@@ -1,0 +1,47 @@
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 100px;
+    .logoContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img {
+            height: 60px;
+        }
+        // span {
+        //     padding-left: 20px;
+        //     color: #000;
+        //     font-size: 30px;
+        //     font-weight: bold;
+        //     font-family: Nunito;
+        // }
+    }
+    .signUpLink {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+}
+
+
+.mainContainer {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #fff;
+    width: 600px;
+    height: 700px;
+    border-radius: 4%;
+}
