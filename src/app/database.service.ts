@@ -4,6 +4,7 @@ import { Firestore, collection, addDoc, updateDoc, doc, onSnapshot } from '@angu
 import { User } from '../models/user.class';
 import { Channel } from '../models/channel.class';
 import { Conversation } from '../models/conversation.class';
+import { ChannelMessage } from '../models/channelMessage.class';
 import { setDoc } from 'firebase/firestore';
 
 @Injectable({
@@ -12,13 +13,13 @@ import { setDoc } from 'firebase/firestore';
 export class DatabaseService {
   firestore: Firestore = inject(Firestore)
  
-  users: any = [];
+  allUsers: Array<any> = [];
   
-  userChannels: any = [];
-  allChannels: any = [];
+  userChannels: Array<any> = [];
+  allChannels: Array<any> = [];
   
-  userConversations: any = [];
-  allConversations: any = [];
+  userConversations: Array<any> = [];
+  allConversations: Array<any> = [];
 
 
   constructor() { 
@@ -31,18 +32,29 @@ export class DatabaseService {
     addDoc(collection(this.firestore, 'users'), user.toJSON());
   }
 
-  addChannel(userId: string, channel: Channel){
-    addDoc(collection(this.firestore, 'users/' + userId + '/channels'), channel.toJSON());
+  addChannel(channel: Channel){
+    channel.membersId.forEach(userId => {
+      setDoc(doc(this.firestore, 'users/' + userId + '/channels', "CHA-" + channel.createdBy), channel.toJSON());
+    });
+  }
+
+  addChannelMessage(channel: Channel, channelMessage: ChannelMessage){
+    const randomNumber = Math.random()
+    channel.membersId.forEach(userId => {
+      setDoc(doc(this.firestore, 'users/' + userId + '/channels/' + channelMessage.channelId + '/channelmessage', "CHA-MSG-" + randomNumber), channelMessage.toJSON());
+    });
   }
 
 
-  addConversation(createdBy: string, recipientId: string, conversationCreator: Conversation, conversationRecipient: Conversation){
+  addConversation(conversationCreator: Conversation, conversationRecipient: Conversation){
     //add converstaion to creator
-    setDoc(doc(this.firestore, 'users/' + createdBy + '/conversations', "CoM-" + createdBy), conversationCreator.toJSON());
+    setDoc(doc(this.firestore, 'users/' + conversationCreator.createdBy + '/conversations', "CoM-" + conversationCreator.createdBy), conversationCreator.toJSON());
 
     //add conversation to recipient
-    setDoc(doc(this.firestore, 'users/' + recipientId + '/conversations', "CoM-" + createdBy), conversationRecipient.toJSON() )
+    setDoc(doc(this.firestore, 'users/' + conversationCreator.recipientId + '/conversations', "CoM-" + conversationCreator.createdBy), conversationRecipient.toJSON());
   }
+
+
 
 
   /*read functions */
@@ -52,29 +64,36 @@ export class DatabaseService {
       users.forEach(user => {
         const userData = user.data();
         userData['id'] = user.id; 
-        this.users.push(userData);
+        this.allUsers.push(userData);
       })
-      console.log(this.users);
     })
   }
 
+
+  loadUserConversations(userId: string){
+    onSnapshot(collection(this.firestore, 'users/' + userId + '/conversations'), (conversations) => {
+      conversations.forEach(conversation => {
+        const conversationData = conversation.data();
+        conversationData['id'] = conversation.id;
+        this.userConversations.push(conversationData);
+      })
+      this.userConversations = [];
+    })
+  }
+
+
   loadAllConversations(){
-    this.allConversations = [];
     onSnapshot(collection(this.firestore,'users'), (users) => {
       users.forEach(user => {
         onSnapshot(collection(this.firestore, 'users/' + user.id + '/conversations'), (conversations) => {
           conversations.forEach(conversation => {
-            console.log('checking user Data from user: ' + user.id)
             const conversationData = conversation.data();
             conversationData['id'] = conversation.id;
             this.allConversations.push(conversationData);
-            console.log(this.allConversations);
-            //debugger;
           })
         })
       })
     })
-
   }
 
 
@@ -90,7 +109,6 @@ export class DatabaseService {
         })
       })
     })
-    console.log(this.allChannels);
   }
   
 
@@ -105,16 +123,11 @@ export class DatabaseService {
   }
   
 
-  loadUserConversations(userId: string){
-    onSnapshot(collection(this.firestore, 'users/' + userId + '/conversations'), (conversations) => {
-      conversations.forEach(conversation => {
-        const conversationData = conversation.data();
-        conversationData['id'] = conversation.id;
-        this.userConversations.push(conversationData)
-      })
-    })
-  }
+
 
   /*update functions */
 
+
+  //edit Channel
+  //edit Profile
 }

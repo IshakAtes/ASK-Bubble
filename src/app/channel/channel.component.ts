@@ -4,6 +4,7 @@ import { DatabaseService } from '../database.service';
 import { User } from '../../models/user.class';
 import { Channel } from '../../models/channel.class';
 import { Conversation } from '../../models/conversation.class';
+import { ChannelMessage } from '../../models/channelMessage.class';
 
 @Component({
   selector: 'app-channel',
@@ -24,6 +25,7 @@ channel = new Channel();
 user = new User()
 conversationCreator = new Conversation();
 conversationRecipient = new Conversation();
+channelMessage = new ChannelMessage();
 
 
 constructor(){  
@@ -34,48 +36,38 @@ constructor(){
   //debugger;
   //this.database.addConversation(this.userId2, this.userId1, this.conversationCreator, this.conversationRecipient);
  
-  this.database.loadUserConversations(this.userId1);
-  console.log('all conversations from user ' + this.userId1);
-  console.log(this.database.userConversations);
+  this.database.loadAllUsers();
+  console.log('all Users');
+  console.log(this.database.allUsers);
 
-  this.database.loadUserConversations(this.userId2);
-  console.log('all conversations from user ' + this.userId2);
-  console.log(this.database.userConversations);
 
   this.database.loadUserConversations(this.userId3);
-  console.log('all conversations from user ' + this.userId3);
+  console.log('all Conversations from: ' + this.userId3);
   console.log(this.database.userConversations);
-  
-  //this.database.loadAllUsers();
-  //this.database.loadAllConversations();
-  //this.database.loadAllChannels();
-  
-  //console.log(this.database.allConversations);
-  
-  
-  //this.createUser();
-  //this.database.addUser(this.user);
-  
-  //this.createChannel();
-  //this.database.addChannel(this.userId3, this.channel);
-  
 
-  /*
-  this.createConversationCreator(this.userId3, this.userId1);
-  this.createConversationRecipient(this.userId3, this.userId1);
-  const randomNumber = Math.random;
-  console.log(randomNumber);
-  this.database.addConversation(this.userId3, this.userId1, this.conversationCreator, this.conversationRecipient);
-  */
 
-  //console.log(this.database.users);
-  
-  /*
-  console.log('channels for user: ' + this.userId3)
+  this.database.loadAllConversations();
+  console.log('all Conversations');
+  console.log(this.database.allConversations);
+
+
+  this.database.loadUserChannels(this.userId3);
+  console.log('all Channels from user: ' + this.userId3);
   console.log(this.database.userChannels);
 
-  console.log('conversations for user: ' + this.userId3)
-  console.log(this.database.userConversations);
+
+  this.database.loadAllChannels();
+  console.log('all Channels');
+  console.log(this.database.allChannels);
+  
+  this.createChannel();
+  this.createChannelMessage();
+  //this.database.addChannelMessage(this.channel, this.channelMessage);
+
+
+  /*
+  this.createChannel();
+  this.database.addChannel(this.channel);
   */
 }
 
@@ -94,9 +86,9 @@ createUser(){
 createChannel(){
   this.channel.createdAt = new Date();
   this.channel.createdBy = 'BSHDDuLBHC0o8RKcrcr6';
-  this.channel.description = 'This is a code created testchannel';
-  this.channel.members = ['Simon', 'Ishak', 'Kerim'];
-  this.channel.name = 'Code created testchannel';
+  this.channel.description = 'First Channel with Function';
+  this.channel.membersId = ['p1oEblSsradmfVeyvTu3', 'BSHDDuLBHC0o8RKcrcr6', 'zd1XsuBu16TsbC3OVe1o'];
+  this.channel.name = 'FirstChannel';
 }
 
 
@@ -112,6 +104,15 @@ createConversationRecipient(createdBy: string, recipientId: string){
   this.conversationRecipient.createdBy = createdBy;
   this.conversationRecipient.fileUrl = 'null';
   this.conversationRecipient.recipientId = recipientId;
+}
+
+createChannelMessage(){
+  this.channelMessage.channelId = 'ChaM-BSHDDuLBHC0o8RKcrcr6';
+  this.channelMessage.content = 'This is the second test message';
+  this.channelMessage.createdAt = new Date();
+  this.channelMessage.createdBy = 'ChaM-BSHDDuLBHC0o8RKcrcr6';
+  this.channelMessage.fileUrl = '';
+  this.channelMessage.threadId = '';
 }
 
 }

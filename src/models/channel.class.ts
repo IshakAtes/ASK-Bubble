@@ -2,7 +2,7 @@ export class Channel {
     createdAt: Date;
     createdBy: string;
     description: string;
-    members: Array<string>;
+    membersId: Array<string>;
     name: string;
 
 
@@ -10,7 +10,7 @@ export class Channel {
         this.createdAt = obj ? obj.createdAt : '';
         this.createdBy = obj ? obj.createdBy : '';
         this.description = obj ? obj.description : '';
-        this.members = obj ? obj.members : '';
+        this.membersId = obj ? obj.members : '';
         this.name = obj ? obj.name : '';
     }
 
@@ -19,7 +19,7 @@ export class Channel {
             createdAt: this.createdAt,
             createdBy: this.createdBy,
             description: this.description,
-            members: this.members,
+            membersId: this.membersId,
             name: this.name,
         }
     }
