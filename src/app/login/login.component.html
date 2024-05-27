@@ -9,10 +9,55 @@
     </div>
 </nav>
 <div class="mainContainer">
-    <div class="card">
+    <form (ngSubmit)="onSubmit()" [formGroup]="myForm" class="card">
         <h1>Anmeldung</h1>
         <span>Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</span>
-        <input type="string">
-        <input type="string">
-    </div>
+        <div class="loginCt">
+            <input
+            type="email"
+            formControlName="mail"
+            ngModel
+            (focus)="img.src = '../../assets/img/mail-focus.png'"
+            (blur)="img.src = '../../assets/img/mail-Icon.png'"
+            placeholder="beispielname&#64;email.com" required>
+            <img #img src="../../assets/img/mail-Icon.png" alt="">
+            <p
+            *ngIf="myForm.get('mail')?.invalid && myForm.get('mail')?.touched"
+            class="errorStyle">
+                *Diese E-Mail-Adresse is leider ungültig.
+            </p>
+        </div>
+        <div class="loginCt">
+            <input
+            type="string"
+            formControlName="pw"
+            ngModel
+            (focus)="lockImg.src = '../../assets/img/lock-focus.png'"
+            (blur)="lockImg.src = '../../assets/img/lock-icon.png'"
+            placeholder="Passwort" required>
+            <img #lockImg src="../../assets/img/lock-icon.png" alt="">
+            <p
+            *ngIf="myForm.get('pw')?.invalid && myForm.get('pw')?.touched"
+            class="errorStyle">
+                Falsches Passwort. Bitte noch einmal versuchen.
+            </p>
+        </div>
+        <a href="#">Passwort vergessen?</a>
+        <div class="separaterCt">
+            <div></div>
+            <span>ODER</span>
+        </div>
+        <button (mousedown)="onMouseDown()" (mouseup)="onMouseUp()"
+            [class.pressed]="isPressed"
+            class="googleBtn">
+            <img src="../../assets/img/Google.png" alt="googleIcon">
+            <span>
+                Anmelden mit Google
+            </span>
+        </button>
+        <div class="btnCt">
+            <button>Anmelden</button>
+            <button>Gäste-Login</button>
+        </div>
+    </form>
 </div>
