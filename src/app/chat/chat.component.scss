@@ -11,8 +11,24 @@
     gap: 0px;
     display: flex;
     justify-content: space-between;
-    opacity: 0px;
     box-shadow: 0px 2px 10px 0px #00000014;
+}
+
+.channelname{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    
+    span {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 32.74px;
+    }
+
+    img{
+        width: 30px;
+        height: 30.19px;
+    }
 }
 
 .time-separator {
@@ -41,4 +57,105 @@
 .line {
     width: 80%;
     border: 1px solid #ADB0D9;
+}
+
+.message {
+    display: flex;
+    gap: 30px;
+    padding: 25px 45px 25px 45px;
+}
+
+.avatar {
+    width: 70px;
+    height: 70px;
+    gap: 10px;
+    border-radius: 40px;
+}
+
+.message-content-div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.message-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.message-header-userName {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 24.55px;
+    text-align: left;
+}
+
+.message-header-timestamp {
+    color: #686868;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 19.1px;
+    text-align: left;
+}
+
+.massage-content-bubble {
+    padding: 15px;
+    border-radius: 0px 30px 30px 30px;
+    background: #ECEEFE;
+}
+
+.massage-content {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 24.55px;
+}
+
+.answer-bar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.answer-count {
+    color: #535AF1;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 24.55px;
+}
+
+.last-answer {
+    color: #686868;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 19.1px;
+}
+
+.own-message {
+    display: flex;
+    gap: 30px;
+    padding: 25px 45px 25px 45px;
+    flex-direction: row-reverse;
+}
+
+.own-message-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: end;
+    flex-direction: row-reverse;
+}
+
+.own-massage-content-bubble {
+    padding: 15px;
+    border-radius: 30px 0px 30px 30px;
+    background: #797EF3;
+    color: white;
+}
+
+.own-answer-bar {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 20px;
 }
