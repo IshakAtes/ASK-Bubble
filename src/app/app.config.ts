@@ -5,6 +5,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import {provideFirebaseApp } from '@angular/fire/app';
 import * as firebaseConfig from '../assets/firebaseConfig.json';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 
 
@@ -18,7 +19,7 @@ export const appConfig: ApplicationConfig = {
         "authDomain":firebaseConfig.authDomain,
         "messagingSenderId":firebaseConfig.messagingSenderId
       })),
-      provideFirestore(() => getFirestore()),
+      provideFirestore(() => getFirestore()), provideAnimationsAsync(), provideAnimationsAsync(), provideAnimationsAsync(), provideAnimationsAsync(), provideAnimationsAsync(), provideAnimationsAsync(), provideAnimationsAsync(), provideAnimationsAsync(), provideAnimationsAsync(), provideAnimationsAsync(),
 
   ]
 };
