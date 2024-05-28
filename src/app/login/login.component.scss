@@ -29,6 +29,23 @@ nav {
         justify-content: center;
         align-items: center;
         flex-direction: column;
+
+        >span {
+            font-family: "Nunito";
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 24.55px;
+            text-align: right;
+        }
+        >a {
+            text-decoration: none;
+            font-family: "Figtree";
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 21.6px;
+            text-align: left;
+            color: #797EF3;
+        }
     }
 }
 
@@ -209,7 +226,7 @@ nav {
         transition: ease-in-out 125ms;
 
         &:hover {
-            filter: brightness(1.25);
+            background-color: #797EF3;
         }
     }
 
@@ -229,8 +246,34 @@ nav {
         transition: ease-in-out 125ms;
         
         &:hover {
-            background-color: #444DF2;
+            background-color: #535AF1;
             color: #fff;
+        }
+    }
+}
+
+.footerCt {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 600px;
+    margin-top: 40px;
+    
+    span {
+        font-family: "Figtree";
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 21.6px;
+        text-align: left;
+        color: #797EF3;
+        border: 1px solid #68686800;
+        padding: 12px 25px 12px 25px;
+        border-radius: 25px;
+
+        &:hover {
+            cursor: pointer;
+            border: 1px solid #686868;
+            color: #686868;
         }
     }
 }

@@ -5,7 +5,7 @@
     </div>
     <div class="signUpLink">
         <span>Neu bei DABubble?</span>
-        <a href="#">Konto erstellen</a>
+        <a [routerLink]="['/signUp']">Konto erstellen</a>
     </div>
 </nav>
 <div class="mainContainer">
@@ -60,4 +60,8 @@
             <button>Gäste-Login</button>
         </div>
     </form>
+    <div class="footerCt">
+        <span [routerLink]="['/imprint']">Impressum</span>
+        <span [routerLink]="['/privacyPolicy']">Datenschutz</span>
+    </div>
 </div>
