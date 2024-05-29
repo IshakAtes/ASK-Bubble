@@ -197,19 +197,70 @@
     gap: 20px;
 }
 
-.input-div {
-    padding: 25px 45px 25px 45px;
-}
+// .input-div {
+//     padding: 25px 45px 25px 45px;
+// }
 
-.input {
-    width: calc(100% - 45px);
+// .input {
+//     width: calc(100% - 45px);
+//     height: 145px;
+//     padding: 20px;
+//     border-radius: 20px;
+//     border: 1px solid #ADB0D9
+// }
+
+
+.message-container {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
     height: 145px;
+
     padding: 20px;
     border-radius: 20px;
-    border: 1px solid #ADB0D9
+    border: 1px solid #ADB0D9;
+
 }
 
+.message-input {
+    border: none;
+    resize: none;
+    height: 100%;
+}
 
+.message-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    height: 40px;
+}
+
+.action-left {
+    display: flex;
+    gap: 10px;
+}
+
+.action-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.action-button:hover {
+    color: #007BFF;
+}
+
+.action-right {
+    display: flex;
+    align-items: center;
+}
+
+.line{
+    border: 1px solid #ADB0D9
+}
 
 
 // Scrollbar
