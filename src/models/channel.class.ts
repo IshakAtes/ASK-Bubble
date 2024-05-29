@@ -4,6 +4,7 @@ export class Channel {
     description: string;
     membersId: Array<string>;
     name: string;
+    channelId: string;
 
 
     constructor(obj?: any){
@@ -12,6 +13,7 @@ export class Channel {
         this.description = obj ? obj.description : '';
         this.membersId = obj ? obj.members : '';
         this.name = obj ? obj.name : '';
+        this.channelId = obj ? obj.channelId : '';
     }
 
     public toJSON(){
@@ -21,6 +23,7 @@ export class Channel {
             description: this.description,
             membersId: this.membersId,
             name: this.name,
+            channelId: this.channelId,
         }
     }
 
