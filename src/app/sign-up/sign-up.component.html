@@ -56,8 +56,16 @@
             </p>
         </div>
         <div class="privacyCheckbox">
-            <mat-checkbox class="example-margin"></mat-checkbox>
+            <mat-checkbox formControlName="box" class="checkboxStyle"></mat-checkbox>
             <span>Ich stimme der <a href="#">Datenschutzerklärung</a> zu.</span>
+        </div>
+        <div class="nextBtn">
+            <button
+            [routerLink]="['/choosingAvatar']"
+            [ngClass]="{'enabledBtn': myForm.valid, 'disabledBtn': !myForm.valid}"
+            [disabled]="!myForm.valid">
+                Weiter
+            </button>
         </div>
     </form>
     <div class="footerCt">

@@ -137,7 +137,7 @@ nav {
     width: 100%;
     margin-top: 40px;
 
-    mat-checkbox {
+    .checkboxStyle {
         margin-right: 20px;
         width: 24px;
         height: auto;
@@ -146,9 +146,54 @@ nav {
         --mdc-checkbox-unselected-pressed-icon-color: #444DF2;
         --mdc-checkbox-unselected-hover-icon-color: #444DF2;
         --mdc-checkbox-unselected-focus-icon-color: #444DF2;
+        --mdc-checkbox__nativa-control: red;
+        --mdc-checkbox__ripple: blue;
+        --mdc-checkbox-selected-focus-state-layer-color: #9747FF;
+        --mdc-circular-progress-active-indicator-color: #9747FF;
+        --mdc-checkbox-selected-icon-color: #9747FF !important;
+
     }
 }
 
+
+.nextBtn{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+
+.enabledBtn {
+    text-decoration: none;
+    padding: 12px 25px 12px 25px;
+    border-radius: 25px;
+    background-color: #444DF2;
+    color:#fff;
+    border: 0;
+    cursor: pointer;
+    font-family: "Nunito";
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    transition: ease-in-out 125ms;
+
+    &:hover {
+        background-color: #797EF3;
+    }
+}
+
+.disabledBtn {
+    text-decoration: none;
+    padding: 12px 25px 12px 25px;
+    border-radius: 25px;
+    background-color: #686868;
+    border: 0;
+    color: #fff;
+    font-family: "Nunito";
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+}
 
 .footerCt {
     display: flex;
