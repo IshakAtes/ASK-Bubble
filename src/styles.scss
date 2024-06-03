@@ -42,3 +42,47 @@ body {
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.primaryBtn {
+  text-decoration: none;
+  padding: 12px 25px 12px 25px;
+  gap: 10px;
+  border: 0;
+  border-radius: 25px;
+  opacity: 0px;
+  background-color: #444DF2;
+  font-family: "Nunito";
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24.55px;
+  text-align: left;
+  color: #fff;
+  cursor: pointer;
+  transition: ease-in-out 125ms;
+  &:hover {
+    background-color: #797EF3;
+  }
+}
+
+
+.secondaryBtn {
+  padding: 12px 25px 12px 25px;
+  gap: 10px;
+  border-radius: 25px;
+  border: 1px solid #797EF3;
+  background-color: #fff;
+  cursor: pointer;
+  transition: ease-in-out 125ms;
+  text-decoration: none;
+  font-family: "Nunito";
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24.55px;
+  text-align: center;
+  color: #444DF2;
+  transition: ease-in-out 125ms;
+  &:hover {
+      background-color: #535AF1;
+      color: #FFFFFF;
+  }
+}

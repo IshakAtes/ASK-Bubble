@@ -4,12 +4,35 @@
     </div>
 </nav>
 <div class="mainContainer">
-    <form class="card">
+    <div class="card">
         <div class="formHeadline"> 
             <img [routerLink]="['/signUp']" src="../../assets/img/arrow_back.png" alt="arrow_back">
             <h1>Wähle deinen Avatar</h1>
         </div>
-    </form>
+        <div
+        (click)="uploadAvatarImage()"
+        class="avatarImageCt">
+        </div>
+        <h2>User Name</h2>
+        <span class="avatarListHeadline">Aus der Liste wählen</span>
+        <!-- generate a div with a loop
+        and every div has another background image Avatar -->
+        <div class="allAvatars">
+            <div class="avatarCt"
+            *ngFor="let item of images"
+            (click)="selectDummyAvatar(item)"
+            [ngStyle]="{'background-image': 'url(' + item + ')'}"
+            #avatarCt>
+            </div>
+        </div>
+        <div class="uploadCt">
+            <span>eigenes Bild verwenden</span>
+            <button class="secondaryBtn">Datei hochladen</button>
+        </div>
+        <div class="createUserBtnCt">
+            <button class="primaryBtn">Konto erstellen</button>
+        </div>
+    </div>
 
     <div class="footerCt">
         <span [routerLink]="['/imprint']">Impressum</span>
