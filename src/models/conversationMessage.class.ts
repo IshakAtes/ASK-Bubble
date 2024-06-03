@@ -5,6 +5,7 @@ export class ConversationMessage {
     createdBy: string;
     fileUrl: string;
     threadId: string;
+    messageId: string;
 
 
     constructor(obj?: any){
@@ -14,6 +15,7 @@ export class ConversationMessage {
         this.createdBy = obj ? obj.createdBy : '';
         this.fileUrl = obj ? obj.fileUrl : '';
         this.threadId = obj ? obj.threadId : '';
+        this.messageId = obj ? obj.messageId : '';
     }
 
     public toJSON(){
@@ -24,6 +26,7 @@ export class ConversationMessage {
             createdBy: this.createdBy,
             fileUrl: this.fileUrl,
             threadId: this.threadId,
+            messageId: this.messageId,
         }
     }
 

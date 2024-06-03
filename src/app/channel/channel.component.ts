@@ -19,15 +19,19 @@ export class ChannelComponent {
 
   firestore: Firestore = inject(Firestore);
   database = inject(DatabaseService);
+  
+  
   userId1: string = 'p1oEblSsradmfVeyvTu3';
   userId2: string = 'BSHDDuLBHC0o8RKcrcr6';
   userId3: string = 'zd1XsuBu16TsbC3OVe1o';
-
-  channelId: string = 'ChaM-BSHDDuLBHC0o8RKcrcr6'
+  channelId: string = 'CHA-p1oEblSsradmfVeyvTu3'
   messageID: string = 'uX2zpZuE5rr9ZE5OHG8q'
 
-  test: Array<any> = []; 
+  activeUser: string = '';
 
+
+  userList: Array<any> = [];
+  messageList: Array<ChannelMessage> = [];
 
   channel = new Channel();
   user = new User()
@@ -35,56 +39,126 @@ export class ChannelComponent {
   conversationCreator = new Conversation();
   conversationRecipient = new Conversation();
   channelMessage = new ChannelMessage();
-
-  specificMessageId: any;
-  
   loadedConversation = new Conversation();
   conversationMessage = new ConversationMessage();
 
 
   constructor(){  
 
-    this.database.loadAllUsers();
-    console.log('all Users');
-    console.log(this.database.allUsers);
+    /*DONE*/
 
 
-    this.database.loadAllConversations();
-    console.log('all Conversations');
-    console.log(this.database.allConversations);
+    this.database.loadAllUsers().then(userlist => {
+      this.userList = userlist;
+      console.log('this.userList from Promise:')
+      console.log(this.userList)
+    });
 
-
-    this.database.loadUserConversations(this.userId3);
-    console.log('all Conversations from: ' + this.userId3);
-    console.log(this.database.userConversations);
-
-
-    this.database.loadAllUserChannels(this.userId3);
-    console.log('all Channels from user: ' + this.userId3);
-    console.log(this.database.userChannels);
-
-
-    this.database.loadAllChannels();
-    console.log('all Channels');
-    console.log(this.database.allChannels);
-    
-
-    this.database.loadSpecificUserChannel(this.userId1, this.channelId)
-    console.log('specific UserChannel');
-    console.log(this.database.specificUserChannel);
-
-
-    this.database.loadAllChannelMessages();
-    console.log('all channel Messages');
-    console.log(this.database.allChannelMessages);
-
-
-    this.database.loadChannelMessages(this.userId2, this.channelId);
-    console.log('Messages from a specific channel');
-    console.log(this.database.channelMessages);
+    setTimeout(() => {
+      console.log('this.userList outside of Promise with delay:')
+      console.log(this.userList)
+    }, 500);
 
     
-    this.createChannel(this.userId1, 'TestDescription',[this.userId1, this.userId2, this.userId3] ,'TestName')
+    this.database.loadAllChannels().then(allChannels => {
+      console.log('all channels from Promise')
+      console.log(allChannels);
+    });
+
+
+    this.database.loadAllUserChannels(this.userId1).then(userChannels => {
+      console.log('all Channels from user: ' + this.userId1 + ' from promise');
+      console.log(userChannels);
+    });
+
+
+    this.database.getUserId('ishak@dummy.de').then(userId =>{
+      console.log('userid from promise')
+      console.log(userId);
+    })
+
+
+    this.database.loadSpecificUserChannel(this.userId1, this.channelId).then(channel => {
+      console.log('channel: ' + channel.channelId + ' from user ' + this.userId1 + ' from within the promise' );
+      console.log(channel);
+  
+    })
+
+
+    this.database.loadAllChannelMessages().then(messageList => {
+      console.log('all channel Messages from Promise');
+      console.log(messageList);
+      this.messageList = messageList;
+    });
+   
+
+    this.database.loadChannelMessages(this.userId2, this.channelId).then(messages => {
+      console.log('Messages from a specific channel from Promise');
+      console.log(messages);
+    });
+
+
+    this.database.loadAllConversations().then(allConversations =>{
+      console.log('all Conversations from Promise');
+      console.log(allConversations);
+    });
+
+
+    this.database.loadUserConversations(this.userId1).then(conversations =>{
+      console.log('all Conversations from: ' + this.userId1 + ' from Promise');
+      console.log(conversations);
+    });
+
+
+    this.database.loadSpecificUserConversation(this.userId1, 'CONV-p1oEblSsradmfVeyvTu3')
+      .then(conversation => {
+        console.log('single conversation from ' + this.userId1);
+        console.log(conversation);
+    })
+
+    this.database.loadAllConversationMessages().then(allConversationMessages => {
+      console.log('All conversation messages');
+      console.log(allConversationMessages);
+    })
+
+    this.database.loadConversationMessages(this.userId1, 'CONV-p1oEblSsradmfVeyvTu3')
+    .then(conversationMessages => {
+      console.log('All Messages from a specific Conversation');
+      console.log(conversationMessages);
+    })
+
+  
+    /*
+    this.database.loadSpecificUserConversation(this.userId2, 'CONV-p1oEblSsradmfVeyvTu3')
+    .then(conversation => {
+      this.createConversationMessage(conversation, '6th conversationmessage created by promise', this.userId2)
+      this.database.addConversationMessage(conversation, this.conversationMessage)
+    })
+    */
+
+
+    /*
+    userId1: string = 'p1oEblSsradmfVeyvTu3';
+    userId2: string = 'BSHDDuLBHC0o8RKcrcr6';
+    userId3: string = 'zd1XsuBu16TsbC3OVe1o';
+    */
+    
+
+
+
+    /* TODO */
+
+    /*Conversation Functions */
+    
+
+
+    /*
+    this.createConversationCreator(this.userId3, this.userId1);
+    this.createConversationRecipient(this.userId3, this.userId1);
+    this.database.addConversation(this.conversationCreator, this.conversationRecipient)
+    */
+
+    //this.createChannel(this.userId1, 'TestDescription',[this.userId1, this.userId2, this.userId3] ,'TestName')
     
 
     //Wichtig!!!//
@@ -97,16 +171,21 @@ export class ChannelComponent {
     */
     
     
-    //this.createConversationFromDB();
+
+
   }
 
-  createReaction(emoji: string, userId: string, channelMessage: ChannelMessage){
-    const randomNumber = Math.random()
-    this.reaction.emoji = emoji;
-    this.reaction.userId = userId;
-    this.reaction.messageId = channelMessage.messageId;
-    this.reaction.reactionId = 'CHA-MSG-REACT-' + randomNumber;
+
+  /*real Functions*/
+
+  openConversation(userId: string){
+    console.log('opened chat with user: ' + userId);
   }
+
+  openChannel(channelId: string){
+    console.log('opened channel with channelId: ' + channelId);
+  }
+
 
   /* Dummy Data*/
   createUser(){
@@ -128,22 +207,17 @@ export class ChannelComponent {
   }
 
 
-  createChannelMessage(channel: Channel, content: string, createdBy: string, fileUrl?: string, threadId?: string){
+  createChannelMessageReaction(emoji: string, userId: string, channelMessage: ChannelMessage){
     const randomNumber = Math.random()
-    this.channelMessage.channelId = channel.channelId;
-    this.channelMessage.content = content;
-    this.channelMessage.createdAt = new Date();
-    this.channelMessage.createdBy = createdBy;
-    this.channelMessage.messageId = 'CHA-MSG-' + randomNumber
-    this.channelMessage.fileUrl = fileUrl ? fileUrl : '';
-    this.channelMessage.threadId = threadId ? threadId: '';
+    this.reaction.emoji = emoji;
+    this.reaction.userId = userId;
+    this.reaction.messageId = channelMessage.messageId;
+    this.reaction.reactionId = 'CHA-MSG-REACT-' + randomNumber;
   }
 
 
-
-
-
   createConversationCreator(createdBy: string, recipientId: string){
+    this.conversationCreator.conversationId = 'CONV-' + createdBy;
     this.conversationCreator.conversationName = 'Conversation with ' + recipientId;
     this.conversationCreator.createdBy = createdBy;
     this.conversationCreator.fileUrl = 'null';
@@ -152,26 +226,36 @@ export class ChannelComponent {
 
 
   createConversationRecipient(createdBy: string, recipientId: string){
+    this.conversationRecipient.conversationId = 'CONV-' + createdBy;
     this.conversationRecipient.conversationName = 'Conversation with ' + createdBy;
     this.conversationRecipient.createdBy = createdBy;
     this.conversationRecipient.fileUrl = 'null';
     this.conversationRecipient.recipientId = recipientId;
   }
 
+  createChannelMessage(channel: Channel, content: string, createdBy: string, fileUrl?: string, threadId?: string){
+    const randomNumber = Math.random()
+    this.channelMessage.channelId = channel.channelId;
+    this.channelMessage.content = content;
+    this.channelMessage.createdAt = new Date();
+    this.channelMessage.createdBy = createdBy;
+    this.channelMessage.fileUrl = fileUrl ? fileUrl : '';
+    this.channelMessage.threadId = threadId ? threadId: '';
+    this.channelMessage.messageId = 'CHA-MSG-' + randomNumber
+  }
 
-  createConversationMessage(){
-    this.conversationMessage.conversationId = 'CoM-BSHDDuLBHC0o8RKcrcr6';
-    this.conversationMessage.content = 'First Conversation Message';
+
+  createConversationMessage(conversation: Conversation, content: string, createdBy: string, fileUrl?: string, threadId?: string){
+    const randomNumber = Math.random()
+    this.conversationMessage.conversationId = conversation.conversationId;
+    this.conversationMessage.content = content;
     this.conversationMessage.createdAt = new Date();
-    this.conversationMessage.createdBy = 'BSHDDuLBHC0o8RKcrcr6';
-    this.conversationMessage.fileUrl = '';
-    this.conversationMessage.threadId = '';
+    this.conversationMessage.createdBy = createdBy;
+    this.conversationMessage.fileUrl = fileUrl ? fileUrl : '';
+    this.conversationMessage.threadId = threadId ? threadId: '';
+    this.conversationMessage.messageId = 'CONV-MSG-' +  randomNumber
   }
 
 
-  createConversationFromDB(){
-    console.log('database entry');
-    this.test = this.database.loadSpecificUserConversation(this.userId1, 'CoM-BSHDDuLBHC0o8RKcrcr6')
-  }
 
 }

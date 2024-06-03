@@ -14,28 +14,13 @@ import { setDoc } from 'firebase/firestore';
 })
 export class DatabaseService {
   firestore: Firestore = inject(Firestore)
- 
-
-  allUsers: Array<any> = [];
   
-  allChannels: Array<any> = [];
-  userChannels: Array<any> = [];
-  specificUserChannel: Array<any> = [];
   
-  allConversations: Array<any> = [];
-  userConversations: Array<any> = [];
-  specificUserConversation: Array<any> = [];
-  
-  allChannelMessages: Array<any> = [];
-  channelMessages: Array<any> = [];
-  specificChannelMessage: Array<any> = [];
-
-
   constructor() { 
     
   }
 
-  /*write functions */
+  /*create functions */
 
   addUser(user: User){
     addDoc(collection(this.firestore, 'users'), user.toJSON());
@@ -66,19 +51,18 @@ export class DatabaseService {
 
   addConversation(conversationCreator: Conversation, conversationRecipient: Conversation){
     //add converstaion to creator
-    setDoc(doc(this.firestore, 'users/' + conversationCreator.createdBy + '/conversations', "CONV-" + conversationCreator.createdBy), conversationCreator.toJSON());
+    setDoc(doc(this.firestore, 'users/' + conversationCreator.createdBy + '/conversations', conversationCreator.conversationId), conversationCreator.toJSON());
 
     //add conversation to recipient
-    setDoc(doc(this.firestore, 'users/' + conversationCreator.recipientId + '/conversations', "CONV-" + conversationCreator.createdBy), conversationRecipient.toJSON());
+    setDoc(doc(this.firestore, 'users/' + conversationCreator.recipientId + '/conversations', conversationCreator.conversationId), conversationRecipient.toJSON());
   }
 
 
   addConversationMessage(conversation: Conversation, conversationMessage: ConversationMessage){
-    const randomNumber = Math.random()
     //add Message to creator
-    setDoc(doc(this.firestore, 'users/' + conversation.createdBy + '/conversations/' + conversationMessage.conversationId + '/conversationmessages', "CONV-MSG-" + randomNumber), conversationMessage.toJSON());
+    setDoc(doc(this.firestore, 'users/' + conversation.createdBy + '/conversations/' + conversationMessage.conversationId + '/conversationmessages', conversationMessage.messageId), conversationMessage.toJSON());
     //add Message to recipient
-    setDoc(doc(this.firestore, 'users/' + conversation.recipientId + '/conversations/' + conversationMessage.conversationId + '/conversationmessages', "CONV-MSG-" + randomNumber), conversationMessage.toJSON());
+    setDoc(doc(this.firestore, 'users/' + conversation.recipientId + '/conversations/' + conversationMessage.conversationId + '/conversationmessages', conversationMessage.messageId), conversationMessage.toJSON());
   }
 
 
@@ -95,28 +79,37 @@ export class DatabaseService {
 
   /*read functions */
 
-  getUserId(){
-    
+   getUserId(email: string): Promise<string>{
+    return new Promise<string>((resolve, reject) =>{
+      let activeUser: string
+      onSnapshot(collection(this.firestore, 'users'), (users) => {
+        users.forEach(user => {
+          const userData = user.data();
+          if(userData['email'] == email){
+             activeUser = user.id;
+             resolve(activeUser);
+          }
+        })
+        }, (error) => {
+          reject(error)
+        })
+    })
   }
 
 
-  getChannelId(){
-    
-  }
-
-
-  getMessageId(){
-    
-  }
-
-
-  loadAllUsers(){
-    onSnapshot(collection(this.firestore, 'users'), (users) => {
-      users.forEach(user => {
-        const userData = user.data();
-        userData['id'] = user.id; 
-        this.allUsers.push(userData);
-      })
+  loadAllUsers(): Promise<Array<any>>{
+    return new Promise<Array<any>>((resolve, reject) =>{
+      const userList = [] as Array<any>
+      onSnapshot(collection(this.firestore, 'users'), (users) => {
+        users.forEach(user => {
+          const userData = user.data();
+          userData['id'] = user.id; 
+          userList.push(userData);
+          resolve(userList);
+        })
+        }, (error) => {
+          reject(error)
+        })
     })
   }
 
@@ -126,116 +119,137 @@ export class DatabaseService {
   }
 
 
-  loadAllConversations(){
-    onSnapshot(collection(this.firestore,'users'), (users) => {
-      users.forEach(user => {
-        onSnapshot(collection(this.firestore, 'users/' + user.id + '/conversations'), (conversations) => {
-          conversations.forEach(conversation => {
-            const conversationData = conversation.data();
-            conversationData['id'] = conversation.id;
-            this.allConversations.push(conversationData);
+
+  loadAllChannels(): Promise<Array<Channel>> {
+    return new Promise<Array<Channel>>((resolve, reject) =>{
+      const channelList = [] as Array<Channel>
+      onSnapshot(collection(this.firestore, 'users'), (users) => {
+        users.forEach(user => {
+          onSnapshot(collection(this.firestore, 'users/' + user.id + '/channels'), (channels) => {
+            channels.forEach(channel => {
+              const channelData = channel.data();
+              const channelObject = {} as Channel;
+              channelObject.createdAt = channelData['createdAt'];
+              channelObject.createdBy = channelData['createdBy'];
+              channelObject.description = channelData['description'];
+              channelObject.membersId = channelData['membersId'];
+              channelObject.name = channelData['name'];
+              channelObject.channelId = channelData['channelId'];
+              channelList.push(channelObject);
+              resolve(channelList);
+            })
           })
         })
-      })
-    })
-  }
-
-
-  loadUserConversations(userId: string){
-    onSnapshot(collection(this.firestore, 'users/' + userId + '/conversations'), (conversations) => {
-      conversations.forEach(conversation => {
-        const conversationData = conversation.data();
-        conversationData['id'] = conversation.id;
-        this.userConversations.push(conversationData);
-      })
-    })
-  }
-
-
-  loadSpecificUserConversation(userId: string, conversationId: string){
-    onSnapshot(collection(this.firestore, 'users/' + userId + '/conversations'), (conversations) => {
-      conversations.forEach(conversation => {
-        if(conversation.id == conversationId){
-          const specificConversationData = conversation.data();
-          specificConversationData['id'] = conversation.id;
-          this.specificUserConversation.push(specificConversationData);
-        }
-      })
-    })
-    return this.specificUserConversation;
-  }
-
-
-  loadAllChannels(){
-    onSnapshot(collection(this.firestore,'users'), (users) => {
-      users.forEach(user => {
-        onSnapshot(collection(this.firestore, 'users/' + user.id + '/channels'), (channels) => {
-          channels.forEach(channel => {
-            const channelData = channel.data();
-            channelData['id'] = channel.id;
-            this.allChannels.push(channelData);
-          })
+        }, (error) => {
+          reject(error)
         })
-      })
     })
   }
   
 
-  loadAllUserChannels(userId: string){
-    onSnapshot(collection(this.firestore, 'users/' + userId + '/channels'), (channels) => {
-      channels.forEach(channel => {
-        const channelData = channel.data();
-        channelData['id'] = channel.id;
-        this.userChannels.push(channelData);
+  loadAllUserChannels(userId: string): Promise<Array<Channel>>{
+    return new Promise<Array<Channel>>((resolve, reject) =>{ 
+      const channelList = [] as Array<Channel>
+      onSnapshot(collection(this.firestore, 'users/' + userId + '/channels'), (channels) => {
+        channels.forEach(channel => {
+          const channelData = channel.data();
+          const channelObject = {} as Channel;
+          channelObject.createdAt = channelData['createdAt'];
+          channelObject.createdBy = channelData['createdBy'];
+          channelObject.description = channelData['description'];
+          channelObject.membersId = channelData['membersId'];
+          channelObject.name = channelData['name'];
+          channelObject.channelId = channelData['channelId'];
+          channelList.push(channelObject);
+          resolve(channelList);
+        })
+      },(error) => {
+        reject(error)
       })
-    })
+    }) 
   }
 
 
-  loadSpecificUserChannel(userId: string, channelId: string){
-    onSnapshot(collection(this.firestore, 'users/' + userId + '/channels/'), (channels) => {
-      channels.forEach(channel => {
-        if(channel.id == channelId){
-          const channelData = channel.data();
-          channelData['id'] = channel.id;
-          this.specificUserChannel.push(channelData);
-        }
+  loadSpecificUserChannel(userId: string, channelId: string): Promise<Channel>{
+    return new Promise<Channel>((resolve, reject) =>{ 
+      const channelObject = {} as Channel
+      onSnapshot(collection(this.firestore, 'users/' + userId + '/channels'), (channels) => {
+        channels.forEach(channel => {
+          if(channelId == channel.id){
+            const channelData = channel.data();
+            channelObject.createdAt = channelData['createdAt'];
+            channelObject.createdBy = channelData['createdBy'];
+            channelObject.description = channelData['description'];
+            channelObject.membersId = channelData['membersId'];
+            channelObject.name = channelData['name'];
+            channelObject.channelId = channelData['channelId'];
+            resolve(channelObject);
+          }
+        })
+      },(error) => {
+        reject(error)
       })
-    })
+    }) 
   }
 
 
   loadAllChannelMessages(){
-    onSnapshot(collection(this.firestore,'users'), (users) => {
-      users.forEach(user => {
-        onSnapshot(collection(this.firestore, 'users/' + user.id + '/channels'), (channels) => {
-          channels.forEach(channel => {
-            onSnapshot(collection(this.firestore, 'users/' + user.id + '/channels/' + channel.id + '/channelmessages'), (messages) => {
-              messages.forEach(message => {
-                const messageData = message.data();
-                messageData['id'] = message.id;
-                this.allChannelMessages.push(messageData);
+    return new Promise<Array<ChannelMessage>>((resolve, reject) =>{
+      const messageList = [] as Array<ChannelMessage>
+      onSnapshot(collection(this.firestore, 'users'), (users) => {
+        users.forEach(user => {
+          onSnapshot(collection(this.firestore, 'users/' + user.id + '/channels'), (channels) => {
+            channels.forEach(channel => {
+              onSnapshot(collection(this.firestore, 'users/' + user.id + '/channels/' + channel.id + '/channelmessages'), (messages) => {
+                messages.forEach(message => {
+                  const messageData = message.data();
+                  const messageObject = {} as ChannelMessage;
+                  messageObject.channelId = messageData['channelId'];
+                  messageObject.content = messageData['content'];
+                  messageObject.createdAt = messageData['createdAt'];
+                  messageObject.createdBy = messageData['createdBy'];
+                  messageObject.fileUrl = messageData['fileUrl'];
+                  messageObject.threadId = messageData['threadId'];
+                  messageObject.messageId = messageData['messageId'];
+                  messageList.push(messageObject);
+                  resolve(messageList);
+                })
               })
             })
           })
         })
-      })
+        }, (error) => {
+          reject(error)
+        })
     })
   }
 
 
-  loadChannelMessages(userId: string, channelId: string){
-    onSnapshot(collection(this.firestore, 'users/' + userId + '/channels/' + channelId + '/channelmessages'), (messages) => {
-      messages.forEach(message => {
-          const channelMessagesData = message.data();
-          channelMessagesData['id'] = message.id;
-          this.channelMessages.push(channelMessagesData);
+  loadChannelMessages(userId: string, channelId: string): Promise<Array<ChannelMessage>>{
+    return new Promise<Array<ChannelMessage>>((resolve, reject) =>{ 
+      const messageList = [] as Array<ChannelMessage>
+      onSnapshot(collection(this.firestore, 'users/' + userId + '/channels/' + channelId + '/channelmessages'), (messages) => {
+        messages.forEach(message => {
+          const messageData = message.data();
+          const channelMessageObject = {} as ChannelMessage;
+          channelMessageObject.channelId = messageData['channelId'];
+          channelMessageObject.content = messageData['content'];
+          channelMessageObject.createdAt = messageData['createdAt'];
+          channelMessageObject.createdBy = messageData['createdBy'];
+          channelMessageObject.fileUrl = messageData['fileUrl'];
+          channelMessageObject.threadId = messageData['threadId'];
+          channelMessageObject.messageId = messageData['messageId'];
+          messageList.push(channelMessageObject);
+          resolve(messageList);
+        })
+      },(error) => {
+        reject(error)
       })
-    })
+    }) 
   }
 
 
-  async loadSpecificChannelMessage(userId: string, channelId: string, messageId: string): Promise<ChannelMessage> {
+  loadSpecificChannelMessage(userId: string, channelId: string, messageId: string): Promise<ChannelMessage> {
     return new Promise<ChannelMessage>((resolve, reject) =>{
       const specificMessage = {} as ChannelMessage
       onSnapshot(collection(this.firestore, 'users/' + userId + '/channels/' + channelId + '/channelmessages'), (messages) => {
@@ -259,12 +273,176 @@ export class DatabaseService {
    }
 
 
- 
+
+   /* CONVERSATION FUNCTIONS*/
+  loadAllConversations(): Promise<Array<Conversation>>{
+    return new Promise<Array<Conversation>>((resolve, reject) =>{
+      const conversationList = [] as Array<Conversation>
+      onSnapshot(collection(this.firestore, 'users'), (users) => {
+        users.forEach(user => {
+          onSnapshot(collection(this.firestore, 'users/' + user.id + '/conversations'), (conversations) => {
+            conversations.forEach(conversation => {
+              const conversationData = conversation.data();
+              const conversationObject = {} as Conversation;
+              conversationObject.conversationId = conversationData['conversationId'];
+              conversationObject.conversationName = conversationData['conversationName'];
+              conversationObject.createdBy = conversationData['createdBy'];
+              conversationObject.fileUrl = conversationData['fileUrl'];
+              conversationObject.recipientId = conversationData['recipientId'];
+              conversationList.push(conversationObject);
+              resolve(conversationList);
+            })
+          })
+        })
+        }, (error) => {
+          reject(error)
+        })
+    })
+  }
+
+  
+  loadUserConversations(userId: string): Promise<Array<Conversation>>{
+    return new Promise<Array<Conversation>>((resolve, reject) =>{ 
+      const ConversationList = [] as Array<Conversation>
+      onSnapshot(collection(this.firestore, 'users/' + userId + '/conversations'), (conversations) => {
+        conversations.forEach(conversation => {
+          const conversationData = conversation.data();
+          const conversationObject = {} as Conversation;
+          conversationObject.conversationId = conversationData['conversationId'];
+          conversationObject.conversationName = conversationData['conversationName'];
+          conversationObject.createdBy = conversationData['createdBy'];
+          conversationObject.fileUrl = conversationData['fileUrl'];
+          conversationObject.recipientId = conversationData['recipientId'];
+          ConversationList.push(conversationObject);
+          resolve(ConversationList);
+        })
+      },(error) => {
+        reject(error)
+      })
+    }) 
+  }
+
+
+  loadSpecificUserConversation(userId: string, conversationId: string):Promise<Conversation>{
+    return new Promise<Conversation>((resolve, reject) =>{ 
+      const conversationObject = {} as Conversation
+      onSnapshot(collection(this.firestore, 'users/' + userId + '/conversations'), (conversations) => {
+        conversations.forEach(conversation => {
+          if(conversationId == conversation.id){
+            const conversationData = conversation.data();
+            conversationObject.conversationId = conversationData['conversationId'];
+            conversationObject.conversationName = conversationData['conversationName'];
+            conversationObject.createdBy = conversationData['createdBy'];
+            conversationObject.fileUrl = conversationData['fileUrl'];
+            conversationObject.recipientId = conversationData['recipientId'];
+            resolve(conversationObject);
+          }
+        })
+      },(error) => {
+        reject(error)
+      })
+    })     
+  }
+
+  
+  loadAllConversationMessages(){
+    return new Promise<Array<ConversationMessage>>((resolve, reject) =>{
+      const messageList = [] as Array<ConversationMessage>
+      onSnapshot(collection(this.firestore, 'users'), (users) => {
+      users.forEach(user => {
+          onSnapshot(collection(this.firestore, 'users/' + user.id + '/conversations'), (conversations) => {
+            conversations.forEach(conversation => {
+              onSnapshot(collection(this.firestore, 'users/' + user.id + '/conversations/' + conversation.id + '/conversationmessages'), (messages) => {
+                messages.forEach(message => {
+                  const messageData = message.data();
+                  const messageObject = {} as ConversationMessage;
+                  messageObject.conversationId = messageData['conversationId'];
+                  messageObject.content = messageData['content'];
+                  messageObject.createdAt = messageData['createdAt'];
+                  messageObject.createdBy = messageData['createdBy'];
+                  messageObject.fileUrl = messageData['fileUrl'];
+                  messageObject.threadId = messageData['threadId'];
+                  messageObject.messageId = messageData['messageId'];
+                  messageList.push(messageObject);
+                  resolve(messageList);
+                })
+              })
+            })
+          })
+        })
+        }, (error) => {
+          reject(error)
+        })
+     })
+  }
+
+
+  loadConversationMessages(userId: string, conversationId: string): Promise<Array<ConversationMessage>>{
+    return new Promise<Array<ConversationMessage>>((resolve, reject) =>{
+      const messageList = [] as Array<ConversationMessage>
+      onSnapshot(collection(this.firestore, 'users/' + userId + '/conversations/' + conversationId + '/conversationmessages'), (messages) => {
+        messages.forEach(message => {
+          const messageData = message.data();
+          const messageObject = {} as ConversationMessage;
+          messageObject.conversationId = messageData['conversationId'];
+          messageObject.content = messageData['content'];
+          messageObject.createdAt = messageData['createdAt'];
+          messageObject.createdBy = messageData['createdBy'];
+          messageObject.fileUrl = messageData['fileUrl'];
+          messageObject.threadId = messageData['threadId'];
+          messageObject.messageId = messageData['messageId'];
+          messageList.push(messageObject);
+          resolve(messageList);
+        })
+      },(error) => {
+        reject(error)
+      })
+    })
+  }
+
+
+  loadSpecificConversationMessage(userId: string, conversationId: string, messageId: string): Promise<Array<ConversationMessage>>{
+    return new Promise<Array<ConversationMessage>>((resolve, reject) =>{
+      const messageList = [] as Array<ConversationMessage>
+      onSnapshot(collection(this.firestore, 'users/' + userId + '/conversations/' + conversationId + '/conversationmessages'), (messages) => {
+        messages.forEach(message => {
+          if(message.id == messageId){
+            const messageData = message.data();
+            const messageObject = {} as ConversationMessage;
+            messageObject.conversationId = messageData['conversationId'];
+            messageObject.content = messageData['content'];
+            messageObject.createdAt = messageData['createdAt'];
+            messageObject.createdBy = messageData['createdBy'];
+            messageObject.fileUrl = messageData['fileUrl'];
+            messageObject.threadId = messageData['threadId'];
+            messageObject.messageId = messageData['messageId'];
+            messageList.push(messageObject);
+            resolve(messageList);
+          }
+        })
+      },(error) => {
+        reject(error)
+      })
+    })
+  }
 
 
 
+  //Folgende ID´s müssen aus dem HTML abgerufen werden?
 
-
+   /*
+   getChannelId(){
     
+   }
+
+   getConversationId(){
+
+   }
+ 
+ 
+   getMessageId(){
+     
+   }
+   */
 
 }
