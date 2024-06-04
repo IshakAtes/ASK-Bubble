@@ -6,6 +6,7 @@ import { ImprintComponent } from './imprint/imprint.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { DialogChooseAvatarComponent } from './dialog-choose-avatar/dialog-choose-avatar.component';
+import { ThreadComponent } from './thread/thread.component';
 import { WorkspaceComponent } from './workspace/workspace.component';
 
 
@@ -17,5 +18,6 @@ export const routes: Routes = [
     { path: 'imprint', component: ImprintComponent},
     { path: 'privacyPolicy', component: PrivacyPolicyComponent},
     { path: 'signUp', component: SignUpComponent},
-    { path: 'choosingAvatar', component: DialogChooseAvatarComponent}
+    { path: 'choosingAvatar', component: DialogChooseAvatarComponent},
+    { path: 'thread', component: ThreadComponent}
 ];
