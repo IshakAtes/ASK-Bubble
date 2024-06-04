@@ -79,15 +79,20 @@ export class DatabaseService {
 
   /*read functions */
 
-   getUserId(email: string): Promise<string>{
-    return new Promise<string>((resolve, reject) =>{
-      let activeUser: string
+   getUser(email: string): Promise<User>{
+    return new Promise<User>((resolve, reject) =>{
+      const activeUser = {} as User;
       onSnapshot(collection(this.firestore, 'users'), (users) => {
         users.forEach(user => {
           const userData = user.data();
           if(userData['email'] == email){
-             activeUser = user.id;
-             resolve(activeUser);
+            activeUser.email = userData['email'] 
+            activeUser.name = userData['name']
+            activeUser.password = userData['password']
+            activeUser.status = userData['status']
+            activeUser.avatarUrl = userData['avatarUrl']
+            activeUser.userId = user.id 
+            resolve(activeUser);
           }
         })
         }, (error) => {
@@ -95,6 +100,8 @@ export class DatabaseService {
         })
     })
   }
+
+
 
 
   loadAllUsers(): Promise<Array<any>>{
@@ -301,7 +308,7 @@ export class DatabaseService {
   }
 
   
-  loadUserConversations(userId: string): Promise<Array<Conversation>>{
+  loadAllUserConversations(userId: string): Promise<Array<Conversation>>{
     return new Promise<Array<Conversation>>((resolve, reject) =>{ 
       const ConversationList = [] as Array<Conversation>
       onSnapshot(collection(this.firestore, 'users/' + userId + '/conversations'), (conversations) => {

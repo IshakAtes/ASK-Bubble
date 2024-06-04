@@ -1,393 +1,294 @@
-section {
-    display: flex;
-    position: relative;
-    align-items: center;
-    flex-direction: column;
-    width: 366px;
-    height: 940px;
-    top: 115px;
-    left: 20px;
-    padding: 32px 30px 32px 30px;
-    gap: 25px;
-    border-radius: 30px;
-    opacity: 0px;
+.main-chat {
+    height: 90vh;
+    width: 90vw;
     background-color: white;
-    margin-bottom: 115px;
+    border-radius: 30px;
+    position: relative;
 }
 
-.workspaceHead {
+.main-chat-header {
+    height: 96px;
+    padding: 25px 45px 25px 45px;
+    gap: 0px;
     display: flex;
     justify-content: space-between;
-    width: 306px;
-    height: 60px;
-    gap: 0px;
-    border-radius: 30px;
-    opacity: 0px;
-        
-    .titleContainer{
-        display: flex;
-        align-items: center;
-        width: 250px;
-        height: 60px;
-        padding: 0px 20px 0px 0px;
-        gap: 15px;
-        opacity: 0px;
+    box-shadow: 0px 2px 10px 0px #00000014;
+}
 
-        >img {
-            width: 60px;
-            height: 60px;
-            gap: 0px;
-            border-radius: 30px;
-            opacity: 0px;
-        }
+.channelname {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 
-        >span{
-           display: flex;
-            width: 155px;
-            height: 33px;
-            gap: 10px;
-            opacity: 0px;
-            font-family: Nunito;
-            font-size: 24px;
-            font-weight: 700;
-            line-height: 32.74px;
-            text-align: left;
-        }
+    span {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 32.74px;
     }
 
-    .bgContainer{
-        display: flex;
+    img {
+        width: 30px;
+        height: 30.19px;
+    }
+}
+
+.member-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.membercount {
+    min-width: 12px;
+
+    span {
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 27.28px;
+    }
+}
+
+.memberdiscs-div {
+    display: flex;
+    align-items: center;
+
+    img {
         width: 40px;
         height: 40px;
-        padding: 8px 0px 0px 0px;
-        gap: 10px;
-        opacity: 0px;
-        svg:hover {   
-            path {
-                fill: #535AF1;
-            }
-            cursor: pointer;
-            border-radius: 20px;
-            background-color:#ECEEFE;
-        }
-    }
-}
-
-.workspaceBody{
-    display: flex;
-    flex-direction: column;
-    width: 306px;
-    height: 671px;
-    gap: 25px;
-    opacity: 0px;
-}
-
-//Following classes are part of workspace body
-.channelListContainer{
-    width: 306px;
-    height: fit-content;
-    gap: 25px;
-    opacity: 0px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    .channelHead {
-        display: flex;
-        justify-content: space-between;
-        width: 306px;
-        height: 46px;
-        padding: 3px 0px 3px 0px;
-        gap: 0px;
-        opacity: 0px;
-        .channelMenu:hover{
-            svg {   
-                path {
-                    fill: #535AF1;
-                }
-            }
-
-            .channelMenuTitle{
-                span {
-                    color: #535AF1;
-                }
-            }
-        }
-
-        .channelMenu{
-            display: flex;
-            width: 176px;
-            height: 40px;
-            padding: 5px 10px 5px 0px;
-            gap: 15px;
-            border-radius: 15px 0px 0px 0px;
-            opacity: 0px;
-            cursor: pointer;
-            .channelMenuTitle{
-                display: flex;
-                width: 121px;
-                height: 27px;
-                gap: 10px;
-                opacity: 0px;
-
-                >svg{
-                    width: 24px;
-                    height: 24px;
-                }
-
-                >span{
-                    width: 87px;
-                    height: 27px;
-                    gap: 0px;
-                    opacity: 0px;
-                    font-family: Nunito;
-                    font-size: 20px;
-                    font-weight: 700;
-                    line-height: 27.28px;
-                    text-align: left; 
-                }
-            }
-        }
-
-        .addNewChannelBg{
-            display: flex;
-            width: 30px;
-            height: 30px;
-            padding: 3px 0px 0px 0px;
-            gap: 10px;
-            border-radius: 30px 0px 0px 0px;
-            opacity: 0px;
-            background-color: transparent;
-            svg:hover{
-                cursor: pointer;
-                path {
-                    fill: #535AF1;
-                }
-                border-radius: 12px;
-                background-color:#ECEEFE;
-            }
-        }
-    }
-
-    //channelBody important because of loaded Data.
-    .channelBody {
-        display: flex;
-        flex-direction: column;
-        width: 306px;
-        height: fit-content;
-        gap: 13px;
-        opacity: 0px;
-        >button {
-            display: flex;
-            position: relative;
-            left: 25px;
-            align-items: center;
-            width: fit-content;
-            height: 33px;
-            padding: 4px 20px 4px 20px;
-            gap: 10px;
-            border-radius: 20px;
-            opacity: 0px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            >p{
-                width: 17.11px;
-                height: 16.65px;
-                position: relative;
-                display: flex;
-                gap: 0px;
-                opacity: 0px;
-                font-size: 24px;
-            }
-            >span{
-                display: flex;
-                width: fit-content;
-                height: 25px;
-                gap: 0px;
-                opacity: 0px;
-                font-family: Nunito;
-                font-size: 18px;
-                font-weight: 700;
-                line-height: 24.55px;
-                text-align: left;
-            }
-        }
-        button:hover {
-            background: #ECEEFE;
-            p {
-                color: #535AF1
-            }
-        }
-    }
-
-    .channelFoot{
-        display: flex;
-        width: 306px;
-        height: 33px;
-        gap: 13px;
+        margin: -6px;
         border-radius: 30px;
-        opacity: 0px;
-
-        >button{
-            display: flex;
-            position: relative;
-            left: 25px;
-            align-items: center;
-            width: 240px;
-            height: 33px;
-            padding: 4px 20px 4px 15px;
-            gap: 10px;
-            opacity: 0px;
-            border-radius: 20px;
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            >span{
-                display: flex;
-                height: 25px;
-                gap: 0px;
-                opacity: 0px;
-                font-family: Nunito;
-                font-size: 18px;
-                font-weight: 400;
-                line-height: 24.55px;
-                text-align: left;
-            }
-        }
-
-        button:hover {
-            svg{
-                cursor: pointer;
-                path {
-                    fill: #535AF1;
-                }
-                border-radius: 12px;
-            }
-            span {
-                color: #535AF1;
-            }
-        }
+        border: 2px solid #FFFFFF
     }
 }
 
-.conversationListContainer{
-    width: 306px;
-    height: fit-content;
-    gap: 25px;
-    opacity: 0px;
+.chat-area {
+    max-height: 40vh;
+    overflow-y: scroll;
+}
+
+.time-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 35px;
+    padding: 20px 0 20px 0;
+    position: relative;
+}
+
+.date {
+    width: 189px;
+    height: 35px;
+    padding: 5px 15px 5px 15px;
+    gap: 10px;
+    border-radius: 30px;
+    background: white;
+    border: 1px solid #ADB0D9;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+}
+
+.line {
+    width: 80%;
+    border: 1px solid #ADB0D9;
+}
+
+.message {
+    display: flex;
+    gap: 30px;
+    padding: 25px 45px 25px 45px;
+}
+
+.avatar {
+    width: 70px;
+    height: 70px;
+    gap: 10px;
+    border-radius: 40px;
+}
+
+.message-content-div {
     display: flex;
     flex-direction: column;
+    gap: 8px;
+}
+
+.message-header {
+    display: flex;
     align-items: center;
-    .conversationHead {
-        display: flex;
-        justify-content: space-between;
-        width: 306px;
-        height: 46px;
-        padding: 3px 0px 3px 0px;
-        gap: 0px;
-        opacity: 0px;
+    gap: 20px;
+}
 
-        .conversationMenu{
-            display: flex;
-            width: 176px;
-            height: 40px;
-            padding: 5px 10px 5px 0px;
-            gap: 10px;
-            border-radius: 15px 0px 0px 0px;
-            opacity: 0px;
-            cursor: pointer;
-            .conversationMenuTitle{
-                display: flex;
-                width: 121px;
-                height: 27px;
-                gap: 10px;
-                opacity: 0px;
+.message-header-userName {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 24.55px;
+    text-align: left;
+}
 
-                svg{
-                    width: 24px;
-                    height: 24px;
-                }
+.message-header-timestamp {
+    color: #686868;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 19.1px;
+    text-align: left;
+}
 
-                >span{
-                    width: 87px;
-                    height: 27px;
-                    gap: 0px;
-                    opacity: 0px;
-                    font-family: Nunito;
-                    font-size: 20px;
-                    font-weight: 700;
-                    line-height: 27.28px;
-                    text-align: left; 
-                }
-            }
-        }
+.massage-content-bubble {
+    padding: 15px;
+    border-radius: 0px 30px 30px 30px;
+    background: #ECEEFE;
+}
 
-        .conversationMenu:hover{
-            svg {   
-                path {
-                    fill: #535AF1;
-                }
-            }
+.massage-content {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 24.55px;
+}
 
-            .conversationMenuTitle{
-                span {
-                    color: #535AF1;
-                }
-            }
-        }
-    }
+.answer-bar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
 
-        //channelBody important because of loaded Data.
-        .conversationBody {
-            display: flex;
-            flex-direction: column;
-            width: 306px;
-            height: fit-content;
-            gap: 13px;
-            opacity: 0px;
-            >button {
-                display: flex;
-                position: relative;
-                left: 20px;
-                align-items: center;
-                width: fit-content;
-                height: fit-content;
-                padding: 4px 20px 4px 20px;
-                gap: 10px;
-                border-radius: 30px;
-                opacity: 0px;
-                background: transparent;
-                border: none;
-                cursor: pointer;
-                
-                >img{
-                    width: 50px;
-                    height: 50px;
-                    gap: 0px;
-                    border-radius: 30px;
-                    opacity: 0px;
+.answer-count {
+    color: #535AF1;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 24.55px;
+}
 
-                }
-            
-                >span{
-                    display: flex;
-                    width: fit-content;
-                    height: 25px;
-                    gap: 0px;
-                    opacity: 0px;
-                    font-family: Nunito;
-                    font-size: 18px;
-                    font-weight: 700;
-                    line-height: 24.55px;
-                    text-align: left;
-                }
-            }
-    
-            button:hover {
-                background: #ECEEFE;
-                p {
-                    color: #535AF1
-                }
-            }
-        }
+.last-answer {
+    color: #686868;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 19.1px;
+}
+
+.own-message {
+    display: flex;
+    gap: 30px;
+    padding: 25px 45px 25px 45px;
+    flex-direction: row-reverse;
+}
+
+.own-message-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: end;
+    flex-direction: row-reverse;
+}
+
+.own-massage-content-bubble {
+    padding: 15px;
+    border-radius: 30px 0px 30px 30px;
+    background: #797EF3;
+    color: white;
+}
+
+.own-answer-bar {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 20px;
+}
+
+// .input-div {
+//     padding: 25px 45px 25px 45px;
+// }
+
+// .input {
+//     width: calc(100% - 45px);
+//     height: 145px;
+//     padding: 20px;
+//     border-radius: 20px;
+//     border: 1px solid #ADB0D9
+// }
+
+
+.message-container {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    height: 145px;
+
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px solid #ADB0D9;
+
+}
+
+.message-input {
+    border: none;
+    resize: none;
+    height: 100%;
+}
+
+.message-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    height: 40px;
+}
+
+.action-left {
+    display: flex;
+    gap: 10px;
+}
+
+.action-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.action-button:hover {
+    color: #007BFF;
+}
+
+.action-right {
+    display: flex;
+    align-items: center;
+}
+
+.line{
+    border: 1px solid #ADB0D9
+}
+
+
+// Scrollbar
+
+
+::-webkit-scrollbar {
+    width: 12px;
+    background-color: transparent;
+    /* Hintergrund der Scrollbar */
+}
+
+:hover::-webkit-scrollbar {
+    background-color: rgba(0, 0, 0, 0.1);
+    /* Leicht sichtbarer Hintergrund beim Hover */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(105, 105, 105, 0.6);
+    /* Dunkelgraue Scrollbar mit Transparenz */
+    border-radius: 10px;
+    /* Abgerundete Enden */
+    border: 3px solid transparent;
+    /* Abstand zum Rand */
+    background-clip: padding-box;
+    /* Vermeidung von Überlappung */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(105, 105, 105, 1);
+    /* Vollständig sichtbar beim Hover */
 }
