@@ -211,17 +211,15 @@
 
 
 .message-container {
-    width: 100%;
-    max-width: 600px;
     display: flex;
     flex-direction: column;
     background-color: #fff;
     height: 145px;
 
     padding: 20px;
+    margin: 25px 45px;
     border-radius: 20px;
     border: 1px solid #ADB0D9;
-
 }
 
 .message-input {
