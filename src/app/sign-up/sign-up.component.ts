@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { DatabaseService } from '../database.service';
+import { User } from '../../models/user.class';
 
 
 @Component({
@@ -16,15 +18,32 @@ export class SignUpComponent {
   isPressed = false;
   myForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router, public us: DatabaseService) {
     this.myForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(5)]],
       pw: ['', [Validators.required, Validators.minLength(5)]],
       mail: ['', [Validators.required, Validators.email]],
-      box: ['', [Validators.required, Validators.requiredTrue]],
+      box: ['', [Validators.requiredTrue]],
     });
   }
 
-  onSubmit() {}
+
+  onSubmit() {
+    if (this.myForm.valid) {
+      const formValues = this.myForm.value;
+      const newUser = new User({
+        email: formValues.mail,
+        name: formValues.name,
+        password: formValues.pw,
+        status: 'offline',
+        avatarUrl: '',
+        userId: ''
+      });
+      this.us.userCache = newUser;
+      this.router.navigate(['/choosingAvatar']);
+    } else {
+      console.log('Form is invalid');
+    }
+  }
 
 }
