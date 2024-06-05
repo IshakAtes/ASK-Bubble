@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { DatabaseService } from '../database.service';
 import { User } from '../../models/user.class';
+import { UserService } from '../user.service';
 
 
 @Component({
@@ -18,7 +18,7 @@ export class SignUpComponent {
   isPressed = false;
   myForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router, public us: DatabaseService) {
+  constructor(private fb: FormBuilder, private router: Router, public us: UserService) {
     this.myForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(5)]],
       pw: ['', [Validators.required, Validators.minLength(5)]],

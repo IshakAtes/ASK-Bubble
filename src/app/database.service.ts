@@ -14,7 +14,6 @@ import { setDoc } from 'firebase/firestore';
 })
 export class DatabaseService {
   firestore: Firestore = inject(Firestore)
-  userCache: any;
   
   
   constructor() { 
