@@ -42,7 +42,7 @@ export class SignUpComponent {
       this.us.userCache = newUser;
       this.router.navigate(['/choosingAvatar']);
     } else {
-      console.log('Form is invalid');
+      alert('Formular konnte nicht abgeschickt werden');
     }
   }
 

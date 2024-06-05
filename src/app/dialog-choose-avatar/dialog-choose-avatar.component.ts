@@ -29,6 +29,7 @@ export class DialogChooseAvatarComponent {
   createUser() {
     this.us.userCache.avatarUrl = this.selectedAvatar;
     console.log(this.us.userCache);
+    this.us.addUser(this.us.userCache);
   }
 
   selectDummyAvatar(item: any) {
