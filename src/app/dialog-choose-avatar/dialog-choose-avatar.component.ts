@@ -1,7 +1,7 @@
 import { NgFor, NgIf, NgStyle } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { DatabaseService } from '../database.service';
+import { UserService } from '../user.service';
 
 
 
@@ -23,13 +23,13 @@ export class DialogChooseAvatarComponent {
     '../../assets/img/defaultAvatars/defaultMale3.png'
   ];
   selectedAvatar: string = "";
-  constructor(private router: Router, public us: DatabaseService) {
-    console.log(us);
+  constructor(private router: Router, public us: UserService) {
   }
 
   createUser() {
     this.us.userCache.avatarUrl = this.selectedAvatar;
     console.log(this.us.userCache);
+    this.us.addUser(this.us.userCache);
   }
 
   selectDummyAvatar(item: any) {
