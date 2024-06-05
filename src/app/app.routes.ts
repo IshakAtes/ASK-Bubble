@@ -8,6 +8,7 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { DialogChooseAvatarComponent } from './dialog-choose-avatar/dialog-choose-avatar.component';
 import { ThreadComponent } from './thread/thread.component';
 import { WorkspaceComponent } from './workspace/workspace.component';
+import { MainComponent } from './main/main.component';
 
 
 export const routes: Routes = [
@@ -19,5 +20,6 @@ export const routes: Routes = [
     { path: 'privacyPolicy', component: PrivacyPolicyComponent},
     { path: 'signUp', component: SignUpComponent},
     { path: 'choosingAvatar', component: DialogChooseAvatarComponent},
-    { path: 'thread', component: ThreadComponent}
+    { path: 'thread', component: ThreadComponent},
+    { path: 'main', component: MainComponent},
 ];

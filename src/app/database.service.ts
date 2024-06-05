@@ -21,7 +21,103 @@ export class DatabaseService {
     
   }
 
-  /*create functions */
+  /*create object Functions */
+
+  createUser(email: string, name: string, password: string, status: string, avatarUrl: string): User{
+    const user = {} as User
+    user.email = email
+    user.name = name;
+    user.password = password;
+    user.status = status;
+    user.avatarUrl = avatarUrl;
+    user.userId = '';
+    return user
+  }
+
+
+  createChannel(createdBy: string, description: string, membersId: Array<string>, channelName: string): Channel{
+    let channel = {} as Channel
+    channel.createdAt = new Date();
+    channel.createdBy = createdBy;
+    channel.description = description;
+    channel.membersId = membersId;
+    channel.name = channelName;
+    channel.channelId = 'CHA-' + createdBy;
+    return channel
+  }
+
+
+  createChannelMessage(channel: Channel, content: string, createdBy: string, fileUrl?: string, threadId?: string): ChannelMessage{
+    let channelMessage = {} as ChannelMessage
+    const randomNumber = Math.random()
+    channelMessage.channelId = channel.channelId;
+    channelMessage.content = content;
+    channelMessage.createdAt = new Date();
+    channelMessage.createdBy = createdBy;
+    channelMessage.fileUrl = fileUrl ? fileUrl : '';
+    channelMessage.threadId = threadId ? threadId: '';
+    channelMessage.messageId = 'CHA-MSG-' + randomNumber
+    return channelMessage
+  }
+
+
+  createChannelMessageReaction(emoji: string, userId: string, channelMessage: ChannelMessage): Reaction{
+    let reaction = {} as Reaction;
+    const randomNumber = Math.random()
+    reaction.emoji = emoji;
+    reaction.userId = userId;
+    reaction.messageId = channelMessage.messageId;
+    reaction.reactionId = 'CHA-MSG-REACT-' + randomNumber;
+    return reaction
+  }
+
+  createConversationCreator(createdBy: string, recipientId: string): Conversation{
+    const conversationCreator = {} as Conversation;
+    conversationCreator.conversationId = 'CONV-' + createdBy;
+    conversationCreator.conversationName = 'Conversation with ' + recipientId;
+    conversationCreator.createdBy = createdBy;
+    conversationCreator.fileUrl = 'null';
+    conversationCreator.recipientId = recipientId;
+    return conversationCreator;
+  }
+
+  createConversationRecipient(createdBy: string, recipientId: string): Conversation{
+    const conversationRecipient = {} as Conversation
+    conversationRecipient.conversationId = 'CONV-' + createdBy;
+    conversationRecipient.conversationName = 'Conversation with ' + createdBy;
+    conversationRecipient.createdBy = createdBy;
+    conversationRecipient.fileUrl = 'null';
+    conversationRecipient.recipientId = recipientId;
+    return conversationRecipient;
+  }
+
+
+  createConversationMessage(conversation: Conversation, content: string, createdBy: string, fileUrl?: string, threadId?: string): ConversationMessage{
+    let conversationMessage = {} as ConversationMessage;
+    const randomNumber = Math.random();
+    conversationMessage.conversationId = conversation.conversationId;
+    conversationMessage.content = content;
+    conversationMessage.createdAt = new Date();
+    conversationMessage.createdBy = createdBy;
+    conversationMessage.fileUrl = fileUrl ? fileUrl : '';
+    conversationMessage.threadId = threadId ? threadId: '';
+    conversationMessage.messageId = 'CONV-MSG-' +  randomNumber
+    return conversationMessage
+  }
+
+
+  createConversationMessageReaction(emoji: string, userId: string, conversationMessage: ConversationMessage): Reaction{
+    let reaction = {} as Reaction;
+    const randomNumber = Math.random();
+    reaction.emoji = emoji;
+    reaction.userId = userId;
+    reaction.messageId = conversationMessage.messageId;
+    reaction.reactionId = 'CONV-MSG-REACT-' + randomNumber;
+    return reaction
+  }
+
+  /*create database entry functions */
+
 
   addUser(user: User){
     addDoc(collection(this.firestore, 'users'), user.toJSON());
@@ -30,14 +126,14 @@ export class DatabaseService {
 
   addChannel(channel: Channel){
     channel.membersId.forEach(userId => {
-      setDoc(doc(this.firestore, 'users/' + userId + '/channels', channel.channelId), channel.toJSON());
+      setDoc(doc(this.firestore, 'users/' + userId + '/channels', channel.channelId), channel);
     });
-    
   }
+
 
   addChannelMessage(channel: Channel, channelMessage: ChannelMessage){
     channel.membersId.forEach(userId => {
-      setDoc(doc(this.firestore, 'users/' + userId + '/channels/' + channel.channelId + '/channelmessages', channelMessage.messageId), channelMessage.toJSON());
+      setDoc(doc(this.firestore, 'users/' + userId + '/channels/' + channel.channelId + '/channelmessages', channelMessage.messageId), channelMessage);
     });
   }
 
@@ -46,10 +142,11 @@ export class DatabaseService {
 
   }
 
+
   addChannelMessageReaction(channel: Channel, channelMessage: ChannelMessage, reaction: Reaction){
     channel.membersId.forEach(userId => {
       setDoc(doc(this.firestore, 'users/' + userId + '/channels/' 
-      + channel.channelId + '/channelmessages/' + channelMessage.messageId + '/reactions', reaction.reactionId), reaction.toJSON());
+      + channel.channelId + '/channelmessages/' + channelMessage.messageId + '/reactions', reaction.reactionId), reaction);
     });
   }
 
@@ -57,7 +154,6 @@ export class DatabaseService {
   addConversation(conversationCreator: Conversation, conversationRecipient: Conversation){
     //add converstaion to creator
     setDoc(doc(this.firestore, 'users/' + conversationCreator.createdBy + '/conversations', conversationCreator.conversationId), conversationCreator.toJSON());
-
     //add conversation to recipient
     setDoc(doc(this.firestore, 'users/' + conversationCreator.recipientId + '/conversations', conversationCreator.conversationId), conversationRecipient.toJSON());
   }
@@ -78,19 +174,16 @@ export class DatabaseService {
 
 
   addConversationMessageReaction(conversation: Conversation, conversationMessage: ConversationMessage, reaction: Reaction){
-    
+    //add reaction to creator message
     setDoc(doc(this.firestore, 'users/' + conversation.createdBy + '/conversations/' 
     + conversation.conversationId + '/conversationmessages/' + conversationMessage.messageId + '/reactions', reaction.reactionId), reaction.toJSON());
-   
-
+    //add reaction to recipient message
     setDoc(doc(this.firestore, 'users/' + conversation.recipientId + '/conversations/' 
     + conversation.conversationId + '/conversationmessages/' + conversationMessage.messageId + '/reactions', reaction.reactionId), reaction.toJSON());
-
   }
 
 
   /*read functions */
-
    getUser(email: string): Promise<User>{
     return new Promise<User>((resolve, reject) =>{
       const activeUser = {} as User;
@@ -105,6 +198,29 @@ export class DatabaseService {
             activeUser.avatarUrl = userData['avatarUrl']
             activeUser.userId = user.id 
             resolve(activeUser);
+          }
+        })
+        }, (error) => {
+          reject(error)
+        })
+    })
+  }
+
+
+  loadUser(userId: string): Promise<User>{
+    return new Promise<User>((resolve, reject) =>{
+      const foundUser = {} as User;
+      onSnapshot(collection(this.firestore, 'users'), (users) => {
+        users.forEach(user => {
+          const userData = user.data();
+          if(user.id == userId){
+            foundUser.email = userData['email'] 
+            foundUser.name = userData['name']
+            foundUser.password = userData['password']
+            foundUser.status = userData['status']
+            foundUser.avatarUrl = userData['avatarUrl']
+            foundUser.userId = user.id 
+            resolve(foundUser);
           }
         })
         }, (error) => {
@@ -284,7 +400,6 @@ export class DatabaseService {
    }
 
 
-
    /* CONVERSATION FUNCTIONS*/
   loadAllConversations(): Promise<Array<Conversation>>{
     return new Promise<Array<Conversation>>((resolve, reject) =>{
@@ -435,7 +550,6 @@ export class DatabaseService {
       })
     })
   }
-
 
 
   //Folgende ID´s müssen aus dem HTML abgerufen werden?

@@ -125,21 +125,18 @@
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
                     </svg>
-                    
                     <span>{{activeUser.name}} (Du)</span>
                 </button>
-                <button *ngFor="let conversation of activeUserConversations" (click)="openConversation(conversation.conversationId)">
-                    <img src="../../assets/img/defaultAvatars/defaultMale2.png" alt="">
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
-                    </svg>
-                    @if(activeUser.userId == conversation.createdBy ){
-                        <span>{{conversation.recipientId}}</span>
-                    }
-                    @else{
-                        <span>{{conversation.createdBy}}</span>
-                    }
-                </button>
+                
+                @for (user of usersFromActiveUserConversationList; track  user; let i = $index;){
+                    <button (click)="openConversation(activeUserConversationList[i].conversationId)">
+                        <img src="{{user.avatarUrl}}" alt="">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
+                        </svg>
+                        <span>{{user.name}}</span>
+                    </button>
+                }
             </div> <!--ChannelBody-End-->
 
 
