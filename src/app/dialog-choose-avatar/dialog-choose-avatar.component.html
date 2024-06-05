@@ -10,6 +10,7 @@
             <h1>Wähle deinen Avatar</h1>
         </div>
         <div
+        [ngStyle]="{'background-image': selectedAvatar ? 'url(' + selectedAvatar + ')' : 'url(../../assets/img/unUsedDefault.png)'}"
         (click)="uploadAvatarImage()"
         class="avatarImageCt">
         </div>
@@ -30,7 +31,7 @@
             <button class="secondaryBtn">Datei hochladen</button>
         </div>
         <div class="createUserBtnCt">
-            <button class="primaryBtn">Konto erstellen</button>
+            <button (click)="createUser()" class="primaryBtn">Konto erstellen</button>
         </div>
     </div>
 

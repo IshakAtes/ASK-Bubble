@@ -14,7 +14,6 @@
             <input
             type="name"
             formControlName="name"
-            ngModel
             (focus)="userIcon.src = '../../assets/img/person_24dp_FILL0_wght400_GRAD0_opsz24 (1).png'"
             (blur)="userIcon.src = '../../assets/img/person_24dp_FILL0_wght400_GRAD0_opsz24.png'"
             placeholder="Name und Nachname" required>
@@ -29,7 +28,6 @@
             <input
             type="email"
             formControlName="mail"
-            ngModel
             (focus)="img.src = '../../assets/img/mail-focus.png'"
             (blur)="img.src = '../../assets/img/mail-Icon.png'"
             placeholder="beispielname&#64;email.com" required>
@@ -44,7 +42,6 @@
             <input
             type="string"
             formControlName="pw"
-            ngModel
             (focus)="lockImg.src = '../../assets/img/lock-focus.png'"
             (blur)="lockImg.src = '../../assets/img/lock-icon.png'"
             placeholder="Passwort" required>
@@ -61,9 +58,9 @@
         </div>
         <div class="nextBtn">
             <button
-            [routerLink]="['/choosingAvatar']"
-            [ngClass]="{'enabledBtn': myForm.valid, 'disabledBtn': !myForm.valid}"
-            [disabled]="!myForm.valid">
+                type="submit"
+                [ngClass]="{'enabledBtn': myForm.valid, 'disabledBtn': !myForm.valid}"
+                [disabled]="!myForm.valid">
                 Weiter
             </button>
         </div>
