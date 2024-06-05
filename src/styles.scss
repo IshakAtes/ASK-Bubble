@@ -39,6 +39,7 @@ $da-bubble-theme: mat.define-light-theme((
 body {
     background-color: #ECEEFE;
     margin: 0px;
+    overflow-x: hidden;
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

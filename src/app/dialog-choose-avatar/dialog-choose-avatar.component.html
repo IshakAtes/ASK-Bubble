@@ -4,7 +4,7 @@
     </div>
 </nav>
 <div class="mainContainer">
-    <div class="card">
+    <div class="card" data-aos="fade-left">
         <div class="formHeadline"> 
             <img [routerLink]="['/signUp']" src="../../assets/img/arrow_back.png" alt="arrow_back">
             <h1>Wähle deinen Avatar</h1>
@@ -33,6 +33,11 @@
         <div class="createUserBtnCt">
             <button (click)="createUser()" class="primaryBtn">Konto erstellen</button>
         </div>
+    </div>
+    <div
+    [ngClass]="{bubbleVisible: userCreated}"
+    class="userCreatedInfoBubble">
+        <span>Konto erfolgreich erstellt</span>
     </div>
 
     <div class="footerCt">

@@ -1,4 +1,4 @@
-import { NgFor, NgIf, NgStyle } from '@angular/common';
+import { NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../user.service';
@@ -8,7 +8,7 @@ import { UserService } from '../user.service';
 @Component({
   selector: 'app-dialog-choose-avatar',
   standalone: true,
-  imports: [RouterLink, NgFor, NgStyle, NgIf],
+  imports: [RouterLink, NgFor, NgStyle, NgIf, NgClass],
   templateUrl: './dialog-choose-avatar.component.html',
   styleUrl: './dialog-choose-avatar.component.scss'
 })
@@ -23,13 +23,19 @@ export class DialogChooseAvatarComponent {
     '../../assets/img/defaultAvatars/defaultMale3.png'
   ];
   selectedAvatar: string = "";
+  userCreated: boolean = false;
   constructor(private router: Router, public us: UserService) {
   }
 
   createUser() {
     this.us.userCache.avatarUrl = this.selectedAvatar;
     console.log(this.us.userCache);
+    this.userCreated = true;
     this.us.addUser(this.us.userCache);
+    setTimeout(() => {
+      this.userCreated = false;
+      this.router.navigate(['/']);
+    }, 2000);
   }
 
   selectDummyAvatar(item: any) {
