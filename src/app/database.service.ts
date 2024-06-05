@@ -41,10 +41,14 @@ export class DatabaseService {
   }
 
 
+  addChannelMessageThread(channel: Channel, channelMessage: ChannelMessage, ){
+
+  }
+
   addChannelMessageReaction(channel: Channel, channelMessage: ChannelMessage, reaction: Reaction){
     channel.membersId.forEach(userId => {
       setDoc(doc(this.firestore, 'users/' + userId + '/channels/' 
-      + channelMessage.channelId + '/channelmessages/' + channelMessage.messageId + '/reactions', reaction.reactionId), reaction.toJSON());
+      + channel.channelId + '/channelmessages/' + channelMessage.messageId + '/reactions', reaction.reactionId), reaction.toJSON());
     });
   }
 
@@ -66,15 +70,22 @@ export class DatabaseService {
   }
 
 
-  /*
-  addConversationMessageReaction(channel: Channel, channelMessage: ChannelMessage, reaction: Reaction){
-    const randomNumber = Math.random()
-    channel.membersId.forEach(userId => {
-      setDoc(doc(this.firestore, 'users/' + userId + '/channels/' 
-      + channelMessage.channelId + '/channelmessages/' + reaction.messageId + '/reactions', "CHA-REACT-" + randomNumber), reaction.toJSON());
-    });
+  
+  addConversationMessageThread(){
+    
   }
-  */
+
+
+  addConversationMessageReaction(conversation: Conversation, conversationMessage: ConversationMessage, reaction: Reaction){
+    
+    setDoc(doc(this.firestore, 'users/' + conversation.createdBy + '/conversations/' 
+    + conversation.conversationId + '/conversationmessages/' + conversationMessage.messageId + '/reactions', reaction.reactionId), reaction.toJSON());
+   
+
+    setDoc(doc(this.firestore, 'users/' + conversation.recipientId + '/conversations/' 
+    + conversation.conversationId + '/conversationmessages/' + conversationMessage.messageId + '/reactions', reaction.reactionId), reaction.toJSON());
+
+  }
 
 
   /*read functions */
@@ -102,8 +113,6 @@ export class DatabaseService {
   }
 
 
-
-
   loadAllUsers(): Promise<Array<any>>{
     return new Promise<Array<any>>((resolve, reject) =>{
       const userList = [] as Array<any>
@@ -119,12 +128,6 @@ export class DatabaseService {
         })
     })
   }
-
-
-  loadSpecificUser(){
-
-  }
-
 
 
   loadAllChannels(): Promise<Array<Channel>> {
@@ -408,14 +411,13 @@ export class DatabaseService {
   }
 
 
-  loadSpecificConversationMessage(userId: string, conversationId: string, messageId: string): Promise<Array<ConversationMessage>>{
-    return new Promise<Array<ConversationMessage>>((resolve, reject) =>{
-      const messageList = [] as Array<ConversationMessage>
+  loadSpecificConversationMessage(userId: string, conversationId: string, messageId: string): Promise<ConversationMessage>{
+    return new Promise<ConversationMessage>((resolve, reject) =>{
+      const messageObject = {} as ConversationMessage
       onSnapshot(collection(this.firestore, 'users/' + userId + '/conversations/' + conversationId + '/conversationmessages'), (messages) => {
         messages.forEach(message => {
           if(message.id == messageId){
             const messageData = message.data();
-            const messageObject = {} as ConversationMessage;
             messageObject.conversationId = messageData['conversationId'];
             messageObject.content = messageData['content'];
             messageObject.createdAt = messageData['createdAt'];
@@ -423,8 +425,8 @@ export class DatabaseService {
             messageObject.fileUrl = messageData['fileUrl'];
             messageObject.threadId = messageData['threadId'];
             messageObject.messageId = messageData['messageId'];
-            messageList.push(messageObject);
-            resolve(messageList);
+            
+            resolve(messageObject);
           }
         })
       },(error) => {
