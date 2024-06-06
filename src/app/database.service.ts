@@ -183,7 +183,7 @@ export class DatabaseService {
 
 
   /*read functions */
-   getUser(email: string): Promise<User>{
+  getUser(email: string): Promise<User>{
     return new Promise<User>((resolve, reject) =>{
       const activeUser = {} as User;
       onSnapshot(collection(this.firestore, 'users'), (users) => {
