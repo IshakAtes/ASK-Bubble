@@ -86,3 +86,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
       color: #FFFFFF;
   }
 }
+
+.mat-mdc-dialog-container {
+  --mdc-dialog-container-shape: 30px;
+}

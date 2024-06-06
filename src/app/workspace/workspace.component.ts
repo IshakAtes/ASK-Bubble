@@ -8,6 +8,8 @@ import { ChannelMessage } from '../../models/channelMessage.class';
 import { Reaction } from '../../models/reactions.class';
 import { ConversationMessage } from '../../models/conversationMessage.class';
 import { CommonModule } from '@angular/common';
+import {MatDialog} from '@angular/material/dialog';
+import { DialogCreateChannelComponent } from '../dialog-create-channel/dialog-create-channel.component';
 
 @Component({
   selector: 'app-workspace',
@@ -20,16 +22,6 @@ export class WorkspaceComponent {
   firestore: Firestore = inject(Firestore);
   database = inject(DatabaseService);
   
-  //test variables
-  userId1: string = 'p1oEblSsradmfVeyvTu3';
-  userId2: string = 'BSHDDuLBHC0o8RKcrcr6';
-  userId3: string = 'zd1XsuBu16TsbC3OVe1o';
-  channelId: string = 'CHA-p1oEblSsradmfVeyvTu3'
-  userList: Array<any> = [];
-  messageList: Array<ChannelMessage> = [];
-
-
-  /*real variables */
   activeUser = new User()
   activeUserChannels: Array<Channel> = [];
   activeUserConversationList: Array<Conversation> = [];
@@ -39,7 +31,8 @@ export class WorkspaceComponent {
   hideChannelBody: boolean = false;
 
 
-  constructor(){  
+  constructor(public dialog: MatDialog){  
+    
     this.database.getUser('simon@dummy.de').then(user =>{
       this.activeUser = user;
       this.database.loadAllUserChannels(user.userId).then(userChannels => {
@@ -58,13 +51,15 @@ export class WorkspaceComponent {
             this.database.loadUser(conversation.recipientId)
             .then(loadedUser => {
               this.usersFromActiveUserConversationList.push(loadedUser);
-              console.log('loadedUser from If-part: ' + loadedUser)
+              console.log('loadedUser from If-part:')
+              console.log(loadedUser);
             })
           }else{
             this.database.loadUser(conversation.createdBy)
             .then(loadedUser => {
               this.usersFromActiveUserConversationList.push(loadedUser);
-              console.log('loadedUser from else-part: ' + loadedUser)
+              console.log('loadedUser from else-part:');
+              console.log(loadedUser);
             })
           }
         })
@@ -72,8 +67,8 @@ export class WorkspaceComponent {
     })
 
 
-    
-  }
+
+  } //End of Constructor
 
 
   openConversation(conversationId: string){
@@ -103,5 +98,9 @@ export class WorkspaceComponent {
     else{
       this.hideConversationBody = true;
     }
+  }
+
+  openCreateChannelDialog(){
+    this.dialog.open(DialogCreateChannelComponent)
   }
 }
