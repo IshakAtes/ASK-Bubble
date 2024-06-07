@@ -1,25 +1,17 @@
 <div class="main-chat">
     <div class="main-chat-header">
         <div class="channelname">
-            <span># Entwicklerteam</span>
-            <img src="../../assets/img/keyboard_arrow_down.png" alt="">
+            <div class="main-chat-header-avatar-div">
+                <img class="avatar" src="../../assets/img/defaultAvatars/defaultMale1.png" alt="User Avatar">
+                @if(online){
+                    <div class="online-indicator"></div>
+                }@else{
+                    <div class="offline-indicator"></div>
+                }
+            </div>
+            <span>Noah Braun</span>
         </div>
 
-        <div class="member-bar">
-            <div class="memberdiscs-div">
-                <img src="../../assets/img/defaultAvatars/defaultFemale1.png" alt="">
-                <img src="../../assets/img/defaultAvatars/defaultFemale1.png" alt="">
-                <img src="../../assets/img/defaultAvatars/defaultFemale1.png" alt="">
-            </div>
-
-            <div class="membercount">
-                <span>3</span>
-            </div>
-
-
-            <img class="add-member" src="../../assets/img/add_members_button.png" alt="">
-
-        </div>
     </div>
 
     <div class="chat-area">
@@ -31,8 +23,22 @@
         </div>
 
         <div class="message">
+            <div class="reactionbar">
+                <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
+                <img src="../../assets/img/reactionbar_answer.png" alt="">
+                <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
+                <img src="../../assets/img/reactionbar_answer.png" alt="">
+            </div>
             <div>
-                <img class="avatar" src="../../assets/img/defaultAvatars/defaultMale1.png" alt="User Avatar">
+                <div class="avatar-div">
+                    <img class="avatar" src="../../assets/img/defaultAvatars/defaultMale1.png" alt="User Avatar">
+                    @if(online){
+                        <div class="online-indicator"></div>
+                    }@else{
+                        <div class="offline-indicator"></div>
+                    }
+                </div>
+
             </div>
             <div class="message-content-div">
                 <div class="message-header">
@@ -55,6 +61,14 @@
         </div>
 
         <div class="own-message">
+            <div class="own-reactionbar">
+                <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
+                <img src="../../assets/img/reactionbar_answer.png" alt="">
+                <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
+                <img src="../../assets/img/reactionbar_answer.png" alt="">
+                <img src="../../assets/img/reactionbar_edit.png" alt="">
+            </div>
+
             <div>
                 <img class="avatar" src="../../assets/img/defaultAvatars/defaultMale3.png" alt="User Avatar">
             </div>
