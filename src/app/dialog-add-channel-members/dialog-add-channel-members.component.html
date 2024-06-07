@@ -1,6 +1,6 @@
 <section>
     <div class="headline">
-        <span>Channel erstellen</span>
+        <span>Leute hinzufügen</span>
         <div class="closeSvgBg" >
             <!--close svg-->
             <svg (click)="dialogRef.close()" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -13,27 +13,24 @@
             </svg>
         </div>
     </div>
+    
+    <div class="radioButtonGroup" >
+        <div class="radioButtons">
+            <input (click)="changeUserInputVisibility('hide')" type="radio" value="team" name="addUser">
+            <input (click)="changeUserInputVisibility('show')" type="radio" value="single" name="addUser" >
+        </div>
+        <div  class="labels">
+            <span>Alle Mitglieder von OfficeTeam hinzufügen</span>
+            <span>Bestimmte Leute hinzufügen</span>
+        </div>
 
-    <div class="description">
-        <span>Channels dienen deinem Team zur Kommunikation. Am besten 
-            sollten sie themenbezogen sein  #marketing zum Beispiel.
-        </span>
     </div>
-
-    <div class="channelInput">
-        <span>Channel-Name</span>
-        <input (input)="checkContent()" placeholder="#   z.B. Kooperationsprojekte" [(ngModel)]="channelName">
+    <div class="userInput" [ngClass]="{'d-none': hidden}">
+        <input placeholder="Name eingeben">
     </div>
-
-    <div class="descriptionInput">
-        <p>Beschreibung&nbsp;<span>(optional)</span></p>
-        <input placeholder="Dein Text Hier" [(ngModel)]="description">
-    </div>
-
-
 
     <div class="btnContainer">
-        <button [ngClass]="{'disabledButton': buttonDisabled}" [disabled]="buttonDisabled" (click)="saveChannelInformation()">Erstellen</button>
+        <button>Erstellen</button>
     </div>
-    
+
 </section>

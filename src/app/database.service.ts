@@ -15,6 +15,7 @@ import { setDoc } from 'firebase/firestore';
 export class DatabaseService {
   firestore: Firestore = inject(Firestore)
   
+  channelCache: Channel;
   
   constructor() { 
     
