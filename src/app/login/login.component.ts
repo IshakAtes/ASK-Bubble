@@ -1,9 +1,9 @@
 import { CommonModule, NgStyle } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../user.service';
-import { __symbol__ } from 'zone.js/lib/zone-impl';
+import { Firestore, collection, doc, updateDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +13,7 @@ import { __symbol__ } from 'zone.js/lib/zone-impl';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
+  firestore: Firestore = inject(Firestore)
   isPressed = false;
   myForm: FormGroup;
 
@@ -24,12 +25,14 @@ export class LoginComponent {
     });
   }
 
+  
   async onSubmit() {
     const logUser = await this.us.getUser(this.myForm.value.mail, this.myForm.value.pw);
     if (this.myForm.valid && logUser) {
       try {
-        //User status online setzen nicht nur lokal sondern auch auf firebase
-        console.log(logUser);
+        this.us.userOnline(logUser.userId);
+        this.router.navigate(['/main']);
+        console.log('update', logUser);
       } catch (error) {
         console.error('Fehler beim Abrufen des Benutzers:', error);
       }
@@ -37,6 +40,7 @@ export class LoginComponent {
       console.log('Formular ist ungültig');
     }
   }
+
 
   guestLogin() {
     console.log('Gäste-Login wurde angeklickt');

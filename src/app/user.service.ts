@@ -11,10 +11,16 @@ export class UserService {
 
   constructor() { }
 
+  userOnline(id: string) {
+    const userDocRef = doc(this.firestore, "users", id);
+    updateDoc(userDocRef, {
+      status: "Online"
+    })
+  }
+
   addUser(user: User){
     addDoc(collection(this.firestore, 'users'), user.toJSON());
   }
-
 
   getUser(email: string, password: string): Promise<User> {
     return new Promise<User>((resolve, reject) => {
