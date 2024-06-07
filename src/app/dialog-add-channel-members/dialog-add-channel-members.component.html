@@ -20,17 +20,39 @@
             <input (click)="changeUserInputVisibility('show')" type="radio" value="single" name="addUser" >
         </div>
         <div  class="labels">
-            <span>Alle Mitglieder von OfficeTeam hinzufügen</span>
+            <span>Alle Mitglieder von&nbsp; <p> OfficeTeam </p>&nbsp;hinzufügen</span>
             <span>Bestimmte Leute hinzufügen</span>
         </div>
 
     </div>
-    <div class="userInput" [ngClass]="{'d-none': hidden}">
-        <input placeholder="Name eingeben">
+    <div class="userInput" [ngClass]="{'d-none': hideUserInput}">
+        <input placeholder="Name eingeben" [(ngModel)]="searchUser">
     </div>
+    
+    @if(searchUser == ''){
+
+    }
+    @else{
+        <div class="userlistContainer">
+            <div *ngFor="let user of userlist" class="userList">
+                <img src="{{user.avatarUrl}}">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
+                </svg>
+                <span>{{user.name}}</span>
+            </div>
+        </div>
+    }
 
     <div class="btnContainer">
         <button>Erstellen</button>
     </div>
 
+
+
+
+
 </section>
+
+
+

@@ -213,7 +213,7 @@ section {
                 opacity: 0px;
                 font-family: Nunito;
                 font-size: 18px;
-                font-weight: 700;
+                font-weight: 400;
                 line-height: 24.55px;
                 text-align: left;
             }
@@ -343,7 +343,7 @@ section {
         }
     }
 
-        //channelBody important because of loaded Data.
+        //conversationBody important because of loaded Data.
         .conversationBody {
             display: flex;
             flex-direction: column;
@@ -372,7 +372,6 @@ section {
                     gap: 0px;
                     border-radius: 30px;
                     opacity: 0px;
-
                 }
 
                 >svg{
@@ -392,7 +391,7 @@ section {
                     opacity: 0px;
                     font-family: Nunito;
                     font-size: 18px;
-                    font-weight: 700;
+                    font-weight: 400;
                     line-height: 24.55px;
                     text-align: left;
                 }

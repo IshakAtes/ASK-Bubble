@@ -114,9 +114,11 @@ section {
             opacity: 0px;
         }
 
-        :focus {
-            border: 1px solid #535AF1;
-        }
+
+    }
+
+    input:focus {
+        outline: none !important;
     }
 
     input:hover{
@@ -178,10 +180,10 @@ section {
             text-align: left;
             color: #686868;
         }
+    }
 
-        :focus {
-            border: 1px solid #535AF1;
-        }
+    input:focus{
+        outline: none !important;
     }
 
     input:hover{

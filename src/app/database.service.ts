@@ -230,14 +230,20 @@ export class DatabaseService {
   }
 
 
-  loadAllUsers(): Promise<Array<any>>{
-    return new Promise<Array<any>>((resolve, reject) =>{
-      const userList = [] as Array<any>
+  loadAllUsers(): Promise<Array<User>>{
+    return new Promise<Array<User>>((resolve, reject) =>{
+      const userList = [] as Array<User>
       onSnapshot(collection(this.firestore, 'users'), (users) => {
         users.forEach(user => {
           const userData = user.data();
-          userData['id'] = user.id; 
-          userList.push(userData);
+          const userObject = {} as User;
+          userObject.avatarUrl = userData['avatarUrl'];
+          userObject.email = userData['email'];
+          userObject.name = userData['name'];
+          userObject.password = userData['password'];
+          userObject.status = userData['status'];
+          userObject.userId = user.id
+          userList.push(userObject);
           resolve(userList);
         })
         }, (error) => {

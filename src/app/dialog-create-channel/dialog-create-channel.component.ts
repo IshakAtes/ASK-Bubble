@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, booleanAttribute, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { DatabaseService } from '../database.service';
 import { FormsModule } from '@angular/forms';
@@ -39,72 +39,38 @@ export class DialogCreateChannelComponent {
   }
 
   validateContent(): Promise<boolean>{
-    
     return new Promise<boolean>((resolve, reject) =>{
-      
-    
       this.database.loadAllChannels()
         .then(channelList => {
-          
-        
-          channelList.forEach(channel => {
-            //debugger;
-            let result: boolean = true;
-            if(result){
-              if(this.channelName.toLowerCase() == channel.name.toLowerCase()){
-                result = false;
-                resolve(result)
-              }
-              else if(result){
-                result = true;
-                
-              }
-              else{
-                result = true;
-                resolve(result)
-              }
+           let result = true;
+           for (let channel of channelList) {
+            if(this.channelName.toLowerCase() == channel.name.toLowerCase()){
+              result = false;
+              break;
             }
+           }
+           resolve(result);
           })
-        }),(error: any) =>{
-          reject(error)
-        }
-      
+          .catch(error =>{
+            reject(error)
+          })
     },)
-
-  
-
-
   }
   
 
   saveChannelInformation(){
     this.validateContent()
       .then(bool => {
-        debugger;
         if(bool){
-          console.log('Channel Name geht klar :)!')
+          this.channelCache = this.database.createChannel(this.activeUser, this.description, [], this.channelName)
+          const channelInfo = this.dialog.open(DialogAddChannelMembersComponent)
+          channelInfo.componentInstance.channelCache = this.database.createChannel(this.activeUser, this.description, [], this.channelName);
+          this.dialogRef.close();
         }
         else{
           console.log('Doppelter Channel Name')
-          
         }
       })
-
-    /*
-    if(this.validateContent()){
-      
-      this.channelCache = this.database.createChannel(this.activeUser, this.description, [], this.channelName)
-      const channelInfo = this.dialog.open(DialogAddChannelMembersComponent)
-      channelInfo.componentInstance.channelCache = this.database.createChannel(this.activeUser, this.description, [], this.channelName);
-      this.dialogRef.close();
-     
-      //
-    }
-    else{
-      
-    }
-    */
-
   }
 
 }
