@@ -42,6 +42,11 @@ export class LoginComponent {
   }
 
 
+  googleAuthentification() {
+    console.log('Google wurde angeklickt');
+  }
+
+
   guestLogin() {
     console.log('Gäste-Login wurde angeklickt');
     // Hier kannst du weitere Logik für Gäste-Login hinzufügen, z.B. Routing
