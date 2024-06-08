@@ -9,17 +9,19 @@ import { DialogChooseAvatarComponent } from './dialog-choose-avatar/dialog-choos
 import { ThreadComponent } from './thread/thread.component';
 import { WorkspaceComponent } from './workspace/workspace.component';
 import { MainComponent } from './main/main.component';
+import { DialogPasswordResetComponent } from './dialog-password-reset/dialog-password-reset.component';
 
 
 export const routes: Routes = [
     { path: '', component: LoginComponent },
     { path: 'chat', component: ChatComponent },
-    { path: 'workspace', component: WorkspaceComponent},
-    { path: 'channel', component: ChannelComponent},
-    { path: 'imprint', component: ImprintComponent},
-    { path: 'privacyPolicy', component: PrivacyPolicyComponent},
-    { path: 'signUp', component: SignUpComponent},
-    { path: 'choosingAvatar', component: DialogChooseAvatarComponent},
-    { path: 'thread', component: ThreadComponent},
-    { path: 'main', component: MainComponent},
+    { path: 'workspace', component: WorkspaceComponent },
+    { path: 'channel', component: ChannelComponent },
+    { path: 'imprint', component: ImprintComponent },
+    { path: 'privacyPolicy', component: PrivacyPolicyComponent },
+    { path: 'signUp', component: SignUpComponent },
+    { path: 'choosingAvatar', component: DialogChooseAvatarComponent },
+    { path: 'thread', component: ThreadComponent },
+    { path: 'main', component: MainComponent },
+    { path: 'forgotPassword', component: DialogPasswordResetComponent },
 ];
