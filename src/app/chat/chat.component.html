@@ -98,13 +98,21 @@
     </div> -->
 
     <div class="message-container">
+        @if (showEmoticons) {
+            <div class="emoticon-div">
+                @for (emoji of emoticons; track $index) {
+                    <img src="../../assets/img/emoticons/{{emoji}}" alt="">
+                }
+            </div>
+        }
+        
         <textarea class="message-input" placeholder="Nachricht an #Entwicklerteam"></textarea>
         <div class="message-actions">
 
             <div class="action-left">
                 <button class="action-button"> <img src="../../assets/img/add_icon.png" alt=""></button>
                 <div class="line"></div>
-                <button class="action-button"><img src="../../assets/img/emoticon_icon.png" alt=""></button>
+                <button (click)="toggleEmoticons()" class="action-button"><img src="../../assets/img/emoticon_icon.png" alt=""></button>
                 <button class="action-button"><img src="../../assets/img/mention_icon.png" alt=""></button>
             </div>
 
@@ -114,3 +122,4 @@
         </div>
     </div>
 </div>
+

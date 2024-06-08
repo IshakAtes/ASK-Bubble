@@ -297,6 +297,7 @@
 
 
 .message-container {
+    position: relative;
     display: flex;
     flex-direction: column;
     background-color: #fff;
@@ -325,6 +326,15 @@
 .action-left {
     display: flex;
     gap: 10px;
+
+
+    button {
+        border-radius: 50px;
+
+        &:hover {
+            background: #ECEEFE;
+        }
+    }
 }
 
 .action-button {
@@ -344,6 +354,30 @@
 
 .line {
     border: 1px solid #ADB0D9
+}
+
+
+.emoticon-div {
+    position: absolute;
+    width: 250px;
+    background-color: white;
+    padding: 12px;
+    border-radius: 20px;
+    border: 1px solid #ADB0D9;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    bottom: 185px;
+
+    img {
+        height: 24px;
+        width: 24px;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
 }
 
 
