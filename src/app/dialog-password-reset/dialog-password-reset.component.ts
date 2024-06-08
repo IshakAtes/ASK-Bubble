@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-dialog-password-reset',
@@ -13,7 +14,16 @@ import { Router, RouterLink } from '@angular/router';
 export class DialogPasswordResetComponent {
   myForm: FormGroup;
 
-  constructor(private router: Router) {}
+  constructor(private formBuilder: FormBuilder, private router: Router, private us: UserService) {
+    this.myForm = this.formBuilder.group({
+      mail: ['', [Validators.required, Validators.email]],
+    });
+  }
+
+  sendResetLink() {
+    console.log(this.myForm.value.mail);
+    console.log(this.us);
+  }
 
   onSubmit() {}
 
