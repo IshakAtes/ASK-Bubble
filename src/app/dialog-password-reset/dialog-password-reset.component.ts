@@ -20,11 +20,10 @@ export class DialogPasswordResetComponent {
     });
   }
 
-  sendResetLink() {
-    console.log(this.myForm.value.mail);
-    console.log(this.us);
-  }
 
-  onSubmit() {}
+  onSubmit() {
+    // this.us.findUser(this.myForm.value.mail);
+    this.us.checkEmail(this.myForm.value.mail);
+  }
 
 }

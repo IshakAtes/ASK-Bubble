@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { User } from '../models/user.class';
 import { Firestore, collection, addDoc, updateDoc, doc, onSnapshot } from '@angular/fire/firestore';
+import { getDocs, query, where } from "firebase/firestore";
 
 @Injectable({
   providedIn: 'root'
@@ -8,8 +9,43 @@ import { Firestore, collection, addDoc, updateDoc, doc, onSnapshot } from '@angu
 export class UserService {
   firestore: Firestore = inject(Firestore)
   userCache: any;
+  mailUser: any;
 
   constructor() { }
+
+
+  // findUser(email: string) {
+  //   const q = query(collection(this.firestore, "users"), where("email", "==", email));
+  //   const unsubscribe = onSnapshot(q, (querySnapshot) => {
+  //     querySnapshot.forEach((doc) => {
+  //       console.log('leer', querySnapshot.empty);
+  //       if (doc == undefined) {
+  //         console.log('undefined ist gut');
+  //       } else {
+  //         // users.push(doc.data().name);
+  //         console.log('doc', doc.data());
+  //       }
+  //     });
+  //   });
+  // }
+
+  async checkEmail(email: string): Promise<void> {
+    try {
+      const q = query(collection(this.firestore, 'users'), where('email', '==', email));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        console.log('Kein Dokument mit der angegebenen E-Mail-Adresse gefunden');
+      } else {
+        querySnapshot.forEach((doc) => {
+          console.log('E-Mail gefunden:', doc.data()['email']);
+        });
+      }
+    } catch (error) {
+      console.error('Fehler beim Abrufen der Dokumente:', error);
+    }
+  }
+
 
   userOnline(id: string) {
     const userDocRef = doc(this.firestore, "users", id);
