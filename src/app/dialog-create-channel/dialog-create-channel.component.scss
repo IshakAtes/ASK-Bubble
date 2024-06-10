@@ -76,6 +76,8 @@ section {
     height: 105px;
     gap: 20px;
     opacity: 0px;
+
+    
     >span {
         display: flex;
         width: fit-content;
@@ -113,8 +115,6 @@ section {
             gap: 0px;
             opacity: 0px;
         }
-
-
     }
 
     input:focus {
@@ -123,6 +123,18 @@ section {
 
     input:hover{
         border: 1px solid #535AF1;
+    }
+
+    >label {
+        font-family: Nunito;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 24.55px;
+        text-align: left;
+        color: red;
+        position: relative;
+        bottom: 18px;
+        left: 24px;
     }
 }
 

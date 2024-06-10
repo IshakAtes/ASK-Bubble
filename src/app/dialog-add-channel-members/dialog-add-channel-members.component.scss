@@ -115,8 +115,9 @@ section {
     display: flex;
     flex-direction: column;
     position: absolute;
-    top: 234px;
-    left: 70px;
+    top: 240px;
+    left: 100px;
+    z-index: 99;
 
     padding: 40px;
     gap: 20px;
@@ -125,52 +126,55 @@ section {
     border: 1px solid #535AF1;
     overflow: auto;
     background-color: #FFFFFF;
-    
-    
-
-    .userList {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        width: fit-content;
-        padding: 0px 15px 0px 15px;
-       
-        >img{
-            width: 50px;
-            height: 50px;
-            gap: 0px;
-            border-radius: 30px;
-            opacity: 0px;
-        }
-       
-        >svg{
+        .userList {
             display: flex;
-            position: relative;
-            right: 15px;
-            top: 18px;
-        }
-
-        span {
-            display: flex;
-            position: relative;
+            align-items: center;
+            cursor: pointer;
             width: fit-content;
-            height: 25px;
-            gap: 0px;
-            opacity: 0px;
-            font-family: Nunito;
-            font-size: 18px;
-            font-weight: 400;
-            line-height: 24.55px;
-            text-align: left;
+            padding: 0px 15px 0px 15px;
            
+
+            >div {
+                display: flex;
+                align-items: center;
+
+                >img{
+                    width: 50px;
+                    height: 50px;
+                    gap: 0px;
+                    border-radius: 30px;
+                    opacity: 0px;
+                }
+               
+                >svg{
+                    display: flex;
+                    position: relative;
+                    right: 15px;
+                    top: 18px;
+                }
+        
+                span {
+                    display: flex;
+                    position: relative;
+                    width: fit-content;
+                    height: 25px;
+                    gap: 0px;
+                    opacity: 0px;
+                    font-family: Nunito;
+                    font-size: 18px;
+                    font-weight: 400;
+                    line-height: 24.55px;
+                    text-align: left;
+                   
+                }
+            }
+
         }
-    }
-
-    .userList:hover {
-        background-color: #ECEEFE;
-        border-radius: 20px;
-    }
-
+    
+        .userList:hover {
+            background-color: #ECEEFE;
+            border-radius: 20px;
+        }
 }
 
 .userlistContainer::-webkit-scrollbar {
@@ -182,42 +186,138 @@ section {
     flex-direction: column;
     width: 792px;
     gap: 20px;
+    
+    opacity: 0px;
+    
+    display: flex;
+    width: 792px;
     height: 65px;
-    opacity: 0px; 
-    >input {
-        display: flex;
-        width: 792px;
-        height: 65px;
-        padding: 20px;
-        gap: 30px;
-        border-radius: 30px;
-        border: 1px;
-        opacity: 0px;
-        border: 1px solid #ADB0D9;
-        cursor: pointer;
+    padding: 0px 20px 0px 20px;
+    gap: 30px;
+    border-radius: 30px;
+    border: 1px;
+    opacity: 0px;
+    border: 1px solid #ADB0D9;
+    cursor: pointer;
 
-        ::placeholder {
+    .inputWrapper {
+        display: flex;
+        height: 65px;
+        
+        .selectedList {
             display: flex;
-            width: 752px;
-            height: 25px;
-            gap: 20px;
-            opacity: 0px;
+            align-items: center;
+            padding: 0px 15px 0px 15px;
+
+            .selectedUser{
+                display: flex;
+                align-items: center;
+                background-color: #ECEEFE;
+                border-radius: 20px;
+                width: fit-content;
+                position: relative;
+                right: 20px;
+                margin-right: 10px;
+                  
+                        
+                >img{
+                    width: 50px !important;
+                    height: 50px !important;
+                    gap: 0px;
+                    border-radius: 30px;
+                    opacity: 0px;
+                }
+
+                >svg{
+                    display: flex;
+                    position: relative;
+                    right: 15px;
+                    top: 18px;
+                }
+                
+                .close{
+                    display: flex;
+                    position: relative;
+                    right: 0px !important;
+                    top: 0px !important;
+                    svg:hover {
+                        path {
+                            fill: #535AF1;
+                        }
+                        cursor: pointer;
+                    }
+                }
+
+        
+                span {
+                    display: flex;
+                    position: relative;
+                    width: fit-content;
+                    height: 25px;
+                    gap: 0px;
+                    opacity: 0px;
+                    font-family: Nunito;
+                    font-size: 18px;
+                    font-weight: 400;
+                    line-height: 24.55px;
+                    text-align: left;
+                   
+                }
+            }
+        }
+    
+    
+        >input {
+            display: flex;
+            width: 792px;
+            height: 62px;
+            padding: 0px 20px 0px 20px;
+            gap: 30px;
+            border: none;
+            position: relative;
+            top: 1px;
+            right: 30px;
+
+
             font-family: Nunito;
             font-size: 18px;
             font-weight: 400;
             line-height: 24.55px;
             text-align: left;
-            color: #686868;
+    
+            cursor: pointer;
+            ::placeholder {
+                display: flex;
+                width: 752px;
+                height: 25px;
+                gap: 20px;
+                opacity: 0px;
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 400;
+                line-height: 24.55px;
+                text-align: left;
+                color: #686868;
+            }
+        }
+    
+        input:focus{
+            outline: none !important;
         }
     }
 
-    input:focus{
-        outline: none !important;
+    >label {
+        font-family: Nunito;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 24.55px;
+        text-align: left;
+        color: red;
+        position: relative;
+        bottom: 18px;
+        left: 24px;
     }
-    
-    input:hover{
-        border: 1px solid #535AF1;
-    }
+
 }
 
 
@@ -249,4 +349,14 @@ section {
     button:hover {
         background-color: #797EF3;
     }
+}
+
+
+.mat-mdc-dialog-container {
+    --mdc-dialog-container-shape: 30px;
+}
+  
+.mdc-dialog__surface {
+    overflow-y: visible !important;
+  
 }

@@ -23,6 +23,7 @@
     <div class="channelInput">
         <span>Channel-Name</span>
         <input (input)="checkContent()" placeholder="#   z.B. Kooperationsprojekte" [(ngModel)]="channelName">
+        <label #errorMsg></label>
     </div>
 
     <div class="descriptionInput">

@@ -1,12 +1,9 @@
 import { Component, inject } from '@angular/core';
-import { Firestore, collection, addDoc, updateDoc, doc, onSnapshot } from '@angular/fire/firestore';
+import { Firestore} from '@angular/fire/firestore';
 import { DatabaseService } from '../database.service';
 import { User } from '../../models/user.class';
 import { Channel } from '../../models/channel.class';
 import { Conversation } from '../../models/conversation.class';
-import { ChannelMessage } from '../../models/channelMessage.class';
-import { Reaction } from '../../models/reactions.class';
-import { ConversationMessage } from '../../models/conversationMessage.class';
 import { CommonModule } from '@angular/common';
 import {MatDialog} from '@angular/material/dialog';
 import { DialogCreateChannelComponent } from '../dialog-create-channel/dialog-create-channel.component';
@@ -46,28 +43,21 @@ export class WorkspaceComponent {
       .then(userConversations => {
         this.activeUserConversationList = userConversations;
         userConversations.forEach(conversation =>{
-          console.log('createdBy: ' + conversation.createdBy + ' recipientId ' + conversation.recipientId + ' userId: ' + user.userId)
           if(conversation.createdBy == user.userId){
             this.database.loadUser(conversation.recipientId)
             .then(loadedUser => {
               this.usersFromActiveUserConversationList.push(loadedUser);
-              console.log('loadedUser from If-part:')
-              console.log(loadedUser);
             })
           }else{
             this.database.loadUser(conversation.createdBy)
             .then(loadedUser => {
               this.usersFromActiveUserConversationList.push(loadedUser);
-              console.log('loadedUser from else-part:');
-              console.log(loadedUser);
             })
           }
         })
       });
     })
-
-
-
+    
   } //End of Constructor
 
 

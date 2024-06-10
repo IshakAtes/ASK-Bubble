@@ -16,6 +16,8 @@ export class DatabaseService {
   firestore: Firestore = inject(Firestore)
   
   channelCache: Channel;
+
+  testvariable: string;
   
   constructor() { 
     

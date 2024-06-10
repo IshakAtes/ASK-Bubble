@@ -1,5 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MainComponent } from '../main/main.component';
+import { Channel } from '../../models/channel.class';
 
 @Component({
   selector: 'app-channel',
@@ -10,5 +12,8 @@ import { CommonModule } from '@angular/common';
 })
 export class ChannelComponent {
 
+  @Input() channel: Channel
+  @Input() channelName: string = ''
+ 
   
 }

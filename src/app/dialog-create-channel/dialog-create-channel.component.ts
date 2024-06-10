@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject } from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { DatabaseService } from '../database.service';
 import { FormsModule } from '@angular/forms';
@@ -22,7 +22,7 @@ export class DialogCreateChannelComponent {
   channelCache: Channel;
 
   buttonDisabled: boolean = true;
-  
+  @ViewChild('errorMsg') errorMessage: ElementRef
   
 
   constructor(public dialogRef: MatDialogRef<DialogCreateChannelComponent>, public dialog: MatDialog){
@@ -68,7 +68,7 @@ export class DialogCreateChannelComponent {
           this.dialogRef.close();
         }
         else{
-          console.log('Doppelter Channel Name')
+          this.errorMessage.nativeElement.innerHTML = 'Channel-Name existiert bereits'
         }
       })
   }

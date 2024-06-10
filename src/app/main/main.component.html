@@ -1,5 +1,17 @@
 <section>
     <app-workspace></app-workspace>
-    <app-channel></app-channel>
+    @if(chat){
+        <app-chat></app-chat>
+    }
+    @else {
+        <app-channel
+        channelName="Hello World"
+        ></app-channel>
+    }
+    
+
+
+  
+    
 </section>
 
