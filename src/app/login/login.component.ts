@@ -19,6 +19,7 @@ export class LoginComponent {
 
   constructor(private fb: FormBuilder, private router: Router, public us: UserService) {
     console.log(this.us.loadAllUsers());
+    this.us.wrongLogin = false;
     this.myForm = this.fb.group({
       pw: ['', [Validators.required, Validators.minLength(5)]],
       mail: ['', [Validators.required, Validators.email]],

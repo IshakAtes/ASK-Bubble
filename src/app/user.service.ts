@@ -10,7 +10,7 @@ export class UserService {
   loggedUser: User;
   firestore: Firestore = inject(Firestore)
   userCache: any;
-  wrongLogin: boolean;
+  wrongLogin: boolean = false;
   // mailUser: any;
 
   activeUser: User;
