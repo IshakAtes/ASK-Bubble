@@ -7,9 +7,11 @@ import { getDocs, query, where } from "firebase/firestore";
   providedIn: 'root'
 })
 export class UserService {
+  loggedUser: User;
   firestore: Firestore = inject(Firestore)
   userCache: any;
-  mailUser: any;
+  wrongLogin: boolean;
+  // mailUser: any;
 
   activeUser: User;
 
@@ -37,7 +39,7 @@ export class UserService {
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.empty) {
-        console.log('Kein Dokument mit der angegebenen E-Mail-Adresse gefunden');
+        alert('Kein User mit der angegebenen E-Mail-Adresse gefunden');
       } else {
         querySnapshot.forEach((doc) => {
           console.log('E-Mail gefunden:', doc.data()['email']);
@@ -53,20 +55,21 @@ export class UserService {
     const userDocRef = doc(this.firestore, "users", id);
     updateDoc(userDocRef, {
       status: "Online"
-    })
+    });
   }
 
   addUser(user: User){
     addDoc(collection(this.firestore, 'users'), user.toJSON());
   }
 
+  
   getUser(email: string, password: string): Promise<User> {
     return new Promise<User>((resolve, reject) => {
       const activeUser = {} as User;
       const usersCollection = collection(this.firestore, 'users');
+      this.wrongLogin = false;
       
       onSnapshot(usersCollection, (users) => {
-        let userFound = false;
         users.forEach(user => {
           const userData = user.data();
           if (userData['email'] === email && userData['password'] === password) {
@@ -76,13 +79,12 @@ export class UserService {
             activeUser.status = userData['status'];
             activeUser.avatarUrl = userData['avatarUrl'];
             activeUser.userId = user.id;
-            userFound = true;
             resolve(activeUser);
           }
+          else if(userData['email'] !== email || userData['password'] !== password) {
+            this.wrongLogin = true;
+          }
         });
-        if (!userFound) {
-          reject('Benutzer nicht gefunden oder falsche Anmeldedaten');
-        }
       }, (error) => {
         reject(error);
       });

@@ -27,12 +27,14 @@ export class LoginComponent {
 
   
   async onSubmit() {
-    const logUser = await this.us.getUser(this.myForm.value.mail, this.myForm.value.pw);
-    if (this.myForm.valid && logUser) {
+    console.log('anmelden', this.myForm.value);
+    const acceptedUser = await this.us.getUser(this.myForm.value.mail, this.myForm.value.pw);
+    if (this.myForm.valid && acceptedUser) {
       try {
-        this.us.userOnline(logUser.userId);
+        this.us.loggedUser = acceptedUser;
+        this.us.userOnline(this.us.loggedUser.userId);
         this.router.navigate(['/main']);
-        console.log('update', logUser);
+        console.log(this.us.loggedUser);
       } catch (error) {
         console.error('Fehler beim Abrufen des Benutzers:', error);
       }
