@@ -479,7 +479,7 @@ export class DatabaseService {
   }
 
   
-  loadAllConversationMessages(){
+  loadAllConversationMessages():Promise<Array<ConversationMessage>>{
     return new Promise<Array<ConversationMessage>>((resolve, reject) =>{
       const messageList = [] as Array<ConversationMessage>
       onSnapshot(collection(this.firestore, 'users'), (users) => {
