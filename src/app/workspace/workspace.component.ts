@@ -7,6 +7,7 @@ import { Conversation } from '../../models/conversation.class';
 import { CommonModule } from '@angular/common';
 import {MatDialog} from '@angular/material/dialog';
 import { DialogCreateChannelComponent } from '../dialog-create-channel/dialog-create-channel.component';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-workspace',
@@ -18,6 +19,7 @@ import { DialogCreateChannelComponent } from '../dialog-create-channel/dialog-cr
 export class WorkspaceComponent {
   firestore: Firestore = inject(Firestore);
   database = inject(DatabaseService);
+  userService = inject(UserService);
   
   activeUser = new User()
   activeUserChannels: Array<Channel> = [];
@@ -26,6 +28,7 @@ export class WorkspaceComponent {
 
   hideConversationBody: boolean = false;
   hideChannelBody: boolean = false;
+
 
 
   constructor(public dialog: MatDialog){  

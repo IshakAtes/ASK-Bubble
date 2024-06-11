@@ -7,12 +7,17 @@
 }
 
 .main-chat-header {
-    height: 96px;
+    //height: 96px;
     padding: 25px 45px 25px 45px;
     gap: 0px;
     display: flex;
     justify-content: space-between;
     box-shadow: 0px 2px 10px 0px #00000014;
+
+    img {
+        width: 40px;
+        height: 40px;
+    }
 }
 
 .channelname {
@@ -25,17 +30,33 @@
         font-weight: 700;
         line-height: 32.74px;
     }
+}
 
-    img {
-        width: 30px;
-        height: 30.19px;
-    }
+.channelname:hover {
+    background-color: #ECEEFE;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+
+
+.member-bar-wrapper {
+    display: flex;
+    align-items: center;
 }
 
 .member-bar {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
+    margin-right: 20px;
+    
+}
+
+.member-bar:hover {
+    cursor: pointer;
+    background-color: #ECEEFE;
+    border-radius: 20px;
 }
 
 .membercount {
@@ -60,6 +81,17 @@
         border: 2px solid #FFFFFF
     }
 }
+
+.add-member {
+    >svg:hover {
+        path {
+            fill: #535AF1;
+            scale: 1.05;
+        }
+        cursor: pointer;
+    }
+}
+
 
 .chat-area {
     max-height: 40vh;
@@ -197,17 +229,6 @@
     gap: 20px;
 }
 
-// .input-div {
-//     padding: 25px 45px 25px 45px;
-// }
-
-// .input {
-//     width: calc(100% - 45px);
-//     height: 145px;
-//     padding: 20px;
-//     border-radius: 20px;
-//     border: 1px solid #ADB0D9
-// }
 
 
 .message-container {
@@ -261,6 +282,9 @@
 .line{
     border: 1px solid #ADB0D9
 }
+
+
+
 
 
 // Scrollbar

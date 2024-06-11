@@ -11,6 +11,8 @@ export class UserService {
   userCache: any;
   mailUser: any;
 
+  activeUser: User;
+
   constructor() { }
 
 

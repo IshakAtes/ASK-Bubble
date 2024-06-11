@@ -29,7 +29,7 @@ export class DialogAddChannelMembersComponent {
   userlist: Array<User> = [];
   foundUserList: Array<User> = [];
   selectedUserList: Array<User> = [];
-  memberIdList: Array<string> = [];
+ 
 
 
   @ViewChild('errorMsg') errorMessage: ElementRef
