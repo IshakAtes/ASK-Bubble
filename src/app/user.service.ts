@@ -11,9 +11,9 @@ export class UserService {
   firestore: Firestore = inject(Firestore)
   userCache: any;
   wrongLogin: boolean = false;
+  resetUserPw: any;
   // mailUser: any;
 
-  activeUser: User;
 
   constructor() { }
 
@@ -33,22 +33,6 @@ export class UserService {
   //   });
   // }
 
-  async checkEmail(email: string): Promise<void> {
-    try {
-      const q = query(collection(this.firestore, 'users'), where('email', '==', email));
-      const querySnapshot = await getDocs(q);
-
-      if (querySnapshot.empty) {
-        alert('Kein User mit der angegebenen E-Mail-Adresse gefunden');
-      } else {
-        querySnapshot.forEach((doc) => {
-          console.log('E-Mail gefunden:', doc.data()['email']);
-        });
-      }
-    } catch (error) {
-      console.error('Fehler beim Abrufen der Dokumente:', error);
-    }
-  }
 
 
   userOnline(id: string) {
