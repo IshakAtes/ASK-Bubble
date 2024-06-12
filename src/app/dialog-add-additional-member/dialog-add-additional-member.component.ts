@@ -17,6 +17,9 @@ export class DialogAddAdditionalMemberComponent {
   
   //From dialog-add-channel-members.ts because of adding members to channel
   currentChannel: Channel;
+  activeUser: string = 'p1oEblSsradmfVeyvTu3'
+
+  newChannel: Channel;
  
   database = inject(DatabaseService)
  
@@ -33,12 +36,34 @@ export class DialogAddAdditionalMemberComponent {
   @ViewChild('errorMsg') errorMessage: ElementRef 
   
   constructor(public dialogRef: MatDialogRef<DialogAddAdditionalMemberComponent>, public dialog: MatDialog){
-    this.database.loadAllUsers().then(allUsers =>{
-      this.userlist = allUsers
-    })
+    this.setUserlist();
   }
 
 
+  setUserlist(){
+    
+    setTimeout(() => {
+      this.database.loadAllUsers().then(allUsers =>{
+        allUsers.forEach(member => {
+          this.database.loadUser(member.userId)
+            .then(user =>{
+              this.userlist.push(user)
+            })
+        })
+      })
+    }, 100);
+
+
+    setTimeout(() => {
+      this.currentChannel.membersId.forEach(memberid => {
+        this.userlist.forEach(user => {
+          if(memberid == user.userId){
+            this.userlist.splice(this.userlist.indexOf(user), 1)
+          }
+        })
+      })
+    }, 150);
+  }
 
 
   selectUser(user: User){
@@ -73,9 +98,6 @@ export class DialogAddAdditionalMemberComponent {
   }
 
 
-
-
-
   changeUserContainerVisibility(){
     if(this.hideUserContainer){
       this.hideUserContainer = false;
@@ -98,5 +120,43 @@ export class DialogAddAdditionalMemberComponent {
 
   showFilteredUser(){
     this.foundUserList = this.userlist.filter((user) => user.name.toLowerCase().startsWith(this.searchUser));
+  }
+
+
+  addNewMembers(){
+    if(this.selectedUserList.length == 0){
+      this.errorMessage.nativeElement.innerHTML = 'Bitte wählen Sie weitere Nutzer aus';
+    }
+    else{
+      this.newChannel = new Channel(this.currentChannel);
+      
+
+      console.log('add selection to DB');
+
+      this.addChannelToNewMembers();
+      this.updateChannel();
+      this.dialogRef.close();
+      
+    }
+  }
+
+  addChannelToNewMembers(){
+    this.newChannel.membersId = [];
+    this.selectedUserList.forEach(user =>{
+      this.newChannel.membersId.push(user.userId)
+    })
+    console.log('New channel filled with new Users')
+    console.log(this.newChannel)
+    this.database.addChannel(this.newChannel);
+  }
+
+  updateChannel(){
+    this.selectedUserList.forEach(user => {
+      this.currentChannel.membersId.push(user.userId)
+    })
+    console.log('updated channel filled with all users')
+    console.log(this.currentChannel)
+    this.database.updateChannelMembers(new Channel(this.currentChannel));
+    this.setUserlist();
   }
 }

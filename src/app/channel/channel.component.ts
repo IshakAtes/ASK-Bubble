@@ -32,7 +32,6 @@ export class ChannelComponent {
 
   constructor(public dialog: MatDialog){
     setTimeout(() => {
-      console.log(this.channel)
       this.channel.membersId.forEach(member => {
         this.database.loadUser(member)
           .then(user => {
@@ -46,12 +45,14 @@ export class ChannelComponent {
         })
     }, 500);
 
+    /*
     setTimeout(() => {
       console.log('MemberList');
       console.log(this.memberList);
       console.log('MessageList');
       console.log(this.messageList);
     }, 2000);
+    */
   }
 
   showAddMember(){

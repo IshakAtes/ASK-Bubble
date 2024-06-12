@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, updateDoc, doc, onSnapshot } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, onSnapshot } from '@angular/fire/firestore';
 import { User } from '../models/user.class';
 import { Channel } from '../models/channel.class';
 import { Conversation } from '../models/conversation.class';
@@ -8,6 +8,7 @@ import { ChannelMessage } from '../models/channelMessage.class';
 import { Reaction } from '../models/reactions.class';
 import { ConversationMessage } from '../models/conversationMessage.class';
 import { setDoc } from 'firebase/firestore';
+import { updateDoc, doc } from 'firebase/firestore'; // Korrigiert den Importpfad
 
 @Injectable({
   providedIn: 'root'
@@ -118,9 +119,9 @@ export class DatabaseService {
     return reaction
   }
 
+
+
   /*create database entry functions */
-
-
   addUser(user: User){
     addDoc(collection(this.firestore, 'users'), user.toJSON());
   }
@@ -128,7 +129,7 @@ export class DatabaseService {
 
   addChannel(channel: Channel){
     channel.membersId.forEach(userId => {
-      setDoc(doc(this.firestore, 'users/' + userId + '/channels', channel.channelId), channel);
+      setDoc(doc(this.firestore, 'users/' + userId + '/channels', channel.channelId), channel.toJSON());
     });
   }
 
@@ -171,7 +172,7 @@ export class DatabaseService {
 
   
   addConversationMessageThread(){
-    
+
   }
 
 
@@ -183,6 +184,17 @@ export class DatabaseService {
     setDoc(doc(this.firestore, 'users/' + conversation.recipientId + '/conversations/' 
     + conversation.conversationId + '/conversationmessages/' + conversationMessage.messageId + '/reactions', reaction.reactionId), reaction.toJSON());
   }
+
+
+
+  /*update functions */
+  updateChannelMembers(channel: Channel){
+    channel.membersId.forEach(user => {
+      updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/'), channel.channelId), channel.toJSON());
+    })
+  }
+
+
 
 
   /*read functions */
@@ -558,6 +570,8 @@ export class DatabaseService {
       })
     })
   }
+
+
 
 
   //Folgende ID´s müssen aus dem HTML abgerufen werden?

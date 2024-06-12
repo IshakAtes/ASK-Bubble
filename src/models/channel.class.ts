@@ -11,7 +11,7 @@ export class Channel {
         this.createdAt = obj ? obj.createdAt : '';
         this.createdBy = obj ? obj.createdBy : '';
         this.description = obj ? obj.description : '';
-        this.membersId = obj ? obj.members : '';
+        this.membersId = obj ? obj.membersId : [];
         this.name = obj ? obj.name : '';
         this.channelId = obj ? obj.channelId : '';
     }
@@ -26,7 +26,4 @@ export class Channel {
             channelId: this.channelId,
         }
     }
-
-   
-
 }

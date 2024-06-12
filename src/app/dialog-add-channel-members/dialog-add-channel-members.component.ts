@@ -23,7 +23,7 @@ export class DialogAddChannelMembersComponent {
   hideUserInput: boolean = true;
   hideUserContainer: boolean = true;
   inputFocused: boolean =  false;
-  
+  activeUser: string = 'p1oEblSsradmfVeyvTu3'
   searchUser: string = '';
   
   userlist: Array<User> = [];
@@ -40,6 +40,11 @@ export class DialogAddChannelMembersComponent {
   constructor(public dialogRef: MatDialogRef<DialogAddChannelMembersComponent>, public dialog: MatDialog){
     this.database.loadAllUsers().then(allUsers =>{
       this.userlist = allUsers
+      this.userlist.forEach(user => {
+        if(user.userId == this.activeUser){
+          this.userlist.splice(this.userlist.indexOf(user), 1);
+        }
+      })
     })
   }
 
@@ -93,6 +98,7 @@ export class DialogAddChannelMembersComponent {
             this.selectedUserList.forEach(user => {
               this.memberIdList.push(user.userId)
             })
+            this.memberIdList.push(activeUser)
             this.database.addChannel(this.database.createChannel(this.channelCache.createdBy, this.channelCache.description, this.memberIdList, this.channelCache.name))
           */
       }
@@ -134,5 +140,7 @@ export class DialogAddChannelMembersComponent {
       this.inputFocused = true;
     }
   }
+
+
 
 }
