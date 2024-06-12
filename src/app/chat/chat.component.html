@@ -4,9 +4,9 @@
             <div class="main-chat-header-avatar-div">
                 <img class="avatar" src="../../assets/img/defaultAvatars/defaultMale1.png" alt="User Avatar">
                 @if(online){
-                    <div class="online-indicator"></div>
+                <div class="online-indicator"></div>
                 }@else{
-                    <div class="offline-indicator"></div>
+                <div class="offline-indicator"></div>
                 }
             </div>
             <span>Noah Braun</span>
@@ -18,47 +18,16 @@
         <div class="time-separator">
             <div class="date">
                 <span>Dienstag, 14 Januar</span>
+                <!-- <span>{{list[0].createdAt}}</span> -->
             </div>
             <div class="line"></div>
         </div>
 
-        <div class="message">
-            <div class="reactionbar">
-                <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
-                <img src="../../assets/img/reactionbar_answer.png" alt="">
-                <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
-                <img src="../../assets/img/reactionbar_answer.png" alt="">
-            </div>
-            <div>
-                <div class="avatar-div">
-                    <img class="avatar" src="../../assets/img/defaultAvatars/defaultMale1.png" alt="User Avatar">
-                    @if(online){
-                        <div class="online-indicator"></div>
-                    }@else{
-                        <div class="offline-indicator"></div>
-                    }
-                </div>
+        @for (message of list; track $index) {
+        @if (message.createdBy == userId) {
+        @for (user of allUsers; track $index) {
+        @if (message.createdBy == user.userId) {
 
-            </div>
-            <div class="message-content-div">
-                <div class="message-header">
-                    <span class="message-header-userName">Noah Braun</span>
-                    <span class="message-header-timestamp">14:25 Uhr</span>
-                </div>
-
-                <div class="massage-content-bubble">
-                    <span class="massage-content">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quam, illum
-                        excepturi eaque voluptate soluta laboriosam ratione voluptates, odit exercitationem voluptatibus
-                        ipsum debitis omnis totam sunt suscipit. Voluptatibus doloribus delectus facilis?</span>
-                </div>
-
-                <div class="answer-bar">
-                    <span class="answer-count">2 Antworten</span>
-                    <span class="last-answer">Letzte Antwort 14:56</span>
-
-                </div>
-            </div>
-        </div>
 
         <div class="own-message">
             <div class="own-reactionbar">
@@ -70,18 +39,16 @@
             </div>
 
             <div>
-                <img class="avatar" src="../../assets/img/defaultAvatars/defaultMale3.png" alt="User Avatar">
+                <img class="avatar" src="{{user.avatarUrl}}" alt="User Avatar">
             </div>
             <div class="message-content-div">
                 <div class="own-message-header">
-                    <span class="message-header-userName">Frederik Beck</span>
-                    <span class="message-header-timestamp">14:25 Uhr</span>
+                    <span class="message-header-userName">{{user.name}}</span>
+                    <span class="message-header-timestamp">{{formatTime(message.createdAt)}}</span>
                 </div>
 
                 <div class="own-massage-content-bubble">
-                    <span class="massage-content">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quam, illum
-                        excepturi eaque voluptate soluta laboriosam ratione voluptates, odit exercitationem voluptatibus
-                        ipsum debitis omnis totam sunt suscipit. Voluptatibus doloribus delectus facilis?</span>
+                    <span class="massage-content">{{message.content}}</span>
                 </div>
 
                 <div class="own-answer-bar">
@@ -91,6 +58,54 @@
                 </div>
             </div>
         </div>
+        }
+        }
+        }
+        @else {
+        @for (user of allUsers; track $index) {
+        @if (message.createdBy == user.userId) {
+        <div class="message">
+            <div class="reactionbar">
+                <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
+                <img src="../../assets/img/reactionbar_answer.png" alt="">
+                <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
+                <img src="../../assets/img/reactionbar_answer.png" alt="">
+            </div>
+            <div>
+                <div class="avatar-div">
+                    <img class="avatar" src="{{user.avatarUrl}}" alt="User Avatar">
+                    @if(user.status == 'online'){
+                    <div class="online-indicator"></div>
+                    }@else{
+                    <div class="offline-indicator"></div>
+                    }
+                </div>
+
+            </div>
+            <div class="message-content-div">
+                <div class="message-header">
+                    <span class="message-header-userName">{{user.name}}</span>
+                    <span class="message-header-timestamp">{{formatTime(message.createdAt)}}</span>
+                </div>
+
+                <div class="massage-content-bubble">
+                    <span class="massage-content">{{message.content}}</span>
+                </div>
+
+                <div class="answer-bar">
+                    <span class="answer-count">2 Antworten</span>
+                    <span class="last-answer">Letzte Antwort 14:56</span>
+
+                </div>
+            </div>
+        </div>
+        }}
+        }
+        }
+
+
+
+
     </div>
 
     <!-- <div class="input-div">
@@ -99,29 +114,31 @@
 
     <div class="message-container">
         @if (showEmoticons) {
-            <div class="emoticon-div">
-                @for (emoji of emoticons; track $index) {
-                    <img src="../../assets/img/emoticons/{{emoji}}" alt="">
-                }
-            </div>
+        <div class="emoticon-div">
+            @for (emoji of emoticons; track $index) {
+            <img src="../../assets/img/emoticons/{{emoji}}" alt="">
+            }
+        </div>
         }
-<!-- Erwähnungen -->
+        <!-- Erwähnungen -->
         @if (showMention) {
-            <div class="mention-div">
-                @for (users of allUsers; track $index) {
-                    <div>{{users.name}}</div>
-                }
-            </div>
+        <div class="mention-div">
+            @for (users of allUsers; track $index) {
+            <div>{{users.name}}</div>
+            }
+        </div>
         }
-        
+
         <textarea class="message-input" placeholder="Nachricht an #Entwicklerteam"></textarea>
         <div class="message-actions">
 
             <div class="action-left">
                 <button class="action-button"> <img src="../../assets/img/add_icon.png" alt=""></button>
                 <div class="line"></div>
-                <button (click)="toggleEmoticons()" class="action-button"><img src="../../assets/img/emoticon_icon.png" alt=""></button>
-                <button (click)="toggleMention()" class="action-button"><img src="../../assets/img/mention_icon.png" alt=""></button>
+                <button (click)="toggleEmoticons()" class="action-button"><img src="../../assets/img/emoticon_icon.png"
+                        alt=""></button>
+                <button (click)="toggleMention()" class="action-button"><img src="../../assets/img/mention_icon.png"
+                        alt=""></button>
             </div>
 
             <div class="action-right">
@@ -130,4 +147,3 @@
         </div>
     </div>
 </div>
-

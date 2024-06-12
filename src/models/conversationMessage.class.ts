@@ -1,7 +1,9 @@
+import { Timestamp } from "firebase/firestore";
+
 export class ConversationMessage {
     conversationId: string;
     content: string;
-    createdAt: Date;
+    createdAt: any;
     createdBy: string;
     fileUrl: string;
     threadId: string;
