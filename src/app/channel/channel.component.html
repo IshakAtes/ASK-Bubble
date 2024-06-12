@@ -2,13 +2,13 @@
     <div class="main-chat-header">
         
         
-        <div class="channelname">
+        <div class="channelname" (click)="showChannelSettings()">
             <span># {{channel.name}}</span>
             <img src="../../assets/img/keyboard_arrow_down.png" alt="">
         </div>
 
-        <div class="member-bar-wrapper">
-            <div class="member-bar">
+        <div class="member-bar-wrapper" >
+            <div class="member-bar" (click)="showMemberList()">
             
                 <div class="memberdiscs-div">
                     <img *ngFor="let user of memberList" src="{{user.avatarUrl}}" alt="">

@@ -159,4 +159,6 @@ export class DialogAddAdditionalMemberComponent {
     this.database.updateChannelMembers(new Channel(this.currentChannel));
     this.setUserlist();
   }
+
+  
 }
