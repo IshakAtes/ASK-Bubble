@@ -42,7 +42,7 @@ export class DialogCreateChannelComponent {
     return new Promise<boolean>((resolve, reject) =>{
       this.database.loadAllChannels()
         .then(channelList => {
-           let result = true;
+          let result = true;
            for (let channel of channelList) {
             if(this.channelName.toLowerCase() == channel.name.toLowerCase()){
               result = false;
@@ -53,7 +53,7 @@ export class DialogCreateChannelComponent {
           })
           .catch(error =>{
             reject(error)
-          })
+        })
     },)
   }
   

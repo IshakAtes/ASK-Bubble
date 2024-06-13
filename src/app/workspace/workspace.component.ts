@@ -30,10 +30,13 @@ export class WorkspaceComponent {
   hideChannelBody: boolean = false;
 
 
+  userSimon: string = 'simon@dummy.de';
+
+  userSpongeBob: string = 'schwamm@gmail.ocm';
 
   constructor(public dialog: MatDialog){  
     
-    this.database.getUser('simon@dummy.de').then(user =>{
+    this.database.getUser(this.userSimon).then(user =>{
       this.activeUser = user;
       this.database.loadAllUserChannels(user.userId).then(userChannels => {
         this.activeUserChannels = userChannels
@@ -41,7 +44,7 @@ export class WorkspaceComponent {
     })
 
 
-    this.database.getUser('simon@dummy.de').then(user =>{
+    this.database.getUser(this.userSimon).then(user =>{
       this.database.loadAllUserConversations(user.userId)
       .then(userConversations => {
         this.activeUserConversationList = userConversations;

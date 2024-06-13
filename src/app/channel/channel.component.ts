@@ -23,12 +23,16 @@ export class ChannelComponent {
   channelId: string = 'CHA-BSHDDuLBHC0o8RKcrcr6'
   activeUser: string = 'p1oEblSsradmfVeyvTu3'
 
+  activeUser1: string = 'l2RRMmucZi37mppmjU81'
+  
+
 
   //realData
   @Input() channel: Channel
   database = inject(DatabaseService);
   memberList: Array<User> = [];
   messageList: Array<ChannelMessage>
+  channelCreator: User;
  
 
 
@@ -44,21 +48,17 @@ export class ChannelComponent {
       this.database.loadChannelMessages(this.activeUser, this.channel.channelId)
         .then(messages => {
           this.messageList = messages;
-        })
-    }, 500);
+      })
 
-    /*
-    setTimeout(() => {
-      console.log('MemberList');
-      console.log(this.memberList);
-      console.log('MessageList');
-      console.log(this.messageList);
-    }, 2000);
-    */
+      this.database.loadUser(this.channel.createdBy)
+        .then(user =>{
+          this.channelCreator = user;
+        })
+
+    }, 500);
   }
 
   showAddMember(){
-    //this.dialog.open(DialogAddAdditionalMemberComponent)
     const channelInfo = this.dialog.open(DialogAddAdditionalMemberComponent);
     channelInfo.componentInstance.currentChannel = this.channel;
   }
@@ -71,6 +71,7 @@ export class ChannelComponent {
   showChannelSettings(){
     const channelInfo = this.dialog.open(DialogShowChannelSettingsComponent);
     channelInfo.componentInstance.currentChannel = this.channel;
+    channelInfo.componentInstance.channelCreator = this.channelCreator;
   }
 
 }

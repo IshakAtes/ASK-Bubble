@@ -187,12 +187,7 @@ export class DatabaseService {
 
 
 
-  /*update functions */
-  updateChannelMembers(channel: Channel){
-    channel.membersId.forEach(user => {
-      updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/'), channel.channelId), channel.toJSON());
-    })
-  }
+
 
 
 
@@ -271,26 +266,33 @@ export class DatabaseService {
     return new Promise<Array<Channel>>((resolve, reject) =>{
       const channelList = [] as Array<Channel>
       onSnapshot(collection(this.firestore, 'users'), (users) => {
+        const channelPromises = [] as Array<Promise<void>>;
         users.forEach(user => {
-          onSnapshot(collection(this.firestore, 'users/' + user.id + '/channels'), (channels) => {
-            channels.forEach(channel => {
-              const channelData = channel.data();
-              const channelObject = {} as Channel;
-              channelObject.createdAt = channelData['createdAt'];
-              channelObject.createdBy = channelData['createdBy'];
-              channelObject.description = channelData['description'];
-              channelObject.membersId = channelData['membersId'];
-              channelObject.name = channelData['name'];
-              channelObject.channelId = channelData['channelId'];
-              channelList.push(channelObject);
-              resolve(channelList);
-            })
-          })
-        })
-        }, (error) => {
-          reject(error)
-        })
-    })
+          const channelPromise = new Promise<void>((resolveChannel, rejectChannel) => {
+            onSnapshot(collection(this.firestore, 'users/' + user.id + '/channels'), (channels) => {
+              channels.forEach(channel => {
+                const channelData = channel.data();
+                const channelObject = {} as Channel;
+                channelObject.createdAt = channelData['createdAt'];
+                channelObject.createdBy = channelData['createdBy'];
+                channelObject.description = channelData['description'];
+                channelObject.membersId = channelData['membersId'];
+                channelObject.name = channelData['name'];
+                channelObject.channelId = channelData['channelId'];
+                channelList.push(channelObject);
+                //resolve(channelList);
+              });
+              resolveChannel();
+            }, rejectChannel);
+          
+          });
+          channelPromises.push(channelPromise);
+        });
+        Promise.all(channelPromises)
+          .then(() => resolve(channelList))
+          .catch(error => reject(error));
+      },reject);  
+    });
   }
   
 
@@ -572,23 +574,37 @@ export class DatabaseService {
   }
 
 
+  /*update functions */
+  updateChannelMembers(channel: Channel){
+    channel.membersId.forEach(user => {
+      updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/'), channel.channelId), channel.toJSON());
+    })
+  }
 
 
-  //Folgende ID´s müssen aus dem HTML abgerufen werden?
 
-   /*
-   getChannelId(){
-    
-   }
+  updateChannelName(channel: Channel){
+    channel.membersId.forEach(user => {
+      updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/'), channel.channelId), channel.toJSON());
+    })
+  }
 
-   getConversationId(){
 
-   }
- 
- 
-   getMessageId(){
-     
-   }
-   */
+
+
+  updateChannelDescription(){
+
+  }
+
+
+
+  /*delete functions */
+  deleteChannelMember(channel: Channel){
+    /*
+    channel.membersId.forEach(user => {
+      updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/'), channel.channelId), channel.toJSON());
+    })
+    */
+  }
 
 }

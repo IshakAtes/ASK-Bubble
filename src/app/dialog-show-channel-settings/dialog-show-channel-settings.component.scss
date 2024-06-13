@@ -1,56 +1,49 @@
 section {
 
-    //width: 910px;
+      width: 872px;
     // height: 374px;
       padding: 40px;
-      border-radius: 30px;
+      border-radius: 0px 30px 30px 30px;
       opacity: 0px;
       background: #FFFFFF;
       display: flex;
       flex-direction: column;
       position: relative;
-      top: -105px;
-      left: 270px;
-      gap: 20px;
-      
+      top: 25px;
+      left: 120px;
+      gap: 20px;  
     }
-    
-    .channelName {
-        display: flex;
-        >p {
-            font-family: Nunito;
-            font-size: 18px;
-            font-weight: 400;
-            line-height: 24.55px;
-            text-align: left;
-            color: #535AF1;
-        
-          }
-        
-          >span{
-            font-family: Nunito;
-            font-size: 18px;
-            font-weight: 400;
-            line-height: 24.55px;
-            text-align: left;
-            color: #535AF1;
-            
-          }
-    }
-    
-    
-    
-    
-    
-    
+
+
     .headline {
-     width: 514px;
+     //width: 833px;
      height: 40px;
      gap: 0px;
      display: flex;
      justify-content: space-between;
      align-items: center;
      opacity: 0px;
+     
+     .headlineNameWrapper {
+        display: flex;
+        padding: 2px 1px 2px 1px;
+        gap: 15px;
+        border-radius: 30px;
+        opacity: 0px;
+        >span{
+            display: flex;
+            width: fit-content;
+            height: 33px;
+            gap: 0px;
+            opacity: 0px;
+            font-family: Nunito;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 32.74px;
+            text-align: left;
+        }
+     }
+     
      .closeSvgBg{
          width: 40px;
          height: 40px;
@@ -63,106 +56,347 @@ section {
              background-color:#ECEEFE;
              border-radius: 20px;
              cursor: pointer;
-         }
-     }
-    
-    >span{
-         display: flex;
-         width: 400px;
-         height: 33px;
-         gap: 0px;
-         opacity: 0px;
-         font-family: Nunito;
-         font-size: 24px;
-         font-weight: 700;
-         line-height: 32.74px;
-         text-align: left;
-     }
+            }
+        }
     }
+
+
+    .channelNameWrapper {
+        display: flex;
+        flex-direction: column;
+        //width: 792px;
+        height: 72px;
+        padding: 20px;
+        gap: 20px;
+        border-radius: 20px;
+        opacity: 0px;
+        border: 1px solid #ADB0D9;
+        .channelNameEdit{
+            display: flex;
+            justify-content: space-between;
+            //width: 752px;
+            height: 25px;
+            opacity: 0px;
     
-    .d-none {
-     display: none !important;
-    }
+            >span{
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 700;
+                line-height: 24.55px;
+                text-align: left;
+                color: black;
+                width: fit-content; 
+            }
     
+            >p {
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 600;
+                line-height: 24.55px;
+                text-align: left;
+                color: #535AF1; 
+                cursor: pointer; 
+            }
+        }
+
+        .channelName {
+            display: flex;
+            width: fit-content;
+            height: 29px;
+            padding: 2px 1px 2px 1px;
+            gap: 10px;
+            border-radius: 30px;
+            opacity: 0px;
     
-    
-    .userlistContainer{
-     width: 215px;
-     height: 211px;
-     display: flex;
-     flex-direction: column;
-     position: absolute;
-     top: 200px;
-     left: 80px;
-     z-index: 99;
-    
-     padding: 40px;
-     gap: 20px;
-     border-radius: 0px 30px 30px 30px;
-     opacity: 0px;
-     border: 1px solid #535AF1;
-     overflow: auto;
-     background-color: #FFFFFF;
-         .userList {
-             display: flex;
-             align-items: center;
-             cursor: pointer;
-             width: fit-content;
-             padding: 0px 15px 0px 15px;
             
+            >span{
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 400;
+                line-height: 24.55px;
+                text-align: left;                
+                color: black; 
+            }
+        }
+    }
+
+
+    .channelNameInputWrapper {
+        display: flex;
+        flex-direction: column;
+        //width: 792px;
+        gap: 20px;
+        border-radius: 20px;
+        opacity: 0px;
+
+        .channelNameEdit{
+            display: flex;
+            justify-content: space-between;
+            //width: 815px;
+            height: 25px;
+            opacity: 0px;
     
-             >div {
-                 display: flex;
-                 align-items: center;
+            >span{
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 700;
+                line-height: 24.55px;
+                text-align: left;
+                color: black;
+                width: fit-content; 
+            }
     
-                 >img{
-                     width: 50px;
-                     height: 50px;
-                     gap: 0px;
-                     border-radius: 30px;
-                     opacity: 0px;
-                 }
+            >p {
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 600;
+                line-height: 24.55px;
+                text-align: left;
+                color: #535AF1; 
+                cursor: pointer; 
+            }
+        }
+    }
+    
+
+    .channelInfo {
+        display: flex;
+        flex-direction: column;
+        //width: 792px;
+        height: 235px;
+        padding: 20px;
+        gap: 30px;
+        border-radius: 20px;
+        opacity: 0px;
+        border: 1px solid #ADB0D9;
+
+        .channelDescriptionWrapper{
+            display: flex;
+            flex-direction: column;
+           //width: 752px;
+            height: 95px;
+            gap: 20px;
+            opacity: 0px;
+            
+            .channelDescriptionEdit {
+                display: flex;
+                //width: 752px;
+                height: 25px;
+                gap: 0px;
+                justify-content: space-between;
+                opacity: 0px;
+
+                >span{
+                    font-family: Nunito;
+                    font-size: 18px;
+                    font-weight: 700;
+                    line-height: 24.55px;
+                    text-align: left;
+                    color: black;
+                    width: fit-content; 
+                }
+    
+                >p {
+                    font-family: Nunito;
+                    font-size: 18px;
+                    font-weight: 600;
+                    line-height: 24.55px;
+                    text-align: left;
+                    color: #535AF1; 
+                    cursor: pointer; 
+                }  
+            }
+
+            .channelDescription {
+                //width: 752px;
+                height: 50px;
+                gap: 0px;
+                opacity: 0px;
                 
-                 >svg{
-                     display: flex;
-                     position: relative;
-                     right: 15px;
-                     top: 18px;
-                 }
-         
-                 span {
-                     display: flex;
-                     position: relative;
-                     width: fit-content;
-                     height: 25px;
-                     gap: 0px;
-                     opacity: 0px;
-                     font-family: Nunito;
-                     font-size: 18px;
-                     font-weight: 400;
-                     line-height: 24.55px;
-                     text-align: left;
-                    
-                 }
-             }
-    
-         }
-     
-         .userList:hover {
-             background-color: #ECEEFE;
-             border-radius: 20px;
-         }
+                >span {
+                    font-family: Nunito;
+                    font-size: 18px;
+                    font-weight: 400;
+                    line-height: 24.55px;
+                    text-align: left;
+                    color: black;
+                }
+            }
+        }
+
+
+        >svg {
+            width: 752px;
+        }
+
+
+        .createdByWrapper{
+            display: flex;
+            flex-direction: column;
+           // width: 752px;
+            height: 78px;
+            gap: 20px;
+            opacity: 0px;
+
+            > span{
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 700;
+                line-height: 24.55px;
+                text-align: left;                    
+                color: black;
+                width: fit-content; 
+            }
+
+            > p{
+                font-family: Nunito;
+                font-size: 24px;
+                font-weight: 400;
+                line-height: 32.74px;
+                text-align: left;
+                color: #535AF1; 
+            }  
+        }
     }
+
+
+    .channelInputInfo{
+        display: flex;
+        flex-direction: column;
+        //width: 792px;
+        height: 235px;
+        padding: 20px 0px 0px 0px;
+        gap: 30px;
+        border-radius: 20px;
+        opacity: 0px;
+
+        .channelDescriptionInputWrapper{
+            display: flex;
+            flex-direction: column;
+            //width: 815px;
+            height: 95px;
+            gap: 20px;
+            opacity: 0px;
+            
+            .channelDescriptionEdit {
+                display: flex;
+               // width: 815px;
+                height: 25px;
+                gap: 0px;
+                justify-content: space-between;
+                opacity: 0px;
+
+                >span{
+                    font-family: Nunito;
+                    font-size: 18px;
+                    font-weight: 700;
+                    line-height: 24.55px;
+                    text-align: left;
+                    color: black;
+                    width: fit-content; 
+                }
     
-    .userlistContainer::-webkit-scrollbar {
-     display: none;
+                >p {
+                    font-family: Nunito;
+                    font-size: 18px;
+                    font-weight: 600;
+                    line-height: 24.55px;
+                    text-align: left;
+                    color: #535AF1; 
+                    cursor: pointer; 
+                }  
+            }
+
+            .channelDescription {
+                //width: 815px;
+                height: 50px;
+                gap: 0px;
+                opacity: 0px;
+        
+                >span {
+                    font-family: Nunito;
+                    font-size: 18px;
+                    font-weight: 400;
+                    line-height: 24.55px;
+                    text-align: left;
+                    color: black;
+                }
+            }   
+        }
+
+        >svg {
+            display: flex;
+            position: relative;
+            left: -20px;
+            width: 900px;
+        }
+
+        .createdByWrapper{
+            display: flex;
+            flex-direction: column;
+            //width: 752px;
+            height: 78px;
+            gap: 20px;
+            opacity: 0px;
+
+            > span{
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 700;
+                line-height: 24.55px;
+                text-align: left;                    
+                color: black;
+                width: fit-content; 
+            }
+
+            > p{
+                font-family: Nunito;
+                font-size: 24px;
+                font-weight: 400;
+                line-height: 32.74px;
+                text-align: left;
+                color: #535AF1; 
+            }  
+        }
     }
-    
+
+
+
+    .btnContainer{
+        display: flex;
+        justify-content: flex-end;
+        //width: 834px;
+        
+        button {
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            width: 204px;
+            height: 49px;
+            padding: 12px 25px 12px 25px;
+            gap: 10px;
+            border-radius: 25px;
+            border: none;
+            opacity: 0px;
+            background: #444DF2;
+            font-family: Nunito;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 24.55px;
+            text-align: left;
+            color: #FFFFFF;
+        }
+       
+        button:hover {
+            background-color: #797EF3;
+        }
+    }
+
+
     .userInput {
      display: flex;
      flex-direction: column;
-     width: 514px;
-     
+    // width: 790px;
      height: 65px;
      padding: 0px 20px 0px 20px;
      gap: 30px;
@@ -170,97 +404,41 @@ section {
      border: 1px;
      opacity: 0px;
      border: 1px solid #ADB0D9;
-     cursor: pointer;
+     
     
      .inputWrapper {
          display: flex;
          height: 65px;
-         
-         .selectedList {
-             display: flex;
-             align-items: center;
-             padding: 0px 15px 0px 15px;
-    
-             .selectedUser{
-                 display: flex;
-                 align-items: center;
-                 background-color: #ECEEFE;
-                 border-radius: 20px;
-                 width: fit-content;
-                 position: relative;
-                 right: 20px;
-                 margin-right: 10px;
-                   
-                         
-                 >img{
-                     width: 50px !important;
-                     height: 50px !important;
-                     gap: 0px;
-                     border-radius: 30px;
-                     opacity: 0px;
-                 }
-    
-                 >svg{
-                     display: flex;
-                     position: relative;
-                     right: 15px;
-                     top: 18px;
-                 }
-                 
-                 .close{
-                     display: flex;
-                     position: relative;
-                     right: 0px !important;
-                     top: 0px !important;
-                     svg:hover {
-                         path {
-                             fill: #535AF1;
-                         }
-                         cursor: pointer;
-                     }
-                 }
-    
-         
-                 span {
-                     display: flex;
-                     position: relative;
-                     width: fit-content;
-                     height: 25px;
-                     gap: 0px;
-                     opacity: 0px;
-                     font-family: Nunito;
-                     font-size: 18px;
-                     font-weight: 400;
-                     line-height: 24.55px;
-                     text-align: left;
-                    
-                 }
-             }
-         }
-     
-     
+         align-items: center;
+
+        >span {
+            font-family: Nunito;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 24.55px;
+            text-align: left;
+        }
+
          >input {
              display: flex;
-             width: 514px;
+             width: 792px;
              height: 62px;
              padding: 0px 20px 0px 20px;
              gap: 30px;
              border: none;
              position: relative;
              top: 1px;
-             right: 30px;
-    
     
              font-family: Nunito;
              font-size: 18px;
              font-weight: 400;
              line-height: 24.55px;
              text-align: left;
-     
              cursor: pointer;
+             
              ::placeholder {
                  display: flex;
-                 width: 514px;
+                 width: 792px;
                  height: 25px;
                  gap: 20px;
                  opacity: 0px;
@@ -286,50 +464,8 @@ section {
          text-align: left;
          color: red;
          position: relative;
-         bottom: 18px;
-         left: 24px;
-     }
-    
-    }
-    
-    
-    .btnContainer{
-     display: flex;
-     justify-content: flex-end;
-     width: 514px;
-     margin-top: 10px;
-     
-     button {
-         cursor: pointer;
-         display: flex;
-         justify-content: center;
-         width: 125px;
-         height: 49px;
-         padding: 12px 25px 12px 25px;
-         gap: 10px;
-         border-radius: 25px;
-         opacity: 0px;
-         background: #444DF2;
-         border: none;
-         font-family: Nunito;
-         font-size: 18px;
-         font-weight: 700;
-         line-height: 24.55px;
-         text-align: left;
-         color: #FFFFFF;
-     }
-    
-     button:hover {
-         background-color: #797EF3;
+         bottom: 27px;
+        
      }
     }
     
-    
-    .mat-mdc-dialog-container {
-     --mdc-dialog-container-shape: 30px;
-    }
-    
-    .mdc-dialog__surface {
-     overflow-y: visible !important;
-    
-    }
