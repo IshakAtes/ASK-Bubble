@@ -14,10 +14,11 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './dialog-show-channel-settings.component.scss'
 })
 export class DialogShowChannelSettingsComponent {
-  currentChannel: Channel
-  database = inject(DatabaseService)
+  currentChannel: Channel;
+  newChannel: Channel;
+  database = inject(DatabaseService);
   
-  //id of spongebob l2RRMmucZi37mppmjU81
+  //id of spongebob l2RRMmucZi37mppmjU81 p1oEblSsradmfVeyvTu3
 
   activeUser: User;
   channelCreator: User;
@@ -42,7 +43,14 @@ export class DialogShowChannelSettingsComponent {
 
 
   leaveChannel(){
-    console.log('active user is leaving the channel: ' + this.activeUser.userId);
+    console.log(this.currentChannel)
+    this.newChannel = new Channel(this.currentChannel);
+    this.newChannel.membersId.splice(this.newChannel.membersId.indexOf(this.activeUser.userId), 1)
+    console.log(this.newChannel);
+    console.log('This user leaves the channel: ' + this.activeUser.userId)
+    this.database.updateChannelMembers(new Channel(this.newChannel));
+    this.database.deleteChannel(new Channel(this.newChannel), this.activeUser.userId)
+    
     this.dialogRef.close();
   }
 
@@ -67,7 +75,6 @@ export class DialogShowChannelSettingsComponent {
   }
 
 
-
   saveChangedChannelName(){
     this.validateContent()
     .then(bool => {
@@ -81,7 +88,6 @@ export class DialogShowChannelSettingsComponent {
       }
     })
   }
-
 
 
   validateContent(): Promise<boolean>{
@@ -112,14 +118,8 @@ export class DialogShowChannelSettingsComponent {
   }
 
 
-
   setDefault(){
     this.errorMessage.nativeElement.innerHTML = '';
   }
 
-  
-
-
-
-  
 }

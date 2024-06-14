@@ -7,7 +7,7 @@ import { Conversation } from '../models/conversation.class';
 import { ChannelMessage } from '../models/channelMessage.class';
 import { Reaction } from '../models/reactions.class';
 import { ConversationMessage } from '../models/conversationMessage.class';
-import { setDoc } from 'firebase/firestore';
+import { deleteDoc, setDoc } from 'firebase/firestore';
 import { updateDoc, doc } from 'firebase/firestore'; // Korrigiert den Importpfad
 
 @Injectable({
@@ -599,12 +599,12 @@ export class DatabaseService {
 
 
   /*delete functions */
-  deleteChannelMember(channel: Channel){
-    /*
-    channel.membersId.forEach(user => {
-      updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/'), channel.channelId), channel.toJSON());
-    })
-    */
+  deleteChannel(channel: Channel, userId: string){
+    
+
+    deleteDoc(doc(collection(this.firestore, 'users/' + userId + '/channels/'), channel.channelId));
+  
+
   }
 
 }
