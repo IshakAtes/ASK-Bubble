@@ -10,6 +10,7 @@ import { ThreadComponent } from './thread/thread.component';
 import { WorkspaceComponent } from './workspace/workspace.component';
 import { MainComponent } from './main/main.component';
 import { DialogPasswordResetComponent } from './dialog-password-reset/dialog-password-reset.component';
+import { DialogChangePasswordComponent } from './dialog-change-password/dialog-change-password.component';
 
 
 export const routes: Routes = [
@@ -24,4 +25,5 @@ export const routes: Routes = [
     { path: 'thread', component: ThreadComponent },
     { path: 'main', component: MainComponent },
     { path: 'forgotPassword', component: DialogPasswordResetComponent },
+    { path: 'changePassword/:id', component: DialogChangePasswordComponent },
 ];

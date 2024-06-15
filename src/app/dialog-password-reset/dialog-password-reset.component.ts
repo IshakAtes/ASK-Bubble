@@ -18,6 +18,7 @@ export class DialogPasswordResetComponent {
   http = inject(HttpClient);
   firestore: Firestore = inject(Firestore)
   myForm: FormGroup;
+  emailSent: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private router: Router, private us: UserService) {
     this.myForm = this.formBuilder.group({
@@ -69,13 +70,19 @@ export class DialogPasswordResetComponent {
       this.http.post(this.post.endPoint, this.post.body(this.us.resetUserPw))
         .subscribe({
           next: (_response: any) => {
-            // this.us.resetUserPw.reset();
+            this.us.resetUserPw = '';
             this.myForm.reset();
           },
           error: (error: any) => {
             console.error(error);
           },
-          complete: () => console.info('send post complete'),
+          complete: () => {
+            this.emailSent = true;
+            setTimeout(() => {
+              this.emailSent = false;
+              this.router.navigate(['/']);
+            }, 2000);
+          },
         });
     }
   }

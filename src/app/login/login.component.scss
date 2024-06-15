@@ -14,15 +14,6 @@ nav {
         img {
             height: 60px;
         }
-        // span {
-        //     padding-left: 20px;
-        //     color: #000;
-        //     font-size: 30px;
-        //     font-family: "Nunito";
-        //     font-optical-sizing: auto;
-        //     font-weight: 400;
-        //     font-style: normal;
-        // }
     }
     .signUpLink {
         display: flex;
@@ -134,6 +125,17 @@ nav {
         font-weight: 400;
         line-height: 21.6px;
         text-align: left;
+        padding: 5px 15px 5px 15px;
+        transition: ease-in-out 125ms;
+        
+        &:hover {
+            padding: 5px 15px 5px 15px;
+            font-weight: 500;
+            gap: 10px;
+            border-radius: 30px;
+            background-color: #ECEEFE;
+            color: #444DF2;
+        }
     }
 }
 
