@@ -55,7 +55,7 @@ export class DialogPasswordResetComponent {
       } else {
         querySnapshot.forEach((doc) => {
           this.us.resetUserPw = doc.data();
-          this.us.resetUserPw['userId'] = doc.id;
+          this.us.resetUserPw['resetLink'] = '/changePassword/' + doc.id;
           this.sendMail()
         });
       }

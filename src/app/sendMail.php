@@ -16,12 +16,11 @@ switch ($_SERVER['REQUEST_METHOD']) {
     
             $email = $params->email;
             $name = $params->name;
-            $message = $params->password;
-            $id = $params->userId;
+            $message = $params->resetLink;
     
             $recipient = $email;  
             $subject = "Contact From BubbleTeam";
-            $message = "From:" . $name . "<br>" . $message . "<br>" . $id ;
+            $message = "From:" . $name . "<br>" . $message;
 
     
             $headers   = array();
@@ -31,7 +30,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             // Additional headers
             $headers[] = "From: noreply@mywebsite.com";
 
-            mail($recipient, $subject, $message, $id, implode("\r\n", $headers));
+            mail($recipient, $subject, $message, implode("\r\n", $headers));
             break;
         default: //Reject any non POST or OPTIONS requests.
             header("Allow: POST", true, 405);

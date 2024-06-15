@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-dialog-change-password',
@@ -7,6 +8,14 @@ import { Component } from '@angular/core';
   templateUrl: './dialog-change-password.component.html',
   styleUrl: './dialog-change-password.component.scss'
 })
-export class DialogChangePasswordComponent {
+export class DialogChangePasswordComponent implements OnInit {
+  userId: any = '';
 
+  constructor(private route: ActivatedRoute) {
+  }
+
+  ngOnInit():void {
+    this.userId = this.route.snapshot.paramMap.get('id');
+    console.log(this.userId);
+  }
 }
