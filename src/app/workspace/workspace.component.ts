@@ -8,11 +8,12 @@ import { CommonModule } from '@angular/common';
 import {MatDialog} from '@angular/material/dialog';
 import { DialogCreateChannelComponent } from '../dialog-create-channel/dialog-create-channel.component';
 import { UserService } from '../user.service';
+import { ChannelComponent } from '../channel/channel.component';
 
 @Component({
   selector: 'app-workspace',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ChannelComponent],
   templateUrl: './workspace.component.html',
   styleUrl: './workspace.component.scss'
 })
@@ -36,6 +37,8 @@ export class WorkspaceComponent {
 
   constructor(public dialog: MatDialog){  
     
+
+    //Load all channels from User
     this.database.getUser(this.userSimon).then(user =>{
       this.activeUser = user;
       this.database.loadAllUserChannels(user.userId).then(userChannels => {
@@ -44,6 +47,7 @@ export class WorkspaceComponent {
     })
 
 
+    //Load all Conversations from user
     this.database.getUser(this.userSimon).then(user =>{
       this.database.loadAllUserConversations(user.userId)
       .then(userConversations => {
@@ -72,8 +76,11 @@ export class WorkspaceComponent {
   }
 
 
-  openChannel(channelId: string){
-    console.log('opened channel with channelId: ' + channelId);
+  openChannel(channel: Channel){
+    this.userService.currenChannel = channel;
+    const loadNewChannel = this.dialog.open(ChannelComponent);
+    loadNewChannel.componentInstance.channel = channel;
+    this.dialog.open(ChannelComponent)
   }
 
 
@@ -96,6 +103,7 @@ export class WorkspaceComponent {
     }
   }
 
+  
   openCreateChannelDialog(){
     this.dialog.open(DialogCreateChannelComponent)
   }

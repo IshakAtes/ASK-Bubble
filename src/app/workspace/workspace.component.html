@@ -69,7 +69,7 @@
 
             <!--ChannelBody has to be filled with data from database-->
             <div [ngClass]="{'d-none': hideChannelBody}"  class="channelBody">
-                <button *ngFor="let channel of activeUserChannels" (click)="openChannel(channel.channelId)">
+                <button *ngFor="let channel of activeUserChannels" (click)="openChannel(channel)">
                     <p>#</p>
                     <span>{{channel.name}}</span>
                 </button> 
@@ -136,8 +136,6 @@
                 }
             </div> <!--ChannelBody-End-->
 
-
-       
         </div> <!--ConversationListContainer-End-->
     </div> <!--WorkspaceBody-End-->
 </section>

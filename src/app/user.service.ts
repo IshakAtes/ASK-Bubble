@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { User } from '../models/user.class';
 import { Firestore, collection, addDoc, updateDoc, doc, onSnapshot } from '@angular/fire/firestore';
 import { getDocs, query, where } from "firebase/firestore";
+import { Channel } from '../models/channel.class';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,19 @@ export class UserService {
   wrongLogin: boolean = false;
   resetUserPw: any;
   // mailUser: any;
+
+
+
+  //Test Data from Simon
+
+  currentConversationId: string
+
+  currenChannel: Channel;
+
+  currentChannelId: string = 'CHA-BSHDDuLBHC0o8RKcrcr6';
+
+  
+  //End Test Data from Simon
 
 
   constructor() { }

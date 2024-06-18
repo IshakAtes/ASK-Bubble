@@ -1,7 +1,5 @@
 section {
-
       width: 872px;
-    // height: 374px;
       padding: 40px;
       border-radius: 0px 30px 30px 30px;
       opacity: 0px;
@@ -16,7 +14,6 @@ section {
 
 
     .headline {
-     //width: 833px;
      height: 40px;
      gap: 0px;
      display: flex;
@@ -59,7 +56,6 @@ section {
             }
         }
     }
-
 
     .channelNameWrapper {
         display: flex;
@@ -107,8 +103,6 @@ section {
             gap: 10px;
             border-radius: 30px;
             opacity: 0px;
-    
-            
             >span{
                 font-family: Nunito;
                 font-size: 18px;
@@ -120,7 +114,6 @@ section {
         }
     }
 
-
     .channelNameInputWrapper {
         display: flex;
         flex-direction: column;
@@ -128,14 +121,12 @@ section {
         gap: 20px;
         border-radius: 20px;
         opacity: 0px;
-
         .channelNameEdit{
             display: flex;
             justify-content: space-between;
             //width: 815px;
             height: 25px;
             opacity: 0px;
-    
             >span{
                 font-family: Nunito;
                 font-size: 18px;
@@ -158,7 +149,6 @@ section {
         }
     }
     
-
     .channelInfo {
         display: flex;
         flex-direction: column;
@@ -169,7 +159,6 @@ section {
         border-radius: 20px;
         opacity: 0px;
         border: 1px solid #ADB0D9;
-
         .channelDescriptionWrapper{
             display: flex;
             flex-direction: column;
@@ -212,7 +201,7 @@ section {
                 height: 50px;
                 gap: 0px;
                 opacity: 0px;
-                
+
                 >span {
                     font-family: Nunito;
                     font-size: 18px;
@@ -224,11 +213,9 @@ section {
             }
         }
 
-
         >svg {
             width: 752px;
         }
-
 
         .createdByWrapper{
             display: flex;
@@ -237,7 +224,6 @@ section {
             height: 78px;
             gap: 20px;
             opacity: 0px;
-
             > span{
                 font-family: Nunito;
                 font-size: 18px;
@@ -259,7 +245,6 @@ section {
         }
     }
 
-
     .channelInputInfo{
         display: flex;
         flex-direction: column;
@@ -269,7 +254,6 @@ section {
         gap: 30px;
         border-radius: 20px;
         opacity: 0px;
-
         .channelDescriptionInputWrapper{
             display: flex;
             flex-direction: column;
@@ -312,7 +296,6 @@ section {
                 height: 50px;
                 gap: 0px;
                 opacity: 0px;
-        
                 >span {
                     font-family: Nunito;
                     font-size: 18px;
@@ -338,7 +321,6 @@ section {
             height: 78px;
             gap: 20px;
             opacity: 0px;
-
             > span{
                 font-family: Nunito;
                 font-size: 18px;
@@ -359,14 +341,10 @@ section {
             }  
         }
     }
-
-
-
     .btnContainer{
         display: flex;
         justify-content: flex-end;
         //width: 834px;
-        
         button {
             cursor: pointer;
             display: flex;
@@ -392,7 +370,6 @@ section {
         }
     }
 
-
     .userInput {
      display: flex;
      flex-direction: column;
@@ -404,13 +381,10 @@ section {
      border: 1px;
      opacity: 0px;
      border: 1px solid #ADB0D9;
-     
-    
      .inputWrapper {
          display: flex;
          height: 65px;
          align-items: center;
-
         >span {
             font-family: Nunito;
             font-size: 18px;
@@ -428,14 +402,13 @@ section {
              border: none;
              position: relative;
              top: 1px;
-    
              font-family: Nunito;
              font-size: 18px;
              font-weight: 400;
              line-height: 24.55px;
              text-align: left;
              cursor: pointer;
-             
+
              ::placeholder {
                  display: flex;
                  width: 792px;
@@ -468,4 +441,3 @@ section {
         
      }
     }
-    

@@ -50,7 +50,6 @@ export class DialogShowChannelSettingsComponent {
     console.log('This user leaves the channel: ' + this.activeUser.userId)
     this.database.updateChannelMembers(new Channel(this.newChannel));
     this.database.deleteChannel(new Channel(this.newChannel), this.activeUser.userId)
-    
     this.dialogRef.close();
   }
 

@@ -73,6 +73,7 @@ export class DialogAddChannelMembersComponent {
     }
   }
 
+  
   removeUser(user: User){
     this.selectedUserList.splice(this.selectedUserList.indexOf(user), 1);
     this.setDefault();
@@ -94,7 +95,8 @@ export class DialogAddChannelMembersComponent {
       }
       else{
         console.log('add selection to DB');
-          /*
+         
+        /*
             this.selectedUserList.forEach(user => {
               this.memberIdList.push(user.userId)
             })
@@ -120,7 +122,6 @@ export class DialogAddChannelMembersComponent {
   }
 
 
-
   changeUserContainerVisibility(){
     if(this.hideUserContainer){
       this.hideUserContainer = false;
@@ -140,7 +141,4 @@ export class DialogAddChannelMembersComponent {
       this.inputFocused = true;
     }
   }
-
-
-
 }

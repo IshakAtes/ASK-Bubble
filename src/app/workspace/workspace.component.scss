@@ -3,9 +3,8 @@ section {
     position: relative;
     align-items: center;
     flex-direction: column;
-    width: 366px;
-    height: 940px;
-    left: 20px;
+    width: 306px;
+    height: 876px;
     padding: 32px 30px 32px 30px;
     gap: 25px;
     border-radius: 30px;
@@ -29,7 +28,6 @@ section {
     gap: 0px;
     border-radius: 30px;
     opacity: 0px;
-        
     .titleContainer{
         display: flex;
         align-items: center;
@@ -134,7 +132,6 @@ section {
                 height: 27px;
                 gap: 10px;
                 opacity: 0px;
-
                 >svg{
                     width: 24px;
                     height: 24px;
@@ -233,7 +230,6 @@ section {
         gap: 13px;
         border-radius: 30px;
         opacity: 0px;
-
         >button{
             display: flex;
             position: relative;
@@ -308,7 +304,6 @@ section {
                 height: 27px;
                 gap: 10px;
                 opacity: 0px;
-
                 svg{
                     width: 24px;
                     height: 24px;
@@ -365,7 +360,6 @@ section {
                 background: transparent;
                 border: none;
                 cursor: pointer;
-                
                 >img{
                     width: 50px;
                     height: 50px;
@@ -373,7 +367,6 @@ section {
                     border-radius: 30px;
                     opacity: 0px;
                 }
-
                 >svg{
                     display: flex;
                     position: relative;
