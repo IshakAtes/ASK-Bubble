@@ -44,7 +44,7 @@
             <div class="message-content-div">
                 <div class="own-message-header">
                     <span class="message-header-userName">{{user.name}}</span>
-                    <span class="message-header-timestamp">{{formatTime(message.createdAt)}}</span>
+                    <span class="message-header-timestamp">{{formatTime(formatTimestamp(message.createdAt))}}</span>
                 </div>
 
                 <div class="own-massage-content-bubble">
@@ -85,7 +85,7 @@
             <div class="message-content-div">
                 <div class="message-header">
                     <span class="message-header-userName">{{user.name}}</span>
-                    <span class="message-header-timestamp">{{formatTime(message.createdAt)}}</span>
+                    <span class="message-header-timestamp">{{formatTime(formatTimestamp(message.createdAt))}}</span>
                 </div>
 
                 <div class="massage-content-bubble">
@@ -115,6 +115,9 @@
     <div class="message-container">
         @if (showEmoticons) {
         <div class="emoticon-div">
+            <!-- @for (emoji of emojis; track $index) {
+                {{emoji}}
+                } -->
             @for (emoji of emoticons; track $index) {
             <img src="../../assets/img/emoticons/{{emoji}}" alt="">
             }
@@ -129,7 +132,7 @@
         </div>
         }
 
-        <textarea #myTextarea class="message-input" placeholder="Nachricht an #Entwicklerteam"></textarea>
+        <textarea #myTextarea [(ngModel)]="content" class="message-input" placeholder="Nachricht an #Entwicklerteam"></textarea>
         <div class="message-actions">
 
             <div class="action-left">
@@ -142,7 +145,7 @@
             </div>
 
             <div class="action-right">
-                <button class="action-button"> <img src="../../assets/img/send_icon.png" alt=""></button>
+                <button (click)="saveNewMessage()" class="action-button"> <img src="../../assets/img/send_icon.png" alt=""></button>
             </div>
         </div>
     </div>
