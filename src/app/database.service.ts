@@ -7,7 +7,7 @@ import { Conversation } from '../models/conversation.class';
 import { ChannelMessage } from '../models/channelMessage.class';
 import { Reaction } from '../models/reactions.class';
 import { ConversationMessage } from '../models/conversationMessage.class';
-import { deleteDoc, setDoc } from 'firebase/firestore';
+import { Timestamp, deleteDoc, setDoc } from 'firebase/firestore';
 import { updateDoc, doc } from 'firebase/firestore'; // Korrigiert den Importpfad
 
 @Injectable({
@@ -100,7 +100,7 @@ export class DatabaseService {
     const randomNumber = Math.random();
     conversationMessage.conversationId = conversation.conversationId;
     conversationMessage.content = content;
-    conversationMessage.createdAt = new Date();
+    conversationMessage.createdAt = Timestamp.fromDate(new Date());
     conversationMessage.createdBy = createdBy;
     conversationMessage.fileUrl = fileUrl ? fileUrl : '';
     conversationMessage.threadId = threadId ? threadId: '';
@@ -164,9 +164,9 @@ export class DatabaseService {
 
   addConversationMessage(conversation: Conversation, conversationMessage: ConversationMessage){
     //add Message to creator
-    setDoc(doc(this.firestore, 'users/' + conversation.createdBy + '/conversations/' + conversationMessage.conversationId + '/conversationmessages', conversationMessage.messageId), conversationMessage.toJSON());
+    setDoc(doc(this.firestore, 'users/' + conversation.createdBy + '/conversations/' + conversationMessage.conversationId + '/conversationmessages', conversationMessage.messageId), conversationMessage);
     //add Message to recipient
-    setDoc(doc(this.firestore, 'users/' + conversation.recipientId + '/conversations/' + conversationMessage.conversationId + '/conversationmessages', conversationMessage.messageId), conversationMessage.toJSON());
+    setDoc(doc(this.firestore, 'users/' + conversation.recipientId + '/conversations/' + conversationMessage.conversationId + '/conversationmessages', conversationMessage.messageId), conversationMessage);
   }
 
 
