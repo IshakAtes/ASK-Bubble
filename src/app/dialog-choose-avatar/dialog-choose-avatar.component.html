@@ -11,7 +11,7 @@
         </div>
         <div
         [ngStyle]="{'background-image': selectedAvatar ? 'url(' + selectedAvatar + ')' : 'url(../../assets/img/unUsedDefault.png)'}"
-        (click)="uploadAvatarImage()"
+        (click)="triggerFileUpload(fileInput)"
         class="avatarImageCt">
         </div>
         <h2>User Name</h2>
@@ -28,7 +28,8 @@
         </div>
         <div class="uploadCt">
             <span>eigenes Bild verwenden</span>
-            <button class="secondaryBtn">Datei hochladen</button>
+            <input id="fileInput" type="file" accept="image/*" (change)="selectFile($event)" #fileInput />
+            <button (click)="triggerFileUpload(fileInput)" class="secondaryBtn">Datei hochladen</button>
         </div>
         <div class="createUserBtnCt">
             <button (click)="createUser()" class="primaryBtn">Konto erstellen</button>
@@ -45,3 +46,47 @@
         <span [routerLink]="['/privacyPolicy']">Datenschutz</span>
     </div>
 </div>
+
+
+
+
+
+<!-- <div class="row">
+    <div class="col-8">
+      <label class="btn btn-default p-0">
+        <input type="file" accept="image/*" (change)="selectFile($event)" />
+      </label>
+    </div>
+  
+    <div class="col-4">
+      <button
+        class="btn btn-success btn-sm float-right"
+        [disabled]="!currentFile"
+        (click)="upload()"
+      >
+        Upload
+      </button>
+    </div>
+  </div>
+  
+  <div>
+    <img [src]="preview" class="preview" />
+  </div>
+  
+  @if (message) {
+  <div class="alert alert-secondary" role="alert">
+    {{ message }}
+  </div>
+  }
+  
+  <div class="card">
+    <div class="card-header">List of Images</div>
+    <ul class="list-group list-group-flush">
+      @for (image of imageInfos | async; track image.name) {
+      <li class="list-group-item">
+        <p><a href="{{ image.url }}">{{ image.name }}</a></p>
+        <img src="{{ image.url }}" alt="{{ image.name }}" height="80px" />
+      </li>
+      }
+    </ul>
+  </div> -->

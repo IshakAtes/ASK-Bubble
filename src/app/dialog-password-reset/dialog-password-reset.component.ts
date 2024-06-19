@@ -28,7 +28,7 @@ export class DialogPasswordResetComponent {
 
 
   post = {
-    endPoint: 'https://bubble.ishakates.com/sendMail.php',
+    endPoint: 'https://bubble.ishakates.com/sendPwResetlink.php',
     body: (payload: any) => JSON.stringify(payload),
     options: {
       headers: {
@@ -55,7 +55,8 @@ export class DialogPasswordResetComponent {
       } else {
         querySnapshot.forEach((doc) => {
           this.us.resetUserPw = doc.data();
-          this.us.resetUserPw['resetLink'] = '/changePassword/' + doc.id;
+          this.us.resetUserPw['resetLink'] = 'https://bubble.ishakates.com/changePassword/' + doc.id; // Siemon und Kerim hier müsst ihr eure eigene server adresse eingeben.
+          console.log(this.us.resetUserPw);
           this.sendMail()
         });
       }
@@ -70,7 +71,8 @@ export class DialogPasswordResetComponent {
       this.http.post(this.post.endPoint, this.post.body(this.us.resetUserPw))
         .subscribe({
           next: (_response: any) => {
-            this.us.resetUserPw = '';
+            // this.us.resetUserPw = '';
+            console.log('form', this.us.resetUserPw);
             this.myForm.reset();
           },
           error: (error: any) => {

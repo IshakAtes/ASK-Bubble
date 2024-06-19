@@ -3,7 +3,7 @@ export class User {
     name: string;
     password: string;
     status: string;
-    avatarUrl: string;
+    avatarUrl: string | undefined | null;
     userId: string;
 
 
