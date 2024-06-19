@@ -35,7 +35,7 @@ export class WorkspaceComponent {
 
   userSpongeBob: string = 'schwamm@gmail.ocm';
 
-  constructor(public dialog: MatDialog){  
+  constructor(public dialog: MatDialog, public us: UserService){  
     
 
     //Load all channels from User
@@ -43,6 +43,7 @@ export class WorkspaceComponent {
       this.activeUser = user;
       this.database.loadAllUserChannels(user.userId).then(userChannels => {
         this.activeUserChannels = userChannels
+        console.log(this.us.loggedUser);
       });
     })
 

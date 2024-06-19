@@ -55,7 +55,7 @@ export class DialogChooseAvatarComponent {
     this.us.addUser(this.us.userCache);
     setTimeout(() => {
       this.userCreated = false;
-      // this.router.navigate(['/']);
+      this.router.navigate(['/']);
     }, 2000);
   }
 
