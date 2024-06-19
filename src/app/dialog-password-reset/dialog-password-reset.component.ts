@@ -56,6 +56,7 @@ export class DialogPasswordResetComponent {
         querySnapshot.forEach((doc) => {
           this.us.resetUserPw = doc.data();
           this.us.resetUserPw['resetLink'] = '/changePassword/' + doc.id;
+          console.log(this.us.resetUserPw);
           this.sendMail()
         });
       }
@@ -70,7 +71,8 @@ export class DialogPasswordResetComponent {
       this.http.post(this.post.endPoint, this.post.body(this.us.resetUserPw))
         .subscribe({
           next: (_response: any) => {
-            this.us.resetUserPw = '';
+            // this.us.resetUserPw = '';
+            console.log('form', this.us.resetUserPw);
             this.myForm.reset();
           },
           error: (error: any) => {

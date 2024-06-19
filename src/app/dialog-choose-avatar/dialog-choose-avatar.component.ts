@@ -1,17 +1,20 @@
-import { NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
-import { Component } from '@angular/core';
+import { CommonModule, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../user.service';
+import { HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 
 
 @Component({
   selector: 'app-dialog-choose-avatar',
   standalone: true,
-  imports: [RouterLink, NgFor, NgStyle, NgIf, NgClass],
+  imports: [CommonModule, RouterLink, NgFor, NgStyle, NgIf, NgClass],
   templateUrl: './dialog-choose-avatar.component.html',
   styleUrl: './dialog-choose-avatar.component.scss'
 })
+
 
 export class DialogChooseAvatarComponent {
   images: string[] = [
@@ -24,8 +27,26 @@ export class DialogChooseAvatarComponent {
   ];
   selectedAvatar: string = "";
   userCreated: boolean = false;
-  constructor(private router: Router, public us: UserService) {
+
+
+  constructor(private router: Router, public us: UserService) {}
+
+  selectFile(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedAvatar = e.target.result;
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
   }
+
+  triggerFileUpload(fileInput: HTMLInputElement): void {
+    fileInput.click();
+  }
+  
+
 
   createUser() {
     this.us.userCache.avatarUrl = this.selectedAvatar;
@@ -34,7 +55,7 @@ export class DialogChooseAvatarComponent {
     this.us.addUser(this.us.userCache);
     setTimeout(() => {
       this.userCreated = false;
-      this.router.navigate(['/']);
+      // this.router.navigate(['/']);
     }, 2000);
   }
 

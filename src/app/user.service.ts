@@ -2,22 +2,43 @@ import { Injectable, inject } from '@angular/core';
 import { User } from '../models/user.class';
 import { Firestore, collection, addDoc, updateDoc, doc, onSnapshot } from '@angular/fire/firestore';
 import { getDocs, query, where } from "firebase/firestore";
+import { HttpClient, HttpRequest, HttpEvent } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class UserService {
   loggedUser: User;
   firestore: Firestore = inject(Firestore)
-  userCache: any;
+  userCache: User;
   wrongLogin: boolean = false;
   resetUserPw: any;
   // mailUser: any;
+  private baseUrl = 'http://localhost:4200';
 
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
 
+  upload(file: File): Observable<HttpEvent<any>> {
+    const formData: FormData = new FormData();
+
+    formData.append('file', file);
+
+    const req = new HttpRequest('POST', `${this.baseUrl}/upload`, formData, {
+      responseType: 'json'
+    });
+
+    return this.http.request(req);
+  }
+
+  getFiles(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/files`);
+  }
+
+  
   // findUser(email: string) {
   //   const q = query(collection(this.firestore, "users"), where("email", "==", email));
   //   const unsubscribe = onSnapshot(q, (querySnapshot) => {
