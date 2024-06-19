@@ -40,12 +40,13 @@ export class DatabaseService {
 
   createChannel(createdBy: string, description: string, membersId: Array<string>, channelName: string): Channel{
     let channel = {} as Channel
+    const randomNumber = Math.random();
     channel.createdAt = new Date();
     channel.createdBy = createdBy;
     channel.description = description;
     channel.membersId = membersId;
     channel.name = channelName;
-    channel.channelId = 'CHA-' + createdBy;
+    channel.channelId = 'CHA-' + createdBy + '-' + randomNumber;
     return channel
   }
 
@@ -74,6 +75,8 @@ export class DatabaseService {
     return reaction
   }
 
+
+  /*
   createConversationCreator(createdBy: string, recipientId: string): Conversation{
     const conversationCreator = {} as Conversation;
     conversationCreator.conversationId = 'CONV-' + createdBy;
@@ -84,6 +87,7 @@ export class DatabaseService {
     return conversationCreator;
   }
 
+
   createConversationRecipient(createdBy: string, recipientId: string): Conversation{
     const conversationRecipient = {} as Conversation
     conversationRecipient.conversationId = 'CONV-' + createdBy;
@@ -92,6 +96,19 @@ export class DatabaseService {
     conversationRecipient.fileUrl = 'null';
     conversationRecipient.recipientId = recipientId;
     return conversationRecipient;
+  }
+  */
+
+  createConversation(createdBy: string, recipientId: string): Conversation{
+    const conversation = {} as Conversation
+    const randomNumber = Math.random();
+    conversation.conversationId = 'CONV-' + createdBy + '-' + randomNumber;
+    conversation.conversationNameCreator = 'Conversation with ' + recipientId;
+    conversation.conversationNameRecipient = 'Conversation with ' + createdBy;
+    conversation.createdBy = createdBy;
+    conversation.fileUrl = 'null';
+    conversation.recipientId = recipientId;
+    return conversation;
   }
 
 
@@ -107,6 +124,7 @@ export class DatabaseService {
     conversationMessage.messageId = 'CONV-MSG-' +  randomNumber
     return conversationMessage
   }
+  
 
 
   createConversationMessageReaction(emoji: string, userId: string, conversationMessage: ConversationMessage): Reaction{
@@ -154,11 +172,11 @@ export class DatabaseService {
   }
 
 
-  addConversation(conversationCreator: Conversation, conversationRecipient: Conversation){
+  addConversation(conversation: Conversation){
     //add converstaion to creator
-    setDoc(doc(this.firestore, 'users/' + conversationCreator.createdBy + '/conversations', conversationCreator.conversationId), conversationCreator.toJSON());
+    setDoc(doc(this.firestore, 'users/' + conversation.createdBy + '/conversations', conversation.conversationId), conversation);
     //add conversation to recipient
-    setDoc(doc(this.firestore, 'users/' + conversationCreator.recipientId + '/conversations', conversationCreator.conversationId), conversationRecipient.toJSON());
+    setDoc(doc(this.firestore, 'users/' + conversation.recipientId + '/conversations', conversation.conversationId), conversation);
   }
 
 
@@ -186,12 +204,6 @@ export class DatabaseService {
   }
 
 
-
-
-
-
-
-
   /*read functions */
   getUser(email: string): Promise<User>{
     return new Promise<User>((resolve, reject) =>{
@@ -206,9 +218,10 @@ export class DatabaseService {
             activeUser.status = userData['status']
             activeUser.avatarUrl = userData['avatarUrl']
             activeUser.userId = user.id 
-            resolve(activeUser);
+            
           }
         })
+        resolve(activeUser);
         }, (error) => {
           reject(error)
         })
@@ -229,9 +242,9 @@ export class DatabaseService {
             foundUser.status = userData['status']
             foundUser.avatarUrl = userData['avatarUrl']
             foundUser.userId = user.id 
-            resolve(foundUser);
           }
         })
+        resolve(foundUser);
         }, (error) => {
           reject(error)
         })
@@ -253,8 +266,8 @@ export class DatabaseService {
           userObject.status = userData['status'];
           userObject.userId = user.id
           userList.push(userObject);
-          resolve(userList);
         })
+        resolve(userList);
         }, (error) => {
           reject(error)
         })
@@ -280,11 +293,9 @@ export class DatabaseService {
                 channelObject.name = channelData['name'];
                 channelObject.channelId = channelData['channelId'];
                 channelList.push(channelObject);
-                //resolve(channelList);
               });
               resolveChannel();
             }, rejectChannel);
-          
           });
           channelPromises.push(channelPromise);
         });
@@ -299,26 +310,34 @@ export class DatabaseService {
   loadAllUserChannels(userId: string): Promise<Array<Channel>>{
     return new Promise<Array<Channel>>((resolve, reject) =>{ 
       const channelList = [] as Array<Channel>
-      onSnapshot(collection(this.firestore, 'users/' + userId + '/channels'), (channels) => {
-        channels.forEach(channel => {
-          const channelData = channel.data();
-          const channelObject = {} as Channel;
-          channelObject.createdAt = channelData['createdAt'];
-          channelObject.createdBy = channelData['createdBy'];
-          channelObject.description = channelData['description'];
-          channelObject.membersId = channelData['membersId'];
-          channelObject.name = channelData['name'];
-          channelObject.channelId = channelData['channelId'];
-          channelList.push(channelObject);
-          resolve(channelList);
-        })
-      },(error) => {
-        reject(error)
-      })
-    }) 
+      const channelPromises = [] as Array<Promise<void>>
+      const channelPromise = new Promise<void>((resolveChannel, rejectChannel) => {
+        onSnapshot(collection(this.firestore, 'users/' + userId + '/channels'), (channels) => {
+          channels.forEach(channel => {
+            const channelData = channel.data();
+            const channelObject = {} as Channel;
+            channelObject.createdAt = channelData['createdAt'];
+            channelObject.createdBy = channelData['createdBy'];
+            channelObject.description = channelData['description'];
+            channelObject.membersId = channelData['membersId'];
+            channelObject.name = channelData['name'];
+            channelObject.channelId = channelData['channelId'];
+            channelList.push(channelObject);
+          });
+          resolveChannel();
+        
+        }, rejectChannel);
+        
+      });
+      channelPromises.push(channelPromise);
+      Promise.all(channelPromises)
+        .then(() => resolve(channelList))
+        .catch(error => reject(error));
+    });
   }
+   
 
-
+ 
   loadSpecificUserChannel(userId: string, channelId: string): Promise<Channel>{
     return new Promise<Channel>((resolve, reject) =>{ 
       const channelObject = {} as Channel
@@ -332,9 +351,9 @@ export class DatabaseService {
             channelObject.membersId = channelData['membersId'];
             channelObject.name = channelData['name'];
             channelObject.channelId = channelData['channelId'];
-            resolve(channelObject);
           }
         })
+        resolve(channelObject);
       },(error) => {
         reject(error)
       })
@@ -342,35 +361,53 @@ export class DatabaseService {
   }
 
 
+  //tricky
   loadAllChannelMessages(){
-    return new Promise<Array<ChannelMessage>>((resolve, reject) =>{
-      const messageList = [] as Array<ChannelMessage>
+    return new Promise<Array<ChannelMessage>>((resolve, reject) => {
+      const messageList: Array<ChannelMessage> = [];
+      const userPromises: Array<Promise<void>> = [];
+  
       onSnapshot(collection(this.firestore, 'users'), (users) => {
         users.forEach(user => {
-          onSnapshot(collection(this.firestore, 'users/' + user.id + '/channels'), (channels) => {
-            channels.forEach(channel => {
-              onSnapshot(collection(this.firestore, 'users/' + user.id + '/channels/' + channel.id + '/channelmessages'), (messages) => {
-                messages.forEach(message => {
-                  const messageData = message.data();
-                  const messageObject = {} as ChannelMessage;
-                  messageObject.channelId = messageData['channelId'];
-                  messageObject.content = messageData['content'];
-                  messageObject.createdAt = messageData['createdAt'];
-                  messageObject.createdBy = messageData['createdBy'];
-                  messageObject.fileUrl = messageData['fileUrl'];
-                  messageObject.threadId = messageData['threadId'];
-                  messageObject.messageId = messageData['messageId'];
-                  messageList.push(messageObject);
-                  resolve(messageList);
-                })
-              })
-            })
-          })
-        })
-        }, (error) => {
-          reject(error)
-        })
-    })
+          const channelPromise = new Promise<void>((resolveChannel, rejectChannel) => {
+            onSnapshot(collection(this.firestore, `users/${user.id}/channels`), (channels) => {
+              const messagePromises: Array<Promise<void>> = [];
+  
+              channels.forEach(channel => {
+                const messagePromise = new Promise<void>((resolveMessage, rejectMessage) => {
+                  onSnapshot(collection(this.firestore, `users/${user.id}/channels/${channel.id}/channelmessages`), (messages) => {
+                    messages.forEach(message => {
+                      const messageData = message.data();
+                      const messageObject: ChannelMessage = {
+                        channelId: messageData['channelId'],
+                        content: messageData['content'],
+                        createdAt: messageData['createdAt'],
+                        createdBy: messageData['createdBy'],
+                        fileUrl: messageData['fileUrl'],
+                        threadId: messageData['threadId'],
+                        messageId: messageData['messageId'],
+                        toJSON: function (): { channelId: string; content: string; createdAt: Date; createdBy: string; fileUrl: string; threadId: string; messageId: string; } {
+                          throw new Error('Function not implemented.');
+                        }
+                      };
+                      messageList.push(messageObject);
+                    });
+                    resolveMessage();
+                  }, rejectMessage);
+                });
+                messagePromises.push(messagePromise);
+              });
+              Promise.all(messagePromises).then(() => {resolveChannel()}).catch(rejectChannel);
+            });
+          });
+          userPromises.push(channelPromise);
+        });
+  
+        Promise.all(userPromises)
+          .then(() => resolve(messageList))
+          .catch(error => reject(error));
+      }, reject);
+    });
   }
 
 
@@ -389,8 +426,8 @@ export class DatabaseService {
           channelMessageObject.threadId = messageData['threadId'];
           channelMessageObject.messageId = messageData['messageId'];
           messageList.push(channelMessageObject);
-          resolve(messageList);
         })
+        resolve(messageList);
       },(error) => {
         reject(error)
       })
@@ -412,9 +449,9 @@ export class DatabaseService {
               specificMessage.fileUrl = messageData['fileUrl'];
               specificMessage.threadId = messageData['threadId'];
               specificMessage.messageId = messageData['messageId'];
-              resolve(specificMessage);
             }
           });
+          resolve(specificMessage);
         }, (error) => {
           reject(error);
         });
@@ -427,25 +464,31 @@ export class DatabaseService {
     return new Promise<Array<Conversation>>((resolve, reject) =>{
       const conversationList = [] as Array<Conversation>
       onSnapshot(collection(this.firestore, 'users'), (users) => {
+        const conversationPromises = [] as Array<Promise<void>>
         users.forEach(user => {
-          onSnapshot(collection(this.firestore, 'users/' + user.id + '/conversations'), (conversations) => {
-            conversations.forEach(conversation => {
-              const conversationData = conversation.data();
-              const conversationObject = {} as Conversation;
-              conversationObject.conversationId = conversationData['conversationId'];
-              conversationObject.conversationName = conversationData['conversationName'];
-              conversationObject.createdBy = conversationData['createdBy'];
-              conversationObject.fileUrl = conversationData['fileUrl'];
-              conversationObject.recipientId = conversationData['recipientId'];
-              conversationList.push(conversationObject);
-              resolve(conversationList);
-            })
-          })
-        })
-        }, (error) => {
-          reject(error)
-        })
-    })
+          const conversationPromise = new Promise<void>((resolveConversation, rejectConversation) => {
+            onSnapshot(collection(this.firestore, 'users/' + user.id + '/conversations'), (conversations) => {
+              conversations.forEach(conversation => {
+                const conversationData = conversation.data();
+                const conversationObject = {} as Conversation;
+                conversationObject.conversationId = conversationData['conversationId'];
+                conversationObject.conversationNameCreator = conversationData['conversationNameCreator'];
+                conversationObject.conversationNameRecipient = conversationData['conversationNameRecipient'];
+                conversationObject.createdBy = conversationData['createdBy'];
+                conversationObject.fileUrl = conversationData['fileUrl'];
+                conversationObject.recipientId = conversationData['recipientId'];
+                conversationList.push(conversationObject);
+              });
+              resolveConversation();
+            }, rejectConversation)
+          });
+          conversationPromises.push(conversationPromise);
+        });
+        Promise.all(conversationPromises)
+          .then(() => resolve(conversationList))
+          .catch(error => reject(error));
+        }, reject);
+        });
   }
 
   
@@ -457,13 +500,14 @@ export class DatabaseService {
           const conversationData = conversation.data();
           const conversationObject = {} as Conversation;
           conversationObject.conversationId = conversationData['conversationId'];
-          conversationObject.conversationName = conversationData['conversationName'];
+          conversationObject.conversationNameCreator = conversationData['conversationNameCreator'];
+          conversationObject.conversationNameRecipient = conversationData['conversationNameRecipient'];
           conversationObject.createdBy = conversationData['createdBy'];
           conversationObject.fileUrl = conversationData['fileUrl'];
           conversationObject.recipientId = conversationData['recipientId'];
           ConversationList.push(conversationObject);
-          resolve(ConversationList);
         })
+        resolve(ConversationList);
       },(error) => {
         reject(error)
       })
@@ -479,50 +523,66 @@ export class DatabaseService {
           if(conversationId == conversation.id){
             const conversationData = conversation.data();
             conversationObject.conversationId = conversationData['conversationId'];
-            conversationObject.conversationName = conversationData['conversationName'];
+            conversationObject.conversationNameCreator = conversationData['conversationNameCreator'];
+            conversationObject.conversationNameRecipient = conversationData['conversationNameRecipient'];
             conversationObject.createdBy = conversationData['createdBy'];
             conversationObject.fileUrl = conversationData['fileUrl'];
             conversationObject.recipientId = conversationData['recipientId'];
-            resolve(conversationObject);
           }
         })
+        resolve(conversationObject);
       },(error) => {
         reject(error)
       })
     })     
   }
 
-  
+
   loadAllConversationMessages():Promise<Array<ConversationMessage>>{
-    return new Promise<Array<ConversationMessage>>((resolve, reject) =>{
-      const messageList = [] as Array<ConversationMessage>
+    return new Promise<Array<ConversationMessage>>((resolve, reject) => {
+      const messageList: Array<ConversationMessage> = [];
+      const userPromises: Array<Promise<void>> = [];
       onSnapshot(collection(this.firestore, 'users'), (users) => {
-      users.forEach(user => {
-          onSnapshot(collection(this.firestore, 'users/' + user.id + '/conversations'), (conversations) => {
-            conversations.forEach(conversation => {
-              onSnapshot(collection(this.firestore, 'users/' + user.id + '/conversations/' + conversation.id + '/conversationmessages'), (messages) => {
-                messages.forEach(message => {
-                  const messageData = message.data();
-                  const messageObject = {} as ConversationMessage;
-                  messageObject.conversationId = messageData['conversationId'];
-                  messageObject.content = messageData['content'];
-                  messageObject.createdAt = messageData['createdAt'];
-                  messageObject.createdBy = messageData['createdBy'];
-                  messageObject.fileUrl = messageData['fileUrl'];
-                  messageObject.threadId = messageData['threadId'];
-                  messageObject.messageId = messageData['messageId'];
-                  messageList.push(messageObject);
-                  resolve(messageList);
-                })
-              })
-            })
-          })
-        })
-        }, (error) => {
-          reject(error)
-        })
-     })
+        users.forEach(user => {
+          const conversationPromise = new Promise<void>((resolveConversation, rejectConversation) => {
+            onSnapshot(collection(this.firestore, `users/${user.id}/conversations`), (conversations) => {
+              const messagePromises: Array<Promise<void>> = [];
+              conversations.forEach(conversation => {
+                const messagePromise = new Promise<void>((resolveMessage, rejectMessage) => {
+                  onSnapshot(collection(this.firestore, `users/${user.id}/conversations/${conversation.id}/conversationmessages`), (messages) => {
+                    messages.forEach(message => {
+                      const messageData = message.data();
+                      const messageObject: ConversationMessage = {
+                        conversationId: messageData['conversationId'],
+                        content: messageData['content'],
+                        createdAt: messageData['createdAt'],
+                        createdBy: messageData['createdBy'],
+                        fileUrl: messageData['fileUrl'],
+                        threadId: messageData['threadId'],
+                        messageId: messageData['messageId'],
+                        toJSON: function (): { conversationId: string; content: string; createdAt: Timestamp; createdBy: string; fileUrl: string; threadId: string; messageId: string; } {
+                          throw new Error('Function not implemented.');
+                        }
+                      };
+                      messageList.push(messageObject);
+                    });
+                    resolveMessage();
+                  }, rejectMessage);
+                });
+                messagePromises.push(messagePromise);
+              });
+              Promise.all(messagePromises).then(() => {resolveConversation()}).catch(rejectConversation);
+            });
+          });
+          userPromises.push(conversationPromise);
+        });
+        Promise.all(userPromises)
+          .then(() => resolve(messageList))
+          .catch(error => reject(error));
+      }, reject);
+    });
   }
+
 
 
   loadConversationMessages(userId: string, conversationId: string): Promise<Array<ConversationMessage>>{
@@ -540,8 +600,8 @@ export class DatabaseService {
           messageObject.threadId = messageData['threadId'];
           messageObject.messageId = messageData['messageId'];
           messageList.push(messageObject);
-          resolve(messageList);
         })
+        resolve(messageList);
       },(error) => {
         reject(error)
       })
@@ -563,10 +623,9 @@ export class DatabaseService {
             messageObject.fileUrl = messageData['fileUrl'];
             messageObject.threadId = messageData['threadId'];
             messageObject.messageId = messageData['messageId'];
-            
-            resolve(messageObject);
           }
         })
+        resolve(messageObject);
       },(error) => {
         reject(error)
       })

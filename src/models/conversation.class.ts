@@ -1,6 +1,7 @@
 export class Conversation {
     conversationId: string;
-    conversationName: string;
+    conversationNameCreator: string;
+    conversationNameRecipient: string;
     createdBy: string;
     fileUrl: string;
     recipientId: string;
@@ -9,7 +10,8 @@ export class Conversation {
 
     constructor(obj?: any){
         this.conversationId = obj ? obj.conversationId : '';
-        this.conversationName = obj ? obj.conversationName : '';
+        this.conversationNameCreator = obj ? obj.conversationNameCreator : '';
+        this.conversationNameRecipient = obj ? obj.conversationNameRecipient : '';
         this.createdBy = obj ? obj.createdBy : '';
         this.fileUrl = obj ? obj.fileUrl : '';
         this.recipientId = obj ? obj.recipientId : '';
@@ -19,7 +21,8 @@ export class Conversation {
     public toJSON(){
         return {
             conversationId: this.conversationId,
-            conversationName: this.conversationName,
+            conversationNameCreator: this.conversationNameCreator,
+            conversationNameRecipient: this.conversationNameRecipient,
             createdBy: this.createdBy,
             fileUrl: this.fileUrl,
             recipientId: this.recipientId,

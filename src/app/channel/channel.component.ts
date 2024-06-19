@@ -57,15 +57,18 @@ export class ChannelComponent {
     }, 500);
   }
 
+  
   showAddMember(){
     const channelInfo = this.dialog.open(DialogAddAdditionalMemberComponent);
     channelInfo.componentInstance.currentChannel = this.channel;
   }
 
+
   showMemberList(){
     const channelInfo = this.dialog.open(DialogShowMemberListComponent);
     channelInfo.componentInstance.currentChannel = this.channel;
   }
+
 
   showChannelSettings(){
     const channelInfo = this.dialog.open(DialogShowChannelSettingsComponent);

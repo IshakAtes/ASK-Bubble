@@ -67,7 +67,10 @@ export class WorkspaceComponent {
         })
       });
     })
-    
+
+
+    this.database.addConversation(this.database.createConversation('p1oEblSsradmfVeyvTu3', 'bFzvNOxewazPdUx2iBa3'))
+
   } //End of Constructor
 
 
