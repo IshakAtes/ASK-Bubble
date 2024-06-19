@@ -71,7 +71,6 @@ export class DialogAddAdditionalMemberComponent {
     this.selectedUserList.forEach(selectedUser => {
       if(selectedUser.email == user.email){doubleSelection = true;}
     })
-    
     if(doubleSelection){
       this.errorMessage.nativeElement.innerHTML = 'Nutzer wurde bereits ausgewählt';
       this.inputFocused =  false;
@@ -85,12 +84,14 @@ export class DialogAddAdditionalMemberComponent {
     }
   }
 
+
   setDefault(){
     this.inputFocused =  false;
     this.hideUserContainer = true;
     this.searchUser = '';
     this.errorMessage.nativeElement.innerHTML = '';
   }
+
 
   removeUser(user: User){
     this.selectedUserList.splice(this.selectedUserList.indexOf(user), 1);
@@ -118,6 +119,7 @@ export class DialogAddAdditionalMemberComponent {
     }
   }
 
+
   showFilteredUser(){
     this.foundUserList = this.userlist.filter((user) => user.name.toLowerCase().startsWith(this.searchUser));
   }
@@ -129,16 +131,12 @@ export class DialogAddAdditionalMemberComponent {
     }
     else{
       this.newChannel = new Channel(this.currentChannel);
-      
-
-      console.log('add selection to DB');
-
       this.addChannelToNewMembers();
       this.updateChannel();
       this.dialogRef.close();
-      
     }
   }
+
 
   addChannelToNewMembers(){
     this.newChannel.membersId = [];
@@ -150,6 +148,7 @@ export class DialogAddAdditionalMemberComponent {
     this.database.addChannel(this.newChannel);
   }
 
+
   updateChannel(){
     this.selectedUserList.forEach(user => {
       this.currentChannel.membersId.push(user.userId)
@@ -160,7 +159,4 @@ export class DialogAddAdditionalMemberComponent {
     this.setUserlist();
   }
 
-  
-
-  
 }

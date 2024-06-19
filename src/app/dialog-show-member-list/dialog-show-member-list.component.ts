@@ -6,6 +6,7 @@ import { DatabaseService } from '../database.service';
 import { User } from '../../models/user.class';
 import { CommonModule } from '@angular/common';
 import { DialogAddAdditionalMemberComponent } from '../dialog-add-additional-member/dialog-add-additional-member.component';
+import { DialogUserProfileComponent } from '../dialog-user-profile/dialog-user-profile.component';
 
 @Component({
   selector: 'app-dialog-show-member-list',
@@ -25,6 +26,7 @@ export class DialogShowMemberListComponent {
     this.setUserlist();
   }
 
+  
   setUserlist(){
     setTimeout(() => {
       this.currentChannel.membersId.forEach(userId => {
@@ -41,6 +43,13 @@ export class DialogShowMemberListComponent {
     const channelInfo = this.dialog.open(DialogAddAdditionalMemberComponent);
     channelInfo.componentInstance.currentChannel = this.currentChannel;
     this.dialogRef.close();
+  }
+  
+
+  openProfile(user: User){
+    console.log(user.userId);
+    const profileInfo = this.dialog.open(DialogUserProfileComponent);
+    profileInfo.componentInstance.shownUser = user;
   }
 
 }

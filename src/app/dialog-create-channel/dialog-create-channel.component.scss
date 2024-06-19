@@ -1,6 +1,4 @@
 section {
-   // width: 872px;
-   // height: 539px;
     padding: 40px;
     border-radius: 30px;
     opacity: 0px;
@@ -23,7 +21,6 @@ section {
     justify-content: space-between;
     align-items: center;
     opacity: 0px;
-
     .closeSvgBg{
         width: 40px;
         height: 40px;
@@ -53,7 +50,6 @@ section {
     }
 }
 
-
 .description {
     display: flex;
     width: 792px;
@@ -76,8 +72,6 @@ section {
     height: 105px;
     gap: 20px;
     opacity: 0px;
-
-    
     >span {
         display: flex;
         width: fit-content;
@@ -178,7 +172,6 @@ section {
         opacity: 0px;
         border: 1px solid #ADB0D9;
         cursor: pointer;
-
         ::placeholder {
             display: flex;
             width: 752px;
@@ -208,7 +201,6 @@ section {
     justify-content: flex-end;
     width: 830px;
     margin-top: 10px;
-    
     button {
         cursor: pointer;
         display: flex;

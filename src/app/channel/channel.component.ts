@@ -5,7 +5,7 @@ import { User } from '../../models/user.class';
 import { DatabaseService } from '../database.service';
 import { ChannelMessage } from '../../models/channelMessage.class';
 import { FormsModule } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog} from '@angular/material/dialog';
 import { DialogAddAdditionalMemberComponent } from '../dialog-add-additional-member/dialog-add-additional-member.component';
 import { DialogShowMemberListComponent } from '../dialog-show-member-list/dialog-show-member-list.component';
 import { DialogShowChannelSettingsComponent } from '../dialog-show-channel-settings/dialog-show-channel-settings.component';
@@ -20,15 +20,14 @@ import { DialogShowChannelSettingsComponent } from '../dialog-show-channel-setti
 export class ChannelComponent {
 
   //TestData
-  channelId: string = 'CHA-BSHDDuLBHC0o8RKcrcr6'
   activeUser: string = 'p1oEblSsradmfVeyvTu3'
-
   activeUser1: string = 'l2RRMmucZi37mppmjU81'
   
 
 
   //realData
   @Input() channel: Channel
+  @Input() channelBig: boolean;
   database = inject(DatabaseService);
   memberList: Array<User> = [];
   messageList: Array<ChannelMessage>

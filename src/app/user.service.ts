@@ -4,6 +4,7 @@ import { Firestore, collection, addDoc, updateDoc, doc, onSnapshot } from '@angu
 import { getDocs, query, where } from "firebase/firestore";
 import { HttpClient, HttpRequest, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Channel } from '../models/channel.class';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,18 @@ export class UserService {
 
 
   constructor(private http: HttpClient) { }
+
+  //Test Data from Simon
+
+  currentConversationId: string
+
+  currenChannel: Channel;
+
+  currentChannelId: string = 'CHA-BSHDDuLBHC0o8RKcrcr6';
+
+  
+  //End Test Data from Simon
+
 
 
   upload(file: File): Observable<HttpEvent<any>> {

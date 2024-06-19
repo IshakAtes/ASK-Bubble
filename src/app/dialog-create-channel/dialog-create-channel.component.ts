@@ -14,7 +14,6 @@ import { DialogAddChannelMembersComponent } from '../dialog-add-channel-members/
   styleUrl: './dialog-create-channel.component.scss'
 })
 export class DialogCreateChannelComponent {
-
   database = inject(DatabaseService)
   description: string;
   channelName: string;
@@ -29,6 +28,7 @@ export class DialogCreateChannelComponent {
     
   }
 
+
   checkContent(){
     if(this.channelName == ''){
       this.buttonDisabled = true;
@@ -37,6 +37,7 @@ export class DialogCreateChannelComponent {
       this.buttonDisabled = false;
     }
   }
+
 
   validateContent(): Promise<boolean>{
     return new Promise<boolean>((resolve, reject) =>{

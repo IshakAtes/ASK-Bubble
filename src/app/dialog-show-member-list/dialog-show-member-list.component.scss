@@ -1,6 +1,6 @@
 section {
-    //width: 910px;
-      height: 411px;
+      height: 331px;
+      width: 335px;
       padding: 40px;
       border-radius: 30px 0px 30px 30px;
       opacity: 0px;
@@ -8,13 +8,13 @@ section {
       display: flex;
       flex-direction: column;
       position: relative;
-      top: -30px;
-      left: 290px;
+      top: -70px;
+      left: 380px;
       gap: 20px;
     }
 
     .headline {
-        width: 415px;
+        width: 335px;
         height: 40px;
         gap: 0px;
         display: flex;
@@ -35,21 +35,20 @@ section {
                 cursor: pointer;
             }
         }
-           >span{
-               display: flex;
-               width: 400px;
-               height: 33px;
-               gap: 0px;
-               opacity: 0px;
-               font-family: Nunito;
-               font-size: 24px;
-               font-weight: 700;
-               line-height: 32.74px;
-               text-align: left;
-           }
-       }
+        >span{
+            display: flex;
+            width: 400px;
+            height: 33px;
+            gap: 0px;
+            opacity: 0px;
+            font-family: Nunito;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 32.74px;
+            text-align: left;
+        }
+    }
     
-
     .userlistContainer{
         width: 215px;
         height: 211px;
@@ -109,13 +108,10 @@ section {
             }
     }
 
-
     .userlistContainer::-webkit-scrollbar {
         display: none;
    }
        
-
-
     .addMember{
         display: flex;
         align-items: center;
@@ -125,7 +121,6 @@ section {
         gap: 15px;
         border-radius: 100px 0px 0px 0px;
         opacity: 0px;
-
         >div {
             display: flex;
             align-items: center;
@@ -153,7 +148,3 @@ section {
         border-radius: 20px;
         cursor: pointer;
     }
-
-
-
-    
