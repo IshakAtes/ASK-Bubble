@@ -5,6 +5,8 @@ import { getDocs, query, where } from "firebase/firestore";
 import { HttpClient, HttpRequest, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Channel } from '../models/channel.class';
+import { FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +22,7 @@ export class UserService {
   private baseUrl = 'http://localhost:4200';
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   //Test Data from Simon
 
@@ -52,20 +54,32 @@ export class UserService {
   }
 
   
-  // findUser(email: string) {
-  //   const q = query(collection(this.firestore, "users"), where("email", "==", email));
-  //   const unsubscribe = onSnapshot(q, (querySnapshot) => {
-  //     querySnapshot.forEach((doc) => {
-  //       console.log('leer', querySnapshot.empty);
-  //       if (doc == undefined) {
-  //         console.log('undefined ist gut');
-  //       } else {
-  //         // users.push(doc.data().name);
-  //         console.log('doc', doc.data());
-  //       }
-  //     });
-  //   });
-  // }
+  async checkEmail(email: string, myForm: FormGroup): Promise<void> {
+    try {
+      const q = query(collection(this.firestore, 'users'), where('email', '==', email));
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty && myForm.valid) {
+          const formValues = myForm.value;
+          const newUser = new User({
+            email: formValues.mail,
+            name: formValues.name,
+            password: formValues.pw,
+            status: 'offline',
+            avatarUrl: '',
+            userId: ''
+          });
+          this.userCache = newUser;
+          this.router.navigate(['/choosingAvatar']);
+      } else {
+        querySnapshot.forEach((doc) => {
+          alert('Die angegebene email adresse, existiert bereits')
+        });
+      }
+    } catch (error) {
+      console.error('Fehler beim Abrufen der Dokumente:', error);
+    }
+  }
+
 
   changePassword(id: string, pw: string) {
     const userDocRef = doc(this.firestore, "users", id);
