@@ -1,16 +1,23 @@
 <div class="main-chat">
     <div class="main-chat-header">
-        <div class="channelname">
-            <div class="main-chat-header-avatar-div">
-                <img class="avatar" src="../../assets/img/defaultAvatars/defaultMale1.png" alt="User Avatar">
-                @if(online){
-                <div class="online-indicator"></div>
-                }@else{
-                <div class="offline-indicator"></div>
-                }
-            </div>
-            <span>Noah Braun</span>
-        </div>
+        @for (user of allUsers; track $index) {
+            @if (user.userId == specificConversation[0].recipientId) {
+                <div class="channelname">
+                    <div class="main-chat-header-avatar-div">
+                        
+                        <img class="avatar" src="{{user.avatarUrl}}" alt="User Avatar">
+                        @if(user.status == 'online'){
+                        <div class="online-indicator"></div>
+                        }@else{
+                        <div class="offline-indicator"></div>
+                        }
+                    </div>
+                    <span>{{user.name}}</span>
+                </div>
+
+            }
+        }
+        
 
     </div>
 

@@ -41,6 +41,7 @@ export class ChatComponent implements AfterViewInit {
 
     databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
       this.list = messageList;
+      this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
 
       console.log('list');
       console.log(this.list);
@@ -97,7 +98,9 @@ export class ChatComponent implements AfterViewInit {
     this.content = '';
 
     this.databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
+      
       this.list = messageList;
+      this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
 
       console.log('list 2');
       console.log(this.list);
