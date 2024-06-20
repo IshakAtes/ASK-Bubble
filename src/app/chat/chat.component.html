@@ -34,7 +34,7 @@
             @if (formatDate(formatTimestamp(list[$index].createdAt)) != formatDate(formatTimestamp(list[$index-1].createdAt))) {
                 <div class="time-separator">
                     <div class="date">
-                        <span>{{formatDate(formatTimestamp(list[$index+1].createdAt))}}</span>
+                        <span>{{formatDate(formatTimestamp(list[$index].createdAt))}}</span>
                     </div>
                     <div class="line"></div>
                 </div>
