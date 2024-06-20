@@ -20,7 +20,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
     
             $recipient = $email;  
             $subject = "Contact From BubbleTeam";
-            $message = "From:" . $name . "<br>" . $message;
+            $message = "Hello " . $name . " here is you password reset Link:" . "<br>" . $message;
 
     
             $headers   = array();
@@ -28,7 +28,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             $headers[] = 'Content-type: text/html; charset=utf-8';
 
             // Additional headers
-            $headers[] = "From: noreply@bubbleTeam.com";
+            $headers[] = "From: noreply@bubbleteam.com";
 
             mail($recipient, $subject, $message, implode("\r\n", $headers));
             break;

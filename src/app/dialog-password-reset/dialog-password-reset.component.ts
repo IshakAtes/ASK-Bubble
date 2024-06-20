@@ -5,7 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../user.service';
 import { HttpClient } from '@angular/common/http';
 import { getDocs, query, where } from "firebase/firestore";
-import { Firestore, collection, addDoc, updateDoc, doc, onSnapshot } from '@angular/fire/firestore';
+import { Firestore, collection } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-dialog-password-reset',
@@ -40,9 +40,7 @@ export class DialogPasswordResetComponent {
 
 
   onSubmit() {
-    // this.us.findUser(this.myForm.value.mail);
     this.checkEmail(this.myForm.value.mail);
-
   }
 
   async checkEmail(email: string): Promise<void> {
