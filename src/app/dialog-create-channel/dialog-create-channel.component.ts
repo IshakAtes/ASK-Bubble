@@ -14,13 +14,16 @@ import { DialogAddChannelMembersComponent } from '../dialog-add-channel-members/
   styleUrl: './dialog-create-channel.component.scss'
 })
 export class DialogCreateChannelComponent {
+  
   database = inject(DatabaseService)
+  
   description: string;
   channelName: string;
   activeUser: string = 'p1oEblSsradmfVeyvTu3';
   channelCache: Channel;
 
   buttonDisabled: boolean = true;
+  
   @ViewChild('errorMsg') errorMessage: ElementRef
   
 
@@ -52,9 +55,7 @@ export class DialogCreateChannelComponent {
            }
            resolve(result);
           })
-          .catch(error =>{
-            reject(error)
-        })
+          .catch(error => {reject(error)})
     },)
   }
   
@@ -73,5 +74,4 @@ export class DialogCreateChannelComponent {
         }
       })
   }
-
 }

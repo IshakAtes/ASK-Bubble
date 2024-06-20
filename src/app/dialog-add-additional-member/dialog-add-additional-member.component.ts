@@ -1,10 +1,11 @@
-import { Component, inject, ElementRef, ViewChild } from '@angular/core';
+import { Component, inject, ElementRef, ViewChild, AfterViewInit, AfterContentInit } from '@angular/core';
 import { User } from '../../models/user.class';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DatabaseService } from '../database.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Channel } from '../../models/channel.class';
+import { DialogShowSelectedUserComponent } from '../dialog-show-selected-user/dialog-show-selected-user.component';
 
 @Component({
   selector: 'app-dialog-add-additional-member',
@@ -14,35 +15,40 @@ import { Channel } from '../../models/channel.class';
   styleUrl: './dialog-add-additional-member.component.scss'
 })
 export class DialogAddAdditionalMemberComponent {
-  
-  //From dialog-add-channel-members.ts because of adding members to channel
-  currentChannel: Channel;
-  activeUser: string = 'p1oEblSsradmfVeyvTu3'
 
-  newChannel: Channel;
- 
   database = inject(DatabaseService)
- 
+  
+  currentChannel: Channel;
+  newChannel: Channel;
+  
   hideUserContainer: boolean = true;
   inputFocused: boolean =  false;
-   
+  selectedListWidth240: boolean = false;
+
   searchUser: string = '';
- 
+
   userlist: Array<User> = [];
   foundUserList: Array<User> = [];
   selectedUserList: Array<User> = [];
 
-
   @ViewChild('errorMsg') errorMessage: ElementRef 
-  
+  @ViewChild('selectedList') selectedList: ElementRef 
+
+
   constructor(public dialogRef: MatDialogRef<DialogAddAdditionalMemberComponent>, public dialog: MatDialog){
     this.setUserlist();
   }
 
-
+  
   setUserlist(){
-    
+    this.loadUserList();
+    this.createPossibleUserSelection();
+  }
+
+
+  loadUserList(){
     setTimeout(() => {
+      this.userlist = [];
       this.database.loadAllUsers().then(allUsers =>{
         allUsers.forEach(member => {
           this.database.loadUser(member.userId)
@@ -52,8 +58,10 @@ export class DialogAddAdditionalMemberComponent {
         })
       })
     }, 100);
+  }
 
 
+  createPossibleUserSelection(){
     setTimeout(() => {
       this.currentChannel.membersId.forEach(memberid => {
         this.userlist.forEach(user => {
@@ -78,9 +86,24 @@ export class DialogAddAdditionalMemberComponent {
       this.searchUser = '';
     }
     else{
-      this.selectedUserList.push(user);
-      this.setDefault();
-      console.log(this.selectedUserList);
+      this.addUserToSelectedUserList(user)
+    }
+  }
+
+
+  addUserToSelectedUserList(user: User){
+    this.selectedUserList.push(user);
+    this.setDefault();
+    this.checkInputWith();
+  }
+
+
+  checkInputWith(){
+    if(this.selectedList.nativeElement.offsetWidth > 500){
+      this.selectedListWidth240 = true;
+    }
+    else{
+      this.selectedListWidth240 = false;
     }
   }
 
@@ -96,6 +119,7 @@ export class DialogAddAdditionalMemberComponent {
   removeUser(user: User){
     this.selectedUserList.splice(this.selectedUserList.indexOf(user), 1);
     this.setDefault();
+    this.checkInputWith();
   }
 
 
@@ -143,8 +167,6 @@ export class DialogAddAdditionalMemberComponent {
     this.selectedUserList.forEach(user =>{
       this.newChannel.membersId.push(user.userId)
     })
-    console.log('New channel filled with new Users')
-    console.log(this.newChannel)
     this.database.addChannel(this.newChannel);
   }
 
@@ -153,10 +175,14 @@ export class DialogAddAdditionalMemberComponent {
     this.selectedUserList.forEach(user => {
       this.currentChannel.membersId.push(user.userId)
     })
-    console.log('updated channel filled with all users')
-    console.log(this.currentChannel)
     this.database.updateChannelMembers(new Channel(this.currentChannel));
     this.setUserlist();
+  }
+
+
+  openSelectedUserList(){
+    const userlistInfo = this.dialog.open(DialogShowSelectedUserComponent);
+    userlistInfo.componentInstance.selectedUserList = this.selectedUserList;
   }
 
 }

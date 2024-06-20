@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { Firestore} from '@angular/fire/firestore';
 import { DatabaseService } from '../database.service';
 import { User } from '../../models/user.class';
 import { Channel } from '../../models/channel.class';
@@ -18,11 +17,11 @@ import { ChannelComponent } from '../channel/channel.component';
   styleUrl: './workspace.component.scss'
 })
 export class WorkspaceComponent {
-  firestore: Firestore = inject(Firestore);
   database = inject(DatabaseService);
   userService = inject(UserService);
   
   activeUser = new User()
+  
   activeUserChannels: Array<Channel> = [];
   activeUserConversationList: Array<Conversation> = [];
   usersFromActiveUserConversationList: Array<User> = [];
@@ -30,49 +29,55 @@ export class WorkspaceComponent {
   hideConversationBody: boolean = false;
   hideChannelBody: boolean = false;
 
-
   userSimon: string = 'simon@dummy.de';
 
-  userSpongeBob: string = 'schwamm@gmail.ocm';
-
   constructor(public dialog: MatDialog, public us: UserService){  
-    
+    this.loadActiveUserChannels();
+    this.loadActiveUserConversations();
+  }
 
-    //Load all channels from User
+
+  loadActiveUserChannels(){
     this.database.getUser(this.userSimon).then(user =>{
       this.activeUser = user;
       this.database.loadAllUserChannels(user.userId).then(userChannels => {
         this.activeUserChannels = userChannels
-        console.log(this.us.loggedUser);
       });
     })
+  }
 
 
-    //Load all Conversations from user
+  loadActiveUserConversations(){
     this.database.getUser(this.userSimon).then(user =>{
       this.database.loadAllUserConversations(user.userId)
       .then(userConversations => {
         this.activeUserConversationList = userConversations;
         userConversations.forEach(conversation =>{
           if(conversation.createdBy == user.userId){
-            this.database.loadUser(conversation.recipientId)
-            .then(loadedUser => {
-              this.usersFromActiveUserConversationList.push(loadedUser);
-            })
+            this.getRecievedConversation(conversation);
           }else{
-            this.database.loadUser(conversation.createdBy)
-            .then(loadedUser => {
-              this.usersFromActiveUserConversationList.push(loadedUser);
-            })
+            this.getCreatedConversation(conversation);
           }
         })
       });
     })
+  }
 
 
-    //this.database.addConversation(this.database.createConversation('p1oEblSsradmfVeyvTu3', 'bFzvNOxewazPdUx2iBa3'))
+  getCreatedConversation(conversation: Conversation){
+    this.database.loadUser(conversation.createdBy)
+    .then(loadedUser => {
+      this.usersFromActiveUserConversationList.push(loadedUser);
+    })
+  }
 
-  } //End of Constructor
+
+  getRecievedConversation(conversation: Conversation){
+    this.database.loadUser(conversation.recipientId)
+    .then(loadedUser => {
+      this.usersFromActiveUserConversationList.push(loadedUser);
+    })
+  }
 
 
   openConversation(conversationId: string){

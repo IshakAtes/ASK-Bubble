@@ -144,6 +144,7 @@ section {
 .userInput {
  display: flex;
  flex-direction: column;
+ overflow: hidden;
  width: 514px;
  height: 65px;
  padding: 0px 20px 0px 20px;
@@ -161,7 +162,7 @@ section {
          display: flex;
          align-items: center;
          padding: 0px 15px 0px 15px;
-         .selectedUser{
+            .selectedUser{
              display: flex;
              align-items: center;
              background-color: #ECEEFE;
@@ -202,7 +203,7 @@ section {
              span {
                  display: flex;
                  position: relative;
-                 width: fit-content;
+                 width: max-content;
                  height: 25px;
                  gap: 0px;
                  opacity: 0px;
@@ -212,7 +213,32 @@ section {
                  line-height: 24.55px;
                  text-align: left;
              }
-         }
+        }
+
+        .selectedListLength{
+            display: flex;
+            width: 30px;
+            >span {
+                position: relative;
+                right: 28px;
+                z-index: 99;
+                height: 25px;
+                gap: 0px;
+                opacity: 0px;
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 400;
+                line-height: 24.55px;
+                text-align: left;
+                padding: 5px;
+            }
+
+            >span:hover {
+                background-color:#ECEEFE;
+                border-radius: 20px;
+                
+            }
+        }
      }
  
      >input {
@@ -224,7 +250,7 @@ section {
          border: none;
          position: relative;
          top: 1px;
-         right: 30px;
+         right: 45px;
          font-family: Nunito;
          font-size: 18px;
          font-weight: 400;
@@ -251,17 +277,20 @@ section {
      }
  }
 
- >label {
-     font-family: Nunito;
-     font-size: 14px;
-     font-weight: 400;
-     line-height: 24.55px;
-     text-align: left;
-     color: red;
-     position: relative;
-     bottom: 18px;
-     left: 24px;
- }
+
+}
+
+.errorMessage {
+    font-family: Nunito;
+    height: 0px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 24.55px;
+    text-align: left;
+    color: red;
+    position: relative;
+    bottom: 18px;
+    left: 24px;
 }
 
 

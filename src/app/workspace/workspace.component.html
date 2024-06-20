@@ -118,7 +118,7 @@
             <!--ConversationBody has to be filled with data from database-->
             <div [ngClass]="{'d-none': hideConversationBody}" class="conversationBody">
                 <button (click)="openConversation(activeUser.userId)">
-                    <img src="{{this.us.loggedUser.avatarUrl}}" alt="">
+                    <img src="{{activeUser.avatarUrl}}" alt="">
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
                     </svg>

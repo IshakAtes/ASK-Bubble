@@ -172,7 +172,7 @@ section {
 .userInput {
     display: flex;
     flex-direction: column;
-    width: 792px;
+    overflow: hidden;
     gap: 20px;
     opacity: 0px;
     display: flex;
@@ -234,7 +234,7 @@ section {
                 span {
                     display: flex;
                     position: relative;
-                    width: fit-content;
+                    width: max-content;
                     height: 25px;
                     gap: 0px;
                     opacity: 0px;
@@ -244,6 +244,31 @@ section {
                     line-height: 24.55px;
                     text-align: left;
                 }
+            }
+        }
+
+        .selectedListLength{
+            display: flex;
+            width: 30px;
+            >span {
+                position: relative;
+                right: 28px;
+                z-index: 99;
+                height: 25px;
+                gap: 0px;
+                opacity: 0px;
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 400;
+                line-height: 24.55px;
+                text-align: left;
+                padding: 5px;
+            }
+
+            >span:hover {
+                background-color:#ECEEFE;
+                border-radius: 20px;
+                
             }
         }
     
@@ -282,18 +307,19 @@ section {
             outline: none !important;
         }
     }
+}
 
-    >label {
-        font-family: Nunito;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 24.55px;
-        text-align: left;
-        color: red;
-        position: relative;
-        bottom: 18px;
-        left: 24px;
-    }
+.errorMessage {
+    font-family: Nunito;
+    height: 0px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 24.55px;
+    text-align: left;
+    color: red;
+    position: relative;
+    bottom: 18px;
+    left: 24px;
 }
 
 

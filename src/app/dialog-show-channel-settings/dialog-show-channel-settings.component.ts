@@ -16,30 +16,27 @@ import { FormsModule } from '@angular/forms';
 export class DialogShowChannelSettingsComponent {
   currentChannel: Channel;
   newChannel: Channel;
+
   database = inject(DatabaseService);
-  
-  //id of spongebob l2RRMmucZi37mppmjU81 p1oEblSsradmfVeyvTu3
 
   activeUser: User;
   channelCreator: User;
+
   newChannelName: string = '';
   newChannelDescription: string = '';
   
   showEditNameInput: boolean = false;
   showEditDescriptionInput: boolean = false
 
- 
   @ViewChild('errorMsg') errorMessage: ElementRef
 
-
-
+  
   constructor(public dialogRef: MatDialogRef<DialogShowChannelSettingsComponent>, public dialog: MatDialog){
     this.database.loadUser('p1oEblSsradmfVeyvTu3')
       .then(user =>{
         this.activeUser = user;
     })
   }
-
 
 
   leaveChannel(){
@@ -56,20 +53,12 @@ export class DialogShowChannelSettingsComponent {
 
   changeToEditView(value: string){
     if(value == 'name'){
-      if(this.showEditNameInput){
-        this.showEditNameInput = false;
-      }
-      else{
-        this.showEditNameInput = true;
-      }
+      if(this.showEditNameInput){this.showEditNameInput = false;}
+      else{this.showEditNameInput = true;}
     }
     else{
-      if(this.showEditDescriptionInput){
-        this.showEditDescriptionInput = false;
-      }
-      else{
-        this.showEditDescriptionInput = true;
-      }
+      if(this.showEditDescriptionInput){this.showEditDescriptionInput = false;}
+      else{this.showEditDescriptionInput = true;}
     }
   }
 
@@ -102,15 +91,12 @@ export class DialogShowChannelSettingsComponent {
            }
            resolve(result);
           })
-          .catch(error =>{
-            reject(error)
-          })
+          .catch(error =>{reject(error)})
     },)
   }
 
 
   saveChangedChannelDescription(){
-    console.log('save Channel Description: '  + this.newChannelDescription)
     this.currentChannel.description = this.newChannelDescription;
     this.database.updateChannelName(new Channel(this.currentChannel))
     this.showEditDescriptionInput = false;

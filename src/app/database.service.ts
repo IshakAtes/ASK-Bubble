@@ -16,10 +16,6 @@ import { updateDoc, doc } from 'firebase/firestore'; // Korrigiert den Importpfa
 export class DatabaseService {
   firestore: Firestore = inject(Firestore)
   
-  channelCache: Channel;
-
-  testvariable: string;
-  
   constructor() { 
     
   }
@@ -75,30 +71,6 @@ export class DatabaseService {
     return reaction
   }
 
-
-  /*
-  createConversationCreator(createdBy: string, recipientId: string): Conversation{
-    const conversationCreator = {} as Conversation;
-    conversationCreator.conversationId = 'CONV-' + createdBy;
-    conversationCreator.conversationName = 'Conversation with ' + recipientId;
-    conversationCreator.createdBy = createdBy;
-    conversationCreator.fileUrl = 'null';
-    conversationCreator.recipientId = recipientId;
-    return conversationCreator;
-  }
-
-
-  createConversationRecipient(createdBy: string, recipientId: string): Conversation{
-    const conversationRecipient = {} as Conversation
-    conversationRecipient.conversationId = 'CONV-' + createdBy;
-    conversationRecipient.conversationName = 'Conversation with ' + createdBy;
-    conversationRecipient.createdBy = createdBy;
-    conversationRecipient.fileUrl = 'null';
-    conversationRecipient.recipientId = recipientId;
-    return conversationRecipient;
-  }
-  */
-
   createConversation(createdBy: string, recipientId: string): Conversation{
     const conversation = {} as Conversation
     const randomNumber = Math.random();
@@ -147,7 +119,7 @@ export class DatabaseService {
 
   addChannel(channel: Channel){
     channel.membersId.forEach(userId => {
-      setDoc(doc(this.firestore, 'users/' + userId + '/channels', channel.channelId), channel.toJSON());
+      setDoc(doc(this.firestore, 'users/' + userId + '/channels', channel.channelId), channel);
     });
   }
 
@@ -325,9 +297,7 @@ export class DatabaseService {
             channelList.push(channelObject);
           });
           resolveChannel();
-        
         }, rejectChannel);
-        
       });
       channelPromises.push(channelPromise);
       Promise.all(channelPromises)
@@ -337,7 +307,6 @@ export class DatabaseService {
   }
    
 
- 
   loadSpecificUserChannel(userId: string, channelId: string): Promise<Channel>{
     return new Promise<Channel>((resolve, reject) =>{ 
       const channelObject = {} as Channel
@@ -361,7 +330,6 @@ export class DatabaseService {
   }
 
 
-  //tricky
   loadAllChannelMessages(){
     return new Promise<Array<ChannelMessage>>((resolve, reject) => {
       const messageList: Array<ChannelMessage> = [];
@@ -372,7 +340,6 @@ export class DatabaseService {
           const channelPromise = new Promise<void>((resolveChannel, rejectChannel) => {
             onSnapshot(collection(this.firestore, `users/${user.id}/channels`), (channels) => {
               const messagePromises: Array<Promise<void>> = [];
-  
               channels.forEach(channel => {
                 const messagePromise = new Promise<void>((resolveMessage, rejectMessage) => {
                   onSnapshot(collection(this.firestore, `users/${user.id}/channels/${channel.id}/channelmessages`), (messages) => {
@@ -641,7 +608,6 @@ export class DatabaseService {
   }
 
 
-
   updateChannelName(channel: Channel){
     channel.membersId.forEach(user => {
       updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/'), channel.channelId), channel.toJSON());
@@ -649,21 +615,9 @@ export class DatabaseService {
   }
 
 
-
-
-  updateChannelDescription(){
-
-  }
-
-
-
   /*delete functions */
   deleteChannel(channel: Channel, userId: string){
-    
-
     deleteDoc(doc(collection(this.firestore, 'users/' + userId + '/channels/'), channel.channelId));
-  
-
   }
 
 }

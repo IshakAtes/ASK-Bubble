@@ -24,7 +24,6 @@ export class ChannelComponent {
   activeUser1: string = 'l2RRMmucZi37mppmjU81'
   
 
-
   //realData
   @Input() channel: Channel
   @Input() channelBig: boolean;
@@ -37,24 +36,36 @@ export class ChannelComponent {
 
   constructor(public dialog: MatDialog){
     setTimeout(() => {
-      this.channel.membersId.forEach(member => {
-        this.database.loadUser(member)
-          .then(user => {
-            this.memberList.push(user);
-          })
-      })
-
-      this.database.loadChannelMessages(this.activeUser, this.channel.channelId)
-        .then(messages => {
-          this.messageList = messages;
-      })
-
-      this.database.loadUser(this.channel.createdBy)
-        .then(user =>{
-          this.channelCreator = user;
-        })
-
+      this.loadMemberList();
+      this.loadChannelMessages();
+      this.loadChannelCreator();
     }, 500);
+  }
+
+
+  loadMemberList(){
+    this.channel.membersId.forEach(member => {
+      this.database.loadUser(member)
+        .then(user => {
+          this.memberList.push(user);
+        })
+    })
+  }
+
+
+  loadChannelCreator(){
+    this.database.loadUser(this.channel.createdBy)
+      .then(user =>{
+        this.channelCreator = user;
+    })
+  }
+
+
+  loadChannelMessages(){
+    this.database.loadChannelMessages(this.activeUser, this.channel.channelId)
+    .then(messages => {
+      this.messageList = messages;
+    })
   }
 
   
@@ -75,5 +86,5 @@ export class ChannelComponent {
     channelInfo.componentInstance.currentChannel = this.channel;
     channelInfo.componentInstance.channelCreator = this.channelCreator;
   }
-
+  
 }

@@ -6,6 +6,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { User } from '../../models/user.class';
 import { DatabaseService } from '../database.service';
 import { FormsModule } from '@angular/forms';
+import { DialogShowSelectedUserComponent } from '../dialog-show-selected-user/dialog-show-selected-user.component';
 
 
 
@@ -18,26 +19,31 @@ import { FormsModule } from '@angular/forms';
 })
 export class DialogAddChannelMembersComponent {
   database = inject(DatabaseService)
+  
   channelCache: Channel;
   
   hideUserInput: boolean = true;
   hideUserContainer: boolean = true;
   inputFocused: boolean =  false;
+  
   activeUser: string = 'p1oEblSsradmfVeyvTu3'
   searchUser: string = '';
-  
+  resultRadioButton: string;
+
+  memberIdList: Array<string> = [];
   userlist: Array<User> = [];
   foundUserList: Array<User> = [];
   selectedUserList: Array<User> = [];
  
-
-
   @ViewChild('errorMsg') errorMessage: ElementRef
 
-  resultRadioButton: string;
-  
 
   constructor(public dialogRef: MatDialogRef<DialogAddChannelMembersComponent>, public dialog: MatDialog){
+    this.loadUserList();
+  }
+
+
+  loadUserList(){
     this.database.loadAllUsers().then(allUsers =>{
       this.userlist = allUsers
       this.userlist.forEach(user => {
@@ -56,10 +62,7 @@ export class DialogAddChannelMembersComponent {
 
   selectUser(user: User){
     let doubleSelection: boolean = false
-    this.selectedUserList.forEach(selectedUser => {
-      if(selectedUser.email == user.email){doubleSelection = true;}
-    })
-    
+    this.selectedUserList.forEach(selectedUser => {if(selectedUser.email == user.email){doubleSelection = true;}})
     if(doubleSelection){
       this.errorMessage.nativeElement.innerHTML = 'Nutzer wurde bereits ausgewählt';
       this.inputFocused =  false;
@@ -78,7 +81,7 @@ export class DialogAddChannelMembersComponent {
     this.selectedUserList.splice(this.selectedUserList.indexOf(user), 1);
     this.setDefault();
   }
-
+ 
 
   setDefault(){
     this.inputFocused =  false;
@@ -94,20 +97,23 @@ export class DialogAddChannelMembersComponent {
         this.errorMessage.nativeElement.innerHTML = 'Bitte wählen Sie weitere Nutzer aus';
       }
       else{
-        console.log('add selection to DB');
-         
-        /*
-            this.selectedUserList.forEach(user => {
-              this.memberIdList.push(user.userId)
-            })
-            this.memberIdList.push(activeUser)
-            this.database.addChannel(this.database.createChannel(this.channelCache.createdBy, this.channelCache.description, this.memberIdList, this.channelCache.name))
-          */
+        this.addSelectionToDB();
       }
     }
     else{
       console.log('add team to DB');
     }
+  }
+
+
+  addSelectionToDB(){
+      console.log('add selection to DB');
+      this.selectedUserList.forEach(user => {
+        this.memberIdList.push(user.userId)
+      })
+      this.memberIdList.push(this.activeUser);
+      this.database.addChannel(this.database.createChannel(this.channelCache.createdBy, this.channelCache.description, this.memberIdList, this.channelCache.name))
+      this.dialogRef.close();
   }
 
 
@@ -140,5 +146,11 @@ export class DialogAddChannelMembersComponent {
     else{
       this.inputFocused = true;
     }
+  }
+
+
+  openSelectedUserList(){
+    const userlistInfo = this.dialog.open(DialogShowSelectedUserComponent);
+    userlistInfo.componentInstance.selectedUserList = this.selectedUserList;
   }
 }
