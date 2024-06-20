@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, OnChanges, SimpleChanges, Input } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { UserService } from '../user.service';
 import { Timestamp } from 'firebase/firestore';
@@ -18,6 +18,7 @@ export class ChatComponent implements AfterViewInit {
   allUsers = [] as Array<User>;
 
   messages = [] as Array<ConversationMessage>;
+  //@Input() 
   list: Array<ConversationMessage> = [];
 
   allConversations: Array<Conversation> = [];
@@ -30,34 +31,6 @@ export class ChatComponent implements AfterViewInit {
 
   constructor(public databaseService: DatabaseService, public userService: UserService) {
 
-    databaseService.loadAllUsers().then(userList => {
-      this.allUsers = userList;
-      console.log('All Users:', this.allUsers);
-    }).catch(error => {
-      console.error('Fehler beim Laden der Benutzer:', error);
-    });
-
-
-
-    databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
-      this.list = messageList;
-      this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-
-      console.log('list');
-      console.log(this.list);
-    }
-    )
-
-    databaseService.loadAllConversations().then(convo => {
-      this.allConversations = convo;
-      console.log('converstions:');
-      console.log(this.allConversations);
-
-
-    })
-
-
-
     databaseService.loadSpecificUserConversation("p1oEblSsradmfVeyvTu3", "CONV-p1oEblSsradmfVeyvTu3").then(conversationObject => {
       this.specificConversation.push(conversationObject)
 
@@ -65,6 +38,30 @@ export class ChatComponent implements AfterViewInit {
       console.log(this.specificConversation);
     }
     )
+
+
+    databaseService.loadAllUsers().then(userList => {
+      this.allUsers = userList;
+      console.log('All Users:', this.allUsers);
+    }).catch(error => {
+      console.error('Fehler beim Laden der Benutzer:', error);
+    });
+
+   
+    databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
+      this.list = messageList;
+      this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+
+      console.log('list');
+      console.log(this.list);
+    });
+
+
+    databaseService.loadAllConversations().then(convo => {
+      this.allConversations = convo;
+      console.log('converstions:');
+      console.log(this.allConversations);
+    })
   }
 
 
@@ -98,7 +95,7 @@ export class ChatComponent implements AfterViewInit {
     this.content = '';
 
     this.databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
-      
+
       this.list = messageList;
       this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
 
@@ -106,19 +103,41 @@ export class ChatComponent implements AfterViewInit {
       console.log(this.list);
     }
     )
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 10);
   }
 
-  // Focusing tesxtarea after component is initilized 
+
 
   @ViewChild('myTextarea') myTextarea!: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('lastDiv') lastDiv : ElementRef<HTMLDivElement>;
 
   ngAfterViewInit(): void {
-    // Setze den Fokus auf die Textarea, sobald die Komponente initialisiert ist
     this.setFocus();
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 1000);
   }
 
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   if (changes['list']) {
+  //     this.scrollToBottom();
+  //   }
+  // }
+
+  // Focusing tesxtarea after component is initilized 
   setFocus(): void {
     this.myTextarea.nativeElement.focus();
+  }
+
+  // Scroll to the bottom of the chatarea 
+  scrollToBottom(): void {
+      try {
+        this.lastDiv.nativeElement.scrollIntoView();
+      } catch (err) {
+        console.error('Scroll to bottom failed', err);
+      }
   }
 
   // toggeling emoticons and mentions
@@ -145,7 +164,7 @@ export class ChatComponent implements AfterViewInit {
   }
 
 
-    formatTime(date: Date): string {
+  formatTime(date: Date): string {
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
     return `${hours}:${minutes}`;
