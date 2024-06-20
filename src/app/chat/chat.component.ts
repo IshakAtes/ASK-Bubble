@@ -20,6 +20,7 @@ export class ChatComponent implements AfterViewInit {
   messages = [] as Array<ConversationMessage>;
   //@Input() 
   list: Array<ConversationMessage> = [];
+  dates: Array<string> = [];
 
   allConversations: Array<Conversation> = [];
   specificConversation: Array<Conversation> = [];
@@ -30,24 +31,14 @@ export class ChatComponent implements AfterViewInit {
 
 
   constructor(public databaseService: DatabaseService, public userService: UserService) {
-
     databaseService.loadSpecificUserConversation("p1oEblSsradmfVeyvTu3", "CONV-p1oEblSsradmfVeyvTu3").then(conversationObject => {
       this.specificConversation.push(conversationObject)
 
       console.log('specialconversation');
       console.log(this.specificConversation);
-    }
-    )
-
-
-    databaseService.loadAllUsers().then(userList => {
-      this.allUsers = userList;
-      console.log('All Users:', this.allUsers);
-    }).catch(error => {
-      console.error('Fehler beim Laden der Benutzer:', error);
     });
 
-   
+
     databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
       this.list = messageList;
       this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
@@ -57,11 +48,19 @@ export class ChatComponent implements AfterViewInit {
     });
 
 
+    databaseService.loadAllUsers().then(userList => {
+      this.allUsers = userList;
+      console.log('All Users:', this.allUsers);
+    }).catch(error => {
+      console.error('Fehler beim Laden der Benutzer:', error);
+    });
+
+
     databaseService.loadAllConversations().then(convo => {
       this.allConversations = convo;
       console.log('converstions:');
       console.log(this.allConversations);
-    })
+    })    
   }
 
 
@@ -87,25 +86,32 @@ export class ChatComponent implements AfterViewInit {
 
 
   saveNewMessage() {
-    this.list = [];
-    let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specificConversation[0], this.content, this.userId)
+    // this.list = [];
+    // let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specificConversation[0], this.content, this.userId)
 
-    this.databaseService.addConversationMessage(this.specificConversation[0], newMessage)
+    // this.databaseService.addConversationMessage(this.specificConversation[0], newMessage)
 
-    this.content = '';
+    // this.content = '';
 
-    this.databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
+    // this.databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
 
-      this.list = messageList;
-      this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+    //   this.list = messageList;
+    //   this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
 
-      console.log('list 2');
-      console.log(this.list);
+    //   console.log('list 2');
+    //   console.log(this.list);
+    // }
+    // )
+    // setTimeout(() => {
+    //   this.scrollToBottom();
+    // }, 10);
+
+    for (let i = 0; i < this.list.length; i++) {
+      this.dates.push(this.formatDate(this.formatTimestamp(this.list[i].createdAt)))
+      console.log('dates');
+      
+      console.log(this.dates);
     }
-    )
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 10);
   }
 
 

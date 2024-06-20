@@ -24,16 +24,27 @@
     <div #chatArea class="chat-area">
         <div class="time-separator">
             <div class="date">
-                <span>Dienstag, 14 Januar</span>
-                <!-- <span>{{list[0].createdAt}}</span> -->
+                <span>{{formatDate(formatTimestamp(list[0].createdAt))}}</span>
             </div>
             <div class="line"></div>
         </div>
 
         @for (message of list; track $index) {
+            @if ($index > 0) {
+            @if (formatDate(formatTimestamp(list[$index].createdAt)) != formatDate(formatTimestamp(list[$index-1].createdAt))) {
+                <div class="time-separator">
+                    <div class="date">
+                        <span>{{formatDate(formatTimestamp(list[$index+1].createdAt))}}</span>
+                    </div>
+                    <div class="line"></div>
+                </div>
+            }
+            }
         @if (message.createdBy == userId) {
         @for (user of allUsers; track $index) {
         @if (message.createdBy == user.userId) {
+
+            
 
 
         <div class="own-message">
