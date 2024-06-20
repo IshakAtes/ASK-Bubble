@@ -67,6 +67,12 @@ export class UserService {
   //   });
   // }
 
+  changePassword(id: string, pw: string) {
+    const userDocRef = doc(this.firestore, "users", id);
+    updateDoc(userDocRef, {
+      password: pw
+    });
+  }
 
 
   userOnline(id: string) {

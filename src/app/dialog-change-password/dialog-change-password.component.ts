@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule, NgClass, NgIf } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-dialog-change-password',
@@ -16,7 +17,7 @@ export class DialogChangePasswordComponent implements OnInit {
   myForm: FormGroup;
   passworChanged: boolean = false;
 
-  constructor(public route: ActivatedRoute, private formBuilder: FormBuilder, private router: Router) {
+  constructor(public route: ActivatedRoute, private formBuilder: FormBuilder, private router: Router, private us: UserService) {
     this.myForm = this.formBuilder.group({
       newPass1: ['', [Validators.required, Validators.minLength(5)]],
       newPass2: ['', [Validators.required, Validators.minLength(5)]]
@@ -37,13 +38,15 @@ export class DialogChangePasswordComponent implements OnInit {
 
 
   onSubmit() {
-    if (this.myForm.valid) {
-      // Password change logic here
-      console.log('Form submitted', this.myForm.value);
+    if (this.myForm.valid && this.myForm.get('newPass1')?.value === this.myForm.get('newPass2')?.value) {
+      this.us.changePassword(this.userId, this.myForm.value.newPass1);
+      this.passworChanged = true;
+      setTimeout(() => {
+        this.passworChanged = false;
+        this.router.navigate(['/']);
+      }, 2000);
     } else {
       console.log('Form not valid');
     }
-    // this.us.findUser(this.myForm.value.mail);
-    // this.checkEmail(this.myForm.value.mail);
   }
 }
