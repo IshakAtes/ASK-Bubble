@@ -86,32 +86,25 @@ export class ChatComponent implements AfterViewInit {
 
 
   saveNewMessage() {
-    // this.list = [];
-    // let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specificConversation[0], this.content, this.userId)
+    this.list = [];
+    let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specificConversation[0], this.content, this.userId)
 
-    // this.databaseService.addConversationMessage(this.specificConversation[0], newMessage)
+    this.databaseService.addConversationMessage(this.specificConversation[0], newMessage)
 
-    // this.content = '';
+    this.content = '';
 
-    // this.databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
+    this.databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
 
-    //   this.list = messageList;
-    //   this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+      this.list = messageList;
+      this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
 
-    //   console.log('list 2');
-    //   console.log(this.list);
-    // }
-    // )
-    // setTimeout(() => {
-    //   this.scrollToBottom();
-    // }, 10);
-
-    for (let i = 0; i < this.list.length; i++) {
-      this.dates.push(this.formatDate(this.formatTimestamp(this.list[i].createdAt)))
-      console.log('dates');
-      
-      console.log(this.dates);
+      console.log('list 2');
+      console.log(this.list);
     }
+    )
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 10);
   }
 
 
