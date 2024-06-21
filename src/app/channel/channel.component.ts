@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, input, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, input, Input, ViewChild, AfterViewInit, OnInit, OnChanges, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Channel } from '../../models/channel.class';
 import { User } from '../../models/user.class';
@@ -9,6 +9,7 @@ import { MatDialog} from '@angular/material/dialog';
 import { DialogAddAdditionalMemberComponent } from '../dialog-add-additional-member/dialog-add-additional-member.component';
 import { DialogShowMemberListComponent } from '../dialog-show-member-list/dialog-show-member-list.component';
 import { DialogShowChannelSettingsComponent } from '../dialog-show-channel-settings/dialog-show-channel-settings.component';
+import { timeout } from 'rxjs';
 
 @Component({
   selector: 'app-channel',
@@ -17,7 +18,7 @@ import { DialogShowChannelSettingsComponent } from '../dialog-show-channel-setti
   templateUrl: './channel.component.html',
   styleUrl: './channel.component.scss'
 })
-export class ChannelComponent {
+export class ChannelComponent implements OnInit {
 
   //TestData
   activeUser: string = 'p1oEblSsradmfVeyvTu3'
@@ -27,42 +28,92 @@ export class ChannelComponent {
   //realData
   @Input() channel: Channel
   @Input() channelBig: boolean;
-  database = inject(DatabaseService);
+  @Input() reload: boolean;
+
+
+  @Output() changeReloadStatus = new EventEmitter<boolean>();
+
   memberList: Array<User> = [];
   messageList: Array<ChannelMessage>
   channelCreator: User;
+
+  isdataLoaded: boolean = false;
  
+  @ViewChild('main') main: ElementRef 
 
+  constructor(public dialog: MatDialog, private database: DatabaseService){
 
-  constructor(public dialog: MatDialog){
+  }
+
+  ngOnInit(){
+    this.memberList = [];
+    this.messageList = [];
     setTimeout(() => {
-      this.loadMemberList();
-      this.loadChannelMessages();
-      this.loadChannelCreator();
+      Promise.all([
+        this.loadMemberList(),
+        this.loadChannelMessages(),
+        this.loadChannelCreator()
+      ]).then(() => {
+        this.isdataLoaded = true;
+      }).catch(error => {
+        console.log('this ', error)
+      });
     }, 500);
+    console.log('ngOnInit channel triggered')
   }
 
 
-  loadMemberList(){
-    this.channel.membersId.forEach(member => {
+  changeReload(){
+    this.changeReloadStatus.emit()
+  }
+
+
+
+  ngOnChanges(){
+    console.log(this.reload);
+    if(this.reload){
+      this.memberList = [];
+      this.messageList = [];
+      this.isdataLoaded = false;
+      setTimeout(() => {
+        Promise.all([
+          this.loadMemberList(),
+          this.loadChannelMessages(),
+          this.loadChannelCreator()
+        ]).then(() => {
+          this.changeReload(); //Important to be able to load another channel
+          this.isdataLoaded = true;
+        }).catch(error => {
+          console.log('this ', error)
+        });
+      }, 250);
+    }
+  }
+
+
+
+  loadMemberList(): Promise<void>{
+    const memberPromises = this.channel.membersId.map(member => {
       this.database.loadUser(member)
         .then(user => {
           this.memberList.push(user);
         })
-    })
+    });
+    console.log(this.memberList);
+    return Promise.all(memberPromises).then(() => {});
   }
 
 
-  loadChannelCreator(){
-    this.database.loadUser(this.channel.createdBy)
+  loadChannelCreator(): Promise<void>{
+   return this.database.loadUser(this.channel.createdBy)
       .then(user =>{
         this.channelCreator = user;
     })
   }
 
 
-  loadChannelMessages(){
-    this.database.loadChannelMessages(this.activeUser, this.channel.channelId)
+  loadChannelMessages(): Promise<void>{
+    return this.database.loadChannelMessages(this.activeUser, this.channel.channelId)
     .then(messages => {
       this.messageList = messages;
     })
@@ -86,5 +137,5 @@ export class ChannelComponent {
     channelInfo.componentInstance.currentChannel = this.channel;
     channelInfo.componentInstance.channelCreator = this.channelCreator;
   }
-  
+
 }

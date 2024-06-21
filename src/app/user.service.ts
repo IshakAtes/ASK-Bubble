@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, OnInit } from '@angular/core';
 import { User } from '../models/user.class';
 import { Firestore, collection, addDoc, updateDoc, doc, onSnapshot } from '@angular/fire/firestore';
 import { getDocs, query, where } from "firebase/firestore";
@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { Channel } from '../models/channel.class';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DatabaseService } from './database.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,18 +23,28 @@ export class UserService {
   private baseUrl = 'http://localhost:4200';
 
 
-  constructor(private http: HttpClient, private router: Router) { }
-
-  //Test Data from Simon
-
-  currentConversationId: string
-
-  currenChannel: Channel;
-
-  currentChannelId: string = 'CHA-BSHDDuLBHC0o8RKcrcr6';
-
+    //Test Data from Simon
+    database = inject(DatabaseService);
+    currentConversationId: string
   
-  //End Test Data from Simon
+    currentChannel: Channel;
+    
+    activeUser: string = 'p1oEblSsradmfVeyvTu3'
+    currentChannelId: string = 'CHA-BSHDDuLBHC0o8RKcrcr6';
+  
+    
+    //End Test Data from Simon
+
+
+  constructor(private http: HttpClient, private router: Router) { 
+    
+
+
+  }
+
+
+
+
 
 
 

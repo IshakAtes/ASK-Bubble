@@ -10,7 +10,9 @@
     </div>
     
     @if(isWSVisible){
-        <app-workspace></app-workspace>
+        <app-workspace
+        (changeChannel)="changeChannel($event)"
+        ></app-workspace>
     }
 
     
@@ -20,14 +22,17 @@
     @else {
         @if(isWSVisible){
             <app-channel
-            [channelBig]="false"
+            (changeReloadStatus)="setReloadToFalse($event)"
+            [channelBig]="channelBig"
             [channel]="currentChannel"
+            [reload]="reloadChannel"
         ></app-channel>
         }
         @else {
             <app-channel
             [channelBig]="true"
             [channel]="currentChannel"
+            [reload]="reloadChannel"
         ></app-channel>
         }
     }

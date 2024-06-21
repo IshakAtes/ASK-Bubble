@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Output, EventEmitter } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { User } from '../../models/user.class';
 import { Channel } from '../../models/channel.class';
@@ -8,6 +8,8 @@ import {MatDialog} from '@angular/material/dialog';
 import { DialogCreateChannelComponent } from '../dialog-create-channel/dialog-create-channel.component';
 import { UserService } from '../user.service';
 import { ChannelComponent } from '../channel/channel.component';
+
+
 
 @Component({
   selector: 'app-workspace',
@@ -20,6 +22,8 @@ export class WorkspaceComponent {
   database = inject(DatabaseService);
   userService = inject(UserService);
   
+
+
   activeUser = new User()
   
   activeUserChannels: Array<Channel> = [];
@@ -29,7 +33,12 @@ export class WorkspaceComponent {
   hideConversationBody: boolean = false;
   hideChannelBody: boolean = false;
 
+
   userSimon: string = 'simon@dummy.de';
+
+  @Output() changeChannel = new EventEmitter<Channel>();
+  
+
 
   constructor(public dialog: MatDialog, public us: UserService){  
     this.loadActiveUserChannels();
@@ -86,10 +95,7 @@ export class WorkspaceComponent {
 
 
   openChannel(channel: Channel){
-    this.userService.currenChannel = channel;
-    const loadNewChannel = this.dialog.open(ChannelComponent);
-    loadNewChannel.componentInstance.channel = channel;
-    this.dialog.open(ChannelComponent)
+    this.changeChannel.emit(channel);
   }
 
 

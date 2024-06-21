@@ -1,4 +1,7 @@
-<div class="main-chat" [ngClass]="{'channelBig': channelBig}">
+
+<div *ngIf="isdataLoaded; else loadingTemplate" #main class="main-chat" [ngClass]="{'channelBig': channelBig}">
+    
+    
     <div class="main-chat-header">
         
         
@@ -114,11 +117,6 @@
 
     <!-- END OF channelmessages -->
 
-
-    <!-- <div class="input-div">
-        <textarea class="input" name="" id=""></textarea>
-    </div> -->
-
     <div class="message-container">
         <textarea class="message-input" placeholder="Nachricht an #Entwicklerteam"></textarea>
         <div class="message-actions">
@@ -137,9 +135,8 @@
     </div>
 </div>
 
-
-
-
-
-
-
+<ng-template #loadingTemplate>
+    <div class="loading">
+      <p>Laden...</p>
+    </div>
+  </ng-template>
