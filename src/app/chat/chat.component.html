@@ -1,23 +1,23 @@
 <div class="main-chat">
     <div class="main-chat-header">
         @for (user of allUsers; track $index) {
-            @if (user.userId == specificConversation[0].recipientId) {
-                <div class="channelname">
-                    <div class="main-chat-header-avatar-div">
-                        
-                        <img class="avatar" src="{{user.avatarUrl}}" alt="User Avatar">
-                        @if(user.status == 'online'){
-                        <div class="online-indicator"></div>
-                        }@else{
-                        <div class="offline-indicator"></div>
-                        }
-                    </div>
-                    <span>{{user.name}}</span>
-                </div>
+        @if (user.userId == specificConversation[0].recipientId) {
+        <div class="channelname">
+            <div class="main-chat-header-avatar-div">
 
-            }
+                <img class="avatar" src="{{user.avatarUrl}}" alt="User Avatar">
+                @if(user.status == 'online'){
+                <div class="online-indicator"></div>
+                }@else{
+                <div class="offline-indicator"></div>
+                }
+            </div>
+            <span>{{user.name}}</span>
+        </div>
+
         }
-        
+        }
+
 
     </div>
 
@@ -30,21 +30,22 @@
         </div>
 
         @for (message of list; track $index) {
-            @if ($index > 0) {
-            @if (formatDate(formatTimestamp(list[$index].createdAt)) != formatDate(formatTimestamp(list[$index-1].createdAt))) {
-                <div class="time-separator">
-                    <div class="date">
-                        <span>{{formatDate(formatTimestamp(list[$index].createdAt))}}</span>
-                    </div>
-                    <div class="line"></div>
-                </div>
-            }
-            }
+        @if ($index > 0) {
+        @if (formatDate(formatTimestamp(list[$index].createdAt)) !=
+        formatDate(formatTimestamp(list[$index-1].createdAt))) {
+        <div class="time-separator">
+            <div class="date">
+                <span>{{formatDate(formatTimestamp(list[$index].createdAt))}}</span>
+            </div>
+            <div class="line"></div>
+        </div>
+        }
+        }
         @if (message.createdBy == userId) {
         @for (user of allUsers; track $index) {
         @if (message.createdBy == user.userId) {
 
-            
+
 
 
         <div class="own-message">
@@ -126,19 +127,13 @@
 
     </div>
 
-    <!-- <div class="input-div">
-        <textarea class="input" name="" id=""></textarea>
-    </div> -->
 
+    
     <div class="message-container">
+        <!-- Emojis -->
         @if (showEmoticons) {
         <div class="emoticon-div">
-            <!-- @for (emoji of emojis; track $index) {
-                {{emoji}}
-                } -->
-            @for (emoji of emoticons; track $index) {
-            <img src="../../assets/img/emoticons/{{emoji}}" alt="">
-            }
+            <emoji-mart class="emoji-mart" (emojiSelect)="addEmoji($event)" title="Choose your emoji"></emoji-mart>
         </div>
         }
         <!-- Erwähnungen -->
@@ -150,7 +145,8 @@
         </div>
         }
 
-        <textarea #myTextarea [(ngModel)]="content" class="message-input" placeholder="Nachricht an #Entwicklerteam"></textarea>
+        <textarea #myTextarea [(ngModel)]="content" class="message-input"
+            placeholder="Nachricht an #Entwicklerteam"></textarea>
         <div class="message-actions">
 
             <div class="action-left">
@@ -163,7 +159,8 @@
             </div>
 
             <div class="action-right">
-                <button (click)="saveNewMessage()" class="action-button"> <img src="../../assets/img/send_icon.png" alt=""></button>
+                <button (click)="saveNewMessage()" class="action-button"> <img src="../../assets/img/send_icon.png"
+                        alt=""></button>
             </div>
         </div>
     </div>

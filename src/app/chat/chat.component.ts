@@ -6,11 +6,12 @@ import { Conversation } from '../../models/conversation.class';
 import { ConversationMessage } from '../../models/conversationMessage.class';
 import { User } from '../../models/user.class';
 import { FormsModule } from '@angular/forms';
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, PickerModule],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
 })
@@ -71,19 +72,6 @@ export class ChatComponent implements AfterViewInit {
 
   content = '';
 
-  emoticons = ["angry-face.svg", "astonished-face.svg", "clapping-hands-sign.svg", "confounded-face.svg", "confused-face.svg", "crying-face.svg", "disappointed-but-relieved-face.svg", "disappointed-face.svg", "face-palm.svg", "face-savouring-delicious-food.svg", "face-screaming-in-fear.svg", "face-throwing-a-kiss.svg", "face-with-cold-sweat.svg", "face-with-look-of-triumph.svg", "face-with-open-mouth-and-cold-sweat.svg", "face-with-open-mouth.svg", "face-with-stuck-out-tongue-and-tightly-closed-eyes.svg", "face-with-stuck-out-tongue-and-winking-eye.svg", "fire.svg", "flexed-biceps.svg", "flushed-face.svg", "frowning-face-with-open-mouth.svg", "grimacing-face.svg", "grinning-face-with-smiling-eyes.svg", "grinning-face.svg", "handshake.svg", "heavy-black-heart.svg", "hugging-face.svg", "hushed-face.svg", "loudly-crying-face.svg", "nerd-face.svg", "neutral-face.svg", "ok-hand-sign.svg", "party-popper.svg", "person-raising-both-hands-in-celebration.svg", "pouting-face.svg", "raised-hand.svg", "relieved-face.svg", "rocket.svg", "sleeping-face.svg", "slightly-frowning-face.svg", "slightly-smiling-face.svg", "smiling-face-with-halo.svg", "smiling-face-with-heart-shaped-eyes.svg", "smiling-face-with-open-mouth-and-cold-sweat.svg", "smiling-face-with-open-mouth-and-smiling-eyes.svg", "smiling-face-with-open-mouth-and-tightly-closed-eyes.svg", "smiling-face-with-open-mouth.svg", "smiling-face-with-smiling-eyes.svg", "smiling-face-with-sunglasses.svg", "thinking-face.svg", "tired-face.svg", "upside-down-face.svg", "victory-hand.svg", "waving-hand-sign.svg", "white-heavy-check-mark.svg", "white-medium-star.svg", "white-smiling-face.svg", "winking-face.svg", "worried-face.svg"];
-
-
-  emojis: string[] = [
-    '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰',
-    '😘', '😗', '😙', '😚', '😋', '😛', '😜', '🤪', '😝', '🤑', '🤗', '🤭', '🤫', '🤔', '🤐', '🤨',
-    '😐', '😑', '😶', '😏', '😒', '🙄', '😬', '🤥', '😌', '😔', '😪', '🤤', '😴', '😷', '🤒', '🤕',
-    '🤢', '🤮', '🤧', '😵', '🤯', '🤠', '🥳', '😎', '🤓', '🧐', '😕', '😟', '🙁', '☹️', '😮', '😯',
-    '😲', '😳', '🥺', '😦', '😧', '😨', '😰', '😥', '😢', '😭', '😱', '😖', '😣', '😞', '😓', '😩',
-    '😫', '🥱', '😤', '😡', '😠', '🤬', '😈', '👿', '💀', '☠️', '💩', '🤡', '👹', '👺', '👻', '👽',
-    '👾', '🤖', '😺', '😸', '😹', '😻', '😼', '😽', '🙀', '😿', '😾'
-  ];
-
 
   saveNewMessage() {
     this.list = [];
@@ -139,7 +127,7 @@ export class ChatComponent implements AfterViewInit {
       }
   }
 
-  // toggeling emoticons and mentions
+  // toggeling emoticons and mentions divs and selecting emoticons
 
   toggleEmoticons() {
     if (this.showMention) {
@@ -153,6 +141,11 @@ export class ChatComponent implements AfterViewInit {
       this.showEmoticons = false;
     }
     this.showMention = !this.showMention;
+  }
+
+  addEmoji(event: any) {
+    this.content = `${this.content}${event.emoji.native}`;
+    this.showEmoticons = false;
   }
 
   // Formating timestamp into date
