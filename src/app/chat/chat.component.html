@@ -140,7 +140,7 @@
         @if (showMention) {
         <div class="mention-div">
             @for (users of allUsers; track $index) {
-            <div>{{users.name}}</div>
+            <div class="mention-list-element" (click)="addMention(users.name)">{{users.name}}</div>
             }
         </div>
         }

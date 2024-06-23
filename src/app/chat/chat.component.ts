@@ -5,6 +5,7 @@ import { Timestamp } from 'firebase/firestore';
 import { Conversation } from '../../models/conversation.class';
 import { ConversationMessage } from '../../models/conversationMessage.class';
 import { User } from '../../models/user.class';
+import { Channel } from '../../models/channel.class';
 import { FormsModule } from '@angular/forms';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 
@@ -25,6 +26,8 @@ export class ChatComponent implements AfterViewInit {
 
   allConversations: Array<Conversation> = [];
   specificConversation: Array<Conversation> = [];
+
+  allChannels: Array<Channel> = [];
 
   userId = 'p1oEblSsradmfVeyvTu3';
   conversationId = 'CONV-p1oEblSsradmfVeyvTu3';
@@ -57,10 +60,10 @@ export class ChatComponent implements AfterViewInit {
     });
 
 
-    databaseService.loadAllConversations().then(convo => {
-      this.allConversations = convo;
-      console.log('converstions:');
-      console.log(this.allConversations);
+    databaseService.loadAllChannels().then(channel => {
+      this.allChannels = channel;
+      console.log('channels:');
+      console.log(this.allChannels);
     })    
   }
 
@@ -146,6 +149,11 @@ export class ChatComponent implements AfterViewInit {
   addEmoji(event: any) {
     this.content = `${this.content}${event.emoji.native}`;
     this.showEmoticons = false;
+  }
+
+  addMention(mention: string){
+    this.content = `${this.content} @${mention}`;
+    this.showMention = false;
   }
 
   // Formating timestamp into date
