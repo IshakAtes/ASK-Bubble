@@ -1,3 +1,5 @@
+<app-header (search)="onSearch($event)"></app-header>
+
 <div class="main-chat">
     <div class="main-chat-header">
         @for (user of allUsers; track $index) {

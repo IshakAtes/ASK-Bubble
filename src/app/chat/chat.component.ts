@@ -6,13 +6,14 @@ import { Conversation } from '../../models/conversation.class';
 import { ConversationMessage } from '../../models/conversationMessage.class';
 import { User } from '../../models/user.class';
 import { Channel } from '../../models/channel.class';
+import { HeaderComponent } from '../header/header.component';
 import { FormsModule } from '@angular/forms';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [FormsModule, PickerModule],
+  imports: [FormsModule, PickerModule, HeaderComponent],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
 })
@@ -42,13 +43,7 @@ export class ChatComponent implements AfterViewInit {
     });
 
 
-    databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
-      this.list = messageList;
-      this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-
-      console.log('list');
-      console.log(this.list);
-    });
+    this.loadAllMessages();
 
 
     databaseService.loadAllUsers().then(userList => {
@@ -64,6 +59,16 @@ export class ChatComponent implements AfterViewInit {
       console.log('channels:');
       console.log(this.allChannels);
     })
+  }
+
+  loadAllMessages(){
+    this.databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
+      this.list = messageList;
+      this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+
+      console.log('list');
+      console.log(this.list);
+    });
   }
 
   online: boolean = true;
@@ -112,6 +117,25 @@ export class ChatComponent implements AfterViewInit {
   //     this.scrollToBottom();
   //   }
   // }
+
+
+  // search messages
+  filteredList: Array<ConversationMessage> = [];
+
+  onSearch(query: string): void {
+    if (query) {
+      this.filteredList = this.list.filter(message =>
+        message.content.toLowerCase().includes(query.toLowerCase())
+      );
+      this.list = this.filteredList;
+    } else {
+      this.loadAllMessages();
+      setTimeout(() => {
+        this.scrollToBottom();
+      }, 10);
+      
+    }
+  }
 
   //show dropdownmenu with mentions or channels 
 
