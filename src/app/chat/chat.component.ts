@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, OnChanges, SimpleChanges, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, OnChanges, SimpleChanges, Input, OnInit } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { UserService } from '../user.service';
 import { Timestamp } from 'firebase/firestore';
@@ -33,7 +33,6 @@ export class ChatComponent implements AfterViewInit {
   conversationId = 'CONV-p1oEblSsradmfVeyvTu3';
 
 
-
   constructor(public databaseService: DatabaseService, public userService: UserService) {
     databaseService.loadSpecificUserConversation("p1oEblSsradmfVeyvTu3", "CONV-p1oEblSsradmfVeyvTu3").then(conversationObject => {
       this.specificConversation.push(conversationObject)
@@ -64,10 +63,8 @@ export class ChatComponent implements AfterViewInit {
       this.allChannels = channel;
       console.log('channels:');
       console.log(this.allChannels);
-    })    
+    })
   }
-
-
 
   online: boolean = true;
   showEmoticons: boolean = false;
@@ -101,7 +98,7 @@ export class ChatComponent implements AfterViewInit {
 
 
   @ViewChild('myTextarea') myTextarea!: ElementRef<HTMLTextAreaElement>;
-  @ViewChild('lastDiv') lastDiv : ElementRef<HTMLDivElement>;
+  @ViewChild('lastDiv') lastDiv: ElementRef<HTMLDivElement>;
 
   ngAfterViewInit(): void {
     this.setFocus();
@@ -116,6 +113,54 @@ export class ChatComponent implements AfterViewInit {
   //   }
   // }
 
+  //show dropdownmenu with mentions or channels 
+
+  showDropdown: boolean = false;
+  filteredItems: Array<User | Channel> = [];
+
+  onInput(event: any): void {
+    const input = event.target.value;
+    const lastChar = input[input.length - 1];
+
+    // Überprüfen, ob das letzte Zeichen ein Trigger-Zeichen ist
+    if (lastChar === '#' || lastChar === '@') {
+      this.showDropdown = true;
+      this.filterItems(input, lastChar);
+    } else if (this.showDropdown) {
+      // Überprüfen, ob der Eingabetext ein Trigger-Zeichen enthält
+      const hashIndex = input.lastIndexOf('#');
+      const atIndex = input.lastIndexOf('@');
+
+      if (hashIndex === -1 && atIndex === -1) {
+        this.showDropdown = false;
+      } else {
+        const triggerChar = hashIndex > atIndex ? '#' : '@';
+        this.filterItems(input, triggerChar);
+      }
+    }
+  }
+
+  filterItems(input: string, triggerChar: string): void {
+    const queryArray = input.split(triggerChar);
+    const query = queryArray.length > 1 ? queryArray.pop()?.trim().toLowerCase() : '';
+
+    if (query !== undefined) {
+        if (triggerChar === '#') {
+            this.filteredItems = this.allChannels.filter(channel => channel.name.toLowerCase().includes(query));
+        } else if (triggerChar === '@') {
+            this.filteredItems = this.allUsers.filter(user => user.name.toLowerCase().includes(query));
+        }
+    }
+}
+
+  selectItem(item: User | Channel): void {
+    const triggerChar = item.hasOwnProperty('channelId') ? '#' : '@';
+    const inputParts = this.content.split(triggerChar);
+    inputParts.pop();
+    this.content = inputParts.join(triggerChar) + `${triggerChar}${item.name} `;
+    this.showDropdown = false;
+  }
+
   // Focusing tesxtarea after component is initilized 
   setFocus(): void {
     this.myTextarea.nativeElement.focus();
@@ -123,11 +168,11 @@ export class ChatComponent implements AfterViewInit {
 
   // Scroll to the bottom of the chatarea 
   scrollToBottom(): void {
-      try {
-        this.lastDiv.nativeElement.scrollIntoView();
-      } catch (err) {
-        console.error('Scroll to bottom failed', err);
-      }
+    try {
+      this.lastDiv.nativeElement.scrollIntoView();
+    } catch (err) {
+      console.error('Scroll to bottom failed', err);
+    }
   }
 
   // toggeling emoticons and mentions divs and selecting emoticons
@@ -149,11 +194,13 @@ export class ChatComponent implements AfterViewInit {
   addEmoji(event: any) {
     this.content = `${this.content}${event.emoji.native}`;
     this.showEmoticons = false;
+    this.setFocus();
   }
 
-  addMention(mention: string){
+  addMention(mention: string) {
     this.content = `${this.content} @${mention}`;
     this.showMention = false;
+    this.setFocus();
   }
 
   // Formating timestamp into date

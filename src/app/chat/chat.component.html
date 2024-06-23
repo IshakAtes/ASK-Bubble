@@ -128,7 +128,7 @@
     </div>
 
 
-    
+
     <div class="message-container">
         <!-- Emojis -->
         @if (showEmoticons) {
@@ -145,7 +145,24 @@
         </div>
         }
 
-        <textarea #myTextarea [(ngModel)]="content" class="message-input"
+        <!-- Dropdown für Kanäle und Mitglieder -->
+        @if (showDropdown) {
+        <div class="dropdown-menu">
+            @if (filteredItems.length === 0) {
+            <span>Kein passendes Ergebnis</span>
+            }@else {
+            @for (item of filteredItems; track $index) {
+            <div class="dropdown-item" (click)="selectItem(item)">
+                {{ item.name }}
+            </div>
+            }
+            }
+        </div>
+        }
+
+
+
+        <textarea (input)="onInput($event)" #myTextarea [(ngModel)]="content" class="message-input"
             placeholder="Nachricht an #Entwicklerteam"></textarea>
         <div class="message-actions">
 

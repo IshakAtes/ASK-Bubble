@@ -363,25 +363,7 @@
 
 .emoticon-div {
     position: absolute;
-    width: 250px;
-    background-color: white;
-    padding: 12px;
-    border-radius: 20px;
-    border: 1px solid #ADB0D9;
-
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
     bottom: 185px;
-
-    img {
-        height: 24px;
-        width: 24px;
-
-        &:hover {
-            cursor: pointer;
-        }
-    }
 }
 
 .mention-list-element{
@@ -402,6 +384,32 @@
     flex-direction: column;
     gap: 8px;
     bottom: 185px;
+}
+
+.message-container {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    bottom: 185px;
+    width: 250px;
+    max-height: 250px;
+    overflow-y: scroll;
+    background: white;
+    padding: 12px;
+    border-radius: 20px;
+    border: 1px solid #ADB0D9;
+    z-index: 1000;
+}
+
+.dropdown-item {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background: #f0f0f0;
 }
 
 
