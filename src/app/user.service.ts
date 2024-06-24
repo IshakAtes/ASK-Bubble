@@ -30,9 +30,11 @@ export class UserService {
     currentChannel: Channel;
     
     activeUser: string = 'p1oEblSsradmfVeyvTu3'
-    currentChannelId: string = 'CHA-BSHDDuLBHC0o8RKcrcr6';
-  
     
+    currentChannelId: string = 'CHA-BSHDDuLBHC0o8RKcrcr6';
+    
+    //TODO - hiernach suchen wenns live geht und umgestellt werden soll
+    activeUserMail: string = 'simon@dummy.de' 
     //End Test Data from Simon
 
 

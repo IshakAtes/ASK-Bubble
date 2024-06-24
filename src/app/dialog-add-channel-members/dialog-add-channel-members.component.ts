@@ -72,7 +72,7 @@ export class DialogAddChannelMembersComponent {
     else{
       this.selectedUserList.push(user);
       this.setDefault();
-      console.log(this.selectedUserList);
+
     }
   }
 

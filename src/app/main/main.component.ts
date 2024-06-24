@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, OnChanges } from '@angular/core';
 import { WorkspaceComponent } from '../workspace/workspace.component';
 import { ChannelComponent } from '../channel/channel.component';
 import { ChatComponent } from '../chat/chat.component';
@@ -7,6 +7,9 @@ import { DatabaseService } from '../database.service';
 import { Channel } from '../../models/channel.class';
 import { UserService } from '../user.service';
 import { CommonModule } from '@angular/common';
+import { MatDialog, MatDialogRef} from '@angular/material/dialog';
+import { Conversation } from '../../models/conversation.class';
+import { User } from '../../models/user.class';
 
 @Component({
   selector: 'app-main',
@@ -20,41 +23,96 @@ export class MainComponent{
   
 
   database = inject(DatabaseService);
-  userService = inject(UserService);
 
   currentChannel: Channel;
+  activeUserChannels: Array<Channel> = [];
+  activeUserConversationList: Array<Conversation> = [];
+  usersFromActiveUserConversationList: Array<User> = [];
+  activeUser = new User()
+
   
-
-  //TestData
-  channelId: string = 'CHA-BSHDDuLBHC0o8RKcrcr6'
-  activeUser: string = 'p1oEblSsradmfVeyvTu3'
-
   isWSVisible: boolean = true;
   channelBig: boolean = false;
   reloadChannel: boolean = false;
 
-  
-  constructor(){
-    
+  //TestData
+  channelId: string = 'CHA-BSHDDuLBHC0o8RKcrcr6'
 
-    this.database.loadSpecificUserChannel(this.activeUser, this.channelId)
-    .then(channel => {
-      this.currentChannel = channel;
+
+
+
+
+  
+  constructor(public userservice: UserService){
+    this.loadActiveUserChannels();
+    this.loadActiveUserConversations();
+  }
+
+  ngOnChanges(){
+    console.log('triggered on change from main')
+  }
+
+
+  loadActiveUserChannels(){
+    console.log('loadActiveUserChannels triggered')
+    this.database.getUser(this.userservice.activeUserMail).then(user =>{
+      this.activeUser = user;
+      this.database.loadAllUserChannels(user.userId).then(userChannels => {
+        console.log('user Channels after load');
+        console.log(userChannels);
+        this.activeUserChannels = [];
+        this.activeUserChannels = userChannels
+      });
+      
+      //TODO - this.channelid from testdata should be a property of the userObject 
+      //to load the last channel he visited.
+      this.database.loadSpecificUserChannel(this.activeUser.userId, this.channelId)
+      .then(channel => {
+        this.currentChannel = channel;
+      })
     })
-   
+  }
+
+
+  loadActiveUserConversations(){
+    this.database.getUser(this.userservice.activeUserMail).then(user =>{
+      this.database.loadAllUserConversations(user.userId)
+      .then(userConversations => {
+        this.activeUserConversationList = userConversations;
+        userConversations.forEach(conversation =>{
+          if(conversation.createdBy == user.userId){
+            this.getRecievedConversation(conversation);
+          }else{
+            this.getCreatedConversation(conversation);
+          }
+        })
+      });
+    })
+  }
+
+
+  getCreatedConversation(conversation: Conversation){
+    this.database.loadUser(conversation.createdBy)
+    .then(loadedUser => {
+      this.usersFromActiveUserConversationList.push(loadedUser);
+    })
+  }
+
+
+  getRecievedConversation(conversation: Conversation){
+    this.database.loadUser(conversation.recipientId)
+    .then(loadedUser => {
+      this.usersFromActiveUserConversationList.push(loadedUser);
+    })
   }
 
 
 
-  
-
-
   changeChannel(channel: Channel){
-    
-    console.log(channel)
+    this.currentChannel = channel;
     this.reloadChannel = true;
     console.log('reload from changeChannel: (main):', this.reloadChannel)
-    this.currentChannel = channel;
+    
   }
 
 

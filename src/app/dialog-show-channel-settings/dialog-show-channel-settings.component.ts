@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject, OnChanges } from '@angular/core';
 import { Channel } from '../../models/channel.class';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { User } from '../../models/user.class';
@@ -39,11 +39,13 @@ export class DialogShowChannelSettingsComponent {
   }
 
 
+  ngOnChanges(){
+    console.log('triggered on change from show channel settings')
+  }
+
   leaveChannel(){
-    console.log(this.currentChannel)
     this.newChannel = new Channel(this.currentChannel);
     this.newChannel.membersId.splice(this.newChannel.membersId.indexOf(this.activeUser.userId), 1)
-    console.log(this.newChannel);
     console.log('This user leaves the channel: ' + this.activeUser.userId)
     this.database.updateChannelMembers(new Channel(this.newChannel));
     this.database.deleteChannel(new Channel(this.newChannel), this.activeUser.userId)
@@ -69,7 +71,13 @@ export class DialogShowChannelSettingsComponent {
       if(bool){
         this.currentChannel.name = this.newChannelName;
         this.database.updateChannelName(new Channel(this.currentChannel))
+        
         this.showEditNameInput = false;
+        setTimeout(() => {
+          this.dialogRef.close(true);
+        }, 500);
+       
+        
       }
       else{
         this.errorMessage.nativeElement.innerHTML = 'Channel-Name existiert bereits'
@@ -100,6 +108,10 @@ export class DialogShowChannelSettingsComponent {
     this.currentChannel.description = this.newChannelDescription;
     this.database.updateChannelName(new Channel(this.currentChannel))
     this.showEditDescriptionInput = false;
+    setTimeout(() => {
+      this.dialogRef.close(true);
+    }, 500);
+
   }
 
 
