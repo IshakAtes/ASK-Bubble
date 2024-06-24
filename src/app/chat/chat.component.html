@@ -54,7 +54,12 @@
             <div class="own-reactionbar">
                 <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
                 <img src="../../assets/img/reactionbar_answer.png" alt="">
-                <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
+                <img src="../../assets/img/reactionbar_add_reaction.png" (click)="toggleEmoticonsReactionbar()" alt="">
+                @if (showEmoticonsReactionbar) {
+                    <div class="emoticon-reaction-div">
+                        <emoji-mart class="emoji-mart" (emojiSelect)="saveNewMessageReaction($event, message)" title="Choose your emoji"></emoji-mart>
+                    </div>
+                    }
                 <img src="../../assets/img/reactionbar_answer.png" alt="">
                 <img src="../../assets/img/reactionbar_edit.png" alt="">
             </div>
@@ -72,10 +77,17 @@
                     <span class="massage-content">{{message.content}}</span>
                 </div>
 
+                <div class="reaction-bar">
+                    @for (reaction of reactions; track $index) {
+                        @if (reaction.messageId == message.messageId) {
+                            <div>{{reaction.emoji}}</div>
+                        }
+                    }
+                </div>
+
                 <div class="own-answer-bar">
                     <span class="answer-count">2 Antworten</span>
                     <span class="last-answer">Letzte Antwort 14:56</span>
-
                 </div>
             </div>
         </div>
@@ -89,7 +101,12 @@
             <div class="reactionbar">
                 <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
                 <img src="../../assets/img/reactionbar_answer.png" alt="">
-                <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
+                <img src="../../assets/img/reactionbar_add_reaction.png" (click)="toggleEmoticonsReactionbar()" alt="">
+                @if (showEmoticonsReactionbar) {
+                    <div class="emoticon-reaction-div">
+                        <emoji-mart class="emoji-mart" (emojiSelect)="saveNewMessageReaction($event, message)" title="Choose your emoji"></emoji-mart>
+                    </div>
+                    }
                 <img src="../../assets/img/reactionbar_answer.png" alt="">
             </div>
             <div>
@@ -111,6 +128,14 @@
 
                 <div class="massage-content-bubble">
                     <span class="massage-content">{{message.content}}</span>
+                </div>
+
+                <div class="reaction-bar">
+                    @for (reaction of reactions; track $index) {
+                        @if (reaction.messageId == message.messageId) {
+                            <div>{{reaction.emoji}}</div>
+                        }
+                    }
                 </div>
 
                 <div class="answer-bar">

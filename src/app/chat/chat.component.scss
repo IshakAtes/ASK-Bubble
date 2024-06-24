@@ -366,6 +366,11 @@
     bottom: 185px;
 }
 
+.emoticon-reaction-div{
+    position: absolute;
+    bottom: 50px;
+}
+
 .mention-list-element{
     cursor: pointer;
 }
@@ -410,6 +415,10 @@
 
 .dropdown-item:hover {
     background: #f0f0f0;
+}
+
+.reaction-bar{
+    display: flex;
 }
 
 

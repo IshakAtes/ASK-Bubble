@@ -9,6 +9,7 @@ import { Channel } from '../../models/channel.class';
 import { HeaderComponent } from '../header/header.component';
 import { FormsModule } from '@angular/forms';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { Reaction } from '../../models/reactions.class';
 
 @Component({
   selector: 'app-chat',
@@ -29,6 +30,8 @@ export class ChatComponent implements AfterViewInit {
   specificConversation: Array<Conversation> = [];
 
   allChannels: Array<Channel> = [];
+
+  reactions: Array<Reaction> = [];
 
   userId = 'p1oEblSsradmfVeyvTu3';
   conversationId = 'CONV-p1oEblSsradmfVeyvTu3';
@@ -59,9 +62,15 @@ export class ChatComponent implements AfterViewInit {
       console.log('channels:');
       console.log(this.allChannels);
     })
+
+    setTimeout(() => {
+      this.loadAllMessageReactions();
+      console.log('reactions');
+      console.log(this.reactions);
+    }, 2000);
   }
 
-  loadAllMessages(){
+  loadAllMessages() {
     this.databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
       this.list = messageList;
       this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
@@ -71,9 +80,22 @@ export class ChatComponent implements AfterViewInit {
     });
   }
 
+  loadAllMessageReactions(){
+    for (let i = 0; i < this.list.length; i++) {
+      const list = this.list[i];
+    this.databaseService.loadConversationMessagesReactions(this.userId, this.conversationId, list.messageId).then(reaction => {
+       reaction.forEach(reaction => {
+         this.reactions.push(reaction)
+       });
+     })
+   }
+  }
+
   online: boolean = true;
   showEmoticons: boolean = false;
   showMention: boolean = false;
+
+  showEmoticonsReactionbar: boolean = false;
 
   content = '';
 
@@ -98,6 +120,22 @@ export class ChatComponent implements AfterViewInit {
     setTimeout(() => {
       this.scrollToBottom();
     }, 10);
+  }
+
+  // save message reaction
+  saveNewMessageReaction(event: any, convo: ConversationMessage) {
+    this.reactions =[]
+
+    let emoji = event.emoji.native
+    let reaction = this.databaseService.createConversationMessageReaction(emoji, this.userId, convo);
+
+    console.log(reaction);
+
+    this.databaseService.addConversationMessageReaction(this.specificConversation[0], convo, reaction)
+
+    this.loadAllMessageReactions();
+
+    this.showEmoticonsReactionbar =false;
   }
 
 
@@ -133,7 +171,7 @@ export class ChatComponent implements AfterViewInit {
       setTimeout(() => {
         this.scrollToBottom();
       }, 10);
-      
+
     }
   }
 
@@ -169,13 +207,13 @@ export class ChatComponent implements AfterViewInit {
     const query = queryArray.length > 1 ? queryArray.pop()?.trim().toLowerCase() : '';
 
     if (query !== undefined) {
-        if (triggerChar === '#') {
-            this.filteredItems = this.allChannels.filter(channel => channel.name.toLowerCase().includes(query));
-        } else if (triggerChar === '@') {
-            this.filteredItems = this.allUsers.filter(user => user.name.toLowerCase().includes(query));
-        }
+      if (triggerChar === '#') {
+        this.filteredItems = this.allChannels.filter(channel => channel.name.toLowerCase().includes(query));
+      } else if (triggerChar === '@') {
+        this.filteredItems = this.allUsers.filter(user => user.name.toLowerCase().includes(query));
+      }
     }
-}
+  }
 
   selectItem(item: User | Channel): void {
     const triggerChar = item.hasOwnProperty('channelId') ? '#' : '@';
@@ -206,6 +244,10 @@ export class ChatComponent implements AfterViewInit {
       this.showMention = false;
     }
     this.showEmoticons = !this.showEmoticons;
+  }
+
+  toggleEmoticonsReactionbar() {
+    this.showEmoticonsReactionbar = !this.showEmoticonsReactionbar;
   }
 
   toggleMention() {
