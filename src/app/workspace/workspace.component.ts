@@ -1,4 +1,4 @@
-import { Component, inject, Output, EventEmitter } from '@angular/core';
+import { Component, inject, Output, EventEmitter, OnChanges, Input } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { User } from '../../models/user.class';
 import { Channel } from '../../models/channel.class';
@@ -24,11 +24,9 @@ export class WorkspaceComponent {
   
 
 
-  activeUser = new User()
+ // activeUser = new User()
   
-  activeUserChannels: Array<Channel> = [];
-  activeUserConversationList: Array<Conversation> = [];
-  usersFromActiveUserConversationList: Array<User> = [];
+
 
   hideConversationBody: boolean = false;
   hideChannelBody: boolean = false;
@@ -36,56 +34,25 @@ export class WorkspaceComponent {
 
   userSimon: string = 'simon@dummy.de';
 
+  @Input() activeUserChannels: Array<Channel> 
+  @Input() activeUserConversationList: Array<Conversation> 
+  @Input() usersFromActiveUserConversationList: Array<User> 
+  @Input() activeUser: User
+
+  //output data to main component
   @Output() changeChannel = new EventEmitter<Channel>();
   
 
 
   constructor(public dialog: MatDialog, public us: UserService){  
-    this.loadActiveUserChannels();
-    this.loadActiveUserConversations();
+
+    
+    console.log('constructor of workspace triggered')
   }
 
 
-  loadActiveUserChannels(){
-    this.database.getUser(this.userSimon).then(user =>{
-      this.activeUser = user;
-      this.database.loadAllUserChannels(user.userId).then(userChannels => {
-        this.activeUserChannels = userChannels
-      });
-    })
-  }
-
-
-  loadActiveUserConversations(){
-    this.database.getUser(this.userSimon).then(user =>{
-      this.database.loadAllUserConversations(user.userId)
-      .then(userConversations => {
-        this.activeUserConversationList = userConversations;
-        userConversations.forEach(conversation =>{
-          if(conversation.createdBy == user.userId){
-            this.getRecievedConversation(conversation);
-          }else{
-            this.getCreatedConversation(conversation);
-          }
-        })
-      });
-    })
-  }
-
-
-  getCreatedConversation(conversation: Conversation){
-    this.database.loadUser(conversation.createdBy)
-    .then(loadedUser => {
-      this.usersFromActiveUserConversationList.push(loadedUser);
-    })
-  }
-
-
-  getRecievedConversation(conversation: Conversation){
-    this.database.loadUser(conversation.recipientId)
-    .then(loadedUser => {
-      this.usersFromActiveUserConversationList.push(loadedUser);
-    })
+  ngOnChanges(){
+    console.log('workspace on change triggered')
   }
 
 

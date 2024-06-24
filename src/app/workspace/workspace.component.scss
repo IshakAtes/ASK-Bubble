@@ -176,7 +176,8 @@ section {
         display: flex;
         flex-direction: column;
         width: 306px;
-        height: fit-content;
+        height: 300px;
+        overflow: scroll;
         gap: 13px;
         opacity: 0px;
         >button {
@@ -221,6 +222,10 @@ section {
                 color: #535AF1
             }
         }
+    }
+
+    .channelBody::-webkit-scrollbar {
+        display: none;
     }
 
     .channelFoot{
@@ -343,7 +348,8 @@ section {
             display: flex;
             flex-direction: column;
             width: 306px;
-            height: fit-content;
+            height: 300px;
+            overflow: scroll;
             gap: 13px;
             opacity: 0px;
             >button {
@@ -397,4 +403,9 @@ section {
                 }
             }
         }
+
+        .conversationBody::-webkit-scrollbar {
+            display: none;
+        }
+    
 }

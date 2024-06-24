@@ -9,6 +9,7 @@ import { Reaction } from '../models/reactions.class';
 import { ConversationMessage } from '../models/conversationMessage.class';
 import { Timestamp, deleteDoc, setDoc } from 'firebase/firestore';
 import { updateDoc, doc } from 'firebase/firestore'; // Korrigiert den Importpfad
+import { WorkspaceComponent } from './workspace/workspace.component';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,8 @@ import { updateDoc, doc } from 'firebase/firestore'; // Korrigiert den Importpfa
 export class DatabaseService {
   firestore: Firestore = inject(Firestore)
   
+  workspace: WorkspaceComponent;
+
   constructor() { 
     
   }
@@ -655,7 +658,7 @@ export class DatabaseService {
 
   updateChannelName(channel: Channel){
     channel.membersId.forEach(user => {
-      updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/'), channel.channelId), channel.toJSON());
+      updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/'), channel.channelId), channel.toJSON())
     })
   }
 

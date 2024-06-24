@@ -12,6 +12,10 @@
     @if(isWSVisible){
         <app-workspace
         (changeChannel)="changeChannel($event)"
+        [activeUserChannels]="activeUserChannels"
+        [activeUserConversationList]="activeUserConversationList"
+        [usersFromActiveUserConversationList]="usersFromActiveUserConversationList"
+        [activeUser]="activeUser"
         ></app-workspace>
     }
 
@@ -26,11 +30,12 @@
             [channelBig]="channelBig"
             [channel]="currentChannel"
             [reload]="reloadChannel"
+            [activeUser]="activeUser"
         ></app-channel>
         }
         @else {
             <app-channel
-            [channelBig]="true"
+            [channelBig]="channelBig"
             [channel]="currentChannel"
             [reload]="reloadChannel"
         ></app-channel>

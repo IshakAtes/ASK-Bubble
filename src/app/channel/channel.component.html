@@ -48,7 +48,7 @@
 
         <!--Start with channelMessages-->
         @for (message of messageList; track $index) {
-            @if(message.createdBy == activeUser){
+            @if(message.createdBy == activeUser.userId){
                 <div class="own-message">
                     <div>
                         @for (user of memberList; track $index) {
