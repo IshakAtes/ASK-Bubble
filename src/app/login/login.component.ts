@@ -62,15 +62,14 @@ export class LoginComponent {
   async guestLogin(event: Event) {
     event.preventDefault();
     try {
-      this.us.addUser(this.guestLog);
       const acceptedUser = await this.us.getUser(this.guestLog.email, this.guestLog.password);
       if (acceptedUser) {
         this.us.loggedUser = acceptedUser;
         this.us.userOnline(this.us.loggedUser.userId);
         this.router.navigate(['/main']);
         console.log(this.us.loggedUser);
-      } else {
-        console.error('Gäste-Login fehlgeschlagen');
+      } else if(!acceptedUser) {
+        this.us.addUser(this.guestLog);
       }
     } catch (error) {
       console.error('Fehler beim Abrufen des Benutzers:', error);
