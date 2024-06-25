@@ -16,8 +16,6 @@
         </div>
         <h2>User Name</h2>
         <span class="avatarListHeadline">Aus der Liste wählen</span>
-        <!-- generate a div with a loop
-        and every div has another background image Avatar -->
         <div class="allAvatars">
             <div class="avatarCt"
             *ngFor="let item of images"
@@ -46,47 +44,3 @@
         <span [routerLink]="['/privacyPolicy']">Datenschutz</span>
     </div>
 </div>
-
-
-
-
-
-<!-- <div class="row">
-    <div class="col-8">
-      <label class="btn btn-default p-0">
-        <input type="file" accept="image/*" (change)="selectFile($event)" />
-      </label>
-    </div>
-  
-    <div class="col-4">
-      <button
-        class="btn btn-success btn-sm float-right"
-        [disabled]="!currentFile"
-        (click)="upload()"
-      >
-        Upload
-      </button>
-    </div>
-  </div>
-  
-  <div>
-    <img [src]="preview" class="preview" />
-  </div>
-  
-  @if (message) {
-  <div class="alert alert-secondary" role="alert">
-    {{ message }}
-  </div>
-  }
-  
-  <div class="card">
-    <div class="card-header">List of Images</div>
-    <ul class="list-group list-group-flush">
-      @for (image of imageInfos | async; track image.name) {
-      <li class="list-group-item">
-        <p><a href="{{ image.url }}">{{ image.name }}</a></p>
-        <img src="{{ image.url }}" alt="{{ image.name }}" height="80px" />
-      </li>
-      }
-    </ul>
-  </div> -->

@@ -1,7 +1,8 @@
 import { CommonModule, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../user.service';
+import { HttpClient } from '@angular/common/http';
 import { HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -17,6 +18,7 @@ import { Observable } from 'rxjs';
 
 
 export class DialogChooseAvatarComponent {
+  http = inject(HttpClient);
   images: string[] = [
     '../../assets/img/defaultAvatars/defaultFemale1.png',
     '../../assets/img/defaultAvatars/defaultMale1.png',
@@ -30,6 +32,39 @@ export class DialogChooseAvatarComponent {
 
 
   constructor(private router: Router, public us: UserService) {}
+
+  post = {
+    endPoint: 'https://bubble.ishakates.com/sendSignUp.php',
+    body: (payload: any) => JSON.stringify(payload),
+    options: {
+      headers: {
+        'Content-Type': 'text/plain',
+        responseType: 'text',
+      },
+    },
+  };
+
+
+  sendRegisteredMail() {
+    this.http.post(this.post.endPoint, this.post.body(this.us.userCache))
+    .subscribe({
+      next: (_response: any) => {
+        // this.us.resetUserPw = '';
+        console.log('form', this.us.userCache);
+      },
+      error: (error: any) => {
+        console.error(error);
+      },
+      complete: () => {
+        this.userCreated = true;
+        setTimeout(() => {
+          this.userCreated = false;
+          this.router.navigate(['/']);
+        }, 2000);
+      },
+    });
+  }
+
 
   selectFile(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -47,16 +82,16 @@ export class DialogChooseAvatarComponent {
   }
   
 
-
   createUser() {
     this.us.userCache.avatarUrl = this.selectedAvatar;
     console.log(this.us.userCache);
-    this.userCreated = true;
     this.us.addUser(this.us.userCache);
-    setTimeout(() => {
-      this.userCreated = false;
-      this.router.navigate(['/']);
-    }, 2000);
+    this.sendRegisteredMail();
+    // console.log(this.us.userCache);
+    // setTimeout(() => {
+    //   this.userCreated = false;
+    //   this.router.navigate(['/']);
+    // }, 2000);
   }
 
   selectDummyAvatar(item: any) {

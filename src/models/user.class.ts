@@ -5,6 +5,7 @@ export class User {
     status: string;
     avatarUrl: string | undefined | null;
     userId: string;
+    logIn: string;
 
 
     constructor(obj?: any){
@@ -14,6 +15,7 @@ export class User {
         this.status = obj ? obj.status : '';
         this.avatarUrl = obj ? obj.avatarUrl : '';
         this.userId = obj ? obj.userId : '';
+        this.logIn = obj && obj.logIn || 'https://bubble.ishakates.com/';
     }
 
     public toJSON(){
@@ -24,6 +26,7 @@ export class User {
             status: this.status,
             avatarUrl: this.avatarUrl,
             userId: this.userId,
+            logIn: this.logIn,
         }
     }
 
