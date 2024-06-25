@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../user.service';
 import { Firestore, collection, doc, updateDoc } from '@angular/fire/firestore';
+import { User } from '../../models/user.class';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,14 @@ export class LoginComponent {
   firestore: Firestore = inject(Firestore)
   isPressed = false;
   myForm: FormGroup;
+  guestLog: User = new User({
+    email: 'guest@mail.com',
+    name: 'John Doe',
+    password: 'guest123',
+    status: 'online',
+    avatarUrl: '',
+    userId: ''
+  });
 
   constructor(private fb: FormBuilder, private router: Router, public us: UserService) {
     console.log(this.us.loadAllUsers());
@@ -50,9 +59,22 @@ export class LoginComponent {
   }
 
 
-  guestLogin() {
-    console.log('Gäste-Login wurde angeklickt');
-    // Hier kannst du weitere Logik für Gäste-Login hinzufügen, z.B. Routing
+  async guestLogin(event: Event) {
+    event.preventDefault();
+    try {
+      this.us.addUser(this.guestLog);
+      const acceptedUser = await this.us.getUser(this.guestLog.email, this.guestLog.password);
+      if (acceptedUser) {
+        this.us.loggedUser = acceptedUser;
+        this.us.userOnline(this.us.loggedUser.userId);
+        this.router.navigate(['/main']);
+        console.log(this.us.loggedUser);
+      } else {
+        console.error('Gäste-Login fehlgeschlagen');
+      }
+    } catch (error) {
+      console.error('Fehler beim Abrufen des Benutzers:', error);
+    }
   }
 
   onMouseDown() {
