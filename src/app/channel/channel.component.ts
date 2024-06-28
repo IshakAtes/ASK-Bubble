@@ -1,14 +1,15 @@
-import { Component, ElementRef, inject, input, Input, ViewChild, AfterViewInit, OnInit, OnChanges, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Channel } from '../../models/channel.class';
 import { User } from '../../models/user.class';
 import { DatabaseService } from '../database.service';
 import { ChannelMessage } from '../../models/channelMessage.class';
 import { FormsModule } from '@angular/forms';
-import { MatDialog, MatDialogRef} from '@angular/material/dialog';
+import { MatDialog} from '@angular/material/dialog';
 import { DialogAddAdditionalMemberComponent } from '../dialog-add-additional-member/dialog-add-additional-member.component';
 import { DialogShowMemberListComponent } from '../dialog-show-member-list/dialog-show-member-list.component';
 import { DialogShowChannelSettingsComponent } from '../dialog-show-channel-settings/dialog-show-channel-settings.component';
+
 
 
 @Component({
@@ -141,7 +142,7 @@ export class ChannelComponent implements OnInit {
     .subscribe((shouldReload: boolean) => {
       if (shouldReload){
         //TODO - ugly Solution with window.location.reload() https://stackoverflow.com/questions/72777325/angular-mat-dialog-refresh-page-upon-submit-and-not-close-dialog
-       // window.location.reload();
+       //window.location.reload();
        
       }  
       }

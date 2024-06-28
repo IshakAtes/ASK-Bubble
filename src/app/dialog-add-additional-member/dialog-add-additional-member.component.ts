@@ -44,7 +44,7 @@ export class DialogAddAdditionalMemberComponent {
     this.loadUserList();
     this.createPossibleUserSelection();
   }
-
+  
 
   loadUserList(){
     setTimeout(() => {
@@ -94,11 +94,11 @@ export class DialogAddAdditionalMemberComponent {
   addUserToSelectedUserList(user: User){
     this.selectedUserList.push(user);
     this.setDefault();
-    this.checkInputWith();
+    this.checkInputWidth();
   }
 
 
-  checkInputWith(){
+  checkInputWidth(){
     if(this.selectedList.nativeElement.offsetWidth > 500){
       this.selectedListWidth240 = true;
     }
@@ -119,7 +119,7 @@ export class DialogAddAdditionalMemberComponent {
   removeUser(user: User){
     this.selectedUserList.splice(this.selectedUserList.indexOf(user), 1);
     this.setDefault();
-    this.checkInputWith();
+    this.checkInputWidth();
   }
 
 

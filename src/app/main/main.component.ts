@@ -10,20 +10,24 @@ import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { Conversation } from '../../models/conversation.class';
 import { User } from '../../models/user.class';
+import { CreateConversationComponent } from '../create-conversation/create-conversation.component';
 
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [WorkspaceComponent, ChannelComponent, ChatComponent, ThreadComponent, CommonModule],
+  imports: [WorkspaceComponent, ChannelComponent, ChatComponent, ThreadComponent, CommonModule, CreateConversationComponent],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss'
 })
 export class MainComponent{
-  chat: boolean = false;
+  conversation: boolean = false;
+  channel: boolean = false;
+
   
 
   database = inject(DatabaseService);
 
+  currentConversation: Conversation;
   currentChannel: Channel;
   activeUserChannels: Array<Channel> = [];
   activeUserConversationList: Array<Conversation> = [];
@@ -35,17 +39,20 @@ export class MainComponent{
   channelBig: boolean = false;
   reloadChannel: boolean = false;
 
+  workspace: WorkspaceComponent;
+
+
+
   //TestData
   channelId: string = 'CHA-BSHDDuLBHC0o8RKcrcr6'
-
-
-
 
 
   
   constructor(public userservice: UserService){
     this.loadActiveUserChannels();
     this.loadActiveUserConversations();
+    
+    
   }
 
   ngOnChanges(){
@@ -54,13 +61,13 @@ export class MainComponent{
 
 
   loadActiveUserChannels(){
+    this.activeUserChannels = [];
     console.log('loadActiveUserChannels triggered')
     this.database.getUser(this.userservice.activeUserMail).then(user =>{
       this.activeUser = user;
       this.database.loadAllUserChannels(user.userId).then(userChannels => {
         console.log('user Channels after load');
         console.log(userChannels);
-        this.activeUserChannels = [];
         this.activeUserChannels = userChannels
       });
       
@@ -109,10 +116,32 @@ export class MainComponent{
 
 
   changeChannel(channel: Channel){
-    this.currentChannel = channel;
-    this.reloadChannel = true;
-    console.log('reload from changeChannel: (main):', this.reloadChannel)
-    
+    //if switch happens between channels a reload is needed!
+    if(this.channel){
+      this.currentChannel = channel;
+      this.reloadChannel = true;
+      this.conversation = false;
+      this.channel = true;
+    }
+    else{
+      this.currentChannel = channel;
+      this.conversation = false;
+      this.channel = true;
+    }
+  }
+
+  changeConversation(conversation: Conversation){
+    this.currentConversation = conversation;
+    //this.reloadConversation?
+    this.conversation = true;
+    this.channel = false;
+  }
+
+
+  changeNewConversation(){
+    this.reloadChannel = false;
+    this.conversation = false;
+    this.channel = false;
   }
 
 

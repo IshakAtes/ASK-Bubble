@@ -11,7 +11,9 @@
     
     @if(isWSVisible){
         <app-workspace
-        (changeChannel)="changeChannel($event)"
+        (changeToChannel)="changeChannel($event)"
+        (changeToConversation)="changeConversation($event)"
+        (changeToNewConversation)="changeNewConversation()"
         [activeUserChannels]="activeUserChannels"
         [activeUserConversationList]="activeUserConversationList"
         [usersFromActiveUserConversationList]="usersFromActiveUserConversationList"
@@ -20,10 +22,10 @@
     }
 
     
-    @if(chat){
+    @if(conversation){
         <app-chat></app-chat>
     }
-    @else {
+    @else if(channel) {
         @if(isWSVisible){
             <app-channel
             (changeReloadStatus)="setReloadToFalse($event)"
@@ -38,8 +40,18 @@
             [channelBig]="channelBig"
             [channel]="currentChannel"
             [reload]="reloadChannel"
+            [activeUser]="activeUser"
         ></app-channel>
         }
+    }
+    @else {
+        <app-create-conversation
+        [channelBig]="channelBig"
+        (changeToChannel)="changeChannel($event)"
+        (changeToConversation)="changeConversation($event)"
+        >
+            
+        </app-create-conversation>
     }
 </section>
 

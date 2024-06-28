@@ -5,7 +5,7 @@
             <span>Devspace</span>
         </div>
 
-        <div class="bgContainer">
+        <div class="bgContainer" (click)="openNewConversation()">
             <!-- svg add conversation-->
             <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <mask id="mask0_237_558" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="8" y="8" width="24" height="24">
@@ -117,7 +117,7 @@
 
             <!--ConversationBody has to be filled with data from database-->
             <div [ngClass]="{'d-none': hideConversationBody}" class="conversationBody">
-                <button (click)="openConversation(activeUser.userId)">
+                <button (click)="openConversationWithSelf(activeUser.userId)">
                     <img src="{{activeUser.avatarUrl}}" alt="">
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
@@ -126,7 +126,7 @@
                 </button>
                 
                 @for (user of usersFromActiveUserConversationList; track  user; let i = $index;){
-                    <button (click)="openConversation(activeUserConversationList[i].conversationId)">
+                    <button (click)="openConversation(activeUserConversationList[i])">
                         <img src="{{user.avatarUrl}}" alt="">
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>

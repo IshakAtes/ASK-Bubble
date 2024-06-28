@@ -1,4 +1,4 @@
-import { Component, inject, Output, EventEmitter, OnChanges, Input } from '@angular/core';
+import { Component, inject, Output, EventEmitter, OnChanges, Input, output } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { User } from '../../models/user.class';
 import { Channel } from '../../models/channel.class';
@@ -40,7 +40,9 @@ export class WorkspaceComponent {
   @Input() activeUser: User
 
   //output data to main component
-  @Output() changeChannel = new EventEmitter<Channel>();
+  @Output() changeToChannel = new EventEmitter<Channel>();
+  @Output() changeToConversation = new EventEmitter<Conversation>();
+  @Output() changeToNewConversation = new EventEmitter<Conversation>();
   
 
 
@@ -55,14 +57,22 @@ export class WorkspaceComponent {
     console.log('workspace on change triggered')
   }
 
+  openConversationWithSelf(userId: string){
+    console.log('check if there is conversation with self: ', userId)
+  }
 
-  openConversation(conversationId: string){
-    console.log('opened conversation with conversationId: ' + conversationId);
+
+  openConversation(conversation: Conversation){
+    this.changeToConversation.emit(conversation);
+  }
+
+  openNewConversation(){
+    this.changeToNewConversation.emit()
   }
 
 
   openChannel(channel: Channel){
-    this.changeChannel.emit(channel);
+    this.changeToChannel.emit(channel);
   }
 
 

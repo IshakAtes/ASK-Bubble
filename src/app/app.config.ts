@@ -7,6 +7,9 @@ import {provideFirebaseApp } from '@angular/fire/app';
 import * as firebaseConfig from '../assets/firebaseConfig.json';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient } from '@angular/common/http';
+import {AngularFireModule} from '@angular/fire/compat'
+import {AngularFireAuthModule} from '@angular/fire/compat/auth'
+import { GoogleAuthProvider } from 'firebase/auth';
 
 
 
@@ -20,7 +23,12 @@ export const appConfig: ApplicationConfig = {
         "authDomain":firebaseConfig.authDomain,
         "messagingSenderId":firebaseConfig.messagingSenderId
       })),
-      provideFirestore(() => getFirestore()), provideAnimationsAsync(), provideAnimationsAsync(), provideAnimationsAsync(), provideAnimationsAsync(), provideAnimationsAsync(), provideAnimationsAsync(), provideAnimationsAsync(), provideAnimationsAsync(), provideAnimationsAsync(), provideAnimationsAsync(), provideAnimationsAsync(),
+      provideFirestore(() => getFirestore()), provideAnimationsAsync(), provideAnimationsAsync(), 
+      provideAnimationsAsync(), provideAnimationsAsync(), 
+      provideAnimationsAsync(), provideAnimationsAsync(), 
+      provideAnimationsAsync(), provideAnimationsAsync(), 
+      provideAnimationsAsync(), provideAnimationsAsync(), 
+    
 
   ]
 };
