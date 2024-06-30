@@ -32,6 +32,8 @@ export class ChatComponent implements AfterViewInit {
   allChannels: Array<Channel> = [];
 
   reactions: Array<Reaction> = [];
+  groupedReactions: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
+
 
   userId = 'p1oEblSsradmfVeyvTu3';
   userName = 'Simon'
@@ -40,7 +42,7 @@ export class ChatComponent implements AfterViewInit {
 
   constructor(public databaseService: DatabaseService, public userService: UserService) {
     this.loadAllMessages();
-    
+
 
     databaseService.loadSpecificUserConversation("p1oEblSsradmfVeyvTu3", "CONV-p1oEblSsradmfVeyvTu3").then(conversationObject => {
       this.specificConversation.push(conversationObject)
@@ -69,7 +71,15 @@ export class ChatComponent implements AfterViewInit {
       console.log('reactions');
       console.log(this.reactions);
     }, 2000);
+
+    setTimeout(() => {
+      this.groupReactions();
+      console.log('groupreaction');
+      console.log(this.groupedReactions);
+    }, 3000);
+
   }
+
 
   loadAllMessages() {
     this.databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
@@ -81,15 +91,15 @@ export class ChatComponent implements AfterViewInit {
     });
   }
 
-  loadAllMessageReactions(){
+  loadAllMessageReactions() {
     for (let i = 0; i < this.list.length; i++) {
       const list = this.list[i];
-    this.databaseService.loadConversationMessagesReactions(this.userId, this.conversationId, list.messageId).then(reaction => {
-       reaction.forEach(reaction => {
-         this.reactions.push(reaction)
-       });
-     })
-   }
+      this.databaseService.loadConversationMessagesReactions(this.userId, this.conversationId, list.messageId).then(reaction => {
+        reaction.forEach(reaction => {
+          this.reactions.push(reaction)
+        });
+      })
+    }
   }
 
   online: boolean = true;
@@ -123,9 +133,69 @@ export class ChatComponent implements AfterViewInit {
     }, 10);
   }
 
+// group together all reaction based on their messageId and count them to display the right count in html
+  groupReactions() {
+    this.groupedReactions = new Map();
+
+    this.list.forEach(message => {
+      const reactionMap = new Map<string, { count: number, users: string[] }>();
+
+      this.reactions
+        .filter(reaction => reaction.messageId === message.messageId)
+        .forEach(reaction => {
+          if (!reactionMap.has(reaction.emoji)) {
+            reactionMap.set(reaction.emoji, { count: 0, users: [] });
+          }
+          const reactionData = reactionMap.get(reaction.emoji)!;
+          reactionData.count += 1;
+          reactionData.users.push(reaction.userName);
+        });
+
+      this.groupedReactions.set(
+        message.messageId,
+        Array.from(reactionMap.entries()).map(([emoji, { count, users }]) => ({ emoji, count, users }))
+      );
+    });
+  }
+
+//display and hide the reaction info on hover and retun the right text based on reaction(s) creator(s)
+  tooltipVisible: boolean = false;
+  hoveredReaction: { emoji: string, count: number, users: string[] } | null = null;
+
+  showTooltip(reaction: { emoji: string, count: number, users: string[] }) {
+    this.hoveredReaction = reaction;
+    this.tooltipVisible = true;
+  }
+
+  hideTooltip() {
+    this.tooltipVisible = false;
+    this.hoveredReaction = null;
+  }
+
+  
+  getReactionText(users: string[]): string {
+    // const userName = this.userService.userName;
+    const userName = 'Simon';
+    const userText = users.map(user => user === userName ? 'du' : user);
+
+    if (userText.length === 1) {
+      return `${userText[0]} hast darauf reagiert`;
+    } else if (userText.length === 2) {
+      if (userText.includes('du')) {
+        return `${userText[0]} und ${userText[1]} haben darauf reagiert`;
+      }
+      return `${userText[0]} und ${userText[1]} haben darauf reagiert`;
+    } else {
+      if (userText.includes('du')) {
+        return `${userText.filter(text => text !== 'du').join(', ')} und du haben darauf reagiert`;
+      }
+      return `${userText.slice(0, -1).join(', ')} und ${userText[userText.length - 1]} haben darauf reagiert`;
+    }
+  }
+
   // save message reaction
   saveNewMessageReaction(event: any, convo: ConversationMessage) {
-    this.reactions =[]
+    this.reactions = []
 
     let emoji = event.emoji.native
     let reaction = this.databaseService.createConversationMessageReaction(emoji, this.userId, this.userName, convo);
@@ -136,7 +206,7 @@ export class ChatComponent implements AfterViewInit {
 
     this.loadAllMessageReactions();
 
-    this.showEmoticonsReactionbar =false;
+    this.showEmoticonsReactionbar = false;
   }
 
 
@@ -229,7 +299,7 @@ export class ChatComponent implements AfterViewInit {
     setTimeout(() => {
       this.myTextarea.nativeElement.focus();
     }, 10);
-    
+
   }
 
   // Scroll to the bottom of the chatarea 

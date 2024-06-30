@@ -614,7 +614,8 @@ export class DatabaseService {
             emoji: reactionData['emoji'],
             messageId: reactionData['messageId'],
             reactionId: reactionData['reactionId'],
-            userId: reactionData['userId']
+            userId: reactionData['userId'],
+            userName: reactionData['userName'],
           } as Reaction;
           reactionList.push(reactionObject);
         });
