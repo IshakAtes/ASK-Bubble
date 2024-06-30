@@ -43,19 +43,16 @@
         </div>
         }
         }
+
         @if (message.createdBy == userId) {
         @for (user of allUsers; track $index) {
         @if (message.createdBy == user.userId) {
-
-
-
-
         <div class="own-message">
             <div class="own-reactionbar">
                 <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
                 <img src="../../assets/img/reactionbar_answer.png" alt="">
-                <img src="../../assets/img/reactionbar_add_reaction.png" (click)="toggleEmoticonsReactionbar()" alt="">
-                @if (showEmoticonsReactionbar) {
+                <img src="../../assets/img/reactionbar_add_reaction.png" (click)="toggleEmoticonsReactionbar(message.messageId)" alt="">
+                @if (selectedMessageId === message.messageId) {
                 <div class="emoticon-reaction-div">
                     <emoji-mart class="emoji-mart" (emojiSelect)="saveNewMessageReaction($event, message)"
                         title="Choose your emoji"></emoji-mart>
@@ -111,8 +108,8 @@
             <div class="reactionbar">
                 <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
                 <img src="../../assets/img/reactionbar_answer.png" alt="">
-                <img src="../../assets/img/reactionbar_add_reaction.png" (click)="toggleEmoticonsReactionbar()" alt="">
-                @if (showEmoticonsReactionbar) {
+                <img src="../../assets/img/reactionbar_add_reaction.png" (click)="toggleEmoticonsReactionbar(message.messageId)" alt="">
+                @if (selectedMessageId === message.messageId) {
                 <div class="emoticon-reaction-div">
                     <emoji-mart class="emoji-mart" (emojiSelect)="saveNewMessageReaction($event, message)"
                         title="Choose your emoji"></emoji-mart>

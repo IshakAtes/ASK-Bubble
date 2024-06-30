@@ -92,7 +92,6 @@ export class ChatComponent implements AfterViewInit, OnChanges {
   }
 
   loadAllMessageReactions() {
-    debugger
     for (let i = 0; i < this.list.length; i++) {
       const list = this.list[i];
       this.databaseService.loadConversationMessagesReactions(this.userId, this.conversationId, list.messageId).then(reaction => {
@@ -106,8 +105,6 @@ export class ChatComponent implements AfterViewInit, OnChanges {
   online: boolean = true;
   showEmoticons: boolean = false;
   showMention: boolean = false;
-
-  showEmoticonsReactionbar: boolean = false;
 
   content = '';
 
@@ -137,12 +134,7 @@ export class ChatComponent implements AfterViewInit, OnChanges {
   // group together all reaction based on their messageId and count them to display the right count in html
 
   ngOnChanges(changes: SimpleChanges): void {
-    // this.groupedReactions.forEach((value, key) => {
-    //   this.groupedReactions.set(key, []);
-    // });
-    // setTimeout(() => {
-    //   this.groupReactions()
-    // }, 1500);
+
   }
 
   groupReactions() {
@@ -210,50 +202,27 @@ export class ChatComponent implements AfterViewInit, OnChanges {
   }
 
 
-
-  // getReactionText(users: string[]): string {
-  //   // const userName = this.userService.userName;
-  //   const userName = 'Simon';
-  //   const userText = users.map(user => user === userName ? 'du' : user);
-
-  //   if (userText.length === 1) {
-  //     return userText[0] === 'du' ? 'du hast darauf reagiert' : `${userText[0]} hat darauf reagiert`;
-  //   } else if (userText.length === 2) {
-  //     if (userText.includes('du')) {
-  //       return `${userText[0]} und ${userText[1]} haben darauf reagiert`;
-  //     }
-  //     return `${userText[0]} und ${userText[1]} haben darauf reagiert`;
-  //   } else {
-  //     if (userText.includes('du')) {
-  //       return `${userText.filter(text => text !== 'du').join(', ')} und du haben darauf reagiert`;
-  //     }
-  //     return `${userText.slice(0, -1).join(', ')} und ${userText[userText.length - 1]} haben darauf reagiert`;
-  //   }
-  // }
-
   // save message reaction
   async saveNewMessageReaction(event: any, convo: ConversationMessage) {
     this.reactions = [];
-    this.groupedReactions.forEach((value, key) => {
-      this.groupedReactions.set(key, []);
-    });
 
     let emoji = event.emoji.native
     let reaction = this.databaseService.createConversationMessageReaction(emoji, this.userId, this.userName, convo);
 
     console.log(reaction);
 
-    this.databaseService.addConversationMessageReaction(this.specificConversation[0], convo, reaction)
+    await this.databaseService.addConversationMessageReaction(this.specificConversation[0], convo, reaction)
 
     await this.loadAllMessageReactions();
-    this.groupReactions()
-    console.log('new group');
-    console.log(this.groupedReactions);
-    
 
-    this.showEmoticonsReactionbar = false;
+    setTimeout(() => {
+      this.groupReactions()
+      console.log('new group');
+      console.log(this.groupedReactions);
+    }, 1000);
+
+    this.selectedMessageId = null;
   }
-
 
 
   @ViewChild('myTextarea') myTextarea!: ElementRef<HTMLTextAreaElement>;
@@ -265,12 +234,6 @@ export class ChatComponent implements AfterViewInit, OnChanges {
       this.scrollToBottom();
     }, 1000);
   }
-
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   if (changes['list']) {
-  //     this.scrollToBottom();
-  //   }
-  // }
 
 
   // search messages
@@ -358,6 +321,8 @@ export class ChatComponent implements AfterViewInit, OnChanges {
 
   // toggeling emoticons and mentions divs and selecting emoticons
 
+  selectedMessageId: string | null = null;
+
   toggleEmoticons() {
     if (this.showMention) {
       this.showMention = false;
@@ -365,8 +330,13 @@ export class ChatComponent implements AfterViewInit, OnChanges {
     this.showEmoticons = !this.showEmoticons;
   }
 
-  toggleEmoticonsReactionbar() {
-    this.showEmoticonsReactionbar = !this.showEmoticonsReactionbar;
+
+  toggleEmoticonsReactionbar(messageId: string) {
+    if (this.selectedMessageId === messageId) {
+      this.selectedMessageId = null;
+    } else {
+      this.selectedMessageId = messageId;
+    }
   }
 
   toggleMention() {
