@@ -18,7 +18,7 @@ import { Reaction } from '../../models/reactions.class';
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
 })
-export class ChatComponent implements AfterViewInit {
+export class ChatComponent implements AfterViewInit, OnChanges {
   allUsers = [] as Array<User>;
 
   messages = [] as Array<ConversationMessage>;
@@ -92,6 +92,7 @@ export class ChatComponent implements AfterViewInit {
   }
 
   loadAllMessageReactions() {
+    debugger
     for (let i = 0; i < this.list.length; i++) {
       const list = this.list[i];
       this.databaseService.loadConversationMessagesReactions(this.userId, this.conversationId, list.messageId).then(reaction => {
@@ -133,8 +134,19 @@ export class ChatComponent implements AfterViewInit {
     }, 10);
   }
 
-// group together all reaction based on their messageId and count them to display the right count in html
+  // group together all reaction based on their messageId and count them to display the right count in html
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // this.groupedReactions.forEach((value, key) => {
+    //   this.groupedReactions.set(key, []);
+    // });
+    // setTimeout(() => {
+    //   this.groupReactions()
+    // }, 1500);
+  }
+
   groupReactions() {
+    debugger;
     this.groupedReactions = new Map();
 
     this.list.forEach(message => {
@@ -158,44 +170,73 @@ export class ChatComponent implements AfterViewInit {
     });
   }
 
-//display and hide the reaction info on hover and retun the right text based on reaction(s) creator(s)
-  tooltipVisible: boolean = false;
+  //display and hide the reaction info on hover and retun the right text based on reaction(s) creator(s)
+  emojiInfoVisible: boolean = false;
   hoveredReaction: { emoji: string, count: number, users: string[] } | null = null;
 
   showTooltip(reaction: { emoji: string, count: number, users: string[] }) {
     this.hoveredReaction = reaction;
-    this.tooltipVisible = true;
+    this.emojiInfoVisible = true;
   }
 
   hideTooltip() {
-    this.tooltipVisible = false;
+    this.emojiInfoVisible = false;
     this.hoveredReaction = null;
   }
 
-  
+  getReactionUser(users: string[]): string {
+    const userName = 'Simon';
+    const userText = users.map(user => user === userName ? 'du' : user);
+    const formattedUserText = userText.map(user => `${user}`);
+
+    if (userText.length === 1) {
+      return formattedUserText[0];
+    } else if (userText.length === 2) {
+      return `${formattedUserText[0]} und ${formattedUserText[1]}`;
+    } else {
+      return `${formattedUserText.slice(0, -1).join(', ')} und ${formattedUserText[formattedUserText.length - 1]}`;
+    }
+  }
+
   getReactionText(users: string[]): string {
-    // const userName = this.userService.userName;
     const userName = 'Simon';
     const userText = users.map(user => user === userName ? 'du' : user);
 
     if (userText.length === 1) {
-      return `${userText[0]} hast darauf reagiert`;
-    } else if (userText.length === 2) {
-      if (userText.includes('du')) {
-        return `${userText[0]} und ${userText[1]} haben darauf reagiert`;
-      }
-      return `${userText[0]} und ${userText[1]} haben darauf reagiert`;
+      return userText[0] === 'du' ? 'hast darauf reagiert' : 'hat darauf reagiert';
     } else {
-      if (userText.includes('du')) {
-        return `${userText.filter(text => text !== 'du').join(', ')} und du haben darauf reagiert`;
-      }
-      return `${userText.slice(0, -1).join(', ')} und ${userText[userText.length - 1]} haben darauf reagiert`;
+      return 'haben darauf reagiert';
     }
   }
 
+
+
+  // getReactionText(users: string[]): string {
+  //   // const userName = this.userService.userName;
+  //   const userName = 'Simon';
+  //   const userText = users.map(user => user === userName ? 'du' : user);
+
+  //   if (userText.length === 1) {
+  //     return userText[0] === 'du' ? 'du hast darauf reagiert' : `${userText[0]} hat darauf reagiert`;
+  //   } else if (userText.length === 2) {
+  //     if (userText.includes('du')) {
+  //       return `${userText[0]} und ${userText[1]} haben darauf reagiert`;
+  //     }
+  //     return `${userText[0]} und ${userText[1]} haben darauf reagiert`;
+  //   } else {
+  //     if (userText.includes('du')) {
+  //       return `${userText.filter(text => text !== 'du').join(', ')} und du haben darauf reagiert`;
+  //     }
+  //     return `${userText.slice(0, -1).join(', ')} und ${userText[userText.length - 1]} haben darauf reagiert`;
+  //   }
+  // }
+
   // save message reaction
-  saveNewMessageReaction(event: any, convo: ConversationMessage) {
-    this.reactions = []
+  async saveNewMessageReaction(event: any, convo: ConversationMessage) {
+    this.reactions = [];
+    this.groupedReactions.forEach((value, key) => {
+      this.groupedReactions.set(key, []);
+    });
 
     let emoji = event.emoji.native
     let reaction = this.databaseService.createConversationMessageReaction(emoji, this.userId, this.userName, convo);
@@ -204,7 +245,11 @@ export class ChatComponent implements AfterViewInit {
 
     this.databaseService.addConversationMessageReaction(this.specificConversation[0], convo, reaction)
 
-    this.loadAllMessageReactions();
+    await this.loadAllMessageReactions();
+    this.groupReactions()
+    console.log('new group');
+    console.log(this.groupedReactions);
+    
 
     this.showEmoticonsReactionbar = false;
   }

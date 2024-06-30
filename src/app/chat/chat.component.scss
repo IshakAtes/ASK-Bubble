@@ -425,29 +425,66 @@
 .emoji-div {
     // width: 70px;
     // height: 34px;
+    position: relative;
     padding: 5px 10px 5px 10px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 20px;
-    border: 1px solid #ADB0D9
+    border: 1px solid #ADB0D9;
+    z-index: 9;
 }
 
-.tooltip {
+.emoji-info {
     position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #333;
-    color: #fff;
-    padding: 10px;
-    border-radius: 5px;
-    white-space: nowrap;
-    z-index: 10;
-    display: block;
-    margin-top: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  }
+    width: 158px;
+    height: 112px;
+    left: 32px;
+    bottom: 29px;
+    padding: 15px 10px 15px 10px;
+    gap: 5px;
+    border-radius: 30px 30px 30px 0px;
+    background: #444DF2;
+
+    color: white;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+
+    // position: absolute;
+    // top: 100%;
+    // left: 50%;
+    // transform: translateX(-50%);
+    // background: #333;
+    // color: #fff;
+    // padding: 10px;
+    // border-radius: 5px;
+    // white-space: nowrap;
+    // z-index: 10;
+    // display: block;
+    // margin-top: 5px;
+    // box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.emojo-info-emoji-div {
+    font-size: 28px;
+}
+
+.emojo-info-user-div {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 24.55px;
+}
+
+.emojo-info-text-div {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 21.82px;
+}
 
 
 // Scrollbar

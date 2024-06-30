@@ -80,19 +80,19 @@
 
                 <div class="reaction-bar">
                     @for (reaction of groupedReactions.get(message.messageId); track $index) {
-                    <!-- @if (reaction.messageId == message.messageId) { -->
-                    <!-- <div class="emoji-div">{{reaction.emoji}} 1</div> -->
                     <div class="emoji-div" (mouseenter)="showTooltip(reaction)" (mouseleave)="hideTooltip()">
                     {{ reaction.emoji }} {{ reaction.count }}
-                    </div>
-                    @if (tooltipVisible && hoveredReaction === reaction) {
-                    <div class="tooltip" >
-                        <div>{{ reaction.emoji }}</div>
-                        <div>{{ getReactionText(reaction.users) }}</div>
-                      </div>
+
+                    @if (emojiInfoVisible && hoveredReaction === reaction) {
+                        <div class="emoji-info" >
+                            <div class="emojo-info-emoji-div">{{ reaction.emoji }}</div>
+                            <div class="emojo-info-user-div">{{ getReactionUser(reaction.users) }}</div>
+                            <div class="emojo-info-text-div">{{ getReactionText(reaction.users) }}</div>
+                          </div>
+                        }
+                    </div>                 
                     }
-                    }
-                    <!-- } -->
+
                 </div>
 
                 <div class="own-answer-bar">
