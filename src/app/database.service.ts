@@ -102,11 +102,12 @@ export class DatabaseService {
   
 
 
-  createConversationMessageReaction(emoji: string, userId: string, conversationMessage: ConversationMessage): Reaction{
+  createConversationMessageReaction(emoji: string, userId: string, userName: string, conversationMessage: ConversationMessage): Reaction{
     let reaction = {} as Reaction;
     const randomNumber = Math.random();
     reaction.emoji = emoji;
     reaction.userId = userId;
+    reaction.userName = userName;
     reaction.messageId = conversationMessage.messageId;
     reaction.reactionId = 'CONV-MSG-REACT-' + randomNumber;
     return reaction

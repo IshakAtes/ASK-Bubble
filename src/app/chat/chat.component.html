@@ -56,10 +56,11 @@
                 <img src="../../assets/img/reactionbar_answer.png" alt="">
                 <img src="../../assets/img/reactionbar_add_reaction.png" (click)="toggleEmoticonsReactionbar()" alt="">
                 @if (showEmoticonsReactionbar) {
-                    <div class="emoticon-reaction-div">
-                        <emoji-mart class="emoji-mart" (emojiSelect)="saveNewMessageReaction($event, message)" title="Choose your emoji"></emoji-mart>
-                    </div>
-                    }
+                <div class="emoticon-reaction-div">
+                    <emoji-mart class="emoji-mart" (emojiSelect)="saveNewMessageReaction($event, message)"
+                        title="Choose your emoji"></emoji-mart>
+                </div>
+                }
                 <img src="../../assets/img/reactionbar_answer.png" alt="">
                 <img src="../../assets/img/reactionbar_edit.png" alt="">
             </div>
@@ -79,9 +80,9 @@
 
                 <div class="reaction-bar">
                     @for (reaction of reactions; track $index) {
-                        @if (reaction.messageId == message.messageId) {
-                            <div>{{reaction.emoji}}</div>
-                        }
+                    @if (reaction.messageId == message.messageId) {
+                    <div class="emoji-div">{{reaction.emoji}} 1</div>
+                    }
                     }
                 </div>
 
@@ -103,10 +104,11 @@
                 <img src="../../assets/img/reactionbar_answer.png" alt="">
                 <img src="../../assets/img/reactionbar_add_reaction.png" (click)="toggleEmoticonsReactionbar()" alt="">
                 @if (showEmoticonsReactionbar) {
-                    <div class="emoticon-reaction-div">
-                        <emoji-mart class="emoji-mart" (emojiSelect)="saveNewMessageReaction($event, message)" title="Choose your emoji"></emoji-mart>
-                    </div>
-                    }
+                <div class="emoticon-reaction-div">
+                    <emoji-mart class="emoji-mart" (emojiSelect)="saveNewMessageReaction($event, message)"
+                        title="Choose your emoji"></emoji-mart>
+                </div>
+                }
                 <img src="../../assets/img/reactionbar_answer.png" alt="">
             </div>
             <div>
@@ -132,9 +134,9 @@
 
                 <div class="reaction-bar">
                     @for (reaction of reactions; track $index) {
-                        @if (reaction.messageId == message.messageId) {
-                            <div>{{reaction.emoji}}</div>
-                        }
+                    @if (reaction.messageId == message.messageId) {
+                    <div>{{reaction.emoji}}</div>
+                    }
                     }
                 </div>
 
@@ -188,9 +190,12 @@
         }
 
 
-
+        @for (user of allUsers; track $index) {
+        @if (user.userId == specificConversation[0].recipientId) {
         <textarea (input)="onInput($event)" #myTextarea [(ngModel)]="content" class="message-input"
-            placeholder="Nachricht an #Entwicklerteam"></textarea>
+            placeholder="Nachricht an {{user.name}}"></textarea>
+        }
+        }
         <div class="message-actions">
 
             <div class="action-left">

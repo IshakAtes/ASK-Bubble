@@ -34,19 +34,20 @@ export class ChatComponent implements AfterViewInit {
   reactions: Array<Reaction> = [];
 
   userId = 'p1oEblSsradmfVeyvTu3';
+  userName = 'Simon'
   conversationId = 'CONV-p1oEblSsradmfVeyvTu3';
 
 
   constructor(public databaseService: DatabaseService, public userService: UserService) {
+    this.loadAllMessages();
+    
+
     databaseService.loadSpecificUserConversation("p1oEblSsradmfVeyvTu3", "CONV-p1oEblSsradmfVeyvTu3").then(conversationObject => {
       this.specificConversation.push(conversationObject)
 
       console.log('specialconversation');
       console.log(this.specificConversation);
     });
-
-
-    this.loadAllMessages();
 
 
     databaseService.loadAllUsers().then(userList => {
@@ -127,7 +128,7 @@ export class ChatComponent implements AfterViewInit {
     this.reactions =[]
 
     let emoji = event.emoji.native
-    let reaction = this.databaseService.createConversationMessageReaction(emoji, this.userId, convo);
+    let reaction = this.databaseService.createConversationMessageReaction(emoji, this.userId, this.userName, convo);
 
     console.log(reaction);
 
@@ -225,7 +226,10 @@ export class ChatComponent implements AfterViewInit {
 
   // Focusing tesxtarea after component is initilized 
   setFocus(): void {
-    this.myTextarea.nativeElement.focus();
+    setTimeout(() => {
+      this.myTextarea.nativeElement.focus();
+    }, 10);
+    
   }
 
   // Scroll to the bottom of the chatarea 

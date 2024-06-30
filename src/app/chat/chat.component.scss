@@ -314,7 +314,7 @@
     resize: none;
     height: 100%;
 
-    &:focus{
+    &:focus {
         outline: none;
     }
 }
@@ -366,12 +366,12 @@
     bottom: 185px;
 }
 
-.emoticon-reaction-div{
+.emoticon-reaction-div {
     position: absolute;
     bottom: 50px;
 }
 
-.mention-list-element{
+.mention-list-element {
     cursor: pointer;
 }
 
@@ -417,8 +417,20 @@
     background: #f0f0f0;
 }
 
-.reaction-bar{
+.reaction-bar {
     display: flex;
+    gap: 10px;
+}
+
+.emoji-div {
+    // width: 70px;
+    // height: 34px;
+    padding: 5px 10px 5px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    border: 1px solid #ADB0D9
 }
 
 
