@@ -18,7 +18,7 @@ import { Reaction } from '../../models/reactions.class';
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
 })
-export class ChatComponent implements AfterViewInit, OnChanges {
+export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
   allUsers = [] as Array<User>;
 
   messages = [] as Array<ConversationMessage>;
@@ -41,10 +41,49 @@ export class ChatComponent implements AfterViewInit, OnChanges {
 
 
   constructor(public databaseService: DatabaseService, public userService: UserService) {
+    // this.loadAllMessages();
+
+
+    // databaseService.loadSpecificUserConversation("p1oEblSsradmfVeyvTu3", "CONV-p1oEblSsradmfVeyvTu3").then(conversationObject => {
+    //   this.specificConversation.push(conversationObject)
+
+    //   console.log('specialconversation');
+    //   console.log(this.specificConversation);
+    // });
+
+
+    // databaseService.loadAllUsers().then(userList => {
+    //   this.allUsers = userList;
+    //   console.log('All Users:', this.allUsers);
+    // }).catch(error => {
+    //   console.error('Fehler beim Laden der Benutzer:', error);
+    // });
+
+
+    // databaseService.loadAllChannels().then(channel => {
+    //   this.allChannels = channel;
+    //   console.log('channels:');
+    //   console.log(this.allChannels);
+    // })
+
+    // setTimeout(() => {
+    //   this.loadAllMessageReactions();
+    //   console.log('reactions');
+    //   console.log(this.reactions);
+    // }, 2000);
+
+    // setTimeout(() => {
+    //   this.groupReactions();
+    //   console.log('groupreaction');
+    //   console.log(this.groupedReactions);
+    // }, 3000);
+  }
+
+  ngOnInit(): void {
     this.loadAllMessages();
 
 
-    databaseService.loadSpecificUserConversation("p1oEblSsradmfVeyvTu3", "CONV-p1oEblSsradmfVeyvTu3").then(conversationObject => {
+    this.databaseService.loadSpecificUserConversation("p1oEblSsradmfVeyvTu3", "CONV-p1oEblSsradmfVeyvTu3").then(conversationObject => {
       this.specificConversation.push(conversationObject)
 
       console.log('specialconversation');
@@ -52,7 +91,7 @@ export class ChatComponent implements AfterViewInit, OnChanges {
     });
 
 
-    databaseService.loadAllUsers().then(userList => {
+    this.databaseService.loadAllUsers().then(userList => {
       this.allUsers = userList;
       console.log('All Users:', this.allUsers);
     }).catch(error => {
@@ -60,7 +99,7 @@ export class ChatComponent implements AfterViewInit, OnChanges {
     });
 
 
-    databaseService.loadAllChannels().then(channel => {
+    this.databaseService.loadAllChannels().then(channel => {
       this.allChannels = channel;
       console.log('channels:');
       console.log(this.allChannels);
@@ -76,8 +115,7 @@ export class ChatComponent implements AfterViewInit, OnChanges {
       this.groupReactions();
       console.log('groupreaction');
       console.log(this.groupedReactions);
-    }, 3000);
-
+    }, 3000); 
   }
 
 
@@ -138,7 +176,6 @@ export class ChatComponent implements AfterViewInit, OnChanges {
   }
 
   groupReactions() {
-    debugger;
     this.groupedReactions = new Map();
 
     this.list.forEach(message => {

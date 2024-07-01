@@ -33,6 +33,7 @@ export class DatabaseService {
     user.status = status;
     user.avatarUrl = avatarUrl;
     user.userId = '';
+    user.usedLastTwoEmojis = ['✅', '🙌']
     return user
   }
 
@@ -240,7 +241,8 @@ export class DatabaseService {
           userObject.name = userData['name'];
           userObject.password = userData['password'];
           userObject.status = userData['status'];
-          userObject.userId = user.id
+          userObject.userId = user.id;
+          userObject.usedLastTwoEmojis = userData['usedLastTwoEmojis']
           userList.push(userObject);
         })
         resolve(userList);

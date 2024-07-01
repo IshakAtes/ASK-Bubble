@@ -49,9 +49,17 @@
         @if (message.createdBy == user.userId) {
         <div class="own-message">
             <div class="own-reactionbar">
+                @if (user.usedLastTwoEmojis) {
+                    <div>{{user.usedLastTwoEmojis[0]}}</div>
+                    <div>{{user.usedLastTwoEmojis[1]}}</div>
+                }
+                @else {
                 <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
                 <img src="../../assets/img/reactionbar_answer.png" alt="">
-                <img src="../../assets/img/reactionbar_add_reaction.png" (click)="toggleEmoticonsReactionbar(message.messageId)" alt="">
+            }
+
+                <img src="../../assets/img/reactionbar_add_reaction.png"
+                    (click)="toggleEmoticonsReactionbar(message.messageId)" alt="">
                 @if (selectedMessageId === message.messageId) {
                 <div class="emoticon-reaction-div">
                     <emoji-mart class="emoji-mart" (emojiSelect)="saveNewMessageReaction($event, message)"
@@ -78,16 +86,16 @@
                 <div class="reaction-bar">
                     @for (reaction of groupedReactions.get(message.messageId); track $index) {
                     <div class="emoji-div" (mouseenter)="showTooltip(reaction)" (mouseleave)="hideTooltip()">
-                    {{ reaction.emoji }} {{ reaction.count }}
+                        {{ reaction.emoji }} {{ reaction.count }}
 
-                    @if (emojiInfoVisible && hoveredReaction === reaction) {
-                        <div class="emoji-info" >
+                        @if (emojiInfoVisible && hoveredReaction === reaction) {
+                        <div class="emoji-info">
                             <div class="emojo-info-emoji-div">{{ reaction.emoji }}</div>
                             <div class="emojo-info-user-div">{{ getReactionUser(reaction.users) }}</div>
                             <div class="emojo-info-text-div">{{ getReactionText(reaction.users) }}</div>
-                          </div>
+                        </div>
                         }
-                    </div>                 
+                    </div>
                     }
 
                 </div>
@@ -108,7 +116,8 @@
             <div class="reactionbar">
                 <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
                 <img src="../../assets/img/reactionbar_answer.png" alt="">
-                <img src="../../assets/img/reactionbar_add_reaction.png" (click)="toggleEmoticonsReactionbar(message.messageId)" alt="">
+                <img src="../../assets/img/reactionbar_add_reaction.png"
+                    (click)="toggleEmoticonsReactionbar(message.messageId)" alt="">
                 @if (selectedMessageId === message.messageId) {
                 <div class="emoticon-reaction-div">
                     <emoji-mart class="emoji-mart" (emojiSelect)="saveNewMessageReaction($event, message)"
