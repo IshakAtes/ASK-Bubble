@@ -195,7 +195,7 @@ export class DatabaseService {
             activeUser.status = userData['status']
             activeUser.avatarUrl = userData['avatarUrl']
             activeUser.userId = user.id 
-            
+            activeUser.usedLastTwoEmojis = userData['usedLastTwoEmojis']
           }
         })
         resolve(activeUser);
@@ -218,7 +218,8 @@ export class DatabaseService {
             foundUser.password = userData['password']
             foundUser.status = userData['status']
             foundUser.avatarUrl = userData['avatarUrl']
-            foundUser.userId = user.id 
+            foundUser.userId = user.id
+            foundUser.usedLastTwoEmojis = userData['usedLastTwoEmojis'] 
           }
         })
         resolve(foundUser);
@@ -665,8 +666,13 @@ export class DatabaseService {
       updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/'), channel.channelId), channel.toJSON())
     })
   }
+  
 
+  updateUsedLastTwoEmojis(userId:string, emoji1:string, emoji2:string){
+    updateDoc(doc(this.firestore, 'users', userId), 'usedLastTwoEmojis', [emoji1, emoji2]);
+  }
 
+  
   /*delete functions */
   deleteChannel(channel: Channel, userId: string){
     deleteDoc(doc(collection(this.firestore, 'users/' + userId + '/channels/'), channel.channelId));

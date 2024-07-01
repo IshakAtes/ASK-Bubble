@@ -251,13 +251,28 @@
     left: 40px;
     top: -20px;
 
-
     img {
         border-radius: 50%;
 
         &:hover {
+            cursor: pointer;
             background-color: #ECEEFE;
         }
+    }
+}
+
+.reactionbar-emoji-div{
+    width: 47px;
+    height: 46px;
+    font-size: 23px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    border-radius: 50%;
+
+    &:hover{
+        cursor: pointer;
+        background-color: #ECEEFE;
     }
 }
 

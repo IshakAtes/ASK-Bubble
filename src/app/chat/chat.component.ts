@@ -20,6 +20,7 @@ import { Reaction } from '../../models/reactions.class';
 })
 export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
   allUsers = [] as Array<User>;
+  user:User;
 
   messages = [] as Array<ConversationMessage>;
   //@Input() 
@@ -105,6 +106,10 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
       console.log(this.allChannels);
     })
 
+    this.databaseService.loadUser(this.userId).then(user => {
+      this.user = user;
+    })
+
     setTimeout(() => {
       this.loadAllMessageReactions();
       console.log('reactions');
@@ -115,7 +120,7 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
       this.groupReactions();
       console.log('groupreaction');
       console.log(this.groupedReactions);
-    }, 3000); 
+    }, 3000);
   }
 
 
@@ -240,17 +245,28 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
 
 
   // save message reaction
-  async saveNewMessageReaction(event: any, convo: ConversationMessage) {
+  async saveNewMessageReaction(event: any, convo: ConversationMessage, reactionbar?: string) {
     this.reactions = [];
+    let emoji: string
 
-    let emoji = event.emoji.native
+    if (reactionbar) {
+      emoji = reactionbar
+    } else {
+      emoji = event.emoji.native
+    }
+
     let reaction = this.databaseService.createConversationMessageReaction(emoji, this.userId, this.userName, convo);
-
-    console.log(reaction);
-
     await this.databaseService.addConversationMessageReaction(this.specificConversation[0], convo, reaction)
 
+    //console.log(reaction);
     await this.loadAllMessageReactions();
+
+
+    let usedSecondEmoji = this.user.usedLastTwoEmojis[1]
+    if (usedSecondEmoji != emoji) {
+      this.databaseService.updateUsedLastTwoEmojis(this.userId, usedSecondEmoji, emoji)
+    }
+    
 
     setTimeout(() => {
       this.groupReactions()
@@ -260,6 +276,7 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
 
     this.selectedMessageId = null;
   }
+
 
 
   @ViewChild('myTextarea') myTextarea!: ElementRef<HTMLTextAreaElement>;

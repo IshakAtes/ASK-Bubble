@@ -6,7 +6,7 @@ export class User {
     avatarUrl: string | undefined | null;
     userId: string;
     logIn: string;
-    usedLastTwoEmojis: Array<String>; 
+    usedLastTwoEmojis: Array<string>; 
 
 
     constructor(obj?: any){

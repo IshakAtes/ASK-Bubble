@@ -50,8 +50,8 @@
         <div class="own-message">
             <div class="own-reactionbar">
                 @if (user.usedLastTwoEmojis) {
-                    <div>{{user.usedLastTwoEmojis[0]}}</div>
-                    <div>{{user.usedLastTwoEmojis[1]}}</div>
+                    <div (click)="saveNewMessageReaction($event, message, user.usedLastTwoEmojis[0])" class="reactionbar-emoji-div">{{user.usedLastTwoEmojis[0]}}</div>
+                    <div (click)="saveNewMessageReaction($event, message, user.usedLastTwoEmojis[1])" class="reactionbar-emoji-div">{{user.usedLastTwoEmojis[1]}}</div>
                 }
                 @else {
                 <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
