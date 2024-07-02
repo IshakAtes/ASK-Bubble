@@ -10,6 +10,8 @@ import { HeaderComponent } from '../header/header.component';
 import { FormsModule } from '@angular/forms';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { Reaction } from '../../models/reactions.class';
+import { LastTwoEmojisService } from '../shared-services/last-two-emojis.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-chat',
@@ -34,14 +36,14 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
 
   reactions: Array<Reaction> = [];
   groupedReactions: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
-
+  userEmojis$: Observable<Array<string>>;
 
   userId = 'p1oEblSsradmfVeyvTu3';
   userName = 'Simon'
   conversationId = 'CONV-p1oEblSsradmfVeyvTu3';
 
 
-  constructor(public databaseService: DatabaseService, public userService: UserService) {
+  constructor(public databaseService: DatabaseService, public userService: UserService, private lastTwoEmojiService: LastTwoEmojisService) {
     // this.loadAllMessages();
 
 
@@ -109,6 +111,8 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
     this.databaseService.loadUser(this.userId).then(user => {
       this.user = user;
     })
+
+    this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.userId);
 
     setTimeout(() => {
       this.loadAllMessageReactions();
