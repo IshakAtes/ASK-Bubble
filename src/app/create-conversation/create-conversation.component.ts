@@ -8,6 +8,7 @@ import { MatDialog} from '@angular/material/dialog';
 import { ConversationMessage } from '../../models/conversationMessage.class';
 import { FormsModule } from '@angular/forms';
 import { Conversation } from '../../models/conversation.class';
+import { UserService } from '../user.service';
 
 
 @Component({
@@ -52,7 +53,7 @@ export class CreateConversationComponent {
 
 
 
-  constructor(public dialog: MatDialog, private database: DatabaseService){
+  constructor(public dialog: MatDialog, private database: DatabaseService, public us: UserService){
     this.loadUserList();
     this.loadUserChannel();
     this.loadUserConversation();
@@ -113,7 +114,7 @@ export class CreateConversationComponent {
       if(conversation.createdBy == this.userId){
         if(conversation.recipientId == user.userId){
           console.log('A Conversation was Found --> open Conversation via emit')
-          
+
           this.changeToConversation.emit(conversation);
           break;
         }
@@ -136,16 +137,14 @@ export class CreateConversationComponent {
 
   openNewConversation(user: User){
     let newConversation = this.database.createConversation(this.userId, user.userId)
-    setTimeout(() => {
-      console.log('create new conversation' + newConversation)
-      console.log(newConversation)
-      //TODO - scharf schalten !
-      //this.database.addConversation(newConversation);
-    }, 200);
+    console.log('create new conversation' + newConversation)
+    console.log(newConversation)
+    this.database.addConversation(newConversation);
+    this.us.loadActiveUserConversations();
     
     setTimeout(() => {
-        this.changeToConversation.emit(newConversation);
-    }, 500);
+      this.changeToConversation.emit(newConversation);
+    }, 200);
 
   }
 
@@ -173,14 +172,6 @@ export class CreateConversationComponent {
       this.inputFocused = true;
     }
   }
-
-
-
-
-
-
-
-
 
 
 }

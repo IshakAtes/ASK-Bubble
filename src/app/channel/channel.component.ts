@@ -9,6 +9,7 @@ import { MatDialog} from '@angular/material/dialog';
 import { DialogAddAdditionalMemberComponent } from '../dialog-add-additional-member/dialog-add-additional-member.component';
 import { DialogShowMemberListComponent } from '../dialog-show-member-list/dialog-show-member-list.component';
 import { DialogShowChannelSettingsComponent } from '../dialog-show-channel-settings/dialog-show-channel-settings.component';
+import { UserService } from '../user.service';
 
 
 
@@ -30,6 +31,7 @@ export class ChannelComponent implements OnInit {
 
   //outputData to main component
   @Output() changeReloadStatus = new EventEmitter<boolean>();
+  @Output() reloadWorkspaceStatus = new EventEmitter<boolean>();
 
   memberList: Array<User> = [];
   messageList: Array<ChannelMessage>
@@ -39,7 +41,7 @@ export class ChannelComponent implements OnInit {
  
   @ViewChild('main') main: ElementRef 
 
-  constructor(public dialog: MatDialog, private database: DatabaseService){
+  constructor(public dialog: MatDialog, private database: DatabaseService, public us: UserService){
 
   }
 
@@ -66,6 +68,10 @@ export class ChannelComponent implements OnInit {
 
   changeReload(){
     this.changeReloadStatus.emit()
+  }
+
+  reloadWorkspace(){
+    this.reloadWorkspaceStatus.emit(true);
   }
 
 
@@ -138,15 +144,6 @@ export class ChannelComponent implements OnInit {
     channelInfo.componentInstance.currentChannel = this.channel;
     channelInfo.componentInstance.channelCreator = this.channelCreator;
     
-    channelInfo.afterClosed()
-    .subscribe((shouldReload: boolean) => {
-      if (shouldReload){
-        //TODO - ugly Solution with window.location.reload() https://stackoverflow.com/questions/72777325/angular-mat-dialog-refresh-page-upon-submit-and-not-close-dialog
-       //window.location.reload();
-       
-      }  
-      }
-    );
     
 
    

@@ -5,6 +5,7 @@ import { User } from '../../models/user.class';
 import { DatabaseService } from '../database.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { UserService } from '../user.service';
 
 
 @Component({
@@ -32,7 +33,7 @@ export class DialogShowChannelSettingsComponent {
   @ViewChild('errorMsg') errorMessage: ElementRef
 
   
-  constructor(public dialogRef: MatDialogRef<DialogShowChannelSettingsComponent>, public dialog: MatDialog){
+  constructor(public dialogRef: MatDialogRef<DialogShowChannelSettingsComponent>, public dialog: MatDialog, public us: UserService){
     this.database.loadUser('p1oEblSsradmfVeyvTu3')
       .then(user =>{
         this.activeUser = user;
@@ -72,11 +73,9 @@ export class DialogShowChannelSettingsComponent {
       if(bool){
         this.currentChannel.name = this.newChannelName;
         this.database.updateChannelName(new Channel(this.currentChannel))
-        
         this.showEditNameInput = false;
-        setTimeout(() => {
-          this.dialogRef.close(true);
-        }, 500);
+        this.us.loadActiveUserChannels();
+        this.dialogRef.close(true);
        
         
       }
@@ -109,10 +108,8 @@ export class DialogShowChannelSettingsComponent {
     this.currentChannel.description = this.newChannelDescription;
     this.database.updateChannelName(new Channel(this.currentChannel))
     this.showEditDescriptionInput = false;
-    setTimeout(() => {
-      this.dialogRef.close(true);
-    }, 500);
-
+    this.us.loadActiveUserChannels();
+    this.dialogRef.close(true);
   }
 
 

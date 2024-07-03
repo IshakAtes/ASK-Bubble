@@ -8,6 +8,7 @@ import { Channel } from '../models/channel.class';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DatabaseService } from './database.service';
+import { Conversation } from '../models/conversation.class';
 
 @Injectable({
   providedIn: 'root'
@@ -22,34 +23,24 @@ export class UserService {
   // mailUser: any;
   private baseUrl = 'http://localhost:4200';
 
+  activeUserChannels: Array<Channel> = [];
+  activeUserConversationList: Array<Conversation> = [];
+  usersFromActiveUserConversationList: Array<User> = [];
+  activeUserObject: User;
 
-    //Test Data from Simon
-    database = inject(DatabaseService);
-    currentConversationId: string
-  
-    currentChannel: Channel;
-    
-    activeUser: string = 'p1oEblSsradmfVeyvTu3'
-    
-    currentChannelId: string = 'CHA-BSHDDuLBHC0o8RKcrcr6';
-    
-    //TODO - hiernach suchen wenns live geht und umgestellt werden soll
-    activeUserMail: string = 'simon@dummy.de' 
-    //End Test Data from Simon
+  //TODO - hiernach suchen wenns live geht und umgestellt werden soll
+  activeUserMail: string = 'simon@dummy.de' 
 
 
-  constructor(private http: HttpClient, private router: Router) { 
-    
 
 
+  constructor(private http: HttpClient, private router: Router, public database: DatabaseService) { 
+    this.loadActiveUserChannels();
+    this.loadActiveUserConversations();
   }
 
 
-
-
-
-
-
+  
   upload(file: File): Observable<HttpEvent<any>> {
     const formData: FormData = new FormData();
     formData.append('file', file);
@@ -154,6 +145,59 @@ export class UserService {
         }, (error) => {
           reject(error)
         })
+    })
+  }
+
+
+
+
+  loadActiveUserChannels(){
+    this.activeUserChannels = [];
+    console.log('loadActiveUserChannels triggered')
+    this.database.getUser(this.activeUserMail).then(user =>{
+      this.activeUserObject = user;
+      this.database.loadAllUserChannels(user.userId).then(userChannels => {
+        console.log('user Channels after load');
+        console.log(userChannels);
+        this.activeUserChannels = userChannels
+      });
+    })
+  }
+
+
+  loadActiveUserConversations(){
+    this.activeUserConversationList = [];
+    this.usersFromActiveUserConversationList = [];
+    this.database.getUser(this.activeUserMail).then(user =>{
+      this.database.loadAllUserConversations(user.userId)
+      .then(userConversations => {
+        this.activeUserConversationList = userConversations;
+        userConversations.forEach(conversation =>{
+          if(conversation.createdBy == user.userId){
+            this.getRecievedConversation(conversation);
+            console.log(this.usersFromActiveUserConversationList)
+          }else{
+            this.getCreatedConversation(conversation);
+            console.log(this.usersFromActiveUserConversationList)
+          }
+        })
+      });
+    })
+  }
+
+
+  getCreatedConversation(conversation: Conversation){
+    this.database.loadUser(conversation.createdBy)
+    .then(loadedUser => {
+      this.usersFromActiveUserConversationList.push(loadedUser);
+    })
+  }
+
+
+  getRecievedConversation(conversation: Conversation){
+    this.database.loadUser(conversation.recipientId)
+    .then(loadedUser => {
+      this.usersFromActiveUserConversationList.push(loadedUser);
     })
   }
 }

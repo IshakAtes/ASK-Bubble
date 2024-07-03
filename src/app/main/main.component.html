@@ -14,10 +14,13 @@
         (changeToChannel)="changeChannel($event)"
         (changeToConversation)="changeConversation($event)"
         (changeToNewConversation)="changeNewConversation()"
-        [activeUserChannels]="activeUserChannels"
-        [activeUserConversationList]="activeUserConversationList"
-        [usersFromActiveUserConversationList]="usersFromActiveUserConversationList"
-        [activeUser]="activeUser"
+
+
+        [activeUserChannels]="userservice.activeUserChannels"
+        [activeUser]="userservice.activeUserObject"
+
+        [usersFromActiveUserConversationList]="userservice.usersFromActiveUserConversationList"
+        [activeUserConversationList]="userservice.activeUserConversationList"
         ></app-workspace>
     }
 
@@ -29,18 +32,23 @@
         @if(isWSVisible){
             <app-channel
             (changeReloadStatus)="setReloadToFalse($event)"
+
+            [activeUser]="userservice.activeUserObject"
             [channelBig]="channelBig"
             [channel]="currentChannel"
             [reload]="reloadChannel"
-            [activeUser]="activeUser"
+
         ></app-channel>
         }
         @else {
             <app-channel
+            (changeReloadStatus)="setReloadToFalse($event)"
+
+            [activeUser]="userservice.activeUserObject"
             [channelBig]="channelBig"
             [channel]="currentChannel"
             [reload]="reloadChannel"
-            [activeUser]="activeUser"
+
         ></app-channel>
         }
     }

@@ -39,6 +39,7 @@ export class WorkspaceComponent {
   @Input() usersFromActiveUserConversationList: Array<User> 
   @Input() activeUser: User
 
+
   //output data to main component
   @Output() changeToChannel = new EventEmitter<Channel>();
   @Output() changeToConversation = new EventEmitter<Conversation>();
@@ -47,8 +48,6 @@ export class WorkspaceComponent {
 
 
   constructor(public dialog: MatDialog, public us: UserService){  
-
-    
     console.log('constructor of workspace triggered')
   }
 
