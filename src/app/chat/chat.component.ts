@@ -26,14 +26,11 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
   user:User;
 
   messages = [] as Array<ConversationMessage>;
-  //@Input() 
   list: Array<ConversationMessage> = [];
   dates: Array<string> = [];
 
   allConversations: Array<Conversation> = [];
   specificConversation: Array<Conversation> = [];
-
-
 
   allChannels: Array<Channel> = [];
 
@@ -92,13 +89,15 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
     //   console.log('groupreaction');
     //   console.log(this.groupedReactions);
     // }, 3000);
-
   }
 
   ngOnInit(): void {
     this.isChatDataLoaded  = false;
     this.loadAllMessages();
-    
+
+    this.databaseService.loadUser(this.userId).then(user => {
+      this.user = user;
+    })
 
     this.databaseService.loadSpecificUserConversation("p1oEblSsradmfVeyvTu3", "CONV-p1oEblSsradmfVeyvTu3")
     .then(conversation => {
@@ -114,10 +113,6 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
          else{
            this.passiveUser =  creatorUser;
          }
-         console.log('specific.createdyBy');
-         console.log('sending user: ', this.sendingUser);
-         console.log('passiv user ', this.passiveUser);
-
      })
 
      this.databaseService.loadUser(this.specific.recipientId)
@@ -129,23 +124,8 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
          else{
            this.passiveUser = recipientUser;
          }
-         console.log('specific.recipientID');
-         console.log('sending user: ', this.sendingUser);
-         console.log('passiv user ', this.passiveUser);
-         
-
        })
     })
-
-
-    this.databaseService.loadSpecificUserConversation("p1oEblSsradmfVeyvTu3", "CONV-p1oEblSsradmfVeyvTu3").then(conversationObject => {
-      this.specificConversation.push(conversationObject)
-
-      console.log('specialconversation');
-      console.log(this.specificConversation);
-    });
-
-
 
     this.databaseService.loadAllUsers().then(userList => {
       this.allUsers = userList;
@@ -155,35 +135,29 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
     });
 
  
-
-
-
-
-
-    this.databaseService.loadAllChannels().then(channel => {
+    this.databaseService.loadAllUserChannels(this.userId).then(channel => {
       this.allChannels = channel;
       console.log('channels:');
       console.log(this.allChannels);
     })
 
-    this.databaseService.loadUser(this.userId).then(user => {
-      this.user = user;
-    })
-
+    
     this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.userId);
 
-    setTimeout(() => {
+
+    setTimeout( () => {
       this.loadAllMessageReactions();
       console.log('reactions');
       console.log(this.reactions);
-    }, 500);
+    }, 900);
+
 
     setTimeout(() => {
       this.groupReactions();
       console.log('groupreaction');
       console.log(this.groupedReactions);
       this.isChatDataLoaded  = true;
-    }, 1000);
+    }, 1500);
   }
 
 
@@ -217,9 +191,9 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
 
   saveNewMessage() {
     this.list = [];
-    let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specificConversation[0], this.content, this.userId)
+    let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specific, this.content, this.userId)
 
-    this.databaseService.addConversationMessage(this.specificConversation[0], newMessage)
+    this.databaseService.addConversationMessage(this.specific, newMessage)
 
     this.content = '';
 
@@ -308,8 +282,7 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
 
 
   // save message reaction
-  async saveNewMessageReaction(event: any, convo: ConversationMessage, reactionbar?: string) {
-    this.reactions = [];
+  async saveNewMessageReaction(event: any, convo: ConversationMessage, userId: string, reactionbar?: string) {
     let emoji: string
 
     if (reactionbar) {
@@ -318,16 +291,25 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
       emoji = event.emoji.native
     }
 
-    let reaction = this.databaseService.createConversationMessageReaction(emoji, this.userId, this.userName, convo);
-    await this.databaseService.addConversationMessageReaction(this.specificConversation[0], convo, reaction)
+    // Überprüfe, ob der Benutzer bereits mit diesem Emoji reagiert hat
+    const userAlreadyReacted = this.reactions.some(reaction => 
+      reaction.messageId === convo.messageId && reaction.emoji === emoji && reaction.userId === userId
+    );
 
-    //console.log(reaction);
+    if (userAlreadyReacted) {
+      console.log('User has already reacted with this emoji');
+      return;
+    }
+    this.reactions = [];
+    let reaction = this.databaseService.createConversationMessageReaction(emoji, userId, this.userName, convo);
+    await this.databaseService.addConversationMessageReaction(this.specific, convo, reaction)
     await this.loadAllMessageReactions();
 
 
+    let usedLastEmoji = this.user.usedLastTwoEmojis[0]
     let usedSecondEmoji = this.user.usedLastTwoEmojis[1]
-    if (usedSecondEmoji != emoji) {
-      this.databaseService.updateUsedLastTwoEmojis(this.userId, usedSecondEmoji, emoji)
+    if (usedSecondEmoji != emoji && usedLastEmoji != emoji) {
+      this.databaseService.updateUsedLastTwoEmojis(userId, usedSecondEmoji || usedLastEmoji, emoji)
     }
     
     this.databaseService.loadAllUsers().then(userList => {
@@ -338,7 +320,7 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
     });
 
 
-    this.databaseService.loadAllChannels().then(channel => {
+    this.databaseService.loadAllUserChannels(this.userId).then(channel => {
       this.allChannels = channel;
       console.log('channels:');
       console.log(this.allChannels);
@@ -363,7 +345,7 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
     this.setFocus();
     setTimeout(() => {
       this.scrollToBottom();
-    }, 1000);
+    }, 2000);
   }
 
 
@@ -381,12 +363,10 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
       setTimeout(() => {
         this.scrollToBottom();
       }, 10);
-
     }
   }
 
   //show dropdownmenu with mentions or channels 
-
   showDropdown: boolean = false;
   filteredItems: Array<User | Channel> = [];
 
@@ -438,7 +418,6 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
     setTimeout(() => {
       this.myTextarea.nativeElement.focus();
     }, 10);
-
   }
 
   // Scroll to the bottom of the chatarea 
@@ -451,7 +430,6 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
   }
 
   // toggeling emoticons and mentions divs and selecting emoticons
-
   selectedMessageId: string | null = null;
 
   toggleEmoticons() {
@@ -490,7 +468,6 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
   }
 
   // Formating timestamp into date
-
   formatTimestamp(timestamp: Timestamp): Date {
     const date = new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
     return new Date(date)

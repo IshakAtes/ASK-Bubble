@@ -2,10 +2,10 @@
 
 
 
-<app-header (search)="onSearch($event)"></app-header>
+    <app-header (search)="onSearch($event)"></app-header>
 
-<div class="main-chat">
-    <div class="main-chat-header">
+    <div class="main-chat">
+        <div class="main-chat-header">
             <div class="channelname">
                 <div class="main-chat-header-avatar-div">
 
@@ -18,239 +18,247 @@
                 </div>
                 <span>{{passiveUser.name}}</span>
             </div>
-    </div>
-
-    <div #chatArea class="chat-area">
-        <div class="time-separator">
-            <div class="date">
-                <span>{{formatDate(formatTimestamp(list[0].createdAt))}}</span>
-            </div>
-            <div class="line"></div>
         </div>
 
-        @for (message of list; track $index) {
-            @if ($index > 0) {
-                @if (formatDate(formatTimestamp(list[$index].createdAt)) !=
-                formatDate(formatTimestamp(list[$index-1].createdAt))) {
-                <div class="time-separator">
-                    <div class="date">
-                        <span>{{formatDate(formatTimestamp(list[$index].createdAt))}}</span>
-                    </div>
-                    <div class="line"></div>
+        <div #chatArea class="chat-area">
+            <div class="time-separator">
+                <div class="date">
+                    <span>{{formatDate(formatTimestamp(list[0].createdAt))}}</span>
                 </div>
-                }
+                <div class="line"></div>
+            </div>
+
+            @for (message of list; track $index) {
+            @if ($index > 0) {
+            @if (formatDate(formatTimestamp(list[$index].createdAt)) !=
+            formatDate(formatTimestamp(list[$index-1].createdAt))) {
+            <div class="time-separator">
+                <div class="date">
+                    <span>{{formatDate(formatTimestamp(list[$index].createdAt))}}</span>
+                </div>
+                <div class="line"></div>
+            </div>
+            }
             }
 
             @if (message.createdBy == userId) {
-                        <div class="own-message">
-                            <div class="own-reactionbar">
-                                @if (user.usedLastTwoEmojis) {
-                                    <div (click)="saveNewMessageReaction($event, message, user.usedLastTwoEmojis[0])" class="reactionbar-emoji-div">{{user.usedLastTwoEmojis[0]}}</div>
-                                    <div (click)="saveNewMessageReaction($event, message, user.usedLastTwoEmojis[1])" class="reactionbar-emoji-div">{{user.usedLastTwoEmojis[1]}}</div>
-                                }
-                                @else {
-                                <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
-                                <img src="../../assets/img/reactionbar_answer.png" alt="">
-                            }
+            <div class="own-message">
+                <div class="own-reactionbar">
+                    @if (user.usedLastTwoEmojis) {
+                    <div (click)="saveNewMessageReaction($event, message, user.userId, user.usedLastTwoEmojis[0])"
+                        class="reactionbar-emoji-div">{{user.usedLastTwoEmojis[0]}}</div>
+                    <div (click)="saveNewMessageReaction($event, message, user.userId, user.usedLastTwoEmojis[1])"
+                        class="reactionbar-emoji-div">{{user.usedLastTwoEmojis[1]}}</div>
+                    }
+                    @else {
+                    <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
+                    <img src="../../assets/img/reactionbar_answer.png" alt="">
+                    }
 
-                                <img src="../../assets/img/reactionbar_add_reaction.png"
-                                    (click)="toggleEmoticonsReactionbar(message.messageId)" alt="">
-                                @if (selectedMessageId === message.messageId) {
-                                <div class="emoticon-reaction-div">
-                                    <emoji-mart class="emoji-mart" (emojiSelect)="saveNewMessageReaction($event, message)"
-                                        title="Choose your emoji"></emoji-mart>
-                                </div>
-                                }
-                                <img src="../../assets/img/reactionbar_answer.png" alt="">
-                                <img src="../../assets/img/reactionbar_edit.png" alt="">
-                            </div>
-
-                            <div>
-                                <img class="avatar" src="{{user.avatarUrl}}" alt="User Avatar">
-                            </div>
-                            <div class="message-content-div">
-                                <div class="own-message-header">
-                                    <span class="message-header-userName">{{user.name}}</span>
-                                    <span class="message-header-timestamp">{{formatTime(formatTimestamp(message.createdAt))}}</span>
-                                </div>
-
-                                <div class="own-massage-content-bubble">
-                                    <span class="massage-content">{{message.content}}</span>
-                                </div>
-
-                                <div class="reaction-bar">
-                                    @for (reaction of groupedReactions.get(message.messageId); track $index) {
-                                    <div class="emoji-div" (mouseenter)="showTooltip(reaction)" (mouseleave)="hideTooltip()">
-                                        {{ reaction.emoji }} {{ reaction.count }}
-
-                                        @if (emojiInfoVisible && hoveredReaction === reaction) {
-                                        <div class="emoji-info">
-                                            <div class="emojo-info-emoji-div">{{ reaction.emoji }}</div>
-                                            <div class="emojo-info-user-div">{{ getReactionUser(reaction.users) }}</div>
-                                            <div class="emojo-info-text-div">{{ getReactionText(reaction.users) }}</div>
-                                        </div>
-                                        }
-                                    </div>
-                                    }
-
-                                </div>
-
-                                <div class="own-answer-bar">
-                                    <span class="answer-count">2 Antworten</span>
-                                    <span class="last-answer">Letzte Antwort 14:56</span>
-                                </div>
-                            </div>
-                        </div>
-               
-              
-            }
-            @else {
-                
-                   
-                    @if (message.createdBy == passiveUser.userId) {
-                    <div class="message">
-                        <div class="reactionbar">
-                            <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
-                            <img src="../../assets/img/reactionbar_answer.png" alt="">
-                            <img src="../../assets/img/reactionbar_add_reaction.png"
-                                (click)="toggleEmoticonsReactionbar(message.messageId)" alt="">
-                            @if (selectedMessageId === message.messageId) {
-                            <div class="emoticon-reaction-div">
-                                <emoji-mart class="emoji-mart" (emojiSelect)="saveNewMessageReaction($event, message)"
-                                    title="Choose your emoji"></emoji-mart>
-                            </div>
-                            }
-                            <img src="../../assets/img/reactionbar_answer.png" alt="">
-                        </div>
-                        <div>
-                            <div class="avatar-div">
-                                <img class="avatar" src="{{passiveUser.avatarUrl}}" alt="User Avatar">
-                                @if(passiveUser.status == 'online'){
-                                <div class="online-indicator"></div>
-                                }@else{
-                                <div class="offline-indicator"></div>
-                                }
-                            </div>
-
-                        </div>
-                        <div class="message-content-div">
-                            <div class="message-header">
-                                <span class="message-header-userName">{{passiveUser.name}}</span>
-                                <span class="message-header-timestamp">{{formatTime(formatTimestamp(message.createdAt))}}</span>
-                            </div>
-
-                            <div class="massage-content-bubble">
-                                <span class="massage-content">{{message.content}}</span>
-                            </div>
-
-                            <div class="reaction-bar">
-                                @for (reaction of reactions; track $index) {
-                                @if (reaction.messageId == message.messageId) {
-                                <div>{{reaction.emoji}}</div>
-                                }
-                                }
-                            </div>
-
-                            <div class="answer-bar">
-                                <span class="answer-count">2 Antworten</span>
-                                <span class="last-answer">Letzte Antwort 14:56</span>
-
-                            </div>
-                        </div>
+                    <img src="../../assets/img/reactionbar_add_reaction.png"
+                        (click)="toggleEmoticonsReactionbar(message.messageId)" alt="">
+                    @if (selectedMessageId === message.messageId) {
+                    <div class="emoticon-reaction-div">
+                        <emoji-mart class="emoji-mart" (emojiSelect)="saveNewMessageReaction($event, message, user.userId)"
+                            title="Choose your emoji"></emoji-mart>
                     </div>
                     }
-               
+                    <img src="../../assets/img/reactionbar_answer.png" alt="">
+                    <img src="../../assets/img/reactionbar_edit.png" alt="">
+                </div>
+
+                <div>
+                    <img class="avatar" src="{{user.avatarUrl}}" alt="User Avatar">
+                </div>
+                <div class="message-content-div">
+                    <div class="own-message-header">
+                        <span class="message-header-userName">{{user.name}}</span>
+                        <span class="message-header-timestamp">{{formatTime(formatTimestamp(message.createdAt))}}</span>
+                    </div>
+
+                    <div class="own-massage-content-bubble">
+                        <span class="massage-content">{{message.content}}</span>
+                    </div>
+
+                    <div class="reaction-bar">
+                        @for (reaction of groupedReactions.get(message.messageId); track $index) {
+                        <div class="emoji-div" (mouseenter)="showTooltip(reaction)" (mouseleave)="hideTooltip()">
+                            {{ reaction.emoji }} {{ reaction.count }}
+
+                            @if (emojiInfoVisible && hoveredReaction === reaction) {
+                            <div class="emoji-info">
+                                <div class="emojo-info-emoji-div">{{ reaction.emoji }}</div>
+                                <div class="emojo-info-user-div">{{ getReactionUser(reaction.users) }}</div>
+                                <div class="emojo-info-text-div">{{ getReactionText(reaction.users) }}</div>
+                            </div>
+                            }
+                        </div>
+                        }
+                    </div>
+
+                    <div class="own-answer-bar">
+                        <span class="answer-count">2 Antworten</span>
+                        <span class="last-answer">Letzte Antwort 14:56</span>
+                    </div>
+                </div>
+            </div>
+
+
             }
-        }
-
-        <!-- Empty div function as anchor to scroll down to  -->
-        <div #lastDiv></div>
-
-    </div>
+            @else {
 
 
+            @if (message.createdBy == passiveUser.userId) {
+            <div class="message">
+                <div class="reactionbar">
+                    @if (passiveUser.usedLastTwoEmojis) {
+                    <div (click)="saveNewMessageReaction($event, message, passiveUser.userId, passiveUser.usedLastTwoEmojis[0])"
+                        class="reactionbar-emoji-div">{{passiveUser.usedLastTwoEmojis[0]}}</div>
+                    <div (click)="saveNewMessageReaction($event, message, passiveUser.userId, passiveUser.usedLastTwoEmojis[1])"
+                        class="reactionbar-emoji-div">{{passiveUser.usedLastTwoEmojis[1]}}</div>
+                    }
+                    @else {
+                    <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
+                    <img src="../../assets/img/reactionbar_answer.png" alt="">
+                    }
+                    <img src="../../assets/img/reactionbar_add_reaction.png"
+                        (click)="toggleEmoticonsReactionbar(message.messageId)" alt="">
+                    @if (selectedMessageId === message.messageId) {
+                    <div class="emoticon-reaction-div">
+                        <emoji-mart class="emoji-mart" (emojiSelect)="saveNewMessageReaction($event, message, passiveUser.userId)"
+                            title="Choose your emoji"></emoji-mart>
+                    </div>
+                    }
+                    <img src="../../assets/img/reactionbar_answer.png" alt="">
+                </div>
+                <div>
+                    <div class="avatar-div">
+                        <img class="avatar" src="{{passiveUser.avatarUrl}}" alt="User Avatar">
+                        @if(passiveUser.status == 'online'){
+                        <div class="online-indicator"></div>
+                        }@else{
+                        <div class="offline-indicator"></div>
+                        }
+                    </div>
 
-    <div class="message-container">
-        <!-- Emojis -->
-        @if (showEmoticons) {
-        <div class="emoticon-div">
-            <emoji-mart class="emoji-mart" (emojiSelect)="addEmoji($event)" title="Choose your emoji"></emoji-mart>
-        </div>
-        }
-        <!-- Erwähnungen -->
-        @if (showMention) {
-        <div class="mention-div">
-            @for (users of allUsers; track $index) {
-            <div class="mention-list-element" (click)="addMention(users.name)">{{users.name}}</div>
-            }
-        </div>
-        }
+                </div>
+                <div class="message-content-div">
+                    <div class="message-header">
+                        <span class="message-header-userName">{{passiveUser.name}}</span>
+                        <span class="message-header-timestamp">{{formatTime(formatTimestamp(message.createdAt))}}</span>
+                    </div>
 
-        <!-- Dropdown für Kanäle und Mitglieder -->
-        @if (showDropdown) {
-        <div class="dropdown-menu">
-            @if (filteredItems.length === 0) {
-            <span>Kein passendes Ergebnis</span>
-            }@else {
-            @for (item of filteredItems; track $index) {
-            <div class="dropdown-item" (click)="selectItem(item)">
-                {{ item.name }}
+                    <div class="massage-content-bubble">
+                        <span class="massage-content">{{message.content}}</span>
+                    </div>
+
+                    <div class="reaction-bar">
+                        @for (reaction of groupedReactions.get(message.messageId); track $index) {
+                        <div class="emoji-div" (mouseenter)="showTooltip(reaction)" (mouseleave)="hideTooltip()">
+                            {{ reaction.emoji }} {{ reaction.count }}
+
+                            @if (emojiInfoVisible && hoveredReaction === reaction) {
+                            <div class="emoji-info">
+                                <div class="emojo-info-emoji-div">{{ reaction.emoji }}</div>
+                                <div class="emojo-info-user-div">{{ getReactionUser(reaction.users) }}</div>
+                                <div class="emojo-info-text-div">{{ getReactionText(reaction.users) }}</div>
+                            </div>
+                            }
+                        </div>
+                        }
+                    </div>
+
+                    <div class="answer-bar">
+                        <span class="answer-count">2 Antworten</span>
+                        <span class="last-answer">Letzte Antwort 14:56</span>
+                    </div>
+                </div>
             </div>
             }
-            }
-        </div>
-        }
 
-        @if(userId == sendingUser.userId){
-            <textarea 
-            (input)="onInput($event)" 
-            #myTextarea 
-            [(ngModel)]="content" 
-            class="message-input"
-            placeholder="Nachricht an {{passiveUser.name}}">
+            }
+            }
+
+            <!-- Empty div function as anchor to scroll down to  -->
+            <div #lastDiv></div>
+
+        </div>
+
+
+
+        <div class="message-container">
+            <!-- Emojis -->
+            @if (showEmoticons) {
+            <div class="emoticon-div">
+                <emoji-mart class="emoji-mart" (emojiSelect)="addEmoji($event)" title="Choose your emoji"></emoji-mart>
+            </div>
+            }
+            <!-- Erwähnungen -->
+            @if (showMention) {
+            <div class="mention-div">
+                @for (users of allUsers; track $index) {
+                <div class="mention-list-element" (click)="addMention(users.name)">{{users.name}}</div>
+                }
+            </div>
+            }
+
+            <!-- Dropdown für Kanäle und Mitglieder -->
+            @if (showDropdown) {
+            <div class="dropdown-menu">
+                @if (filteredItems.length === 0) {
+                <span>Kein passendes Ergebnis</span>
+                }@else {
+                @for (item of filteredItems; track $index) {
+                <div class="dropdown-item" (click)="selectItem(item)">
+                    {{ item.name }}
+                </div>
+                }
+                }
+            </div>
+            }
+
+            @if(userId == sendingUser.userId){
+            <textarea (input)="onInput($event)" #myTextarea [(ngModel)]="content" class="message-input"
+                placeholder="Nachricht an {{passiveUser.name}}">
         </textarea>
-        }
-        @else {
-            <textarea 
-            (input)="onInput($event)" 
-            #myTextarea 
-            [(ngModel)]="content" 
-            class="message-input"
-            placeholder="Nachricht an {{sendingUser.name}}">
-        </textarea> 
-        }
-
-      
-    
-
-    
-     
+            }
+            @else {
+            <textarea (input)="onInput($event)" #myTextarea [(ngModel)]="content" class="message-input"
+                placeholder="Nachricht an {{sendingUser.name}}">
+        </textarea>
+            }
 
 
-        <div class="message-actions">
 
-            <div class="action-left">
-                <button class="action-button"> <img src="../../assets/img/add_icon.png" alt=""></button>
-                <div class="line"></div>
-                <button (click)="toggleEmoticons()" class="action-button"><img src="../../assets/img/emoticon_icon.png"
-                        alt=""></button>
-                <button (click)="toggleMention()" class="action-button"><img src="../../assets/img/mention_icon.png"
-                        alt=""></button>
-            </div>
 
-            <div class="action-right">
-                <button (click)="saveNewMessage()" class="action-button"> <img src="../../assets/img/send_icon.png"
-                        alt=""></button>
+
+
+
+
+            <div class="message-actions">
+
+                <div class="action-left">
+                    <button class="action-button"> <img src="../../assets/img/add_icon.png" alt=""></button>
+                    <div class="line"></div>
+                    <button (click)="toggleEmoticons()" class="action-button"><img
+                            src="../../assets/img/emoticon_icon.png" alt=""></button>
+                    <button (click)="toggleMention()" class="action-button"><img src="../../assets/img/mention_icon.png"
+                            alt=""></button>
+                </div>
+
+                <div class="action-right">
+                    <button (click)="saveNewMessage()" class="action-button"> <img src="../../assets/img/send_icon.png"
+                            alt=""></button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 </div>
 
 
 <ng-template #loadingTemplate>
     <div class="loading">
-      <p>Laden...</p>
+        <p>Laden...</p>
     </div>
-  </ng-template>
+</ng-template>
