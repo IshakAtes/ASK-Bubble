@@ -27,6 +27,7 @@ export class UserService {
   activeUserConversationList: Array<Conversation> = [];
   usersFromActiveUserConversationList: Array<User> = [];
   activeUserObject: User;
+  isWorkspaceDataLoaded: boolean = true;
 
   //TODO - hiernach suchen wenns live geht und umgestellt werden soll
   activeUserMail: string = 'simon@dummy.de' 
@@ -38,6 +39,8 @@ export class UserService {
     this.loadActiveUserChannels();
     this.loadActiveUserConversations();
   }
+
+
 
 
   
@@ -153,6 +156,7 @@ export class UserService {
 
   loadActiveUserChannels(){
     this.activeUserChannels = [];
+    this.isWorkspaceDataLoaded = false;
     console.log('loadActiveUserChannels triggered')
     this.database.getUser(this.activeUserMail).then(user =>{
       this.activeUserObject = user;
@@ -166,6 +170,7 @@ export class UserService {
 
 
   loadActiveUserConversations(){
+    this.isWorkspaceDataLoaded = false;
     this.activeUserConversationList = [];
     this.usersFromActiveUserConversationList = [];
     this.database.getUser(this.activeUserMail).then(user =>{
@@ -181,6 +186,7 @@ export class UserService {
             console.log(this.usersFromActiveUserConversationList)
           }
         })
+        this.isWorkspaceDataLoaded = true;
       });
     })
   }

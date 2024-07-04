@@ -12,11 +12,12 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { Reaction } from '../../models/reactions.class';
 import { LastTwoEmojisService } from '../shared-services/last-two-emojis.service';
 import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [FormsModule, PickerModule, HeaderComponent],
+  imports: [FormsModule, PickerModule, HeaderComponent, CommonModule],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
 })
@@ -32,6 +33,8 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
   allConversations: Array<Conversation> = [];
   specificConversation: Array<Conversation> = [];
 
+
+
   allChannels: Array<Channel> = [];
 
   reactions: Array<Reaction> = [];
@@ -41,6 +44,15 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
   userId = 'p1oEblSsradmfVeyvTu3';
   userName = 'Simon'
   conversationId = 'CONV-p1oEblSsradmfVeyvTu3';
+
+
+  /*test START Simon*/
+  specific: Conversation;
+  sendingUser: User;
+  passiveUser: User;
+
+  isChatDataLoaded: boolean = true;
+  /*Test END Simon*/
 
 
   constructor(public databaseService: DatabaseService, public userService: UserService, private lastTwoEmojiService: LastTwoEmojisService) {
@@ -80,10 +92,50 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
     //   console.log('groupreaction');
     //   console.log(this.groupedReactions);
     // }, 3000);
+
   }
 
   ngOnInit(): void {
+    this.isChatDataLoaded  = false;
     this.loadAllMessages();
+    
+
+    this.databaseService.loadSpecificUserConversation("p1oEblSsradmfVeyvTu3", "CONV-p1oEblSsradmfVeyvTu3")
+    .then(conversation => {
+     this.specific = conversation;
+     console.log('this is the searched Conversation', this.specific)
+     
+     this.databaseService.loadUser(this.specific.createdBy)
+       .then(creatorUser => {
+         if(creatorUser.userId == this.user.userId){
+           this.sendingUser = creatorUser;
+           console.log('this is the creatorUser', this.sendingUser)
+         }
+         else{
+           this.passiveUser =  creatorUser;
+         }
+         console.log('specific.createdyBy');
+         console.log('sending user: ', this.sendingUser);
+         console.log('passiv user ', this.passiveUser);
+
+     })
+
+     this.databaseService.loadUser(this.specific.recipientId)
+       .then(recipientUser => {
+         if(recipientUser.userId == this.user.userId){
+           this.sendingUser = recipientUser;
+           console.log('this is the recipientUser', this.passiveUser)
+         }
+         else{
+           this.passiveUser = recipientUser;
+         }
+         console.log('specific.recipientID');
+         console.log('sending user: ', this.sendingUser);
+         console.log('passiv user ', this.passiveUser);
+         
+
+       })
+    })
 
 
     this.databaseService.loadSpecificUserConversation("p1oEblSsradmfVeyvTu3", "CONV-p1oEblSsradmfVeyvTu3").then(conversationObject => {
@@ -94,12 +146,18 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
     });
 
 
+
     this.databaseService.loadAllUsers().then(userList => {
       this.allUsers = userList;
       console.log('All Users:', this.allUsers);
     }).catch(error => {
       console.error('Fehler beim Laden der Benutzer:', error);
     });
+
+ 
+
+
+
 
 
     this.databaseService.loadAllChannels().then(channel => {
@@ -118,13 +176,14 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
       this.loadAllMessageReactions();
       console.log('reactions');
       console.log(this.reactions);
-    }, 2000);
+    }, 500);
 
     setTimeout(() => {
       this.groupReactions();
       console.log('groupreaction');
       console.log(this.groupedReactions);
-    }, 3000);
+      this.isChatDataLoaded  = true;
+    }, 1000);
   }
 
 
@@ -271,9 +330,23 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
       this.databaseService.updateUsedLastTwoEmojis(this.userId, usedSecondEmoji, emoji)
     }
     
+    this.databaseService.loadAllUsers().then(userList => {
+      this.allUsers = userList;
+      console.log('All Users:', this.allUsers);
+    }).catch(error => {
+      console.error('Fehler beim Laden der Benutzer:', error);
+    });
+
+
+    this.databaseService.loadAllChannels().then(channel => {
+      this.allChannels = channel;
+      console.log('channels:');
+      console.log(this.allChannels);
+    })
 
     setTimeout(() => {
       this.groupReactions()
+
       console.log('new group');
       console.log(this.groupedReactions);
     }, 1000);

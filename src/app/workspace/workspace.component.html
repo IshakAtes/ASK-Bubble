@@ -1,3 +1,5 @@
+<div *ngIf="userService.isWorkspaceDataLoaded; else loadingTemplate" #main class="main-chat">
+
 
     <section>
         <div class="workspaceHead">
@@ -140,7 +142,7 @@
             </div> <!--ConversationListContainer-End-->
         </div> <!--WorkspaceBody-End-->
     </section>
-
+</div>
 
 
 <ng-template #loadingTemplate>
