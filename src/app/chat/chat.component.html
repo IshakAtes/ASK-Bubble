@@ -23,18 +23,18 @@
         <div #chatArea class="chat-area">
             <div class="time-separator">
                 <div class="date">
-                    <span>{{formatDate(formatTimestamp(list[0].createdAt))}}</span>
+                    <span>{{time.formatDate(time.formatTimestamp(list[0].createdAt))}}</span>
                 </div>
                 <div class="line"></div>
             </div>
 
             @for (message of list; track $index) {
             @if ($index > 0) {
-            @if (formatDate(formatTimestamp(list[$index].createdAt)) !=
-            formatDate(formatTimestamp(list[$index-1].createdAt))) {
+            @if (time.formatDate(time.formatTimestamp(list[$index].createdAt)) !=
+            time.formatDate(time.formatTimestamp(list[$index-1].createdAt))) {
             <div class="time-separator">
                 <div class="date">
-                    <span>{{formatDate(formatTimestamp(list[$index].createdAt))}}</span>
+                    <span>{{time.formatDate(time.formatTimestamp(list[$index].createdAt))}}</span>
                 </div>
                 <div class="line"></div>
             </div>
@@ -73,7 +73,7 @@
                 <div class="message-content-div">
                     <div class="own-message-header">
                         <span class="message-header-userName">{{user.name}}</span>
-                        <span class="message-header-timestamp">{{formatTime(formatTimestamp(message.createdAt))}}</span>
+                        <span class="message-header-timestamp">{{time.formatTime(time.formatTimestamp(message.createdAt))}}</span>
                     </div>
 
                     <div class="own-massage-content-bubble">
@@ -145,7 +145,7 @@
                 <div class="message-content-div">
                     <div class="message-header">
                         <span class="message-header-userName">{{passiveUser.name}}</span>
-                        <span class="message-header-timestamp">{{formatTime(formatTimestamp(message.createdAt))}}</span>
+                        <span class="message-header-timestamp">{{time.formatTime(time.formatTimestamp(message.createdAt))}}</span>
                     </div>
 
                     <div class="massage-content-bubble">
