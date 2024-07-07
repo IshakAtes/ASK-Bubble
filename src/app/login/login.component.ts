@@ -23,7 +23,8 @@ export class LoginComponent {
     password: 'guest123',
     status: 'online',
     avatarUrl: '',
-    userId: ''
+    userId: '',
+    usedLastTwoEmojis: ''
   });
 
   constructor(private fb: FormBuilder, private router: Router, public us: UserService) {
