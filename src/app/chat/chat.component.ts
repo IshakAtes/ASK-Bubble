@@ -11,6 +11,7 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { Reaction } from '../../models/reactions.class';
 import { LastTwoEmojisService } from '../shared-services/chat-functionality/last-two-emojis.service';
 import { TimeFormatingService } from '../shared-services/chat-functionality/time-formating.service';
+import { MentionAndChannelDropdownService } from '../shared-services/chat-functionality/mention-and-channel-dropdown.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
@@ -55,7 +56,13 @@ export class ChatComponent implements AfterViewInit, OnInit {
   constructor(public databaseService: DatabaseService,
     public userService: UserService,
     private lastTwoEmojiService: LastTwoEmojisService,
-    public time: TimeFormatingService) { }
+    public time: TimeFormatingService,
+    public mAndC: MentionAndChannelDropdownService) {
+
+    this.content = mAndC.content;
+    this.allChannels = mAndC.allChannels;
+    this.allUsers = mAndC.allUsers;
+  }
 
   ngOnInit(): void {
     this.isChatDataLoaded = false;
@@ -93,8 +100,8 @@ export class ChatComponent implements AfterViewInit, OnInit {
           })
       })
 
-    this.loadUsersOfUser();
-    this.loadChannlesofUser();
+    this.mAndC.loadUsersOfUser();
+    this.mAndC.loadChannlesofUser();
     this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.userId);
 
 
@@ -102,7 +109,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
       this.loadAllMessageReactions();
       console.log('reactions');
       console.log(this.reactions);
-    }, 900);
+    }, 1500);
 
 
     setTimeout(() => {
@@ -110,27 +117,27 @@ export class ChatComponent implements AfterViewInit, OnInit {
       console.log('groupreaction');
       console.log(this.groupedReactions);
       this.isChatDataLoaded = true;
-    }, 1500);
+    }, 2000);
   }
 
   //load functions
-  loadUsersOfUser(){
-    this.databaseService.loadAllUsers().then(userList => {
-      this.allUsers = userList;
-      console.log('All Users:', this.allUsers);
-    }).catch(error => {
-      console.error('Fehler beim Laden der Benutzer:', error);
-    });
-  }
+  // loadUsersOfUser() {
+  //   this.databaseService.loadAllUsers().then(userList => {
+  //     this.allUsers = userList;
+  //     console.log('All Users:', this.allUsers);
+  //   }).catch(error => {
+  //     console.error('Fehler beim Laden der Benutzer:', error);
+  //   });
+  // }
 
 
-  loadChannlesofUser() {
-    this.databaseService.loadAllUserChannels(this.userId).then(channel => {
-      this.allChannels = channel;
-      console.log('channels:');
-      console.log(this.allChannels);
-    })
-  }
+  // loadChannlesofUser() {
+  //   this.databaseService.loadAllUserChannels(this.userId).then(channel => {
+  //     this.allChannels = channel;
+  //     console.log('channels:');
+  //     console.log(this.allChannels);
+  //   })
+  // }
 
   loadAllMessages() {
     this.databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
@@ -264,8 +271,8 @@ export class ChatComponent implements AfterViewInit, OnInit {
     await this.loadAllMessageReactions();
 
     this.checkIfEmojiIsAlreadyInUsedLastEmojis(emoji, userId);
-    this.loadUsersOfUser();
-    this.loadChannlesofUser()
+    this.mAndC.loadUsersOfUser();
+    this.mAndC.loadChannlesofUser()
 
     setTimeout(() => {
       this.groupReactions()
@@ -275,7 +282,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
   }
 
 
-  checkIfEmojiIsAlreadyInUsedLastEmojis(emoji:string, userId:string){
+  checkIfEmojiIsAlreadyInUsedLastEmojis(emoji: string, userId: string) {
     let usedLastEmoji = this.user.usedLastTwoEmojis[0]
     let usedSecondEmoji = this.user.usedLastTwoEmojis[1]
     if (usedSecondEmoji != emoji && usedLastEmoji != emoji) {
@@ -311,52 +318,52 @@ export class ChatComponent implements AfterViewInit, OnInit {
     }
   }
 
-  //show dropdownmenu with mentions or channels 
-  showDropdown: boolean = false;
-  filteredItems: Array<User | Channel> = [];
+  // //show dropdownmenu with mentions or channels 
+  // showDropdown: boolean = false;
+  // filteredItems: Array<User | Channel> = [];
 
-  onInput(event: any): void {
-    const input = event.target.value;
-    const lastChar = input[input.length - 1];
+  // onInput(event: any): void {
+  //   const input = event.target.value;
+  //   const lastChar = input[input.length - 1];
 
-    // Überprüfen, ob das letzte Zeichen ein Trigger-Zeichen ist
-    if (lastChar === '#' || lastChar === '@') {
-      this.showDropdown = true;
-      this.filterItems(input, lastChar);
-    } else if (this.showDropdown) {
-      // Überprüfen, ob der Eingabetext ein Trigger-Zeichen enthält
-      const hashIndex = input.lastIndexOf('#');
-      const atIndex = input.lastIndexOf('@');
+  //   // Überprüfen, ob das letzte Zeichen ein Trigger-Zeichen ist
+  //   if (lastChar === '#' || lastChar === '@') {
+  //     this.showDropdown = true;
+  //     this.filterItems(input, lastChar);
+  //   } else if (this.showDropdown) {
+  //     // Überprüfen, ob der Eingabetext ein Trigger-Zeichen enthält
+  //     const hashIndex = input.lastIndexOf('#');
+  //     const atIndex = input.lastIndexOf('@');
 
-      if (hashIndex === -1 && atIndex === -1) {
-        this.showDropdown = false;
-      } else {
-        const triggerChar = hashIndex > atIndex ? '#' : '@';
-        this.filterItems(input, triggerChar);
-      }
-    }
-  }
+  //     if (hashIndex === -1 && atIndex === -1) {
+  //       this.showDropdown = false;
+  //     } else {
+  //       const triggerChar = hashIndex > atIndex ? '#' : '@';
+  //       this.filterItems(input, triggerChar);
+  //     }
+  //   }
+  // }
 
-  filterItems(input: string, triggerChar: string): void {
-    const queryArray = input.split(triggerChar);
-    const query = queryArray.length > 1 ? queryArray.pop()?.trim().toLowerCase() : '';
+  // filterItems(input: string, triggerChar: string): void {
+  //   const queryArray = input.split(triggerChar);
+  //   const query = queryArray.length > 1 ? queryArray.pop()?.trim().toLowerCase() : '';
 
-    if (query !== undefined) {
-      if (triggerChar === '#') {
-        this.filteredItems = this.allChannels.filter(channel => channel.name.toLowerCase().includes(query));
-      } else if (triggerChar === '@') {
-        this.filteredItems = this.allUsers.filter(user => user.name.toLowerCase().includes(query));
-      }
-    }
-  }
+  //   if (query !== undefined) {
+  //     if (triggerChar === '#') {
+  //       this.filteredItems = this.allChannels.filter(channel => channel.name.toLowerCase().includes(query));
+  //     } else if (triggerChar === '@') {
+  //       this.filteredItems = this.allUsers.filter(user => user.name.toLowerCase().includes(query));
+  //     }
+  //   }
+  // }
 
-  selectItem(item: User | Channel): void {
-    const triggerChar = item.hasOwnProperty('channelId') ? '#' : '@';
-    const inputParts = this.content.split(triggerChar);
-    inputParts.pop();
-    this.content = inputParts.join(triggerChar) + `${triggerChar}${item.name} `;
-    this.showDropdown = false;
-  }
+  // selectItem(item: User | Channel): void {
+  //   const triggerChar = item.hasOwnProperty('channelId') ? '#' : '@';
+  //   const inputParts = this.content.split(triggerChar);
+  //   inputParts.pop();
+  //   this.content = inputParts.join(triggerChar) + `${triggerChar}${item.name} `;
+  //   this.showDropdown = false;
+  // }
 
   // Focusing tesxtarea after component is initilized 
   setFocus(): void {

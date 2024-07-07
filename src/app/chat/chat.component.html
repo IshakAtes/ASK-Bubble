@@ -203,13 +203,13 @@
             }
 
             <!-- Dropdown für Kanäle und Mitglieder -->
-            @if (showDropdown) {
+            @if (mAndC.showDropdown) {
             <div class="dropdown-menu">
-                @if (filteredItems.length === 0) {
+                @if (mAndC.filteredItems.length === 0) {
                 <span>Kein passendes Ergebnis</span>
                 }@else {
-                @for (item of filteredItems; track $index) {
-                <div class="dropdown-item" (click)="selectItem(item)">
+                @for (item of mAndC.filteredItems; track $index) {
+                <div class="dropdown-item" (click)="mAndC.selectItem(item)">
                     {{ item.name }}
                 </div>
                 }
@@ -218,12 +218,12 @@
             }
 
             @if(userId == sendingUser.userId){
-            <textarea (input)="onInput($event)" #myTextarea [(ngModel)]="content" class="message-input"
+            <textarea (input)="mAndC.onInput($event)" #myTextarea [(ngModel)]="content" class="message-input"
                 placeholder="Nachricht an {{passiveUser.name}}">
         </textarea>
             }
             @else {
-            <textarea (input)="onInput($event)" #myTextarea [(ngModel)]="content" class="message-input"
+            <textarea (input)="mAndC.onInput($event)" #myTextarea [(ngModel)]="content" class="message-input"
                 placeholder="Nachricht an {{sendingUser.name}}">
         </textarea>
             }
