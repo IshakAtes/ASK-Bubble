@@ -105,34 +105,48 @@ export class UserService {
     addDoc(collection(this.firestore, 'users'), user.toJSON());
   }
 
+
+  addGuestUser(user: User){
+    addDoc(collection(this.firestore, 'users'), user.toJSON());
+  }
+
   
   getUser(email: string, password: string): Promise<User> {
     return new Promise<User>((resolve, reject) => {
       const activeUser = {} as User;
       const usersCollection = collection(this.firestore, 'users');
       this.wrongLogin = false;
-      
+      let userFound = false;
+  
       onSnapshot(usersCollection, (users) => {
         users.forEach(user => {
           const userData = user.data();
           if (userData['email'] === email && userData['password'] === password) {
+            console.log('Benutzer gefunden:', userData);
             activeUser.email = userData['email'];
             activeUser.name = userData['name'];
             activeUser.password = userData['password'];
             activeUser.status = userData['status'];
             activeUser.avatarUrl = userData['avatarUrl'];
             activeUser.userId = user.id;
+            userFound = true;
             resolve(activeUser);
           }
-          else if(userData['email'] !== email || userData['password'] !== password) {
-            this.wrongLogin = true;
-          }
         });
+  
+        if (!userFound) {
+          console.log('Kein Benutzer gefunden mit Email:', email);
+          this.wrongLogin = true;
+          reject(new Error('Kein Benutzer gefunden'));
+        }
       }, (error) => {
+        console.error('Fehler beim Abrufen der Benutzer:', error);
         reject(error);
       });
     });
   }
+  
+  
 
 
   loadAllUsers(): Promise<Array<any>>{
