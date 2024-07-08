@@ -17,13 +17,16 @@ export class LoginComponent {
   firestore: Firestore = inject(Firestore)
   isPressed = false;
   myForm: FormGroup;
+  guest: boolean = false;
   guestLog: User = new User({
     email: 'guest@mail.com',
     name: 'John Doe',
     password: 'guest123',
-    status: 'online',
+    status: 'offline',
     avatarUrl: '',
-    userId: ''
+    userId: '',
+    logIn: '',
+    usedLastTwoEmojis: ''
   });
 
   constructor(private fb: FormBuilder, private router: Router, public us: UserService) {
@@ -38,7 +41,43 @@ export class LoginComponent {
   
   async onSubmit() {
     console.log('anmelden', this.myForm.value);
+    if (this.guest) {
+      this.myForm.setValue({
+        pw: this.guestLog.password,
+        mail: this.guestLog.email
+      });
+      console.log('formLog', this.myForm.value);
+      await this.normalSignIn();
+    } else {
+      await this.normalSignIn(); 
+    }
+  }
+
+
+  googleAuthentification() {
+    console.log('Google wurde angeklickt');
+  }
+
+
+  guestLogin() {
+    this.guest = true;
+    this.onSubmit()
+  }
+
+
+  async normalSignIn () {
+    if (this.guest) {
+      try {
+        const guestUser = await this.us.getUser(this.guestLog.email, this.guestLog.password); 
+        console.log(guestUser);
+      } catch (error) {
+        console.log('Kein Gastbenutzer gefunden, erstelle neuen Gastbenutzer');
+        await this.us.addUser(this.guestLog);
+        // acceptedUser = await this.us.getUser(this.guestLog.email, this.guestLog.password);
+      }
+    }
     const acceptedUser = await this.us.getUser(this.myForm.value.mail, this.myForm.value.pw);
+    console.log('normalSign', acceptedUser);
     if (this.myForm.valid && acceptedUser) {
       try {
         this.us.loggedUser = acceptedUser;
@@ -49,32 +88,27 @@ export class LoginComponent {
         console.error('Fehler beim Abrufen des Benutzers:', error);
       }
     } else {
-      console.log('Formular ist ungültig');
+      this.us.addUser(this.guestLog);
     }
   }
 
 
-  googleAuthentification() {
-    console.log('Google wurde angeklickt');
-  }
-
-
-  async guestLogin(event: Event) {
-    event.preventDefault();
-    try {
-      const acceptedUser = await this.us.getUser(this.guestLog.email, this.guestLog.password);
-      if (acceptedUser) {
-        this.us.loggedUser = acceptedUser;
-        this.us.userOnline(this.us.loggedUser.userId);
-        this.router.navigate(['/main']);
-        console.log(this.us.loggedUser);
-      } else if(!acceptedUser) {
-        this.us.addUser(this.guestLog);
-      }
-    } catch (error) {
-      console.error('Fehler beim Abrufen des Benutzers:', error);
-    }
-  }
+  // async guestLogin(event: Event) {
+  //   event.preventDefault();
+  //   try {
+  //     const acceptedUser = await this.us.getUser(this.guestLog.email, this.guestLog.password);
+  //     if (acceptedUser) {
+  //       this.us.loggedUser = acceptedUser;
+  //       this.us.userOnline(this.us.loggedUser.userId);
+  //       this.router.navigate(['/main']);
+  //       console.log(this.us.loggedUser);
+  //     } else if(!acceptedUser) {
+  //       this.us.addUser(this.guestLog);
+  //     }
+  //   } catch (error) {
+  //     console.error('Fehler beim Abrufen des Benutzers:', error);
+  //   }
+  // }
 
   onMouseDown() {
     this.isPressed = true;

@@ -1,7 +1,6 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, OnChanges, SimpleChanges, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { UserService } from '../user.service';
-import { Timestamp } from 'firebase/firestore';
 import { Conversation } from '../../models/conversation.class';
 import { ConversationMessage } from '../../models/conversationMessage.class';
 import { User } from '../../models/user.class';
@@ -10,7 +9,9 @@ import { HeaderComponent } from '../header/header.component';
 import { FormsModule } from '@angular/forms';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { Reaction } from '../../models/reactions.class';
-import { LastTwoEmojisService } from '../shared-services/last-two-emojis.service';
+import { LastTwoEmojisService } from '../shared-services/chat-functionality/last-two-emojis.service';
+import { TimeFormatingService } from '../shared-services/chat-functionality/time-formating.service';
+import { MentionAndChannelDropdownService } from '../shared-services/chat-functionality/mention-and-channel-dropdown.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
@@ -21,9 +22,9 @@ import { CommonModule } from '@angular/common';
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
 })
-export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
+export class ChatComponent implements AfterViewInit, OnInit {
   allUsers = [] as Array<User>;
-  user:User;
+  user: User;
 
   messages = [] as Array<ConversationMessage>;
   list: Array<ConversationMessage> = [];
@@ -52,114 +53,91 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
   /*Test END Simon*/
 
 
-  constructor(public databaseService: DatabaseService, public userService: UserService, private lastTwoEmojiService: LastTwoEmojisService) {
-    // this.loadAllMessages();
+  constructor(public databaseService: DatabaseService,
+    public userService: UserService,
+    private lastTwoEmojiService: LastTwoEmojisService,
+    public time: TimeFormatingService,
+    public mAndC: MentionAndChannelDropdownService) {
 
-
-    // databaseService.loadSpecificUserConversation("p1oEblSsradmfVeyvTu3", "CONV-p1oEblSsradmfVeyvTu3").then(conversationObject => {
-    //   this.specificConversation.push(conversationObject)
-
-    //   console.log('specialconversation');
-    //   console.log(this.specificConversation);
-    // });
-
-
-    // databaseService.loadAllUsers().then(userList => {
-    //   this.allUsers = userList;
-    //   console.log('All Users:', this.allUsers);
-    // }).catch(error => {
-    //   console.error('Fehler beim Laden der Benutzer:', error);
-    // });
-
-
-    // databaseService.loadAllChannels().then(channel => {
-    //   this.allChannels = channel;
-    //   console.log('channels:');
-    //   console.log(this.allChannels);
-    // })
-
-    // setTimeout(() => {
-    //   this.loadAllMessageReactions();
-    //   console.log('reactions');
-    //   console.log(this.reactions);
-    // }, 2000);
-
-    // setTimeout(() => {
-    //   this.groupReactions();
-    //   console.log('groupreaction');
-    //   console.log(this.groupedReactions);
-    // }, 3000);
+    this.content = mAndC.content;
+    this.allChannels = mAndC.allChannels;
+    this.allUsers = mAndC.allUsers;
   }
 
   ngOnInit(): void {
-    this.isChatDataLoaded  = false;
+    this.isChatDataLoaded = false;
     this.loadAllMessages();
 
     this.databaseService.loadUser(this.userId).then(user => {
       this.user = user;
     })
 
-    this.databaseService.loadSpecificUserConversation("p1oEblSsradmfVeyvTu3", "CONV-p1oEblSsradmfVeyvTu3")
-    .then(conversation => {
-     this.specific = conversation;
-     console.log('this is the searched Conversation', this.specific)
-     
-     this.databaseService.loadUser(this.specific.createdBy)
-       .then(creatorUser => {
-         if(creatorUser.userId == this.user.userId){
-           this.sendingUser = creatorUser;
-           console.log('this is the creatorUser', this.sendingUser)
-         }
-         else{
-           this.passiveUser =  creatorUser;
-         }
-     })
+    this.databaseService.loadSpecificUserConversation(this.userId, this.conversationId)
+      .then(conversation => {
+        this.specific = conversation;
+        console.log('this is the searched Conversation', this.specific)
 
-     this.databaseService.loadUser(this.specific.recipientId)
-       .then(recipientUser => {
-         if(recipientUser.userId == this.user.userId){
-           this.sendingUser = recipientUser;
-           console.log('this is the recipientUser', this.passiveUser)
-         }
-         else{
-           this.passiveUser = recipientUser;
-         }
-       })
-    })
+        this.databaseService.loadUser(this.specific.createdBy)
+          .then(creatorUser => {
+            if (creatorUser.userId == this.user.userId) {
+              this.sendingUser = creatorUser;
+              console.log('this is the creatorUser', this.sendingUser)
+            }
+            else {
+              this.passiveUser = creatorUser;
+            }
+          })
 
-    this.databaseService.loadAllUsers().then(userList => {
-      this.allUsers = userList;
-      console.log('All Users:', this.allUsers);
-    }).catch(error => {
-      console.error('Fehler beim Laden der Benutzer:', error);
-    });
+        this.databaseService.loadUser(this.specific.recipientId)
+          .then(recipientUser => {
+            if (recipientUser.userId == this.user.userId) {
+              this.sendingUser = recipientUser;
+              console.log('this is the recipientUser', this.passiveUser)
+            }
+            else {
+              this.passiveUser = recipientUser;
+            }
+          })
+      })
 
- 
-    this.databaseService.loadAllUserChannels(this.userId).then(channel => {
-      this.allChannels = channel;
-      console.log('channels:');
-      console.log(this.allChannels);
-    })
-
-    
+    this.mAndC.loadUsersOfUser();
+    this.mAndC.loadChannlesofUser();
     this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.userId);
 
 
-    setTimeout( () => {
+    setTimeout(() => {
       this.loadAllMessageReactions();
       console.log('reactions');
       console.log(this.reactions);
-    }, 900);
+    }, 1500);
 
 
     setTimeout(() => {
       this.groupReactions();
       console.log('groupreaction');
       console.log(this.groupedReactions);
-      this.isChatDataLoaded  = true;
-    }, 1500);
+      this.isChatDataLoaded = true;
+    }, 2000);
   }
 
+  //load functions
+  // loadUsersOfUser() {
+  //   this.databaseService.loadAllUsers().then(userList => {
+  //     this.allUsers = userList;
+  //     console.log('All Users:', this.allUsers);
+  //   }).catch(error => {
+  //     console.error('Fehler beim Laden der Benutzer:', error);
+  //   });
+  // }
+
+
+  // loadChannlesofUser() {
+  //   this.databaseService.loadAllUserChannels(this.userId).then(channel => {
+  //     this.allChannels = channel;
+  //     console.log('channels:');
+  //     console.log(this.allChannels);
+  //   })
+  // }
 
   loadAllMessages() {
     this.databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
@@ -185,9 +163,7 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
   online: boolean = true;
   showEmoticons: boolean = false;
   showMention: boolean = false;
-
   content = '';
-
 
   saveNewMessage() {
     this.list = [];
@@ -198,25 +174,16 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
     this.content = '';
 
     this.databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
-
       this.list = messageList;
       this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+    })
 
-      console.log('list 2');
-      console.log(this.list);
-    }
-    )
     setTimeout(() => {
       this.scrollToBottom();
     }, 10);
   }
 
   // group together all reaction based on their messageId and count them to display the right count in html
-
-  ngOnChanges(changes: SimpleChanges): void {
-
-  }
-
   groupReactions() {
     this.groupedReactions = new Map();
 
@@ -284,59 +251,44 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
   // save message reaction
   async saveNewMessageReaction(event: any, convo: ConversationMessage, userId: string, reactionbar?: string) {
     let emoji: string
-
     if (reactionbar) {
       emoji = reactionbar
     } else {
       emoji = event.emoji.native
     }
 
-    // Überprüfe, ob der Benutzer bereits mit diesem Emoji reagiert hat
-    const userAlreadyReacted = this.reactions.some(reaction => 
+    const userAlreadyReacted = this.reactions.some(reaction =>
       reaction.messageId === convo.messageId && reaction.emoji === emoji && reaction.userId === userId
     );
-
     if (userAlreadyReacted) {
       console.log('User has already reacted with this emoji');
       return;
     }
+
     this.reactions = [];
     let reaction = this.databaseService.createConversationMessageReaction(emoji, userId, this.userName, convo);
     await this.databaseService.addConversationMessageReaction(this.specific, convo, reaction)
     await this.loadAllMessageReactions();
 
-
-    let usedLastEmoji = this.user.usedLastTwoEmojis[0]
-    let usedSecondEmoji = this.user.usedLastTwoEmojis[1]
-    if (usedSecondEmoji != emoji && usedLastEmoji != emoji) {
-      this.databaseService.updateUsedLastTwoEmojis(userId, usedSecondEmoji || usedLastEmoji, emoji)
-    }
-    
-    this.databaseService.loadAllUsers().then(userList => {
-      this.allUsers = userList;
-      console.log('All Users:', this.allUsers);
-    }).catch(error => {
-      console.error('Fehler beim Laden der Benutzer:', error);
-    });
-
-
-    this.databaseService.loadAllUserChannels(this.userId).then(channel => {
-      this.allChannels = channel;
-      console.log('channels:');
-      console.log(this.allChannels);
-    })
+    this.checkIfEmojiIsAlreadyInUsedLastEmojis(emoji, userId);
+    this.mAndC.loadUsersOfUser();
+    this.mAndC.loadChannlesofUser()
 
     setTimeout(() => {
       this.groupReactions()
-
-      console.log('new group');
-      console.log(this.groupedReactions);
     }, 1000);
 
     this.selectedMessageId = null;
   }
 
 
+  checkIfEmojiIsAlreadyInUsedLastEmojis(emoji: string, userId: string) {
+    let usedLastEmoji = this.user.usedLastTwoEmojis[0]
+    let usedSecondEmoji = this.user.usedLastTwoEmojis[1]
+    if (usedSecondEmoji != emoji && usedLastEmoji != emoji) {
+      this.databaseService.updateUsedLastTwoEmojis(userId, usedSecondEmoji || usedLastEmoji, emoji)
+    }
+  }
 
   @ViewChild('myTextarea') myTextarea!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('lastDiv') lastDiv: ElementRef<HTMLDivElement>;
@@ -366,52 +318,52 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
     }
   }
 
-  //show dropdownmenu with mentions or channels 
-  showDropdown: boolean = false;
-  filteredItems: Array<User | Channel> = [];
+  // //show dropdownmenu with mentions or channels 
+  // showDropdown: boolean = false;
+  // filteredItems: Array<User | Channel> = [];
 
-  onInput(event: any): void {
-    const input = event.target.value;
-    const lastChar = input[input.length - 1];
+  // onInput(event: any): void {
+  //   const input = event.target.value;
+  //   const lastChar = input[input.length - 1];
 
-    // Überprüfen, ob das letzte Zeichen ein Trigger-Zeichen ist
-    if (lastChar === '#' || lastChar === '@') {
-      this.showDropdown = true;
-      this.filterItems(input, lastChar);
-    } else if (this.showDropdown) {
-      // Überprüfen, ob der Eingabetext ein Trigger-Zeichen enthält
-      const hashIndex = input.lastIndexOf('#');
-      const atIndex = input.lastIndexOf('@');
+  //   // Überprüfen, ob das letzte Zeichen ein Trigger-Zeichen ist
+  //   if (lastChar === '#' || lastChar === '@') {
+  //     this.showDropdown = true;
+  //     this.filterItems(input, lastChar);
+  //   } else if (this.showDropdown) {
+  //     // Überprüfen, ob der Eingabetext ein Trigger-Zeichen enthält
+  //     const hashIndex = input.lastIndexOf('#');
+  //     const atIndex = input.lastIndexOf('@');
 
-      if (hashIndex === -1 && atIndex === -1) {
-        this.showDropdown = false;
-      } else {
-        const triggerChar = hashIndex > atIndex ? '#' : '@';
-        this.filterItems(input, triggerChar);
-      }
-    }
-  }
+  //     if (hashIndex === -1 && atIndex === -1) {
+  //       this.showDropdown = false;
+  //     } else {
+  //       const triggerChar = hashIndex > atIndex ? '#' : '@';
+  //       this.filterItems(input, triggerChar);
+  //     }
+  //   }
+  // }
 
-  filterItems(input: string, triggerChar: string): void {
-    const queryArray = input.split(triggerChar);
-    const query = queryArray.length > 1 ? queryArray.pop()?.trim().toLowerCase() : '';
+  // filterItems(input: string, triggerChar: string): void {
+  //   const queryArray = input.split(triggerChar);
+  //   const query = queryArray.length > 1 ? queryArray.pop()?.trim().toLowerCase() : '';
 
-    if (query !== undefined) {
-      if (triggerChar === '#') {
-        this.filteredItems = this.allChannels.filter(channel => channel.name.toLowerCase().includes(query));
-      } else if (triggerChar === '@') {
-        this.filteredItems = this.allUsers.filter(user => user.name.toLowerCase().includes(query));
-      }
-    }
-  }
+  //   if (query !== undefined) {
+  //     if (triggerChar === '#') {
+  //       this.filteredItems = this.allChannels.filter(channel => channel.name.toLowerCase().includes(query));
+  //     } else if (triggerChar === '@') {
+  //       this.filteredItems = this.allUsers.filter(user => user.name.toLowerCase().includes(query));
+  //     }
+  //   }
+  // }
 
-  selectItem(item: User | Channel): void {
-    const triggerChar = item.hasOwnProperty('channelId') ? '#' : '@';
-    const inputParts = this.content.split(triggerChar);
-    inputParts.pop();
-    this.content = inputParts.join(triggerChar) + `${triggerChar}${item.name} `;
-    this.showDropdown = false;
-  }
+  // selectItem(item: User | Channel): void {
+  //   const triggerChar = item.hasOwnProperty('channelId') ? '#' : '@';
+  //   const inputParts = this.content.split(triggerChar);
+  //   inputParts.pop();
+  //   this.content = inputParts.join(triggerChar) + `${triggerChar}${item.name} `;
+  //   this.showDropdown = false;
+  // }
 
   // Focusing tesxtarea after component is initilized 
   setFocus(): void {
@@ -465,29 +417,5 @@ export class ChatComponent implements AfterViewInit, OnChanges, OnInit {
     this.content = `${this.content} @${mention}`;
     this.showMention = false;
     this.setFocus();
-  }
-
-  // Formating timestamp into date
-  formatTimestamp(timestamp: Timestamp): Date {
-    const date = new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
-    return new Date(date)
-  }
-
-
-  formatTime(date: Date): string {
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
-  }
-
-  formatDate(date: Date): string {
-    const days = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
-    const months = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
-
-    const dayName = days[date.getDay()];
-    const day = date.getDate();
-    const monthName = months[date.getMonth()];
-
-    return `${dayName}, ${day} ${monthName}`;
   }
 }

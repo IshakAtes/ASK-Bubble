@@ -25,6 +25,4 @@ export class LastTwoEmojisService {
     });
     return this.userEmojisSubject.asObservable();
   }
-  
-
 }
