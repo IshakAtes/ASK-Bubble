@@ -1,5 +1,6 @@
 section {
     display: flex;
+
 }
 
 app-workspace {
@@ -61,5 +62,35 @@ app-create-conversation {
         >path {
             stroke: #535AF1;
         }
+    }
+}
+
+@media (max-width: 500px) {
+
+    section {
+        height: 100%;
+        flex-direction: column;
+    }
+
+    .header {
+        height: 80px;
+        width: 100vw;
+        background-color: black;
+        position: fixed;
+        z-index: 99;
+    }
+
+    app-workspace {
+        margin-right: 0px;
+        margin-top: 80px;
+        width: 100vw;
+    }
+    
+    app-channel {
+        margin-top: 80px;
+    }
+    
+    app-create-conversation {
+        margin-top: 80px;
     }
 }

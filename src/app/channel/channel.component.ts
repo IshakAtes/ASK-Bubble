@@ -18,7 +18,7 @@ import { UserService } from '../user.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './channel.component.html',
-  styleUrl: './channel.component.scss'
+  styleUrls: ['./channel.component.scss', './channelResp.component.scss']
 })
 export class ChannelComponent implements OnInit {  
 
@@ -140,7 +140,9 @@ export class ChannelComponent implements OnInit {
 
 
   showChannelSettings(){
-    const channelInfo = this.dialog.open(DialogShowChannelSettingsComponent)
+    const channelInfo = this.dialog.open(DialogShowChannelSettingsComponent,{
+      panelClass: 'customDialog'
+    })
     channelInfo.componentInstance.currentChannel = this.channel;
     channelInfo.componentInstance.channelCreator = this.channelCreator;
     

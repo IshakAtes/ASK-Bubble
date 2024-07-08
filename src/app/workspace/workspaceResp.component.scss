@@ -1,0 +1,174 @@
+@mixin nunito20{
+    font-family: Nunito;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 27.28px;
+    text-align: left;  
+}
+
+@mixin nunito17{
+    font-family: Nunito;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 23.19px;
+    text-align: left;
+}
+
+@mixin nunito17Placeholder{
+    font-family: Nunito;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 32px;
+    text-align: left;
+}
+
+
+
+
+
+//Baseline
+@media (max-width: 500px) {
+    section {
+        width: 100vw;
+        height: calc(100vh - 112px);
+        padding: 32px 0px 0px 0px;
+        border-radius: 0px;
+    }
+
+    .bgContainer{
+        display: flex;
+        position: absolute;
+        bottom: 60px;
+        right: 30px;
+        
+        width: 40px;
+        height: 40px;
+
+        padding: 8px 10px 12px 10px;
+        gap: 0px;
+        border-radius: 100px;
+        opacity: 0px;
+        background-color: #444DF2;
+
+ 
+        
+        
+
+        svg {   
+            path {
+                fill: white;
+            }
+            cursor: pointer;
+
+        }
+    }
+
+    .inputDesign{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        width: 398px;
+        height: 30px;
+        padding: 8px 24px 8px 24px;
+        gap: 0px;
+        border-radius: 42px;
+        border: 1px solid #ADB0D9;
+
+        input {
+            border: none;
+            ::placeholder {
+                height: 25px;
+                @include nunito17Placeholder;
+                color: #686868;
+
+            }
+    
+            :focus {
+                border: 1px solid #444DF2;
+            }
+        }
+    }
+
+    .channelListContainer{
+        height: 215px;
+        align-items: baseline;
+    }
+
+    .channelMenuTitle{
+        >span{
+            width: 87px;
+            height: 27px;
+            gap: 0px;
+            opacity: 0px;
+            @include nunito20;
+        }
+    }
+
+
+    .channelBody {
+        >button {
+            >p{
+                width: 17.11px;
+                height: 16.65px;
+                position: relative;
+                display: flex;
+                gap: 0px;
+                opacity: 0px;
+                font-family: Nunito;
+                font-size: 24px;
+            }
+            >span{
+                display: flex;
+                width: fit-content;
+                height: 25px;
+                gap: 0px;
+                opacity: 0px;
+                @include nunito17;
+            }
+        }
+    }
+
+
+    .channelFoot{
+        >button{
+            >span{
+                display: flex;
+                height: 25px;
+                gap: 0px;
+                opacity: 0px;
+                @include nunito17;
+                color: #535AF1,
+            }
+        }
+    }
+
+    .conversationMenuTitle{
+        >span{
+            width: 87px;
+            height: 27px;
+            gap: 0px;
+            opacity: 0px;
+            @include nunito20;
+        }
+    }
+
+
+    .conversationBody {
+        >button {
+            >span{
+                display: flex;
+                position: relative;
+                right: 15px;
+                width: fit-content;
+                height: 25px;
+                gap: 0px;
+                opacity: 0px;
+                @include nunito17;
+            }
+        }
+    }
+
+
+
+}

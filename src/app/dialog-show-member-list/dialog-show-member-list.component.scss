@@ -14,7 +14,7 @@ section {
     }
 
     .headline {
-        width: 335px;
+        width: 100%;
         height: 40px;
         gap: 0px;
         display: flex;
@@ -37,7 +37,7 @@ section {
         }
         >span{
             display: flex;
-            width: 400px;
+            width: fit-content;
             height: 33px;
             gap: 0px;
             opacity: 0px;
@@ -147,4 +147,35 @@ section {
         background-color: #ECEEFE;
         border-radius: 20px;
         cursor: pointer;
+    }
+
+    @media (max-width: 500px) {
+        section {
+            width: calc(100vw - 18vw);
+            height: 360px;
+            padding: 20px 16px 20px 16px;
+            border-radius: 20px 0px 20px 20px;
+            top: -130px;
+            left: -10%;
+            gap: 20px;
+        }
+
+        .userlistContainer{
+            width: 200px;
+            padding: 0px;
+        }
+
+
+        .addMember{
+            display: flex;
+            align-items: center;
+            width: 282px;
+            height: 56px;
+            padding: 12px 0px 12px 0px;
+            gap: 15px;
+            border-radius: 100px 0px 0px 0px;
+            opacity: 0px;
+        }
+
+
     }

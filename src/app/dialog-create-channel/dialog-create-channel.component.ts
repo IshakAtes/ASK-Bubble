@@ -5,6 +5,7 @@ import { DatabaseService } from '../database.service';
 import { FormsModule } from '@angular/forms';
 import { Channel } from '../../models/channel.class';
 import { DialogAddChannelMembersComponent } from '../dialog-add-channel-members/dialog-add-channel-members.component';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-dialog-create-channel',
@@ -27,7 +28,7 @@ export class DialogCreateChannelComponent {
   @ViewChild('errorMsg') errorMessage: ElementRef
   
 
-  constructor(public dialogRef: MatDialogRef<DialogCreateChannelComponent>, public dialog: MatDialog){
+  constructor(public dialogRef: MatDialogRef<DialogCreateChannelComponent>, public dialog: MatDialog, public userService: UserService){
     
   }
 
@@ -65,7 +66,11 @@ export class DialogCreateChannelComponent {
       .then(bool => {
         if(bool){
           this.channelCache = this.database.createChannel(this.activeUser, this.description, [], this.channelName)
-          const channelInfo = this.dialog.open(DialogAddChannelMembersComponent)
+          const channelInfo = this.dialog.open(DialogAddChannelMembersComponent, {
+            panelClass: 'customDialog',
+       
+            
+          })
           channelInfo.componentInstance.channelCache = this.database.createChannel(this.activeUser, this.description, [], this.channelName);
           this.dialogRef.close();
         }

@@ -8,15 +8,16 @@ import {MatDialog} from '@angular/material/dialog';
 import { DialogCreateChannelComponent } from '../dialog-create-channel/dialog-create-channel.component';
 import { UserService } from '../user.service';
 import { ChannelComponent } from '../channel/channel.component';
+import { FormsModule } from '@angular/forms';
 
 
 
 @Component({
   selector: 'app-workspace',
   standalone: true,
-  imports: [CommonModule, ChannelComponent],
+  imports: [CommonModule, ChannelComponent, FormsModule],
   templateUrl: './workspace.component.html',
-  styleUrl: './workspace.component.scss'
+  styleUrls: ['./workspace.component.scss', './workspaceResp.component.scss']
 })
 export class WorkspaceComponent {
   database = inject(DatabaseService);
@@ -25,7 +26,16 @@ export class WorkspaceComponent {
 
 
  // activeUser = new User()
-  
+ inputUser: string = '';
+ inputFocused: boolean =  false;
+ isdataLoaded: boolean = true;
+ hideUserContainer: boolean = true;
+ userlist: Array<User> = [];
+ channelList: Array<Channel> = [];
+ foundUserList: Array<User> = [];
+ foundChannelList: Array<Channel> = [];
+
+
 
 
   hideConversationBody: boolean = false;
@@ -66,7 +76,7 @@ export class WorkspaceComponent {
   }
 
   openNewConversation(){
-    this.changeToNewConversation.emit()
+    this.changeToNewConversation.emit();
   }
 
 
@@ -96,6 +106,46 @@ export class WorkspaceComponent {
 
   
   openCreateChannelDialog(){
-    this.dialog.open(DialogCreateChannelComponent)
+    this.dialog.open(DialogCreateChannelComponent, {
+      panelClass: 'customDialog',
+    })
+  }
+
+
+
+
+  detectInputFocus(){
+    if(this.inputFocused){
+      this.inputFocused = false;
+    }
+    else{
+      this.inputFocused = true;
+    }
+  }
+
+
+  changeUserContainerVisibility(){
+    if(this.hideUserContainer){
+      this.hideUserContainer = false;
+    }
+    else{
+      this.hideUserContainer = true;
+    }
+    console.log('check input focus error ');
+  }
+
+
+  showFilteredUser(){
+    if(this.inputUser.startsWith('@')){
+      let searchUser = this.inputUser.substring(1);
+      this.foundUserList = this.userlist.filter((user) => user.name.toLowerCase().startsWith(searchUser));
+    }
+    else if(this.inputUser.startsWith('#')){
+      let searchChannel = this.inputUser.substring(1);
+      this.foundChannelList = this.channelList.filter((channel) => channel.name.toLowerCase().startsWith(searchChannel))
+    }
+    else{
+      this.foundUserList = this.userlist.filter((user) => user.email.toLowerCase().startsWith(this.inputUser));
+    }
   }
 }

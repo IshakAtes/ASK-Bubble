@@ -6,8 +6,13 @@
         <div class="channelname">
             <span>Neue Nachricht</span>
         </div>
-        
-        <input (focus)="detectInputFocus(); changeUserContainerVisibility()" (input)="showFilteredUser()" [(ngModel)]="inputUser" type="text" placeholder="An: #channel, oder @jemand oder E-Mail Adresse">
+        @if(us.deviceWidth > 500) {
+            <input (focus)="detectInputFocus(); changeUserContainerVisibility()" (input)="showFilteredUser()" [(ngModel)]="inputUser" type="text" placeholder="An: #channel oder @jemand oder E-Mail Adresse">
+        }
+        @else {
+            <input (focus)="detectInputFocus(); changeUserContainerVisibility()" (input)="showFilteredUser()" [(ngModel)]="inputUser" type="text" placeholder="An: #channel oder @jemand">
+
+        }
     </div> 
     
     <!--main-chat-header END-->
@@ -21,7 +26,7 @@
 
     <div class="message-container-orientation">
         <div class="message-container">
-            <textarea class="message-input" placeholder='Lorem Ipsum'></textarea>
+            <textarea class="message-input" placeholder='Deine Nachricht'></textarea>
             <div class="message-actions">
         
             <div class="action-left">

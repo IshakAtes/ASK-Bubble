@@ -6,13 +6,15 @@ import { DatabaseService } from '../database.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Channel } from '../../models/channel.class';
 import { DialogShowSelectedUserComponent } from '../dialog-show-selected-user/dialog-show-selected-user.component';
+import { UserService } from '../user.service';
+
 
 @Component({
   selector: 'app-dialog-add-additional-member',
   standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './dialog-add-additional-member.component.html',
-  styleUrl: './dialog-add-additional-member.component.scss'
+  styleUrls: ['./dialog-add-additional-member.component.scss', './dialog-add-additional-memberResp.component.scss']
 })
 export class DialogAddAdditionalMemberComponent {
 
@@ -35,7 +37,7 @@ export class DialogAddAdditionalMemberComponent {
   @ViewChild('selectedList') selectedList: ElementRef 
 
 
-  constructor(public dialogRef: MatDialogRef<DialogAddAdditionalMemberComponent>, public dialog: MatDialog){
+  constructor(public dialogRef: MatDialogRef<DialogAddAdditionalMemberComponent>, public dialog: MatDialog, public us: UserService){
     this.setUserlist();
   }
 

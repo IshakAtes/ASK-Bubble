@@ -171,12 +171,13 @@ section {
         }
     }
 
+    
     //channelBody important because of loaded Data.
     .channelBody {
         display: flex;
         flex-direction: column;
         width: 306px;
-        height: 300px;
+        height: 160px;
         overflow: scroll;
         gap: 13px;
         opacity: 0px;
@@ -348,7 +349,7 @@ section {
             display: flex;
             flex-direction: column;
             width: 306px;
-            height: 300px;
+            height: 280px;
             overflow: scroll;
             gap: 13px;
             opacity: 0px;

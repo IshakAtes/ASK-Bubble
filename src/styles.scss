@@ -92,18 +92,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   display: none;
 }
 
-.mat-mdc-dialog-container {
-  --mdc-dialog-container-shape: 30px;
-  background-color: transparent !important;
-  box-shadow: none !important;
-}
 
-.mdc-dialog__surface {
-  overflow-y: visible !important;
-  background-color: transparent !important;
-  box-shadow: none !important;
-
-}
 
 
 .feedbackBubble {
@@ -127,4 +116,18 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .bubbleVisible {
   right: 0px;
   opacity: 1;
+}
+
+
+.mat-mdc-dialog-container {
+  --mdc-dialog-container-shape: 30px;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.mdc-dialog__surface {
+  overflow-y: visible !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+
 }

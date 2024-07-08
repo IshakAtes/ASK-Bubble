@@ -15,7 +15,7 @@ import { DialogShowSelectedUserComponent } from '../dialog-show-selected-user/di
   standalone: true,
   imports: [CommonModule, MatRadioModule, FormsModule],
   templateUrl: './dialog-add-channel-members.component.html',
-  styleUrl: './dialog-add-channel-members.component.scss'
+  styleUrls: ['./dialog-add-channel-members.component.scss', './dialog-add-channel-membersResp.component.scss' ]
 })
 export class DialogAddChannelMembersComponent {
   database = inject(DatabaseService)

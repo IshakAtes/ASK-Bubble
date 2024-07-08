@@ -13,7 +13,7 @@ import { UserService } from '../user.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './dialog-show-channel-settings.component.html',
-  styleUrl: './dialog-show-channel-settings.component.scss'
+  styleUrls: ['./dialog-show-channel-settings.component.scss', './dialog-show-channel-settingsResp.component.scss']
 })
 export class DialogShowChannelSettingsComponent {
   currentChannel: Channel;
