@@ -7,6 +7,7 @@ import { User } from '../../models/user.class';
 import { DatabaseService } from '../database.service';
 import { FormsModule } from '@angular/forms';
 import { DialogShowSelectedUserComponent } from '../dialog-show-selected-user/dialog-show-selected-user.component';
+import { UserService } from '../user.service';
 
 
 
@@ -38,8 +39,10 @@ export class DialogAddChannelMembersComponent {
   @ViewChild('errorMsg') errorMessage: ElementRef
 
 
-  constructor(public dialogRef: MatDialogRef<DialogAddChannelMembersComponent>, public dialog: MatDialog){
+  constructor(public dialogRef: MatDialogRef<DialogAddChannelMembersComponent>, public dialog: MatDialog, public us: UserService){
     this.loadUserList();
+
+    
   }
 
 

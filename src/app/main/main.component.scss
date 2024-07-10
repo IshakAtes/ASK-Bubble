@@ -1,10 +1,12 @@
 section {
     display: flex;
+    gap: 10px;
+
 
 }
 
 app-workspace {
-    margin-right: 50px;
+    margin-left: 10px;
     margin-top: 120px;
 }
 
@@ -16,12 +18,16 @@ app-create-conversation {
     margin-top: 120px;
 }
 
+app-chat {
+    margin-top: 120px;
+}
+
 .closeWorkspace {
     display: flex;
     flex-direction: column;
-    position: relative;
+    position: absolute;
     align-items: center;
-    top: 581px;
+    top: 600px;
     left: 0px;
     width: 32px;
     height: 301px;
@@ -32,6 +38,9 @@ app-create-conversation {
     box-shadow: 4px 4px 7px 0px #00000033;
     background: white !important;
     z-index: 99;
+
+
+
 
     >span {
         display: flex;
@@ -82,8 +91,8 @@ app-create-conversation {
 
     app-workspace {
         margin-right: 0px;
+        margin-left: 0px;
         margin-top: 80px;
-        width: 100vw;
     }
     
     app-channel {

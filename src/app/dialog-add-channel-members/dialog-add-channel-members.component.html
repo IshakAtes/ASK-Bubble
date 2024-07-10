@@ -1,5 +1,14 @@
 <section>
+    
+    @if(us.deviceWidth < 500){
+        <svg width="390" height="6" viewBox="0 0 390 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="164" width="62" height="6" rx="3" fill="#D9D9D9"/>
+        </svg>
+    }
+    
     <div class="headline">
+
+        
         <span>Leute hinzufügen</span>
         <div class="closeSvgBg" >
             <!--close svg-->
@@ -34,7 +43,7 @@
     <div class="userInput" [ngClass]="{'d-none': hideUserInput}">
         <div class="inputWrapper"> <!-- this should look like an input-->
             
-            @if(selectedUserList.length > 2){
+            @if(selectedUserList.length > 1){
                 <div class="selectedList"> <!--this should be the list of selected users-->
                     <div *ngFor="let item of [].constructor(1); let i = index" class="selectedUser">
                         <img src="{{selectedUserList[i].avatarUrl}}">
@@ -54,7 +63,7 @@
                         </div>
                     </div>
                     <div class="selectedListLength" (click)="openSelectedUserList()">
-                        @if(selectedUserList.length > 1){
+                        @if(selectedUserList.length >= 1){
                             <span>+{{selectedUserList.length - 1}}</span>
                         }
                     </div>
@@ -84,7 +93,14 @@
 
 
             <!--This is the real input field-->
-            <input (focus)="detectInputFocus(); changeUserContainerVisibility()" (input)="showFilteredUser()" placeholder="Name eingeben" [(ngModel)]="searchUser" >
+            @if(selectedUserList.length >= 1){
+                <input (focus)="detectInputFocus(); changeUserContainerVisibility()" (input)="showFilteredUser()" placeholder="" [(ngModel)]="searchUser" >
+            }
+            @else {
+                <input (focus)="detectInputFocus(); changeUserContainerVisibility()" (input)="showFilteredUser()" placeholder="Name eingeben" [(ngModel)]="searchUser" >
+
+            }
+        
         </div>
     </div>
 
