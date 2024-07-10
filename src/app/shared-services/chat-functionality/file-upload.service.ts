@@ -10,6 +10,8 @@ export class FileUploadService {
   uploadProgress$!: Observable<number>;
   downloadURL$!: Observable<string>;
 
+  downloadURL:string =''
+
   private storage: Storage = inject(Storage);
 
   onFileSelected(event:any){
@@ -34,6 +36,12 @@ export class FileUploadService {
       console.log("The file was uploaded successfully!");
       const url = await getDownloadURL(fileRef);
       console.log("url: ", url)
+      this.downloadURL=url
     })
+  }
+
+  deletePreview(){
+    this.downloadURL=''
+    //Logik zum löschen aus Storage hinzufügen
   }
 }

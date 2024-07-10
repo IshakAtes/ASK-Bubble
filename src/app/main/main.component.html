@@ -11,8 +11,10 @@
     
             <span>Workspace-Menü-schließen</span>
         </div>
-        
-        @if(isWSVisible){
+    
+        <app-header></app-header>
+    
+    @if(isWSVisible){
             <app-workspace
             (changeToChannel)="changeChannel($event)"
             (changeToConversation)="changeConversation($event)"

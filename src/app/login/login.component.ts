@@ -40,13 +40,11 @@ export class LoginComponent {
 
   
   async onSubmit() {
-    console.log('anmelden', this.myForm.value);
     if (this.guest) {
       this.myForm.setValue({
         pw: this.guestLog.password,
         mail: this.guestLog.email
       });
-      console.log('formLog', this.myForm.value);
       await this.normalSignIn();
     } else {
       await this.normalSignIn(); 
@@ -69,7 +67,6 @@ export class LoginComponent {
     if (this.guest) {
       try {
         const guestUser = await this.us.getUser(this.guestLog.email, this.guestLog.password); 
-        console.log(guestUser);
       } catch (error) {
         console.log('Kein Gastbenutzer gefunden, erstelle neuen Gastbenutzer');
         await this.us.addUser(this.guestLog);
@@ -77,7 +74,6 @@ export class LoginComponent {
       }
     }
     const acceptedUser = await this.us.getUser(this.myForm.value.mail, this.myForm.value.pw);
-    console.log('normalSign', acceptedUser);
     if (this.myForm.valid && acceptedUser) {
       try {
         this.us.loggedUser = acceptedUser;
@@ -92,23 +88,6 @@ export class LoginComponent {
     }
   }
 
-
-  // async guestLogin(event: Event) {
-  //   event.preventDefault();
-  //   try {
-  //     const acceptedUser = await this.us.getUser(this.guestLog.email, this.guestLog.password);
-  //     if (acceptedUser) {
-  //       this.us.loggedUser = acceptedUser;
-  //       this.us.userOnline(this.us.loggedUser.userId);
-  //       this.router.navigate(['/main']);
-  //       console.log(this.us.loggedUser);
-  //     } else if(!acceptedUser) {
-  //       this.us.addUser(this.guestLog);
-  //     }
-  //   } catch (error) {
-  //     console.error('Fehler beim Abrufen des Benutzers:', error);
-  //   }
-  // }
 
   onMouseDown() {
     this.isPressed = true;
