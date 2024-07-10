@@ -10,10 +10,12 @@ import { provideHttpClient } from '@angular/common/http';
 import {AngularFireModule} from '@angular/fire/compat'
 import {AngularFireAuthModule} from '@angular/fire/compat/auth'
 import { GoogleAuthProvider } from 'firebase/auth';
+import { getStorage, provideStorage } from '@angular/fire/storage';
 
 
 
 export const appConfig: ApplicationConfig = {
+
   providers: [provideHttpClient(), provideRouter(routes), provideFirebaseApp(() => 
     initializeApp(
       { "projectId": firebaseConfig.projectId,
@@ -28,7 +30,7 @@ export const appConfig: ApplicationConfig = {
       provideAnimationsAsync(), provideAnimationsAsync(), 
       provideAnimationsAsync(), provideAnimationsAsync(), 
       provideAnimationsAsync(), provideAnimationsAsync(), 
-    
 
+      provideStorage(() => getStorage()),
   ]
 };

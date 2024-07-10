@@ -238,7 +238,8 @@
             <div class="message-actions">
 
                 <div class="action-left">
-                    <button class="action-button"> <img src="../../assets/img/add_icon.png" alt=""></button>
+                    <button (change)="fileUpload.onFileSelected($event)"  class="action-button"> <img src="../../assets/img/add_icon.png" alt=""></button>
+                    <input type="file" (change)="fileUpload.onFileSelected($event)">
                     <div class="line"></div>
                     <button (click)="toggleEmoticons()" class="action-button"><img
                             src="../../assets/img/emoticon_icon.png" alt=""></button>

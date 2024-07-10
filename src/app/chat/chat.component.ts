@@ -12,8 +12,11 @@ import { Reaction } from '../../models/reactions.class';
 import { LastTwoEmojisService } from '../shared-services/chat-functionality/last-two-emojis.service';
 import { TimeFormatingService } from '../shared-services/chat-functionality/time-formating.service';
 import { MentionAndChannelDropdownService } from '../shared-services/chat-functionality/mention-and-channel-dropdown.service';
+import { FileUploadService } from '../shared-services/chat-functionality/file-upload.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
+
+
 
 @Component({
   selector: 'app-chat',
@@ -57,7 +60,8 @@ export class ChatComponent implements AfterViewInit, OnInit {
     public userService: UserService,
     private lastTwoEmojiService: LastTwoEmojisService,
     public time: TimeFormatingService,
-    public mAndC: MentionAndChannelDropdownService) {
+    public mAndC: MentionAndChannelDropdownService,
+    public fileUpload: FileUploadService) {
 
     this.content = mAndC.content;
     this.allChannels = mAndC.allChannels;
@@ -294,10 +298,10 @@ export class ChatComponent implements AfterViewInit, OnInit {
   @ViewChild('lastDiv') lastDiv: ElementRef<HTMLDivElement>;
 
   ngAfterViewInit(): void {
-    this.setFocus();
     setTimeout(() => {
+      this.setFocus();
       this.scrollToBottom();
-    }, 2000);
+    }, 4000);
   }
 
 
