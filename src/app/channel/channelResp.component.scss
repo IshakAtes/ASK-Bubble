@@ -1,0 +1,60 @@
+@media (max-width: 500px) {
+    .main-chat {
+        height: calc(100vh - 80px);
+        width: 100vw;
+        background-color: white;
+        border-radius: 0px;
+        position: relative;
+    }
+
+    .message-container-orientation{
+        display: flex;
+        position: absolute;
+        margin-top: 0px;
+        bottom: 30px;
+        left: 5%;
+        width: 90%;
+    
+    }
+
+    .message-container {
+            height: 103px;
+    }
+
+    .main-chat-header {
+        //height: 96px;
+        padding: 10px 16px 10px 16px;
+        gap: 0px;
+        display: flex;
+        justify-content: space-between;
+        box-shadow: 0px 2px 10px 0px #00000014;
+    }
+
+    .channelname {
+        display: flex;
+        align-items: center;
+        padding: 2px 0px 2px 0px;
+        gap: 5px;
+        span {
+            font-family: Nunito;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 32.74px;
+        }
+    }
+
+    ::ng-deep .customDialog {
+        width: 100vw;
+        .mdc-dialog {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .mdc-dialog__container {
+            height: auto;
+        }
+
+    } 
+
+}

@@ -1,6 +1,6 @@
 .main-chat {
     height: 940px;
-    width: 60vw;
+    width: 51.5vw; //989px
     background-color: white;
     border-radius: 30px;
     position: relative;
@@ -19,11 +19,15 @@
     }
 }
 
+
+
+
 .channelname {
     display: flex;
     align-items: center;
     gap: 10px;
     span {
+        font-family: Nunito;
         font-size: 24px;
         font-weight: 700;
         line-height: 32.74px;
@@ -87,8 +91,15 @@
     }
 }
 
+.message-container-orientation{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+
+}
+
 .chat-area {
-    max-height: 40vh;
+    height: 600px;
     overflow-y: scroll;
 }
 
@@ -222,8 +233,8 @@
 }
 
 .message-container {
-    width: 100%;
-    max-width: 600px;
+    width: 90%;
+    max-width: 100%;
     display: flex;
     flex-direction: column;
     background-color: #fff;

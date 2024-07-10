@@ -59,7 +59,8 @@
                         (click)="toggleEmoticonsReactionbar(message.messageId)" alt="">
                     @if (selectedMessageId === message.messageId) {
                     <div class="emoticon-reaction-div">
-                        <emoji-mart class="emoji-mart" (emojiSelect)="saveNewMessageReaction($event, message, user.userId)"
+                        <emoji-mart class="emoji-mart"
+                            (emojiSelect)="saveNewMessageReaction($event, message, user.userId)"
                             title="Choose your emoji"></emoji-mart>
                     </div>
                     }
@@ -73,7 +74,8 @@
                 <div class="message-content-div">
                     <div class="own-message-header">
                         <span class="message-header-userName">{{user.name}}</span>
-                        <span class="message-header-timestamp">{{time.formatTime(time.formatTimestamp(message.createdAt))}}</span>
+                        <span
+                            class="message-header-timestamp">{{time.formatTime(time.formatTimestamp(message.createdAt))}}</span>
                     </div>
 
                     <div class="own-massage-content-bubble">
@@ -125,7 +127,8 @@
                         (click)="toggleEmoticonsReactionbar(message.messageId)" alt="">
                     @if (selectedMessageId === message.messageId) {
                     <div class="emoticon-reaction-div">
-                        <emoji-mart class="emoji-mart" (emojiSelect)="saveNewMessageReaction($event, message, passiveUser.userId)"
+                        <emoji-mart class="emoji-mart"
+                            (emojiSelect)="saveNewMessageReaction($event, message, passiveUser.userId)"
                             title="Choose your emoji"></emoji-mart>
                     </div>
                     }
@@ -145,7 +148,8 @@
                 <div class="message-content-div">
                     <div class="message-header">
                         <span class="message-header-userName">{{passiveUser.name}}</span>
-                        <span class="message-header-timestamp">{{time.formatTime(time.formatTimestamp(message.createdAt))}}</span>
+                        <span
+                            class="message-header-timestamp">{{time.formatTime(time.formatTimestamp(message.createdAt))}}</span>
                     </div>
 
                     <div class="massage-content-bubble">
@@ -228,6 +232,11 @@
         </textarea>
             }
 
+            @if (fileUpload.downloadURL) {
+                <button class="upload-preview-BTN" (click)="fileUpload.deletePreview()" >delete</button>
+                <img class="upload-preview" src="{{fileUpload.downloadURL}}" alt="">
+            }
+
 
 
 
@@ -238,7 +247,10 @@
             <div class="message-actions">
 
                 <div class="action-left">
-                    <button class="action-button"> <img src="../../assets/img/add_icon.png" alt=""></button>
+                    <button class="action-button" (click)="triggerFileInput()"> <img src="../../assets/img/add_icon.png"
+                            alt=""></button>
+                    <input #fileInput type="file" style="display: none;" (change)="fileUpload.onFileSelected($event)">
+                    <!-- <input type="file" (change)="fileUpload.onFileSelected($event)"> -->
                     <div class="line"></div>
                     <button (click)="toggleEmoticons()" class="action-button"><img
                             src="../../assets/img/emoticon_icon.png" alt=""></button>

@@ -198,3 +198,24 @@ section {
             background-color: #535AF1;
         }
     }  
+
+
+    @media (max-width: 500px) {
+        section {
+            width: calc(100vw - 18vw);
+            padding: 40px 20px 40px 20px;
+            position: relative;
+            top: 20px;
+            left: -10%;
+        }
+
+
+        .headline {
+            width: 100%;
+        }
+
+        .image {
+            width: 100%;
+        }
+
+    }

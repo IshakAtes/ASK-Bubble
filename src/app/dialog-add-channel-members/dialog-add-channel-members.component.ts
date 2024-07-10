@@ -7,6 +7,7 @@ import { User } from '../../models/user.class';
 import { DatabaseService } from '../database.service';
 import { FormsModule } from '@angular/forms';
 import { DialogShowSelectedUserComponent } from '../dialog-show-selected-user/dialog-show-selected-user.component';
+import { UserService } from '../user.service';
 
 
 
@@ -15,7 +16,7 @@ import { DialogShowSelectedUserComponent } from '../dialog-show-selected-user/di
   standalone: true,
   imports: [CommonModule, MatRadioModule, FormsModule],
   templateUrl: './dialog-add-channel-members.component.html',
-  styleUrl: './dialog-add-channel-members.component.scss'
+  styleUrls: ['./dialog-add-channel-members.component.scss', './dialog-add-channel-membersResp.component.scss' ]
 })
 export class DialogAddChannelMembersComponent {
   database = inject(DatabaseService)
@@ -38,8 +39,10 @@ export class DialogAddChannelMembersComponent {
   @ViewChild('errorMsg') errorMessage: ElementRef
 
 
-  constructor(public dialogRef: MatDialogRef<DialogAddChannelMembersComponent>, public dialog: MatDialog){
+  constructor(public dialogRef: MatDialogRef<DialogAddChannelMembersComponent>, public dialog: MatDialog, public us: UserService){
     this.loadUserList();
+
+    
   }
 
 

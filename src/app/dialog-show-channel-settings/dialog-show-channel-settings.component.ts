@@ -6,14 +6,17 @@ import { DatabaseService } from '../database.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../user.service';
+import { DialogShowMemberListComponent } from '../dialog-show-member-list/dialog-show-member-list.component';
+import { DialogAddAdditionalMemberComponent } from '../dialog-add-additional-member/dialog-add-additional-member.component';
+import { DialogUserProfileComponent } from '../dialog-user-profile/dialog-user-profile.component';
 
 
 @Component({
   selector: 'app-dialog-show-channel-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DialogShowMemberListComponent],
   templateUrl: './dialog-show-channel-settings.component.html',
-  styleUrl: './dialog-show-channel-settings.component.scss'
+  styleUrls: ['./dialog-show-channel-settings.component.scss', './dialog-show-channel-settingsResp.component.scss']
 })
 export class DialogShowChannelSettingsComponent {
   currentChannel: Channel;
@@ -30,6 +33,8 @@ export class DialogShowChannelSettingsComponent {
   showEditNameInput: boolean = false;
   showEditDescriptionInput: boolean = false
 
+  userlist: Array<User> = [];
+
   @ViewChild('errorMsg') errorMessage: ElementRef
 
   
@@ -38,8 +43,26 @@ export class DialogShowChannelSettingsComponent {
       .then(user =>{
         this.activeUser = user;
     })
+    this.setUserlist();
   }
 
+  setUserlist(){
+    setTimeout(() => {
+      this.currentChannel.membersId.forEach(userId => {
+        this.database.loadUser(userId)
+          .then(user => {
+            this.userlist.push(user);
+          })
+      })
+    }, 100);
+  }
+
+
+  openProfile(user: User){
+    console.log(user.userId);
+    const profileInfo = this.dialog.open(DialogUserProfileComponent);
+    profileInfo.componentInstance.shownUser = user;
+  }
 
   ngOnChanges(){
     console.log('triggered on change from show channel settings')
@@ -115,6 +138,12 @@ export class DialogShowChannelSettingsComponent {
 
   setDefault(){
     this.errorMessage.nativeElement.innerHTML = '';
+  }
+
+  showAddMember(){
+    const channelInfo = this.dialog.open(DialogAddAdditionalMemberComponent);
+    channelInfo.componentInstance.currentChannel = this.currentChannel;
+    this.dialogRef.close();
   }
 
 }

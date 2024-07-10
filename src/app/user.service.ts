@@ -28,6 +28,7 @@ export class UserService {
   usersFromActiveUserConversationList: Array<User> = [];
   activeUserObject: User;
   isWorkspaceDataLoaded: boolean = true;
+  deviceWidth: number
 
   //TODO - hiernach suchen wenns live geht und umgestellt werden soll
   activeUserMail: string = 'simon@dummy.de' 
@@ -206,4 +207,14 @@ export class UserService {
       this.usersFromActiveUserConversationList.push(loadedUser);
     })
   }
+
+  getDeviceWidth(){
+    this.deviceWidth = window.innerWidth;
+    console.log(this.deviceWidth);
+  }
+
+
 }
+
+
+

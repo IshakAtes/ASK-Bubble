@@ -1,6 +1,6 @@
 .main-chat {
     height: 940px;
-    width: 60vw;
+    width: 51.5vw;
     background-color: white;
     border-radius: 30px;
     position: relative;
@@ -60,18 +60,20 @@
 .message-container-orientation{
     display: flex;
     justify-content: center;
+    margin-top: 20px;
+
 }
 
 
 .chat-area {
-    height: 53vh;
+    height: 550px;
     overflow-y: scroll;
 }
 
 
 .message-container {
     width: 100%;
-    max-width: 600px;
+    max-width: 85%;
     display: flex;
     flex-direction: column;
     background-color: #fff;
@@ -235,3 +237,60 @@
    .userlistContainer::-webkit-scrollbar {
     display: none;
    }
+
+   @media (max-width: 850px) {
+
+
+   }
+
+
+
+    @media (max-width: 500px) {
+        .main-chat {
+            height: calc(100vh - 80px);
+            width: 100vw;
+            background-color: white;
+            border-radius: 0px;
+            position: relative;
+        }
+
+
+        .main-chat-header {
+                height: 97px;
+                padding: 20px 16px 7px 16px;
+                input {
+                    padding: 13px 20px 13px 20px;
+                }
+        }
+
+        .message-container-orientation{
+                display: flex;
+                position: absolute;
+                margin-top: 0px;
+                bottom: 30px;
+                left: 5%;
+                width: 90%;
+            
+        }
+
+        .message-container {
+                height: 103px;
+        }
+
+
+        .userlistContainer{
+                height: 211px;
+                position: absolute;
+                top: 125px;
+                width: 65%;
+                left: 5%;
+                z-index: 99;
+                .userList {
+                    padding: 0px;
+                }
+        }
+
+
+    }
+
+   

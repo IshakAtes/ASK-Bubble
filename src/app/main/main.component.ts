@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, OnChanges, AfterViewChecked, AfterViewInit } from '@angular/core';
+import { Component, OnInit, inject, OnChanges, AfterViewChecked, AfterViewInit, } from '@angular/core';
 import { WorkspaceComponent } from '../workspace/workspace.component';
 import { ChannelComponent } from '../channel/channel.component';
 import { ChatComponent } from '../chat/chat.component';
@@ -38,7 +38,7 @@ export class MainComponent{
 
   
   constructor(public userservice: UserService, public database: DatabaseService){
-    
+    userservice.getDeviceWidth();
   }
 
   ngOnChanges(){
@@ -51,35 +51,77 @@ export class MainComponent{
 
 
 
+
+
   changeChannel(channel: Channel){
     //if switch happens between channels a reload is needed!
-    if(this.channel){
-      this.currentChannel = channel;
-      this.reloadChannel = true;
-      this.conversation = false;
-      this.channel = true;
+    if(this.userservice.deviceWidth > 500){
+      //ts settings for desktopView
+      if(this.channel){
+        this.currentChannel = channel;
+        this.reloadChannel = true;
+        this.conversation = false;
+        this.channel = true;
+      }
+      else{
+        this.currentChannel = channel;
+        this.conversation = false;
+        this.channel = true;
+      }
     }
     else{
-      this.currentChannel = channel;
-      this.conversation = false;
-      this.channel = true;
+      //ts settings for mobile view
+      if(this.channel){
+        this.currentChannel = channel;
+        this.reloadChannel = true;
+        this.conversation = false;
+        this.channel = true;
+      }
+      else{
+        this.currentChannel = channel;
+        this.conversation = false;
+        this.channel = true;
+      }
+      this.isWSVisible = false;
     }
+
   }
 
+
+
   changeConversation(conversation: Conversation){
-    this.currentConversation = conversation;
-    //this.reloadConversation?
-    this.conversation = true;
-    this.channel = false;
-    this.userservice.loadActiveUserConversations();
+    if(this.userservice.deviceWidth > 500){
+      this.currentConversation = conversation;
+      //this.reloadConversation?
+      this.conversation = true;
+      this.channel = false;
+      this.userservice.loadActiveUserConversations();
+    }
+    else{
+      this.currentConversation = conversation;
+      this.conversation = true;
+      this.channel = false;
+      this.isWSVisible = false;
+      this.userservice.loadActiveUserConversations();
+    }
+
     
   }
 
 
   changeNewConversation(){
-    this.reloadChannel = false;
-    this.conversation = false;
-    this.channel = false;
+    if(this.userservice.deviceWidth > 500){
+      this.reloadChannel = false;
+      this.conversation = false;
+      this.channel = false;
+    }
+    else{
+      this.reloadChannel = false;
+      this.conversation = false;
+      this.channel = false;
+      this.isWSVisible = false;
+    }
+
   }
 
   
@@ -97,9 +139,11 @@ export class MainComponent{
   changeWSVisibility(){
     if(this.isWSVisible){
       this.isWSVisible = false;
+      this.channelBig = true;
     }
     else{
       this.isWSVisible = true;
+      this.channelBig = false;
     }
   }
 }

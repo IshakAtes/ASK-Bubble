@@ -224,3 +224,146 @@ section {
         background-color: #797EF3;
     }
 }
+
+
+@media (max-width: 500px) {
+    
+    section {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        left: -10px;
+        padding: 40px;
+        border-radius: 0px;
+        opacity: 0px;
+        background: #FFFFFF;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+    
+    
+    .headline {
+        width: calc(100vw - 40px);
+
+        >span{
+            width: fit-content;
+            font-family: Nunito;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 32.74px;
+            text-align: left;
+        }
+    }
+
+    .description {
+        width: calc(100vw - 60px);
+        height: fit-content;
+        >span {
+            font-family: Nunito;
+            font-size: 17px;
+            font-weight: 400;
+            line-height: 23.19px;
+            text-align: left;
+        }
+    }
+
+
+    .channelInput {
+        width: calc(100vw - 100px);
+        >span {
+            font-family: Nunito;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 24.55px;
+            text-align: left;
+        }
+    
+        >input {
+            width: calc(100vw - 100px);
+            ::placeholder {
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 400;
+                line-height: 24.55px;
+                text-align: left;
+                width: calc(100vw - 100px);
+
+            }
+        }
+    
+    }
+
+    .descriptionInput {
+        width: calc(100vw - 100px);
+        >p{
+            width: calc(100vw - 100px);
+
+            font-family: Nunito;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 24.55px;
+            text-align: left;
+    
+            >span{
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 400;
+                line-height: 24.55px;
+                text-align: left;
+            }
+        }
+    
+        >input {
+            width: calc(100vw - 100px);
+            ::placeholder {
+                width: calc(100vw - 100px);
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 400;
+                line-height: 24.55px;
+
+            }
+        }
+    }
+
+    .btnContainer{
+        display: flex;
+        justify-content: flex-end;
+        width: calc(100vw - 65px);
+        margin-top: 10px;
+        button {
+            cursor: pointer;
+            display: flex;
+            width: 125px;
+            height: 49px;
+            padding: 12px 25px 12px 25px;
+            gap: 10px;
+            border-radius: 25px;
+            opacity: 0px;
+            background: #444DF2;
+            border: none;
+            font-family: Nunito;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 24.55px;
+            text-align: left;
+            color: #FFFFFF;
+        }
+    
+        button:hover {
+            background-color: #797EF3;
+        }
+    }
+
+    ::ng-deep .customDialog {
+        .mdc-dialog {
+            position: absolute;
+        }
+
+    } 
+
+
+
+
+}

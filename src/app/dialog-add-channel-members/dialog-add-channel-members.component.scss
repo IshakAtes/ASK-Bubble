@@ -6,6 +6,7 @@ section {
      display: flex;
      flex-direction: column;
      gap: 20px;
+     
 }
 
 
@@ -80,7 +81,7 @@ section {
     .labels {
         display: flex;
         flex-direction: column;
-        width: 566px;
+        width: fit-content;
         height: 70px;
         gap: 20px;
         opacity: 0px;
@@ -97,6 +98,34 @@ section {
             text-align: left;
             >p {
                 color: #535AF1;
+            }
+        }
+        >div {
+            display: flex;
+            flex-wrap: wrap;
+          
+            >span {
+                display: flex;
+                width: fit-content;
+                height: 25px;
+                gap: 0px;
+                opacity: 0px;
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 400;
+                line-height: 24.55px;
+                text-align: left;
+
+            }
+
+            >p {
+                color: #535AF1;
+                margin: 0;
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 400;
+                line-height: 24.55px;
+                text-align: left;
             }
         }
     }
@@ -353,11 +382,3 @@ section {
 }
 
 
-.mat-mdc-dialog-container {
-    --mdc-dialog-container-shape: 30px;
-}
-  
-.mdc-dialog__surface {
-    overflow-y: visible !important;
-  
-}
