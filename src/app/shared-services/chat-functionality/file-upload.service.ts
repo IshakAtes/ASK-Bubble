@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Storage } from '@angular/fire/storage';
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { Observable, Subject } from 'rxjs';
 
 @Injectable({
@@ -59,8 +59,27 @@ export class FileUploadService {
     );
   }
 
-  deletePreview(){
-    this.downloadURL=''
-    //Logik zum löschen aus Storage hinzufügen
+  async deletePreview() {
+    if (this.downloadURL) {
+      try {
+        const fileRef = ref(this.storage, this.downloadURL);
+        await deleteObject(fileRef);
+        console.log("Die Datei wurde erfolgreich gelöscht!");
+        this.downloadURL = '';
+      } catch (error) {
+        console.error('Fehler beim Löschen der Datei:', error);
+        this.fileUploadErrorSubject.next('Fehler beim Löschen der Datei.');
+      }
+    } else {
+      console.log("Keine Datei zum Löschen gefunden.");
+    }
+  }
+
+  isImage(fileUrl: string): boolean {
+    const url = new URL(fileUrl);
+    const path = url.pathname;
+    const imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+    const extension = path.split('.').pop()?.toLowerCase();
+    return imageExtensions.includes(extension || '');
   }
 }

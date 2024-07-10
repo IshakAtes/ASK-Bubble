@@ -84,9 +84,19 @@
 
                     @if (message.fileUrl) {
                     <div class="own-file-div">
-                        <a href="{{message.fileUrl}}"><img src="{{message.fileUrl}}" alt=""></a>
+                        @if (fileUpload.isImage(message.fileUrl)) {
+                        <a href="{{message.fileUrl}}" target="_blank">
+                            <img src="{{message.fileUrl}}" alt="">
+                        </a>
+                        } @else {
+                        <a href="{{message.fileUrl}}" target="_blank">
+                            <img src="../../assets/img/PDF_icon.svg.png" alt="">
+                            <p>PDF öffnen</p>
+                        </a>
+                        }
                     </div>
                     }
+
 
                     <div class="reaction-bar">
                         @for (reaction of groupedReactions.get(message.messageId); track $index) {
@@ -228,10 +238,10 @@
             }
 
             @if (fileUploadError) {
-                <div class="file-upload-error-div">
-                    <p>{{ fileUploadError }}</p>
-                </div>
-            
+            <div class="file-upload-error-div">
+                <p>{{ fileUploadError }}</p>
+            </div>
+
             }@else {
 
             @if(userId == sendingUser.userId){
@@ -247,7 +257,12 @@
 
             @if (fileUpload.downloadURL) {
             <button class="upload-preview-BTN" (click)="fileUpload.deletePreview()">delete</button>
+
+            @if (fileUpload.isImage(fileUpload.downloadURL)) {
             <img class="upload-preview" src="{{fileUpload.downloadURL}}" alt="">
+            } @else {
+            <img class="upload-preview" src="../../assets/img/PDF_icon.svg.png" alt="">
+            }
             }
 
 
