@@ -44,10 +44,15 @@
     }
 
     ::ng-deep .customDialog {
+        width: 100vw;
         .mdc-dialog {
             position: absolute;
             left: 0;
             top: 0;
+        }
+
+        .mdc-dialog__container {
+            height: auto;
         }
 
     } 

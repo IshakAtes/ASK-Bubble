@@ -21,7 +21,7 @@
         .inputWrapper {
             .selectedList {
                 position: relative;
-                top: -8px;   
+                top: -12px;   
                 .selectedUser{
                     top: -8px;
                     >img{
@@ -42,6 +42,7 @@
                    >span {
                        position: relative;
                        right: 28px;
+                       top: -6px;
                        z-index: 99;
                        height: 25px;
                        gap: 0px;

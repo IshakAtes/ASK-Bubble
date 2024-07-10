@@ -30,14 +30,15 @@
 @media (max-width: 500px) {
     section {
         width: 100vw;
-        height: calc(100vh - 112px);
+        height: calc(100vh - 90px);
         padding: 32px 0px 0px 0px;
         border-radius: 0px;
+        
     }
 
     .bgContainer{
         display: flex;
-        position: absolute;
+        position: fixed;
         bottom: 60px;
         right: 30px;
         
@@ -171,4 +172,13 @@
 
 
 
+}
+
+@media (max-width: 390px) {
+    section {
+
+        height: 100vh;
+
+        
+    }
 }
