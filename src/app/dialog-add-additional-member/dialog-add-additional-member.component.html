@@ -139,7 +139,7 @@
         <div class="userInput">
             <div class="inputWrapper"> <!-- this should look like an input-->
                 
-               @if(selectedListWidthMobile > 30){ 
+               @if(selectedUserList.length > 1){ 
                     <div  #selectedList class="selectedList"> <!--this should be the list of selected users-->
                         <div *ngFor="let item of [].constructor(1); let i = index" class="selectedUser">
                             <img  src="{{selectedUserList[i].avatarUrl}}">
@@ -159,7 +159,7 @@
                             </div>
                         </div>
                         <div class="selectedListLength" (click)="openSelectedUserList()">
-                            @if(selectedUserList.length > 1){
+                            @if(selectedUserList.length >= 1){
                                 <span>+{{selectedUserList.length - 1}}</span>
                             }
                         </div>
@@ -189,8 +189,8 @@
                 }
              
                 <!--This is the real input field-->
-                @if(selectedListWidthMobile > 0){
-                    <input (focus)="detectInputFocus(); changeUserContainerVisibility()" (input)="showFilteredUser()" placeholder="|" [(ngModel)]="searchUser" >
+                @if(selectedListWidthMobile >= 1){
+                    <input (focus)="detectInputFocus(); changeUserContainerVisibility()" (input)="showFilteredUser()" placeholder="+" [(ngModel)]="searchUser" >
 
                 }
                 @else {

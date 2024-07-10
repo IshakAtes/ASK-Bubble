@@ -68,8 +68,6 @@ export class DialogCreateChannelComponent {
           this.channelCache = this.database.createChannel(this.activeUser, this.description, [], this.channelName)
           const channelInfo = this.dialog.open(DialogAddChannelMembersComponent, {
             panelClass: 'customDialog',
-       
-            
           })
           channelInfo.componentInstance.channelCache = this.database.createChannel(this.activeUser, this.description, [], this.channelName);
           this.dialogRef.close();

@@ -10,6 +10,7 @@ import { DialogAddAdditionalMemberComponent } from '../dialog-add-additional-mem
 import { DialogShowMemberListComponent } from '../dialog-show-member-list/dialog-show-member-list.component';
 import { DialogShowChannelSettingsComponent } from '../dialog-show-channel-settings/dialog-show-channel-settings.component';
 import { UserService } from '../user.service';
+import { TimeFormatingService } from '../shared-services/chat-functionality/time-formating.service';
 
 
 
@@ -41,7 +42,11 @@ export class ChannelComponent implements OnInit {
  
   @ViewChild('main') main: ElementRef 
 
-  constructor(public dialog: MatDialog, private database: DatabaseService, public us: UserService){
+  constructor(public dialog: MatDialog, private database: DatabaseService, 
+    public time: TimeFormatingService,
+    public us: UserService)
+  
+    {
 
   }
 

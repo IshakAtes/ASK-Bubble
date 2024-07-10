@@ -6,15 +6,15 @@ import { DatabaseService } from '../database.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../user.service';
-import { DialogShowMemberListComponent } from '../dialog-show-member-list/dialog-show-member-list.component';
 import { DialogAddAdditionalMemberComponent } from '../dialog-add-additional-member/dialog-add-additional-member.component';
 import { DialogUserProfileComponent } from '../dialog-user-profile/dialog-user-profile.component';
+import { DialogAddMembersFromSettingsComponent } from '../dialog-add-members-from-settings/dialog-add-members-from-settings.component';
 
 
 @Component({
   selector: 'app-dialog-show-channel-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule, DialogShowMemberListComponent],
+  imports: [CommonModule, FormsModule, DialogAddMembersFromSettingsComponent],
   templateUrl: './dialog-show-channel-settings.component.html',
   styleUrls: ['./dialog-show-channel-settings.component.scss', './dialog-show-channel-settingsResp.component.scss']
 })
@@ -141,7 +141,8 @@ export class DialogShowChannelSettingsComponent {
   }
 
   showAddMember(){
-    const channelInfo = this.dialog.open(DialogAddAdditionalMemberComponent);
+    //create new component
+    const channelInfo = this.dialog.open(DialogAddMembersFromSettingsComponent);
     channelInfo.componentInstance.currentChannel = this.currentChannel;
     this.dialogRef.close();
   }
