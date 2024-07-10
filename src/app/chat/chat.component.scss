@@ -202,6 +202,13 @@
     line-height: 24.55px;
 }
 
+.own-file-div{
+    img{
+        width: 150px;
+        height: 150px;
+    }
+}
+
 .answer-bar {
     display: flex;
     align-items: center;
@@ -430,6 +437,15 @@
 
 .dropdown-item:hover {
     background: #f0f0f0;
+}
+
+.file-upload-error-div{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
 }
 
 .reaction-bar {

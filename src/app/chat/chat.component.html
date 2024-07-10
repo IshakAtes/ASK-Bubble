@@ -82,6 +82,12 @@
                         <span class="massage-content">{{message.content}}</span>
                     </div>
 
+                    @if (message.fileUrl) {
+                    <div class="own-file-div">
+                        <a href="{{message.fileUrl}}"><img src="{{message.fileUrl}}" alt=""></a>
+                    </div>
+                    }
+
                     <div class="reaction-bar">
                         @for (reaction of groupedReactions.get(message.messageId); track $index) {
                         <div class="emoji-div" (mouseenter)="showTooltip(reaction)" (mouseleave)="hideTooltip()">
@@ -200,7 +206,7 @@
             <!-- Erwähnungen -->
             @if (showMention) {
             <div class="mention-div">
-                @for (users of allUsers; track $index) {
+                @for (users of mAndC.allUsers; track $index) {
                 <div class="mention-list-element" (click)="addMention(users.name)">{{users.name}}</div>
                 }
             </div>
@@ -221,26 +227,28 @@
             </div>
             }
 
+            @if (fileUploadError) {
+                <div class="file-upload-error-div">
+                    <p>{{ fileUploadError }}</p>
+                </div>
+            
+            }@else {
+
             @if(userId == sendingUser.userId){
             <textarea (input)="mAndC.onInput($event)" #myTextarea [(ngModel)]="content" class="message-input"
                 placeholder="Nachricht an {{passiveUser.name}}">
-        </textarea>
+            </textarea>
             }
             @else {
             <textarea (input)="mAndC.onInput($event)" #myTextarea [(ngModel)]="content" class="message-input"
                 placeholder="Nachricht an {{sendingUser.name}}">
-        </textarea>
+            </textarea>
             }
 
             @if (fileUpload.downloadURL) {
-                <button class="upload-preview-BTN" (click)="fileUpload.deletePreview()" >delete</button>
-                <img class="upload-preview" src="{{fileUpload.downloadURL}}" alt="">
+            <button class="upload-preview-BTN" (click)="fileUpload.deletePreview()">delete</button>
+            <img class="upload-preview" src="{{fileUpload.downloadURL}}" alt="">
             }
-
-
-
-
-
 
 
 
@@ -250,7 +258,6 @@
                     <button class="action-button" (click)="triggerFileInput()"> <img src="../../assets/img/add_icon.png"
                             alt=""></button>
                     <input #fileInput type="file" style="display: none;" (change)="fileUpload.onFileSelected($event)">
-                    <!-- <input type="file" (change)="fileUpload.onFileSelected($event)"> -->
                     <div class="line"></div>
                     <button (click)="toggleEmoticons()" class="action-button"><img
                             src="../../assets/img/emoticon_icon.png" alt=""></button>
@@ -263,6 +270,10 @@
                             alt=""></button>
                 </div>
             </div>
+
+
+            }
+
         </div>
     </div>
 

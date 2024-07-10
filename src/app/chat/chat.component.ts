@@ -55,6 +55,8 @@ export class ChatComponent implements AfterViewInit, OnInit {
   isChatDataLoaded: boolean = true;
   /*Test END Simon*/
 
+  fileUploadError: string | null = null;
+
 
   constructor(public databaseService: DatabaseService,
     public userService: UserService,
@@ -66,6 +68,16 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.content = mAndC.content;
     this.allChannels = mAndC.allChannels;
     this.allUsers = mAndC.allUsers;
+
+    this.fileUpload.fileUploadError$.subscribe(error => {
+      this.fileUploadError = error;
+      console.log(this.fileUploadError);
+      
+      setTimeout(() => {
+        this.fileUploadError = null;
+        console.log(this.fileUploadError);
+      }, 2500);
+    });
   }
 
   ngOnInit(): void {
@@ -171,7 +183,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
 
   saveNewMessage() {
     this.list = [];
-    let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specific, this.content, this.userId)
+    let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specific, this.content, this.userId, this.fileUpload.downloadURL)
 
     this.databaseService.addConversationMessage(this.specific, newMessage)
 
@@ -185,6 +197,8 @@ export class ChatComponent implements AfterViewInit, OnInit {
     setTimeout(() => {
       this.scrollToBottom();
     }, 10);
+
+    this.fileUpload.downloadURL = '';
   }
 
   // group together all reaction based on their messageId and count them to display the right count in html
