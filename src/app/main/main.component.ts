@@ -11,11 +11,12 @@ import { MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { Conversation } from '../../models/conversation.class';
 import { User } from '../../models/user.class';
 import { CreateConversationComponent } from '../create-conversation/create-conversation.component';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [WorkspaceComponent, ChannelComponent, ChatComponent, ThreadComponent, CommonModule, CreateConversationComponent],
+  imports: [WorkspaceComponent, HeaderComponent , ChannelComponent, ChatComponent, ThreadComponent, CommonModule, CreateConversationComponent],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss'
 })
