@@ -20,7 +20,17 @@ export class UserService {
   userCache: User;
   wrongLogin: boolean = false;
   resetUserPw: any;
-  // mailUser: any;
+  guest: boolean = false;
+  guestLog: User = new User({
+    email: 'guest@mail.com',
+    name: 'John Doe',
+    password: 'guest123',
+    status: 'offline',
+    avatarUrl: '/assets/img/unUsedDefault.png',
+    userId: '',
+    logIn: 'https://bubble.ishakates.com/',
+    usedLastTwoEmojis: ''
+  });
   private baseUrl = 'http://localhost:4200';
 
   activeUserChannels: Array<Channel> = [];
@@ -106,13 +116,13 @@ export class UserService {
     addDoc(collection(this.firestore, 'users'), user.toJSON());
   }
 
-  
+
   getUser(email: string, password: string): Promise<User> {
     return new Promise<User>((resolve, reject) => {
       const activeUser = {} as User;
       const usersCollection = collection(this.firestore, 'users');
       this.wrongLogin = false;
-      
+
       onSnapshot(usersCollection, (users) => {
         users.forEach(user => {
           const userData = user.data();
@@ -127,8 +137,15 @@ export class UserService {
             activeUser.usedLastTwoEmojis = userData['usedLastTwoEmojis'];
             resolve(activeUser);
           }
-          else if(userData['email'] !== email || userData['password'] !== password) {
-            this.wrongLogin = true;
+          else if (!this.wrongLogin) {
+            if (this.guest) {
+              this.addUser(this.guestLog);
+              console.log('hallo');
+              resolve(this.guestLog);
+            } else {
+              this.wrongLogin = true;
+              reject('User not found or wrong credentials');
+            }
           }
         });
       }, (error) => {

@@ -17,7 +17,6 @@ export class LoginComponent {
   firestore: Firestore = inject(Firestore)
   isPressed = false;
   myForm: FormGroup;
-  guest: boolean = false;
   guestLog: User = new User({
     email: 'guest@mail.com',
     name: 'John Doe',
@@ -40,12 +39,12 @@ export class LoginComponent {
 
   
   async onSubmit() {
-    if (this.guest) {
+    if (this.us.guest) {
       this.myForm.setValue({
         pw: this.guestLog.password,
         mail: this.guestLog.email
       });
-      await this.normalSignIn();
+      this.normalSignIn();
     } else {
       await this.normalSignIn(); 
     }
@@ -58,33 +57,35 @@ export class LoginComponent {
 
 
   guestLogin() {
-    this.guest = true;
+    this.us.guest = true;
     this.onSubmit()
   }
 
 
   async normalSignIn () {
-    if (this.guest) {
+    if (this.us.guest) {
       try {
-        const guestUser = await this.us.getUser(this.guestLog.email, this.guestLog.password); 
-      } catch (error) {
-        console.log('Kein Gastbenutzer gefunden, erstelle neuen Gastbenutzer');
-        await this.us.addUser(this.guestLog);
-        // acceptedUser = await this.us.getUser(this.guestLog.email, this.guestLog.password);
-      }
-    }
-    const acceptedUser = await this.us.getUser(this.myForm.value.mail, this.myForm.value.pw);
-    if (this.myForm.valid && acceptedUser) {
-      try {
-        this.us.loggedUser = acceptedUser;
+        const guestUser = await this.us.getUser(this.guestLog.email, this.guestLog.password);
+        this.us.guest = false;
+        this.us.loggedUser = guestUser;
         this.us.userOnline(this.us.loggedUser.userId);
         this.router.navigate(['/main']);
-        console.log(this.us.loggedUser);
       } catch (error) {
-        console.error('Fehler beim Abrufen des Benutzers:', error);
+        console.log('Kein Gastbenutzer gefunden, erstelle neuen Gastbenutzer');
+        // acceptedUser = await this.us.getUser(this.guestLog.email, this.guestLog.password);
       }
-    } else {
-      this.us.addUser(this.guestLog);
+    } else if (!this.us.guest) {
+      const acceptedUser = await this.us.getUser(this.myForm.value.mail, this.myForm.value.pw);
+      if (this.myForm.valid && acceptedUser) {
+        try {
+          this.us.loggedUser = acceptedUser;
+          this.us.userOnline(this.us.loggedUser.userId);
+          this.router.navigate(['/main']);
+          console.log(this.us.loggedUser);
+        } catch (error) {
+          console.error('Fehler beim Abrufen des Benutzers:', error);
+        }
+      } 
     }
   }
 
