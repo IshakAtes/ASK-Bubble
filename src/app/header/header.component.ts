@@ -1,10 +1,7 @@
 import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { ChatComponent } from '../chat/chat.component';
 import { UserService } from '../user.service';
-<<<<<<< HEAD
 import { User } from '../../models/user.class';
-=======
->>>>>>> 8e54c9cb24e247765bef121199d1650f1ac487f7
 
 @Component({
   selector: 'app-header',
