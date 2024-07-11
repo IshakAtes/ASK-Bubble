@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { ChatComponent } from '../chat/chat.component';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-header',
@@ -13,6 +14,10 @@ export class HeaderComponent  {
 
   onSearch(event: any): void {
     this.search.emit(event.target.value);
+  }
+
+  constructor(public us: UserService){
+
   }
 
 }

@@ -9,6 +9,7 @@ import { DialogCreateChannelComponent } from '../dialog-create-channel/dialog-cr
 import { UserService } from '../user.service';
 import { ChannelComponent } from '../channel/channel.component';
 import { FormsModule } from '@angular/forms';
+import { ConversationMessage } from '../../models/conversationMessage.class';
 
 
 
@@ -34,6 +35,7 @@ export class WorkspaceComponent {
  channelList: Array<Channel> = [];
  foundUserList: Array<User> = [];
  foundChannelList: Array<Channel> = [];
+ filteredList: Array<ConversationMessage> = [];
 
 
 
@@ -110,8 +112,6 @@ export class WorkspaceComponent {
       panelClass: 'customDialog',
     })
   }
-
-
 
 
   detectInputFocus(){

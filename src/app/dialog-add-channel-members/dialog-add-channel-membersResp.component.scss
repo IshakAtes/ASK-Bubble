@@ -3,6 +3,7 @@
     ::ng-deep .cdk-overlay-container{
         
         .cdk-global-overlay-wrapper {
+            justify-content: flex-start !important;
             align-items: flex-end !important;
         }
     }
@@ -14,7 +15,7 @@
         opacity: 0px;
         gap: 25px;
         position: relative;
-        right: 40px;
+
 
         >svg {
             width: 100%;
@@ -85,8 +86,3 @@
 }
 
 
-@media (max-width: 380px) {
-    section {
-        right: 37px;
-    }
-}

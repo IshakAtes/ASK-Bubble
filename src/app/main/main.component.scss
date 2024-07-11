@@ -81,10 +81,10 @@ app-chat {
         flex-direction: column;
     }
 
-    .header {
+    app-header {
         height: 80px;
         width: 100vw;
-        background-color: black;
+        background-color: #ECEEFE;
         position: fixed;
         z-index: 99;
     }

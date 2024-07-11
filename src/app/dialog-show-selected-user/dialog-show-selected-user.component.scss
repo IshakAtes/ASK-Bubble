@@ -47,7 +47,6 @@ section {
   }
   
   .userlistContainer{
-      width: 215px;
       height: 211px;
       display: flex;
       flex-direction: column;
@@ -62,41 +61,52 @@ section {
               display: flex;
               align-items: center;
               cursor: pointer;
-              width: fit-content;
+              width: 100%;
               padding: 0px 15px 0px 15px;
-              >div {
-                  display: flex;
-                  align-items: center;
-     
-                  >img{
-                      width: 50px;
-                      height: 50px;
-                      gap: 0px;
-                      border-radius: 30px;
-                      opacity: 0px;
-                  }
-                 
-                  >svg{
-                      display: flex;
-                      position: relative;
-                      right: 15px;
-                      top: 18px;
-                  }
-          
-                  span {
-                      display: flex;
-                      position: relative;
-                      width: fit-content;
-                      height: 25px;
-                      gap: 0px;
-                      opacity: 0px;
-                      font-family: Nunito;
-                      font-size: 18px;
-                      font-weight: 400;
-                      line-height: 24.55px;
-                      text-align: left;
-                  }
-              }
+
+                    >div {
+                        display: flex;
+                        align-items: center;
+
+                        width: 100%;
+                        >img{
+                            width: 50px;
+                            height: 50px;
+                            gap: 0px;
+                            border-radius: 30px;
+                            opacity: 0px;
+                        }
+                       
+                        >svg{
+                            display: flex;
+                            position: relative;
+                            right: 15px;
+                            top: 18px;
+                        }
+                
+                        span {
+                            display: flex;
+                            position: relative;
+                            width: fit-content;
+                            height: 25px;
+                            gap: 0px;
+                            opacity: 0px;
+                            font-family: Nunito;
+                            font-size: 18px;
+                            font-weight: 400;
+                            line-height: 24.55px;
+                            text-align: left;
+                        }
+
+                    }
+
+                    .close {
+                        display: flex;
+                        position: relative;
+                        top: unset !important;
+                        right: unset !important;
+                    }
+              
           }
       
           .userList:hover {
@@ -107,4 +117,119 @@ section {
 
   .userlistContainer::-webkit-scrollbar {
       display: none;
+ }
+
+
+ @media (max-width: 500px) {
+    ::ng-deep .cdk-overlay-container{
+        
+        .cdk-global-overlay-wrapper {
+            justify-content: flex-start !important;
+        }
+    }
+    
+    
+    section {
+        height: 50vh;
+        width: calc(100vw - 20px);
+        padding: 40px 10px 40px 10px;
+        border-radius: 30px;
+
+        >svg {
+            width: 100%;
+        }
+    }
+
+
+    .headline {
+        justify-content: space-around;
+        width: 100%;
+        >span{
+            width: fit-content;
+            height: 33px;
+            font-family: Nunito;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 27.28px;
+            text-align: left;  
+        }
+    }
+
+
+    .userlistContainer{
+        width: 100%;
+        height: fit-content;
+       
+        
+        display: flex;
+        flex-direction: column;
+        z-index: 99;
+        padding: 0px 0px 40px 0px;
+        gap: 20px;
+        border-radius: 0px 30px 30px 30px;
+        opacity: 0px;
+        overflow: auto;
+        background-color: #FFFFFF;
+            
+            .userList {
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                width: 90%;
+                padding: 0px 0px 0px 20px;
+              
+
+                    >div {
+                        display: flex;
+                        align-items: center;
+                        width: 100%;
+
+                        >img{
+                            width: 50px;
+                            height: 50px;
+                            gap: 0px;
+                            border-radius: 30px;
+                            opacity: 0px;
+                        }
+                       
+                        >svg{
+                            display: flex;
+                            position: relative;
+                            right: 15px;
+                            top: 18px;
+                        }
+
+                        span {
+                            display: flex;
+                            position: relative;
+                            width: fit-content;
+                            height: 25px;
+                            gap: 0px;
+                            opacity: 0px;
+                            font-family: Nunito;
+                            font-size: 18px;
+                            font-weight: 400;
+                            line-height: 24.55px;
+                            text-align: left;
+                        }
+                    }
+
+
+                    .close {
+                        display: flex;
+                        position: relative;
+                        top: unset !important;
+                        right: unset !important;
+                    }
+            
+
+                
+            }
+        
+            .userList:hover {
+                background-color: #ECEEFE;
+                border-radius: 20px;
+            }
+    }
+
  }
