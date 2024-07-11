@@ -123,6 +123,8 @@ export class UserService {
             activeUser.status = userData['status'];
             activeUser.avatarUrl = userData['avatarUrl'];
             activeUser.userId = user.id;
+            activeUser.logIn = userData['logIn'];
+            activeUser.usedLastTwoEmojis = userData['usedLastTwoEmojis'];
             resolve(activeUser);
           }
           else if(userData['email'] !== email || userData['password'] !== password) {

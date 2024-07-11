@@ -23,9 +23,9 @@ export class LoginComponent {
     name: 'John Doe',
     password: 'guest123',
     status: 'offline',
-    avatarUrl: '',
+    avatarUrl: '/assets/img/unUsedDefault.png',
     userId: '',
-    logIn: '',
+    logIn: 'https://bubble.ishakates.com/',
     usedLastTwoEmojis: ''
   });
 

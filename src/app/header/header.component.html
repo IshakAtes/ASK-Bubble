@@ -1,25 +1,17 @@
-<header>
-    <div>
-        <img src="/assets/img/Logo.png" alt="Logo">
-    </div>
-    <div class="searchBar">
-        <input type="text" (input)="onSearch($event)" placeholder="Suche...">
-    </div>
-    <div class="loggedUserBar">
-        <span>{{ activeUser.name }}</span>
-        <div class="userAvatarCT"></div>
-        <img src="/assets/img/keyboard_arrow_down.png" alt="dropdown">
-    </div>
-</header>
-
 @if(us.deviceWidth > 500){
     <!--Desktop View-->
     <header>
         <div>
             <img src="/assets/img/Logo.png" alt="Logo">
         </div>
-        <input type="text" (input)="onSearch($event)" placeholder="Suche...">
-        <div>Profile</div>
+        <div class="searchBar">
+            <input type="text" (input)="onSearch($event)" placeholder="Suche...">
+        </div>
+        <div class="loggedUserBar">
+            <span>{{ activeUser.name }}</span>
+            <div [ngStyle]="{'background-image': 'url(' + activeUser.avatarUrl + ')'}" class="userAvatarCT"></div>
+            <img src="/assets/img/keyboard_arrow_down.png" alt="dropdown">
+        </div>
     </header>
 }
 @else {

@@ -2,11 +2,12 @@ import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { ChatComponent } from '../chat/chat.component';
 import { UserService } from '../user.service';
 import { User } from '../../models/user.class';
+import { CommonModule, NgStyle } from '@angular/common';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [ChatComponent], //Ist das noch notwendig
+  imports: [ChatComponent, CommonModule, NgStyle], //Ist das noch notwendig
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })

@@ -24,6 +24,7 @@ header {
         gap: 0px;
         border-radius: 42px;
         justify-content: space-between;
+        border: unset;
     }
 }
 
@@ -33,11 +34,25 @@ header {
     justify-content: center;
     align-items: center;
 
+    >span {
+        font-family: "Nunito";
+        font-size: 32px;
+        font-weight: 700;
+        line-height: 43.65px;
+        text-align: left;
+    }
     >div {
         width: 70px;
         height: 70px;
-        background-color: greenyellow;
         border-radius: 50px;
+        background-position: center;
+        object-fit: cover;
+        background-size: cover;
+        margin-left: 20px;
+    }
+    >img {
+        margin-left: 20px;
+        margin-right: 40px;
     }
 }
 
