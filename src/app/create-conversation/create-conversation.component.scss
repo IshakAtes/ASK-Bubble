@@ -87,6 +87,7 @@
     border: none;
     resize: none;
     height: 100%;
+    background-color: white;
 }
 
 .message-actions {
@@ -272,12 +273,11 @@
                 width: 90%;
         }
 
-        .message-input {
-            background-color: white;
-        }
+
 
         .message-container {
                 height: 103px;
+            
         }
 
 

@@ -201,12 +201,17 @@ section {
 
 
     @media (max-width: 500px) {
+        ::ng-deep .cdk-overlay-container{
+            .cdk-global-overlay-wrapper {
+                justify-content: flex-start !important;
+            }
+        }
+        
         section {
-            width: calc(100vw - 18vw);
-            padding: 40px 20px 40px 20px;
+            width: calc(100vw - 40px);
+            padding: 30px 20px 30px 20px;
             position: relative;
-            top: 20px;
-            left: -10%;
+            top: 0vw;
         }
 
 

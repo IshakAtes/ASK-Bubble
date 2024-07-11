@@ -237,12 +237,33 @@
             </div>
             }
 
+            @if (fileUpload.fileUploading) {
+            <div class="file-upload-error-div">
+                <div>
+                    <div class="lds-grid">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </div>
+                <p>Uploading File</p>
+            </div>
+            }
+
             @if (fileUploadError) {
             <div class="file-upload-error-div">
                 <p>{{ fileUploadError }}</p>
             </div>
 
-            }@else {
+            }
+            
+            @if(!fileUploadError && !fileUpload.fileUploading) {
 
             @if(userId == sendingUser.userId){
             <textarea (input)="mAndC.onInput($event)" #myTextarea [(ngModel)]="content" class="message-input"
@@ -256,14 +277,17 @@
             }
 
             @if (fileUpload.downloadURL) {
-            <button class="upload-preview-BTN" (click)="fileUpload.deletePreview()">delete</button>
+            <div class="upload-preview-div">
+                @if (fileUpload.isImage(fileUpload.downloadURL)) {
+                <img class="upload-preview" src="{{fileUpload.downloadURL}}" alt="">
+                } @else {
+                <img class="upload-preview" src="../../assets/img/PDF_icon.svg.png" alt="">
+                }
 
-            @if (fileUpload.isImage(fileUpload.downloadURL)) {
-            <img class="upload-preview" src="{{fileUpload.downloadURL}}" alt="">
-            } @else {
-            <img class="upload-preview" src="../../assets/img/PDF_icon.svg.png" alt="">
+                <button class="upload-preview-BTN" (click)="fileUpload.deletePreview()">Delete</button>
+            </div>
             }
-            }
+
 
 
 

@@ -189,7 +189,7 @@
                 }
              
                 <!--This is the real input field-->
-                @if(selectedListWidthMobile >= 1){
+                @if(selectedUserList.length >= 1){
                     <input (focus)="detectInputFocus(); changeUserContainerVisibility()" (input)="showFilteredUser()" placeholder="+" [(ngModel)]="searchUser" >
 
                 }

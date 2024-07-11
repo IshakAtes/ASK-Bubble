@@ -11,7 +11,8 @@ section {
 
 
 .headline {
-    width: 830px;
+    width: 100%;
+    max-width: 830px;
     height: 40px;
     gap: 0px;
     display: flex;
@@ -36,7 +37,7 @@ section {
 
     >span{
             display: flex;
-            width: 400px;
+            width: fit-content;
             height: 33px;
             gap: 0px;
             opacity: 0px;
@@ -54,7 +55,8 @@ section {
 
 .radioButtonGroup{
     display: flex;
-    width: 630px;
+    max-width: 630px;
+    width: 100%;
     height: 70px;
     gap: 20px;
     opacity: 0px;
@@ -62,7 +64,7 @@ section {
         display: flex;
         flex-direction: column;
         width: 20px;
-        height: 65px;
+        height: fit-content;
         gap: 25px;
         opacity: 0px;
         >input {
@@ -82,13 +84,14 @@ section {
         display: flex;
         flex-direction: column;
         width: fit-content;
-        height: 70px;
+        height: fit-content;
         gap: 20px;
         opacity: 0px;
         >span {
             display: flex;
-            width: 566px;
-            height: 25px;
+            max-width: 566px;
+            width: 100%;
+            height: fit-content;
             gap: 0px;
             opacity: 0px;
             font-family: Nunito;
@@ -107,7 +110,7 @@ section {
             >span {
                 display: flex;
                 width: fit-content;
-                height: 25px;
+                height: fit-content;
                 gap: 0px;
                 opacity: 0px;
                 font-family: Nunito;
@@ -138,7 +141,7 @@ section {
     flex-direction: column;
     position: absolute;
     top: 240px;
-    left: 100px;
+    left: 60px;
     z-index: 99;
     padding: 40px;
     gap: 20px;
@@ -205,7 +208,8 @@ section {
     gap: 20px;
     opacity: 0px;
     display: flex;
-    width: 792px;
+    max-width: 792px;
+    width: calc(100% - 40px);
     height: 65px;
     padding: 0px 20px 0px 20px;
     gap: 30px;
@@ -303,7 +307,8 @@ section {
     
         >input {
             display: flex;
-            width: 792px;
+            max-width: 792px;
+            width: calc(100% - 40px);
             height: 62px;
             padding: 0px 20px 0px 20px;
             gap: 30px;
@@ -319,7 +324,8 @@ section {
             cursor: pointer;
             ::placeholder {
                 display: flex;
-                width: 752px;
+                max-width: 752px;
+                width: 100%;
                 height: 25px;
                 gap: 20px;
                 opacity: 0px;
@@ -355,7 +361,8 @@ section {
 .btnContainer{
     display: flex;
     justify-content: flex-end;
-    width: 830px;
+    max-width: 830px;
+    width: 100%;
     margin-top: 10px;
     button {
         cursor: pointer;

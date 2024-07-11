@@ -189,6 +189,12 @@ export class DialogAddAdditionalMemberComponent {
 
   openSelectedUserList(){
     const userlistInfo = this.dialog.open(DialogShowSelectedUserComponent);
+    
+    userlistInfo.afterClosed().subscribe( () => {
+      this.selectedUserList = userlistInfo.componentInstance.selectedUserList;
+    })
+    
+    
     userlistInfo.componentInstance.selectedUserList = this.selectedUserList;
   }
 

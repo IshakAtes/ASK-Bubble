@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { User } from '../../models/user.class';
 import { DialogUserProfileComponent } from '../dialog-user-profile/dialog-user-profile.component';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-dialog-show-selected-user',
@@ -16,13 +17,18 @@ export class DialogShowSelectedUserComponent {
   
   selectedUserList: Array<User> = [];
   
-  constructor(public dialogRef: MatDialogRef<DialogShowSelectedUserComponent>, public dialog: MatDialog){
+  constructor(public dialogRef: MatDialogRef<DialogShowSelectedUserComponent>, public dialog: MatDialog, public us: UserService){
 
   }
+
 
   
   openProfile(user: User){
     const profileInfo = this.dialog.open(DialogUserProfileComponent);
     profileInfo.componentInstance.shownUser = user;
+  }
+
+  removeUser(user: User){
+    this.selectedUserList.splice(this.selectedUserList.indexOf(user), 1);
   }
 }

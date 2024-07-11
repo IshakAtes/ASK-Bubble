@@ -51,9 +51,13 @@
 @else {
     <!--HTML for mobile view-->
     <section>
-       <div class="header">
-            
-       </div>
+
+       <app-header
+        (showWorkspace)="viewWorkspace()"
+        [isWSVisible]="isWSVisible"
+       >
+        
+       </app-header>
 
         @if(isWSVisible){
             <app-workspace

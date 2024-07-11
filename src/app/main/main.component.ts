@@ -133,7 +133,11 @@ export class MainComponent{
   }
 
 
-
+  viewWorkspace(){
+    this.isWSVisible = true
+    this.channel = false;
+    this.conversation = false;
+  }
 
 
   changeWSVisibility(){
