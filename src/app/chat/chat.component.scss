@@ -202,10 +202,16 @@
     line-height: 24.55px;
 }
 
-.own-file-div{
-    img{
+.own-file-div {
+    img {
         width: 150px;
         height: 150px;
+    }
+
+    a {
+        display: flex;
+        align-items: center;
+        gap: 20px;
     }
 }
 
@@ -268,7 +274,7 @@
     }
 }
 
-.reactionbar-emoji-div{
+.reactionbar-emoji-div {
     width: 47px;
     height: 46px;
     font-size: 23px;
@@ -277,7 +283,7 @@
     justify-content: center;
     border-radius: 50%;
 
-    &:hover{
+    &:hover {
         cursor: pointer;
         background-color: #ECEEFE;
     }
@@ -439,13 +445,17 @@
     background: #f0f0f0;
 }
 
-.file-upload-error-div{
+.file-upload-error-div {
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 32px;
+
+    p{
+        margin: 0;
+    }
 }
 
 .reaction-bar {
@@ -517,19 +527,104 @@
     line-height: 21.82px;
 }
 
-.upload-preview{
+.upload-preview-div {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+}
+
+.upload-preview-BTN {
+    width: 100px;
+    height: 34px;
+    border-radius: 50px;
+    background: #444DF2;
+    color: white;
+}
+
+.upload-preview {
     width: 50px;
     height: 50px;
 }
 
-.upload-preview-BTN{
-    width: 100px;
+//Loading Spinner
+
+.lds-grid,
+.lds-grid div {
+  box-sizing: border-box;
+}
+.lds-grid {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-grid div {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #444DF2;
+  animation: lds-grid 1.2s linear infinite;
+}
+.lds-grid div:nth-child(1) {
+  top: 8px;
+  left: 8px;
+  animation-delay: 0s;
+}
+.lds-grid div:nth-child(2) {
+  top: 8px;
+  left: 32px;
+  animation-delay: -0.4s;
+}
+.lds-grid div:nth-child(3) {
+  top: 8px;
+  left: 56px;
+  animation-delay: -0.8s;
+}
+.lds-grid div:nth-child(4) {
+  top: 32px;
+  left: 8px;
+  animation-delay: -0.4s;
+}
+.lds-grid div:nth-child(5) {
+  top: 32px;
+  left: 32px;
+  animation-delay: -0.8s;
+}
+.lds-grid div:nth-child(6) {
+  top: 32px;
+  left: 56px;
+  animation-delay: -1.2s;
+}
+.lds-grid div:nth-child(7) {
+  top: 56px;
+  left: 8px;
+  animation-delay: -0.8s;
+}
+.lds-grid div:nth-child(8) {
+  top: 56px;
+  left: 32px;
+  animation-delay: -1.2s;
+}
+.lds-grid div:nth-child(9) {
+  top: 56px;
+  left: 56px;
+  animation-delay: -1.6s;
+}
+@keyframes lds-grid {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 
+
+
 // Scrollbar
-
-
 ::-webkit-scrollbar {
     width: 12px;
     background-color: transparent;

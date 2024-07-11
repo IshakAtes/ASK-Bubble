@@ -78,9 +78,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
         console.log(this.fileUploadError);
       }, 2500);
     });
-
-    console.log(fileUpload.isImage("https://firebasestorage.googleapis.com/v0/b/da-bubble-74a0a.appspot.com/o/messageFiles%2Fpexels-luis-gomes-546819.jpg?alt=media&token=d17db0ae-e7ad-4777-bd4a-7cb3e2e9d422"));
-    
   }
 
   ngOnInit(): void {

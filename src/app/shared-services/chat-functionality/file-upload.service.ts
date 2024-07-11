@@ -17,6 +17,8 @@ export class FileUploadService {
 
   private storage: Storage = inject(Storage);
 
+  fileUploading : boolean = false;
+
   onFileSelected(event:any){
     const selectedFile:File = event.target.files[0];
     this.uploadFile(selectedFile);
@@ -43,6 +45,7 @@ export class FileUploadService {
 
     uploadFile.on('state_changed',
       (snapshot) => {
+        this.fileUploading = true;
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log('Loading progress:', progress);
       },
@@ -55,6 +58,7 @@ export class FileUploadService {
         const url = await getDownloadURL(fileRef);
         console.log("URL: ", url);
         this.downloadURL = url;
+        this.fileUploading = false;
       }
     );
   }
