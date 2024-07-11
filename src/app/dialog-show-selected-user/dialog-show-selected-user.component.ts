@@ -21,12 +21,14 @@ export class DialogShowSelectedUserComponent {
 
   }
 
-  test(){
-    console.log('delete User')
-  }
+
   
   openProfile(user: User){
     const profileInfo = this.dialog.open(DialogUserProfileComponent);
     profileInfo.componentInstance.shownUser = user;
+  }
+
+  removeUser(user: User){
+    this.selectedUserList.splice(this.selectedUserList.indexOf(user), 1);
   }
 }

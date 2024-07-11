@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { ChatComponent } from '../chat/chat.component';
 import { UserService } from '../user.service';
 
@@ -12,12 +12,23 @@ import { UserService } from '../user.service';
 export class HeaderComponent  {
   @Output() search: EventEmitter<string> = new EventEmitter<string>();
 
+  @Output() showWorkspace = new EventEmitter<boolean>();
+  @Input() isWSVisible: boolean;
+
   onSearch(event: any): void {
     this.search.emit(event.target.value);
   }
 
   constructor(public us: UserService){
 
+  }
+
+  viewWorkspace(){
+    this.showWorkspace.emit(true)
+  }
+
+  openProfileDialog(){
+    console.log('open profile Dialog')
   }
 
 }

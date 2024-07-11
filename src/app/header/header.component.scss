@@ -32,6 +32,11 @@ header{
             height: 50px;
             gap: 2px;
 
+            >img {
+                height: 45px;
+                width: 161.5px;
+            }
+
             >div {
                 display: flex;
                 align-items: center;
