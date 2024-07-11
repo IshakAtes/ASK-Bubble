@@ -14,3 +14,29 @@ header{
         height: 32px;
     }
 }
+
+.searchBar {
+    input {
+        width: 989px;
+        top: 25px;
+        left: 406px;
+        padding: 17.5px 45px 17.5px 45px;
+        gap: 0px;
+        border-radius: 42px;
+        justify-content: space-between;
+    }
+}
+
+
+.loggedUserBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    >div {
+        width: 70px;
+        height: 70px;
+        background-color: greenyellow;
+        border-radius: 50px;
+    }
+}

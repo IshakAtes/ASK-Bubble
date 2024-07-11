@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './dialog-user-profile.component.scss'
 })
 export class DialogUserProfileComponent {
-  shownUser: User
+  shownUser: User;
 
   constructor(public dialogRef: MatDialogRef<DialogUserProfileComponent>, public dialog: MatDialog){
     
