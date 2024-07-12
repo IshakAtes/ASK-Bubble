@@ -15,6 +15,7 @@ import { User } from '../../models/user.class';
 })
 export class LoginComponent {
   firestore: Firestore = inject(Firestore)
+  hub = inject(UserService)
   isPressed = false;
   myForm: FormGroup;
   guestLog: User = new User({
@@ -30,6 +31,8 @@ export class LoginComponent {
 
   constructor(private fb: FormBuilder, private router: Router, public us: UserService) {
     console.log(this.us.loadAllUsers());
+    console.log('hub', this.hub.guestData);
+    this.hub.guestData = this.guestLog;
     this.us.wrongLogin = false;
     this.myForm = this.fb.group({
       pw: ['', [Validators.required, Validators.minLength(5)]],
@@ -44,7 +47,7 @@ export class LoginComponent {
         pw: this.guestLog.password,
         mail: this.guestLog.email
       });
-      this.normalSignIn();
+      await this.normalSignIn();
     } else {
       await this.normalSignIn(); 
     }
