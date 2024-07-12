@@ -21,16 +21,7 @@ export class UserService {
   wrongLogin: boolean = false;
   resetUserPw: any;
   guest: boolean = false;
-  guestLog: User = new User({
-    email: 'guest@mail.com',
-    name: 'John Doe',
-    password: 'guest123',
-    status: 'offline',
-    avatarUrl: '/assets/img/unUsedDefault.png',
-    userId: '',
-    logIn: 'https://bubble.ishakates.com/',
-    usedLastTwoEmojis: ''
-  });
+  guestData: User;
   private baseUrl = 'http://localhost:4200';
 
   activeUserChannels: Array<Channel> = [];
@@ -141,9 +132,8 @@ export class UserService {
           }
           else if (!this.wrongLogin) {
             if (this.guest) {
-              this.addUser(this.guestLog);
-              console.log('hallo');
-              resolve(this.guestLog);
+              this.addUser(this.guestData);
+              resolve(this.guestData); // leider wird noch der gast 4 mal generiert und nicht einmal
             } else {
               this.wrongLogin = true;
               reject('User not found or wrong credentials');
