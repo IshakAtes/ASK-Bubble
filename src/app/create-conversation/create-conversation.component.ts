@@ -34,7 +34,7 @@ export class CreateConversationComponent {
   isdataLoaded: boolean = true;
 
 
-  userId = 'p1oEblSsradmfVeyvTu3';
+  userId = 'Adxrm7CExizb76lVrknu';
 
 
   inputUser: string = '';
@@ -107,29 +107,82 @@ export class CreateConversationComponent {
     }
   }
 
+
+
   selectUser(user: User){
+
     for(let conversation of this.conversationList){
       if(conversation.createdBy == this.userId){
         if(conversation.recipientId == user.userId){
-          console.log('A Conversation was Found --> open Conversation via emit')
 
+          console.log('A Conversation was Found --> open Conversation via emit')
           this.changeToConversation.emit(conversation);
           break;
         }
+        else if(conversation.createdBy == user.userId){
+          if(conversation.recipientId == this.userId){
+
+            console.log('A Conversation was Found --> open Conversation via emit')
+            this.changeToConversation.emit(conversation);
+            break;
+          }
+        }
+        //else kann ggf weg nach genügend testen
+        else{
+          /*
+          console.log('Durchgang ' + (this.conversationList.indexOf(conversation) + 1) + ' von ' + this.conversationList.length)
+          if((this.conversationList.indexOf(conversation) +1) ==  this.conversationList.length){
+            console.log('nothing found in last iteration')
+            console.log('No Conversation was found --> create new Conversation')
+            //this.openNewConversation(user);
+          }
+          */
+
+        }
+
       }
+
+
       else if(conversation.createdBy == user.userId){
         if(conversation.recipientId == this.userId){
           console.log('A Conversation was Found --> open Conversation via emit')
           this.changeToConversation.emit(conversation);
           break;
         }
+        else if(conversation.createdBy == this.userId){
+
+          if(conversation.recipientId == user.userId){
+            console.log('A Conversation was Found --> open Conversation via emit')
+            this.changeToConversation.emit(conversation);
+            break;
+          }
+        }
+        //else kann ggf weg, wenn genug getestet wurde!!
+        else{
+          /*
+          console.log('Durchgang ' + (this.conversationList.indexOf(conversation) + 1) + ' von ' + this.conversationList.length)
+          console.log('react from first')
+          if((this.conversationList.indexOf(conversation) +1) == this.conversationList.length) {
+            console.log('nothing found in last iteration')
+            console.log('No Conversation was found --> create new Conversation')
+            //this.openNewConversation(user);
+          }
+          */
+        }
       }
       else{
-        console.log('No Conversation was found --> create new Conversation')
-        this.openNewConversation(user);
+        if((this.conversationList.indexOf(conversation) +1) == this.conversationList.length) {
+          console.log('nothing found in last iteration')
+          console.log('No Conversation was found --> create new Conversation')
+          this.openNewConversation(user);
+        }
       }
+
     }
   }
+
+
+
 
 
 

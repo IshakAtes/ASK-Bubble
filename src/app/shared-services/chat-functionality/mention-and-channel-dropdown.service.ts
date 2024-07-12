@@ -13,7 +13,7 @@ export class MentionAndChannelDropdownService {
   allChannels: Array<Channel> = [];
   allUsers = [] as Array<User>;
 
-  userId = 'p1oEblSsradmfVeyvTu3';
+  userId = 'Adxrm7CExizb76lVrknu';
 
   constructor(private data: DatabaseService) {
     this.loadUsersOfUser();

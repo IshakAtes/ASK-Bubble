@@ -118,7 +118,7 @@ export class DatabaseService {
 
   /*create database entry functions */
   addUser(user: User){
-    addDoc(collection(this.firestore, 'users'), user.toJSON());
+    addDoc(collection(this.firestore, 'users'), user);
   }
 
 
