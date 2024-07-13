@@ -39,7 +39,7 @@ export class DialogShowChannelSettingsComponent {
 
   
   constructor(public dialogRef: MatDialogRef<DialogShowChannelSettingsComponent>, public dialog: MatDialog, public us: UserService){
-    this.database.loadUser('p1oEblSsradmfVeyvTu3')
+    this.database.loadUser('Adxrm7CExizb76lVrknu')
       .then(user =>{
         this.activeUser = user;
     })

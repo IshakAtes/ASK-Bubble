@@ -20,7 +20,7 @@ export class DialogCreateChannelComponent {
   
   description: string;
   channelName: string;
-  activeUser: string = 'p1oEblSsradmfVeyvTu3';
+  activeUser: string = 'Adxrm7CExizb76lVrknu';
   channelCache: Channel;
 
   buttonDisabled: boolean = true;

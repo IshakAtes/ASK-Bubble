@@ -42,7 +42,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
   groupedReactions: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
   userEmojis$: Observable<Array<string>>;
 
-  userId = 'p1oEblSsradmfVeyvTu3';
+  userId = 'Adxrm7CExizb76lVrknu';
   userName = 'Simon'
   conversationId = 'CONV-p1oEblSsradmfVeyvTu3';
 

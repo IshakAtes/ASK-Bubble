@@ -13,9 +13,14 @@ import { CommonModule, NgStyle } from '@angular/common';
 })
 export class HeaderComponent  {
   activeUser: User = this.us.loggedUser;
+  
   @Output() search: EventEmitter<string> = new EventEmitter<string>(); //Ist das noch notwendig
+  
+  
   @Output() showWorkspace = new EventEmitter<boolean>();
   @Input() isWSVisible: boolean;
+
+
   
   constructor(public us: UserService) {
     console.log(this.us.loggedUser);

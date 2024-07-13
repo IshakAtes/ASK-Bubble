@@ -31,6 +31,8 @@ export class UserService {
   isWorkspaceDataLoaded: boolean = true;
   deviceWidth: number
 
+
+
   //TODO - hiernach suchen wenns live geht und umgestellt werden soll
   activeUserMail: string = 'simon@dummy.de' 
 
