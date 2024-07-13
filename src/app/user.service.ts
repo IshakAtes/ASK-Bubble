@@ -110,39 +110,39 @@ export class UserService {
 
   getUser(email: string, password: string): Promise<User> {
     return new Promise<User>((resolve, reject) => {
-      const activeUser = {} as User;
       const usersCollection = collection(this.firestore, 'users');
-      this.wrongLogin = false;
-
+      this.wrongLogin = true; // Setze standardmäßig auf true, bis ein gültiger Benutzer gefunden wird
+  
       onSnapshot(usersCollection, (users) => {
         users.forEach(user => {
           const userData = user.data();
+          console.log(user.data()); // Debugging-Ausgabe
+  
           if (userData['email'] === email && userData['password'] === password) {
-            activeUser.email = userData['email'];
-            activeUser.name = userData['name'];
-            activeUser.password = userData['password'];
-            activeUser.status = userData['status'];
-            activeUser.avatarUrl = userData['avatarUrl'];
-            activeUser.userId = user.id;
-            activeUser.logIn = userData['logIn'];
-            activeUser.usedLastTwoEmojis = userData['usedLastTwoEmojis'];
+            const activeUser = new User({
+              email: userData['email'],
+              name: userData['name'],
+              password: userData['password'],
+              status: userData['status'],
+              avatarUrl: userData['avatarUrl'],
+              userId: user.id,
+              logIn: userData['logIn'],
+              usedLastTwoEmojis: userData['usedLastTwoEmojis']
+            });
+            this.wrongLogin = false; // Setze auf false, da gültiger Benutzer gefunden wurde
             resolve(activeUser);
           }
-          else if (!this.wrongLogin) {
-            if (this.guest) {
-              this.addUser(this.guestData);
-              resolve(this.guestData); // leider wird noch der gast 4 mal generiert und nicht einmal
-            } else {
-              this.wrongLogin = true;
-              reject('User not found or wrong credentials');
-            }
-          }
         });
+        // Wenn nach Durchlauf der Benutzer keine Übereinstimmung gefunden wurde
+        if (this.wrongLogin) {
+          reject('User not found or wrong credentials');
+        }
       }, (error) => {
         reject(error);
       });
     });
   }
+  
 
 
   loadAllUsers(): Promise<Array<any>>{
