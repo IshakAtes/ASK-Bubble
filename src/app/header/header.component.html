@@ -10,11 +10,19 @@
             <div class="searchBar">
                 <input type="text" (input)="onSearch($event)" placeholder="Suche...">
             </div>
-            <div class="loggedUserBar">
+            <div class="loggedUserBar" (click)="toggleDropdown()">
                 <span>{{ us.activeUserObject.name }}</span>
-                <div [ngStyle]="{'background-image': 'url(' + us.activeUserObject.avatarUrl + ')'}" class="userAvatarCT"></div>
+                <div class="avatarContainer" [ngStyle]="{'background-image': 'url(' + us.activeUserObject.avatarUrl + ')'}" class="userAvatarCT"></div>
                 <img src="/assets/img/keyboard_arrow_down.png" alt="dropdown">
-            </div>
+                
+                <!-- Dropdown-Menü -->
+                <div class="dropdown" *ngIf="dropdownOpen">
+                  <ul>
+                    <li><a href="#">Profil</a></li>
+                    <li><a href="#" (click)="logout()">Logout</a></li>
+                  </ul>
+                </div>
+              </div>
         </header>
     }
     @else {

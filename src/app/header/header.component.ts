@@ -12,6 +12,7 @@ import { CommonModule, NgStyle } from '@angular/common';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent  {
+  dropdownOpen: boolean = false;
   activeUser: User = this.us.loggedUser;
   
   @Output() search: EventEmitter<string> = new EventEmitter<string>(); //Ist das noch notwendig
@@ -22,10 +23,16 @@ export class HeaderComponent  {
 
 
   
-  constructor(public us: UserService) {
-    console.log(this.us.loggedUser);
+  constructor(public us: UserService) {}
+
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
   }
 
+  logout() {
+    // Füge hier die Logout-Logik hinzu, z.B. Aufruf einer Methode in UserService
+    this.us.logout();
+  }
 
   onSearch(event: any): void {
     this.search.emit(event.target.value); //Ist das noch notwendig

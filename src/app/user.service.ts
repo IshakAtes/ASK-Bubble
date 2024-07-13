@@ -62,6 +62,11 @@ export class UserService {
     return this.http.get(`${this.baseUrl}/files`);
   }
 
+
+  logout() {
+    console.log('logout clicked');
+  }
+
   
   async checkEmail(email: string, myForm: FormGroup): Promise<void> {
     try {
@@ -118,7 +123,6 @@ export class UserService {
       onSnapshot(usersCollection, (users) => {
         users.forEach(user => {
           const userData = user.data();
-          console.log(user.data()); // Debugging-Ausgabe
   
           if (userData['email'] === email && userData['password'] === password) {
             const activeUser = new User({

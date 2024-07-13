@@ -33,6 +33,8 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative; /* Wichtig für die Positionierung des Dropdowns */
+    cursor: pointer; /* Zeiger-Cursor beim Überfahren mit der Maus */
 
     >span {
         font-family: "Nunito";
@@ -41,7 +43,7 @@ header {
         line-height: 43.65px;
         text-align: left;
     }
-    >div {
+    .userAvatarCT {
         width: 70px;
         height: 70px;
         border-radius: 50px;
@@ -56,6 +58,41 @@ header {
     }
 }
 
+
+.dropdown {
+    position: absolute;
+    top: 100%; /* Unterhalb der loggedUserBar positionieren */
+    left: 0;
+    background: #fff;
+    z-index: 1000; /* Stellen Sie sicher, dass das Dropdown über anderen Inhalten liegt */
+    width: 282px;
+    height: 181px;
+    padding: 30px;
+    gap: 15px;
+    border-radius: 30px 0px 30px 30px;
+    opacity: 0px;
+    box-shadow: 0px 6px 10px 0px #00000033;
+}
+
+.dropdown ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown ul li {
+    padding: 10px;
+}
+
+.dropdown ul li a {
+    text-decoration: none;
+    color: #333;
+}
+
+.dropdown ul li a:hover {
+    background: #f0f0f0;
+}
+  
 
 @media (max-width: 500px) {
     header{
