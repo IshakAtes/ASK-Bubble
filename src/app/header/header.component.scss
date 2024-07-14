@@ -61,10 +61,10 @@ header {
 
 .dropdown {
     position: absolute;
-    top: 100%; /* Unterhalb der loggedUserBar positionieren */
+    top: 100%;
     left: 0;
     background: #fff;
-    z-index: 1000; /* Stellen Sie sicher, dass das Dropdown über anderen Inhalten liegt */
+    z-index: 1000;
     width: 282px;
     padding: 30px;
     gap: 15px;
@@ -89,18 +89,6 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-
-    &:hover {
-        border-radius: 30px;
-        background-color: #ECEEFE;
-    }
-    &:hover a {
-        color: #444DF2; /* Ändere die Textfarbe des <a>-Elements */
-        font-weight: 700;
-    }
-}
-
-.dropdown ul li a {
     text-decoration: none;
     color: #000;
     font-family: "Nunito";
@@ -108,6 +96,13 @@ header {
     font-weight: 600;
     line-height: 32.74px;
     text-align: left;
+
+    &:hover {
+        border-radius: 30px;
+        background-color: #ECEEFE;
+        color: #444DF2;
+        font-weight: 700;
+    }
 }
 
 
@@ -118,7 +113,7 @@ header {
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.5);
-    z-index: 999; /* Ensures the overlay is above other content */
+    z-index: 999;
 }
 
   
