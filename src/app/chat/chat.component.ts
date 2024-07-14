@@ -42,10 +42,18 @@ export class ChatComponent implements AfterViewInit, OnInit {
   groupedReactions: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
   userEmojis$: Observable<Array<string>>;
 
-  userId = 'Adxrm7CExizb76lVrknu';
-  userName = 'Simon'
-  conversationId = 'CONV-p1oEblSsradmfVeyvTu3';
+  // userId = 'Adxrm7CExizb76lVrknu';
+  // userName = 'Simon'
+  // conversationId = 'CONV-p1oEblSsradmfVeyvTu3';
 
+  // userId = 'HTMknmA28FP56EIqrtZo';
+  // userName = 'Kerim Tasci';
+  // conversationId = 'CONV-HTMknmA28FP56EIqrtZo-0.4380479343879251';
+
+  userId = 'Adxrm7CExizb76lVrknu';
+  userName = 'Simon Weirauch';
+  conversationId = 'CONV-HTMknmA28FP56EIqrtZo-0.4380479343879251';
+;
 
   /*test START Simon*/
   specific: Conversation;
@@ -65,9 +73,12 @@ export class ChatComponent implements AfterViewInit, OnInit {
     public mAndC: MentionAndChannelDropdownService,
     public fileUpload: FileUploadService) {
 
-    this.content = mAndC.content;
     this.allChannels = mAndC.allChannels;
     this.allUsers = mAndC.allUsers;
+
+    this.mAndC.content.subscribe(newContent => {
+      this.content = newContent;
+    });
 
     this.fileUpload.fileUploadError$.subscribe(error => {
       this.fileUploadError = error;
@@ -241,7 +252,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
   }
 
   getReactionUser(users: string[]): string {
-    const userName = 'Simon';
+    const userName = this.userName;
     const userText = users.map(user => user === userName ? 'du' : user);
     const formattedUserText = userText.map(user => `${user}`);
 
@@ -255,7 +266,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
   }
 
   getReactionText(users: string[]): string {
-    const userName = 'Simon';
+    const userName = this.userName;
     const userText = users.map(user => user === userName ? 'du' : user);
 
     if (userText.length === 1) {
