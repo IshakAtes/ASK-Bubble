@@ -10,11 +10,14 @@ import { User } from '../../models/user.class';
   styleUrl: './dialog-show-user-profil.component.scss'
 })
 export class DialogShowUserProfilComponent {
+  userData: User;
 
   constructor(
     public dialogRef: MatDialogRef<DialogShowUserProfilComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { user: User }
-  ) {}
+  ) {
+    this.userData = data.user;
+  }
 
   onClose(): void {
     this.dialogRef.close();

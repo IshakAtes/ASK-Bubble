@@ -16,18 +16,17 @@
     </div>
 
     <div class="image">
-        img
-        <!-- <img src="{{shownUser.avatarUrl}}"> -->
+        <img src="{{ userData.avatarUrl }}">
     </div>
 
     <div class="userNameContainer"> 
-        <span>username</span>
+        <span>{{ userData.name }}</span>
         <div>
             <!--Status Symbol-->
             <svg width="16" height="16" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
             </svg>
-            <span>userstatus</span>
+            <span>{{ userData.status }}</span>
         </div>
     </div>
 
@@ -44,7 +43,7 @@
             </svg>
             <span>E-Mail-Adresse</span>
         </div>
-        <span>usermail</span>
+        <span>{{ userData.email }}</span>
     </div>
 
     <div class="sendMessage">
