@@ -19,7 +19,7 @@
                 <!-- Dropdown-Menü -->
                 <div class="dropdown" *ngIf="dropdownOpen">
                   <ul>
-                    <li (click)="openProfileDialog()">Profil</li>
+                    <li (click)="openProfileDialog($event)">Profil</li>
                     <li (click)="logout()">Logout</li>
                   </ul>
                 </div>
@@ -33,7 +33,7 @@
                 <div>
                     <img src="/assets/img/Logo.png" alt="Logo">
                 </div>
-                <img (click)="openProfileDialog()" src="../../assets/img/defaultAvatars/defaultFemale1.png" alt="Logo">
+                <img (click)="openProfileDialog($event)" src="../../assets/img/defaultAvatars/defaultFemale1.png" alt="Logo">
             </header>
         }
         @else{
@@ -53,7 +53,7 @@
                     </div>
                 </div>
         
-                <img (click)="openProfileDialog()" src="../../assets/img/defaultAvatars/defaultFemale1.png" alt="Logo">
+                <img (click)="openProfileDialog($event)" src="../../assets/img/defaultAvatars/defaultFemale1.png" alt="Logo">
             </header>
         }
 

@@ -3,6 +3,8 @@ import { ChatComponent } from '../chat/chat.component';
 import { UserService } from '../user.service';
 import { User } from '../../models/user.class';
 import { CommonModule, NgStyle } from '@angular/common';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { DialogShowUserProfilComponent } from '../dialog-show-user-profil/dialog-show-user-profil.component';
 
 @Component({
   selector: 'app-header',
@@ -24,7 +26,7 @@ export class HeaderComponent  {
 
 
   
-  constructor(public us: UserService) {}
+  constructor(public us: UserService, public dialog: MatDialog) {}
 
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;
@@ -42,8 +44,20 @@ export class HeaderComponent  {
     this.showWorkspace.emit(true)
   }
 
-  openProfileDialog(){
-    console.log('open profile Dialog')
+  openProfileDialog(event: Event) {
+    this.hovered = false;
+    event.stopPropagation();
+    console.log('Öffne Profil-Dialog');
+    
+    // Öffne den Dialog mit den Benutzerdaten
+    const dialogRef = this.dialog.open(DialogShowUserProfilComponent, {
+      data: { user: this.activeUser } // Daten, die an den Dialog übergeben werden
+    });
+
+    // Beispiel für das Reagieren auf das Schließen des Dialogs
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Dialog geschlossen', result);
+    });
   }
 
 }
