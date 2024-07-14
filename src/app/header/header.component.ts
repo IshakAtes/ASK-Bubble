@@ -47,6 +47,7 @@ export class HeaderComponent  {
   openProfileDialog(event: Event) {
     this.hovered = false;
     event.stopPropagation();
+    this.toggleDropdown();
     console.log('Öffne Profil-Dialog');
     
     // Öffne den Dialog mit den Benutzerdaten
@@ -54,10 +55,6 @@ export class HeaderComponent  {
       data: { user: this.activeUser } // Daten, die an den Dialog übergeben werden
     });
 
-    // Beispiel für das Reagieren auf das Schließen des Dialogs
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('Dialog geschlossen', result);
-    });
   }
 
 }
