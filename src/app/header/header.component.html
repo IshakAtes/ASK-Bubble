@@ -4,6 +4,7 @@
     @if(us.deviceWidth > 500){
         <!--Desktop View-->
         <header>
+            <div class="overlay" *ngIf="dropdownOpen" (click)="toggleDropdown()"></div>
             <div>
                 <img src="/assets/img/Logo.png" alt="Logo">
             </div>
@@ -12,7 +13,7 @@
             </div>
             <div class="loggedUserBar" (click)="toggleDropdown()">
                 <span>{{ us.activeUserObject.name }}</span>
-                <div class="avatarContainer" [ngStyle]="{'background-image': 'url(' + us.activeUserObject.avatarUrl + ')'}" class="userAvatarCT"></div>
+                <div [ngStyle]="{'background-image': 'url(' + us.activeUserObject.avatarUrl + ')'}" class="userAvatarCT"></div>
                 <img src="/assets/img/keyboard_arrow_down.png" alt="dropdown">
                 
                 <!-- Dropdown-Menü -->
