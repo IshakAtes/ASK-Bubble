@@ -73,10 +73,8 @@ export class LoginComponent {
         this.us.loggedUser = guestUser;
         this.us.userOnline(this.us.loggedUser.userId);
         this.router.navigate(['/main']);
-        console.log('guestUser', guestUser);
       } catch (error) {
         console.log('Kein Gastbenutzer gefunden, erstelle neuen Gastbenutzer');
-        // acceptedUser = await this.us.getUser(this.guestLog.email, this.guestLog.password);
       }
     } else {
       console.log('1form', this.myForm.value);

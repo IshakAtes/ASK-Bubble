@@ -64,7 +64,8 @@ export class UserService {
 
 
   logout() {
-    console.log('logout clicked');
+    this.loggedUser = new User();
+    this.router.navigate(['']);
   }
 
   
