@@ -77,7 +77,6 @@ export class LoginComponent {
         console.log('Kein Gastbenutzer gefunden, erstelle neuen Gastbenutzer');
       }
     } else {
-      console.log('1form', this.myForm.value);
       const acceptedUser = await this.us.getUser(this.myForm.value.mail, this.myForm.value.pw);
       if (this.myForm.valid && acceptedUser) {
         try {

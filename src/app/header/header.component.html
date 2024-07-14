@@ -11,19 +11,19 @@
             <div class="searchBar">
                 <input type="text" (input)="onSearch($event)" placeholder="Suche...">
             </div>
-            <div class="loggedUserBar" (click)="toggleDropdown()">
+            <div class="loggedUserBar" (click)="toggleDropdown()" (mouseenter)="hovered = true" (mouseleave)="hovered = false">
                 <span>{{ us.activeUserObject.name }}</span>
                 <div [ngStyle]="{'background-image': 'url(' + us.activeUserObject.avatarUrl + ')'}" class="userAvatarCT"></div>
-                <img src="/assets/img/keyboard_arrow_down.png" alt="dropdown">
+                <img  [src]="hovered ? '/assets/img/expand_more.png' : '/assets/img/keyboard_arrow_down.png'" alt="dropdown">
                 
                 <!-- Dropdown-Menü -->
                 <div class="dropdown" *ngIf="dropdownOpen">
                   <ul>
-                    <li>Profil</li>
+                    <li (click)="openProfileDialog()">Profil</li>
                     <li (click)="logout()">Logout</li>
                   </ul>
                 </div>
-              </div>
+            </div>
         </header>
     }
     @else {

@@ -12,6 +12,7 @@ import { CommonModule, NgStyle } from '@angular/common';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent  {
+  hovered: boolean = false;
   dropdownOpen: boolean = false;
   activeUser: User = this.us.loggedUser;
   
@@ -30,7 +31,6 @@ export class HeaderComponent  {
   }
 
   logout() {
-    // Füge hier die Logout-Logik hinzu, z.B. Aufruf einer Methode in UserService
     this.us.logout();
   }
 
