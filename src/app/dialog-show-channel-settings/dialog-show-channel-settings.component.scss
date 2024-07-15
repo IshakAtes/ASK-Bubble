@@ -1,19 +1,22 @@
 section {
-      width: 872px;
       padding: 40px;
       border-radius: 0px 30px 30px 30px;
       opacity: 0px;
       background: #FFFFFF;
       display: flex;
       flex-direction: column;
-      position: relative;
-      top: 25px;
-      left: 120px;
+
+      position: fixed;
+      top: 200px;
+      left: 440px;
+      width: clamp(350px, 37vw, 872px);
       gap: 20px;  
     }
 
 
     .headline {
+     max-width: 792px;
+     width: 100%;
      height: 40px;
      gap: 0px;
      display: flex;
@@ -213,7 +216,7 @@ section {
         }
 
         >svg {
-            width: 752px;
+            width: 100%;
         }
 
         .createdByWrapper{
@@ -308,9 +311,7 @@ section {
 
         >svg {
             display: flex;
-            position: relative;
-            left: -20px;
-            width: 900px;
+            width: 100%;
         }
 
         .createdByWrapper{

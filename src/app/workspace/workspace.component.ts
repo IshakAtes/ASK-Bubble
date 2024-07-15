@@ -59,7 +59,6 @@ export class WorkspaceComponent {
 
   constructor(public dialog: MatDialog, public us: UserService){  
     console.log('constructor of workspace triggered')
-    //this.database.addConversation(this.database.createConversation('HTMknmA28FP56EIqrtZo', 'Adxrm7CExizb76lVrknu'));
   }
 
 

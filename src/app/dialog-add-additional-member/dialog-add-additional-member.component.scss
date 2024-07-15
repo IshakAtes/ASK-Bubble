@@ -5,15 +5,27 @@ section {
   background: #FFFFFF;
   display: flex;
   flex-direction: column;
+  /*
   position: relative;
   top: -105px;
   left: 270px;
-  gap: 20px;
+  */
+  gap: 11.5px;
+
+  height: 214px;
+  width: 434px;
+
+
+  position: fixed;
+  top: 200px;
+  right: 28.5vw;
+  width: clamp(200px, 40vw, 434px);
   
 }
 
 .channelName {
     display: flex;
+    height: 25px;
     >p {
         font-family: Nunito;
         font-size: 18px;
@@ -147,8 +159,8 @@ section {
  display: flex;
  flex-direction: column;
  overflow: hidden;
- width: 514px;
- height: 65px;
+ width: calc(100% - 40px);
+ height: 55px;
  padding: 0px 20px 0px 20px;
  gap: 30px;
  border-radius: 30px;
@@ -246,7 +258,7 @@ section {
      >input {
          display: flex;
          width: 514px;
-         height: 62px;
+         height: 55px;
          padding: 0px 20px 0px 20px;
          gap: 30px;
          border: none;
@@ -299,8 +311,7 @@ section {
 .btnContainer{
  display: flex;
  justify-content: flex-end;
- width: 514px;
- margin-top: 10px;
+ width: 100%;
 
  button {
      cursor: pointer;
@@ -327,11 +338,3 @@ section {
  }
 }
 
-.mat-mdc-dialog-container {
- --mdc-dialog-container-shape: 30px;
-}
-
-.mdc-dialog__surface {
- overflow-y: visible !important;
-
-}

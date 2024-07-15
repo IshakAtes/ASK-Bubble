@@ -98,9 +98,6 @@ export class DialogShowChannelSettingsComponent {
         this.database.updateChannelName(new Channel(this.currentChannel))
         this.showEditNameInput = false;
         this.us.loadActiveUserChannels();
-        this.dialogRef.close(true);
-       
-        
       }
       else{
         this.errorMessage.nativeElement.innerHTML = 'Channel-Name existiert bereits'
@@ -132,7 +129,6 @@ export class DialogShowChannelSettingsComponent {
     this.database.updateChannelName(new Channel(this.currentChannel))
     this.showEditDescriptionInput = false;
     this.us.loadActiveUserChannels();
-    this.dialogRef.close(true);
   }
 
 

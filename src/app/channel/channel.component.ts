@@ -99,7 +99,7 @@ export class ChannelComponent implements OnInit {
         }).catch(error => {
           console.log('this ', error)
         });
-      }, 250);
+      }, 500);
     }
   }
 

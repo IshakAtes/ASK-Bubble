@@ -181,6 +181,7 @@ export class UserService {
         console.log('user Channels after load');
         console.log(userChannels);
         this.activeUserChannels = userChannels
+        this.isWorkspaceDataLoaded = true;
       });
     })
   }
