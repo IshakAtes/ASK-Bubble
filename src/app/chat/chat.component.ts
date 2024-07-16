@@ -16,8 +16,6 @@ import { FileUploadService } from '../shared-services/chat-functionality/file-up
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
-
-
 @Component({
   selector: 'app-chat',
   standalone: true,
@@ -42,10 +40,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
   groupedReactions: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
   userEmojis$: Observable<Array<string>>;
 
-  // userId = 'Adxrm7CExizb76lVrknu';
-  // userName = 'Simon'
-  // conversationId = 'CONV-p1oEblSsradmfVeyvTu3';
-
   // userId = 'HTMknmA28FP56EIqrtZo';
   // userName = 'Kerim Tasci';
   // conversationId = 'CONV-HTMknmA28FP56EIqrtZo-0.4380479343879251';
@@ -53,7 +47,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
   userId = 'Adxrm7CExizb76lVrknu';
   userName = 'Simon Weirauch';
   conversationId = 'CONV-HTMknmA28FP56EIqrtZo-0.4380479343879251';
-;
+  ;
 
   /*test START Simon*/
   specific: Conversation;
@@ -64,7 +58,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
   /*Test END Simon*/
 
   fileUploadError: string | null = null;
-
 
   constructor(public databaseService: DatabaseService,
     public userService: UserService,
@@ -83,7 +76,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.fileUpload.fileUploadError$.subscribe(error => {
       this.fileUploadError = error;
       console.log(this.fileUploadError);
-      
+
       setTimeout(() => {
         this.fileUploadError = null;
         console.log(this.fileUploadError);
@@ -347,53 +340,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
     }
   }
 
-  // //show dropdownmenu with mentions or channels 
-  // showDropdown: boolean = false;
-  // filteredItems: Array<User | Channel> = [];
-
-  // onInput(event: any): void {
-  //   const input = event.target.value;
-  //   const lastChar = input[input.length - 1];
-
-  //   // Überprüfen, ob das letzte Zeichen ein Trigger-Zeichen ist
-  //   if (lastChar === '#' || lastChar === '@') {
-  //     this.showDropdown = true;
-  //     this.filterItems(input, lastChar);
-  //   } else if (this.showDropdown) {
-  //     // Überprüfen, ob der Eingabetext ein Trigger-Zeichen enthält
-  //     const hashIndex = input.lastIndexOf('#');
-  //     const atIndex = input.lastIndexOf('@');
-
-  //     if (hashIndex === -1 && atIndex === -1) {
-  //       this.showDropdown = false;
-  //     } else {
-  //       const triggerChar = hashIndex > atIndex ? '#' : '@';
-  //       this.filterItems(input, triggerChar);
-  //     }
-  //   }
-  // }
-
-  // filterItems(input: string, triggerChar: string): void {
-  //   const queryArray = input.split(triggerChar);
-  //   const query = queryArray.length > 1 ? queryArray.pop()?.trim().toLowerCase() : '';
-
-  //   if (query !== undefined) {
-  //     if (triggerChar === '#') {
-  //       this.filteredItems = this.allChannels.filter(channel => channel.name.toLowerCase().includes(query));
-  //     } else if (triggerChar === '@') {
-  //       this.filteredItems = this.allUsers.filter(user => user.name.toLowerCase().includes(query));
-  //     }
-  //   }
-  // }
-
-  // selectItem(item: User | Channel): void {
-  //   const triggerChar = item.hasOwnProperty('channelId') ? '#' : '@';
-  //   const inputParts = this.content.split(triggerChar);
-  //   inputParts.pop();
-  //   this.content = inputParts.join(triggerChar) + `${triggerChar}${item.name} `;
-  //   this.showDropdown = false;
-  // }
-
   // Focusing tesxtarea after component is initilized 
   setFocus(): void {
     setTimeout(() => {
@@ -453,4 +399,45 @@ export class ChatComponent implements AfterViewInit, OnInit {
   triggerFileInput(): void {
     this.fileInput.nativeElement.click();
   }
+
+
+  // Editing Message
+
+  isEditing: boolean = false;
+  editContent: string = '';
+  selectedMessageIdEdit: string | null = null;
+
+  toggleMessageEdit(messageId: string) {
+    if (this.selectedMessageIdEdit === messageId) {
+      this.selectedMessageIdEdit = null;
+    } else {
+      this.selectedMessageIdEdit = messageId;
+    }
+  }
+
+  editMessage(message: ConversationMessage) {
+    this.toggleMessageEdit(message.messageId)
+    this.isEditing = true;
+    this.editContent = message.content;
+  }
+
+  cancelEditMessage(message: ConversationMessage) {
+    this.isEditing = false;
+    this.editContent = '';
+    this.selectedMessageIdEdit = null;
+  }
+
+  updateMessage(message: ConversationMessage) {
+    const updatedContent = this.editContent;
+    this.isEditing = false;
+    this.selectedMessageIdEdit = null;
+    message.content = updatedContent;
+
+    this.databaseService.updateMessage(message, this.specific).then(() => {
+      console.log('Message updated successfully');
+    }).catch(error => {
+      console.error('Error updating message: ', error);
+    });
+  }
 }
+
