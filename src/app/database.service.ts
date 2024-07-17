@@ -153,7 +153,12 @@ export class DatabaseService {
     //add converstaion to creator
     setDoc(doc(this.firestore, 'users/' + conversation.createdBy + '/conversations', conversation.conversationId), conversation);
     //add conversation to recipient
-    setDoc(doc(this.firestore, 'users/' + conversation.recipientId + '/conversations', conversation.conversationId), conversation);
+    if(!(conversation.createdBy == conversation.recipientId)){
+      setDoc(doc(this.firestore, 'users/' + conversation.recipientId + '/conversations', conversation.conversationId), conversation);
+    }
+    else{
+      console.log('recipient and creator are the same Person!')
+    }
   }
 
 

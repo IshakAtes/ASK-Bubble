@@ -33,6 +33,8 @@
         @else if(channel) {
             <app-channel
                 (changeReloadStatus)="setReloadToFalse($event)"
+                (userLeftChannel)="userLeftChannel()"
+                
                 [activeUser]="userservice.activeUserObject"
                 [channelBig]="channelBig"
                 [channel]="currentChannel"
@@ -81,6 +83,7 @@
             @else if(channel) {
                 <app-channel
                     (changeReloadStatus)="setReloadToFalse($event)"
+                    (userLeftChannel)="userLeftChannel()"
                     [activeUser]="userservice.activeUserObject"
                     [channelBig]="channelBig"
                     [channel]="currentChannel"

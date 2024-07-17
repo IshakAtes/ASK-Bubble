@@ -25,7 +25,7 @@ export class DialogAddAdditionalMemberComponent {
   
   hideUserContainer: boolean = true;
   inputFocused: boolean =  false;
-  selectedListWidth240: boolean = false;
+
   selectedListWidthMobile: number;
 
   searchUser: string = '';
@@ -103,12 +103,10 @@ export class DialogAddAdditionalMemberComponent {
 
   checkInputWidth(){
     if(this.selectedList.nativeElement.offsetWidth > 500){
-      this.selectedListWidth240 = true;
       this.selectedListWidthMobile = this.selectedList.nativeElement.offsetWidth
       console.log(this.selectedListWidthMobile)
     }
     else{
-      this.selectedListWidth240 = false;
       this.selectedListWidthMobile = this.selectedList.nativeElement.offsetWidth
       console.log(this.selectedListWidthMobile)
     }

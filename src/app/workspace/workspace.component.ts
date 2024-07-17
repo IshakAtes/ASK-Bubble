@@ -66,10 +66,6 @@ export class WorkspaceComponent {
     console.log('workspace on change triggered')
   }
 
-  openConversationWithSelf(userId: string){
-    console.log('check if there is conversation with self: ', userId)
-  }
-
 
   openConversation(conversation: Conversation){
     this.changeToConversation.emit(conversation);

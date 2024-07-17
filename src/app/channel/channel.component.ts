@@ -33,6 +33,7 @@ export class ChannelComponent implements OnInit {
   //outputData to main component
   @Output() changeReloadStatus = new EventEmitter<boolean>();
   @Output() reloadWorkspaceStatus = new EventEmitter<boolean>();
+  @Output() userLeftChannel = new EventEmitter<boolean>();
 
   memberList: Array<User> = [];
   messageList: Array<ChannelMessage>
@@ -148,9 +149,15 @@ export class ChannelComponent implements OnInit {
     const channelInfo = this.dialog.open(DialogShowChannelSettingsComponent,{
       panelClass: 'customDialog'
     })
+    
     channelInfo.componentInstance.currentChannel = this.channel;
     channelInfo.componentInstance.channelCreator = this.channelCreator;
-    
+    channelInfo.afterClosed().subscribe(result => {
+      if(result){
+        this.userLeftChannel.emit(true);
+      }
+
+    })
     
 
    
