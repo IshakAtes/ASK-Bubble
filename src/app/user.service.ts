@@ -1,4 +1,4 @@
-import { Injectable, inject, OnInit } from '@angular/core';
+import { Injectable, inject, OnInit, Component } from '@angular/core';
 import { User } from '../models/user.class';
 import { Firestore, collection, addDoc, updateDoc, doc, onSnapshot } from '@angular/fire/firestore';
 import { getDocs, query, where } from "firebase/firestore";
@@ -9,6 +9,7 @@ import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DatabaseService } from './database.service';
 import { Conversation } from '../models/conversation.class';
+import { Auth } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'

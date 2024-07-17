@@ -11,6 +11,7 @@ import {AngularFireModule} from '@angular/fire/compat'
 import {AngularFireAuthModule} from '@angular/fire/compat/auth'
 import { GoogleAuthProvider } from 'firebase/auth';
 import { getStorage, provideStorage } from '@angular/fire/storage';
+import { provideAuth, getAuth } from '@angular/fire/auth';
 
 
 
@@ -25,6 +26,7 @@ export const appConfig: ApplicationConfig = {
         "authDomain":firebaseConfig.authDomain,
         "messagingSenderId":firebaseConfig.messagingSenderId
       })),
+      provideAuth(() => getAuth()),
       provideFirestore(() => getFirestore()), provideAnimationsAsync(), provideAnimationsAsync(), 
       provideAnimationsAsync(), provideAnimationsAsync(), 
       provideAnimationsAsync(), provideAnimationsAsync(), 

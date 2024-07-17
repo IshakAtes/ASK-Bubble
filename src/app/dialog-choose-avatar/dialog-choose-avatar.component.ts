@@ -5,6 +5,7 @@ import { UserService } from '../user.service';
 import { HttpClient } from '@angular/common/http';
 import { HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AuthService } from '../shared-services/auth.service';
 
 
 
@@ -18,6 +19,7 @@ import { Observable } from 'rxjs';
 
 
 export class DialogChooseAvatarComponent {
+  authService = inject(AuthService)
   http = inject(HttpClient);
   images: string[] = [
     '../../assets/img/defaultAvatars/defaultFemale1.png',
@@ -29,6 +31,7 @@ export class DialogChooseAvatarComponent {
   ];
   selectedAvatar: string = "";
   userCreated: boolean = false;
+  errorMessage: string | null = null;
 
 
   constructor(private router: Router, public us: UserService) {}
@@ -80,18 +83,30 @@ export class DialogChooseAvatarComponent {
   triggerFileUpload(fileInput: HTMLInputElement): void {
     fileInput.click();
   }
+
+
+  authRegistration() {
+    this.authService
+      .register(this.us.userCache.email, this.us.userCache.name, this.us.userCache.password)
+      .subscribe({
+        next: () => {
+        console.log('user registred');
+      },
+      error: (err) => {
+        this.errorMessage = err.code;
+        console.log(this.errorMessage);
+      },
+    });
+  }
   
 
   createUser() {
     this.us.userCache.avatarUrl = this.selectedAvatar;
     console.log(this.us.userCache);
     this.us.addUser(this.us.userCache);
+    this.authRegistration();
+    // this.fb.createUserWithEmailAndPassword(this.fb.auth, this.us.userCache.email, this.us.userCache.password)
     this.sendRegisteredMail();
-    // console.log(this.us.userCache);
-    // setTimeout(() => {
-    //   this.userCreated = false;
-    //   this.router.navigate(['/']);
-    // }, 2000);
   }
 
   selectDummyAvatar(item: any) {
