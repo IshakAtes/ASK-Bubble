@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../shared-services/auth.service';
+import { DatabaseService } from '../database.service';
 
 
 
@@ -34,7 +35,7 @@ export class DialogChooseAvatarComponent {
   errorMessage: string | null = null;
 
 
-  constructor(private router: Router, public us: UserService) {}
+  constructor(private router: Router, public us: UserService, public database: DatabaseService) {}
 
   post = {
     endPoint: 'https://bubble.ishakates.com/sendSignUp.php',
@@ -107,6 +108,17 @@ export class DialogChooseAvatarComponent {
     this.authRegistration();
     // this.fb.createUserWithEmailAndPassword(this.fb.auth, this.us.userCache.email, this.us.userCache.password)
     this.sendRegisteredMail();
+    console.log('userCache:', this.us.userCache);
+    this.database.addUser(this.us.userCache);
+
+    setTimeout(() => {
+      this.database.getUser(this.us.userCache.email)
+        .then(user =>{
+          this.database.addConversation(this.database.createConversation(user.userId, user.userId))
+        })
+    }, 1000);
+    this.sendRegisteredMail();
+  
   }
 
   selectDummyAvatar(item: any) {

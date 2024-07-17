@@ -139,6 +139,14 @@ export class MainComponent{
     this.conversation = false;
   }
 
+  userLeftChannel(){
+    console.log('function from main triggered')
+    this.conversation = false;
+    this.channel = false;
+  }
+
+  
+
 
   changeWSVisibility(){
     if(this.isWSVisible){

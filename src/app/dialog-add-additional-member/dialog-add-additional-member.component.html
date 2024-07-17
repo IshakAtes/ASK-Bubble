@@ -27,7 +27,7 @@
         <div class="userInput">
             <div class="inputWrapper"> <!-- this should look like an input-->
                 
-                @if(selectedUserList.length > 2 || selectedListWidth240){
+                @if(selectedUserList.length > 1){
                     <div  #selectedList class="selectedList"> <!--this should be the list of selected users-->
                         <div *ngFor="let item of [].constructor(1); let i = index" class="selectedUser">
                             <img  src="{{selectedUserList[i].avatarUrl}}">

@@ -67,7 +67,7 @@
                     </div>
                     }
                     <img src="../../assets/img/reactionbar_answer.png" alt="">
-                    <img src="../../assets/img/reactionbar_edit.png" alt="">
+                    <img src="../../assets/img/reactionbar_edit.png" (click)="editMessage(message)" alt="">
                 </div>
 
                 <div>
@@ -81,7 +81,18 @@
                     </div>
 
                     <div class="own-massage-content-bubble">
+                        @if (isEditing && selectedMessageIdEdit === message.messageId) {
+                        <div class="edit-message-content-bubble">
+                            <textarea type="text" [(ngModel)]="editContent"></textarea>
+                            <div class="edit-message-content-bubble-BTN-div">
+                                <button (click)="updateMessage(message)">Speichern</button>
+                                <button (click)="cancelEditMessage(message)">Abbrechen</button>
+                            </div>
+                        </div>
+                        }@else {
                         <span class="massage-content">{{message.content}}</span>
+                        }
+
                     </div>
 
                     @if (message.fileUrl) {
@@ -206,7 +217,7 @@
 
         </div>
 
-    }
+        }
 
 
 
@@ -266,7 +277,7 @@
             </div>
 
             }
-            
+
             @if(!fileUploadError && !fileUpload.fileUploading) {
 
             @if(userId == sendingUser.userId){

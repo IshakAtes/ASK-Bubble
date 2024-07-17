@@ -28,6 +28,7 @@ export class UserService {
   activeUserChannels: Array<Channel> = [];
   activeUserConversationList: Array<Conversation> = [];
   usersFromActiveUserConversationList: Array<User> = [];
+  activeUserOwnConversation: Conversation;
   activeUserObject: User;
   isWorkspaceDataLoaded: boolean = true;
   deviceWidth: number
@@ -35,7 +36,7 @@ export class UserService {
 
 
   //TODO - hiernach suchen wenns live geht und umgestellt werden soll
-  activeUserMail: string = 'simon@dummy.de' 
+  activeUserMail: string = 'simon@dummy.de' //'ishakfeuer@gmail.com'  //'simon.w@gmx.net' //'simon@dummy.de' 
 
 
 
@@ -43,6 +44,13 @@ export class UserService {
   constructor(private http: HttpClient, private router: Router, public database: DatabaseService) { 
     this.loadActiveUserChannels();
     this.loadActiveUserConversations();
+    //console.log(this.activeUserObject.userId)
+    
+
+
+
+
+
   }
 
 
@@ -183,6 +191,7 @@ export class UserService {
         console.log(userChannels);
         this.activeUserChannels = userChannels
         this.isWorkspaceDataLoaded = true;
+
       });
     })
   }
@@ -197,12 +206,18 @@ export class UserService {
       .then(userConversations => {
         this.activeUserConversationList = userConversations;
         userConversations.forEach(conversation =>{
-          if(conversation.createdBy == user.userId){
-            this.getRecievedConversation(conversation);
-            console.log(this.usersFromActiveUserConversationList)
-          }else{
-            this.getCreatedConversation(conversation);
-            console.log(this.usersFromActiveUserConversationList)
+          if(!(conversation.createdBy == conversation.recipientId)){ //filter out Conversation with self
+            if(conversation.createdBy == user.userId){
+              this.getRecievedConversation(conversation);
+              console.log(this.usersFromActiveUserConversationList)
+            }else{
+              this.getCreatedConversation(conversation);
+              console.log(this.usersFromActiveUserConversationList)
+            }
+          }
+          else{
+            this.activeUserOwnConversation = conversation;
+            console.log(this.activeUserOwnConversation);
           }
         })
         this.isWorkspaceDataLoaded = true;
@@ -225,6 +240,7 @@ export class UserService {
       this.usersFromActiveUserConversationList.push(loadedUser);
     })
   }
+
 
   getDeviceWidth(){
     this.deviceWidth = window.innerWidth;

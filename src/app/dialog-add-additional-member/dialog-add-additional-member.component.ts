@@ -25,7 +25,7 @@ export class DialogAddAdditionalMemberComponent {
   
   hideUserContainer: boolean = true;
   inputFocused: boolean =  false;
-  selectedListWidth240: boolean = false;
+
   selectedListWidthMobile: number;
 
   searchUser: string = '';
@@ -103,12 +103,10 @@ export class DialogAddAdditionalMemberComponent {
 
   checkInputWidth(){
     if(this.selectedList.nativeElement.offsetWidth > 500){
-      this.selectedListWidth240 = true;
       this.selectedListWidthMobile = this.selectedList.nativeElement.offsetWidth
       console.log(this.selectedListWidthMobile)
     }
     else{
-      this.selectedListWidth240 = false;
       this.selectedListWidthMobile = this.selectedList.nativeElement.offsetWidth
       console.log(this.selectedListWidthMobile)
     }
@@ -164,7 +162,7 @@ export class DialogAddAdditionalMemberComponent {
       this.newChannel = new Channel(this.currentChannel);
       this.addChannelToNewMembers();
       this.updateChannel();
-      this.dialogRef.close();
+      this.dialogRef.close(true);
     }
   }
 
@@ -182,7 +180,7 @@ export class DialogAddAdditionalMemberComponent {
     this.selectedUserList.forEach(user => {
       this.currentChannel.membersId.push(user.userId)
     })
-    this.database.updateChannelMembers(new Channel(this.currentChannel));
+    this.database.updateChannelMembers(this.currentChannel);
     this.setUserlist();
   }
 

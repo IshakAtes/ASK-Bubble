@@ -59,15 +59,12 @@ export class WorkspaceComponent {
 
   constructor(public dialog: MatDialog, public us: UserService){  
     console.log('constructor of workspace triggered')
+    console.log(this.userService.activeUserOwnConversation)
   }
 
 
   ngOnChanges(){
     console.log('workspace on change triggered')
-  }
-
-  openConversationWithSelf(userId: string){
-    console.log('check if there is conversation with self: ', userId)
   }
 
 
