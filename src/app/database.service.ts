@@ -677,6 +677,29 @@ export class DatabaseService {
     updateDoc(doc(this.firestore, 'users', userId), 'usedLastTwoEmojis', [emoji1, emoji2]);
   }
 
+  updateMessage(message: ConversationMessage, conversation: Conversation): Promise<void> {
+    const creatorMessageRef = doc(
+      this.firestore,
+      'users/' + conversation.createdBy + '/conversations/' + message.conversationId + '/conversationmessages',
+      message.messageId
+    );
+  
+    const recipientMessageRef = doc(
+      this.firestore,
+      'users/' + conversation.recipientId + '/conversations/' + message.conversationId + '/conversationmessages',
+      message.messageId
+    );
+  
+    return Promise.all([
+      updateDoc(creatorMessageRef, { content: message.content }),
+      updateDoc(recipientMessageRef, { content: message.content })
+    ]).then(() => {
+      console.log('Message updated successfully for both users');
+    }).catch(error => {
+      console.error('Error updating message: ', error);
+    });
+  }
+
   
   /*delete functions */
   deleteChannel(channel: Channel, userId: string){
