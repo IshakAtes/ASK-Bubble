@@ -59,6 +59,7 @@ export class WorkspaceComponent {
 
   constructor(public dialog: MatDialog, public us: UserService){  
     console.log('constructor of workspace triggered')
+    console.log(this.userService.activeUserOwnConversation)
   }
 
 

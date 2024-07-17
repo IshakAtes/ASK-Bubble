@@ -162,7 +162,7 @@ export class DialogAddAdditionalMemberComponent {
       this.newChannel = new Channel(this.currentChannel);
       this.addChannelToNewMembers();
       this.updateChannel();
-      this.dialogRef.close();
+      this.dialogRef.close(true);
     }
   }
 
@@ -180,7 +180,7 @@ export class DialogAddAdditionalMemberComponent {
     this.selectedUserList.forEach(user => {
       this.currentChannel.membersId.push(user.userId)
     })
-    this.database.updateChannelMembers(new Channel(this.currentChannel));
+    this.database.updateChannelMembers(this.currentChannel);
     this.setUserlist();
   }
 

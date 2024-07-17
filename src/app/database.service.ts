@@ -25,7 +25,7 @@ export class DatabaseService {
 
   /*create object Functions */
 
-  createUser(email: string, name: string, password: string, status: string, avatarUrl: string): User{
+  createUser(email: string, name: string, password: string, status: string, avatarUrl: any): User{
     const user = {} as User
     user.email = email
     user.name = name;
@@ -118,13 +118,42 @@ export class DatabaseService {
 
   /*create database entry functions */
   addUser(user: User){
-    addDoc(collection(this.firestore, 'users'), user);
+    addDoc(collection(this.firestore, 'users'), user.toJSON());
+
+    //Add user ID to userobject in database
+    onSnapshot(collection(this.firestore, 'users'), (foundUsers) => {
+      const addedUser = {} as User
+      foundUsers.forEach(foundUser => {
+        const userData = foundUser.data();
+        if(userData['email'] == user.email){
+          addedUser.email = userData['email'] 
+          addedUser.name = userData['name']
+          addedUser.password = userData['password']
+          addedUser.status = userData['status']
+          addedUser.avatarUrl = userData['avatarUrl']
+          addedUser.userId = foundUser.id 
+          addedUser.usedLastTwoEmojis = userData['usedLastTwoEmojis']
+        }
+      })
+      this.updateUser(addedUser);
+    })
+
+
   }
 
 
+
+  
+
   addChannel(channel: Channel){
+     
+    //wird doppelt vergeben hier ist das Problem mit SET
+
+
+
+    let channelObject = new Channel(channel)
     channel.membersId.forEach(userId => {
-      setDoc(doc(this.firestore, 'users/' + userId + '/channels', channel.channelId), channel);
+      setDoc(doc(this.firestore, 'users/' + userId + '/channels', channel.channelId), channelObject.toJSON());
     });
   }
 
@@ -155,9 +184,6 @@ export class DatabaseService {
     //add conversation to recipient
     if(!(conversation.createdBy == conversation.recipientId)){
       setDoc(doc(this.firestore, 'users/' + conversation.recipientId + '/conversations', conversation.conversationId), conversation);
-    }
-    else{
-      console.log('recipient and creator are the same Person!')
     }
   }
 
@@ -659,11 +685,24 @@ export class DatabaseService {
 
 
   /*update functions */
-  updateChannelMembers(channel: Channel){
-    channel.membersId.forEach(user => {
-      updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/'), channel.channelId), channel.toJSON());
-    })
+  
+  updateUser(user: User){
+    let userObject = new User(user)
+    updateDoc(doc(collection(this.firestore, 'users/'), user.userId), userObject.toJSON());
   }
+
+  
+  updateChannelMembers(channel: Channel){
+    //SET
+    let channelObject = new Channel(channel);
+    
+    channel.membersId.forEach(user => {
+      updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/'), channel.channelId), channelObject.toJSON());
+    })
+    
+  }
+
+
 
 
   updateChannelName(channel: Channel){

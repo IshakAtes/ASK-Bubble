@@ -34,6 +34,7 @@ export class ChannelComponent implements OnInit {
   @Output() changeReloadStatus = new EventEmitter<boolean>();
   @Output() reloadWorkspaceStatus = new EventEmitter<boolean>();
   @Output() userLeftChannel = new EventEmitter<boolean>();
+  @Output() updatedMemberList = new EventEmitter<boolean>();
 
   memberList: Array<User> = [];
   messageList: Array<ChannelMessage>
@@ -136,6 +137,18 @@ export class ChannelComponent implements OnInit {
   showAddMember(){
     const channelInfo = this.dialog.open(DialogAddAdditionalMemberComponent);
     channelInfo.componentInstance.currentChannel = this.channel;
+    channelInfo.afterClosed().subscribe(result => {
+      /*
+      if(result){
+        this.updatedMemberList.emit(true);
+      }
+      */
+      this.isdataLoaded = false;
+      setTimeout(() => {
+        this.isdataLoaded = true;
+      }, 500);
+
+    })
   }
 
 

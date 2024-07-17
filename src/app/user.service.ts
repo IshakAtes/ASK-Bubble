@@ -35,7 +35,7 @@ export class UserService {
 
 
   //TODO - hiernach suchen wenns live geht und umgestellt werden soll
-  activeUserMail: string = 'simon@dummy.de' 
+  activeUserMail: string = 'simon@dummy.de' //'ishakfeuer@gmail.com'  //'simon.w@gmx.net' //'simon@dummy.de' 
 
 
 
@@ -239,6 +239,7 @@ export class UserService {
       this.usersFromActiveUserConversationList.push(loadedUser);
     })
   }
+
 
   getDeviceWidth(){
     this.deviceWidth = window.innerWidth;
