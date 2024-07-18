@@ -186,7 +186,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
     }
   }
 
-  online: boolean = true;
   content = '';
 
   saveNewMessage() {
