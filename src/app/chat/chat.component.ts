@@ -12,6 +12,7 @@ import { Reaction } from '../../models/reactions.class';
 import { LastTwoEmojisService } from '../shared-services/chat-functionality/last-two-emojis.service';
 import { TimeFormatingService } from '../shared-services/chat-functionality/time-formating.service';
 import { MentionAndChannelDropdownService } from '../shared-services/chat-functionality/mention-and-channel-dropdown.service';
+import { EditMessageService } from '../shared-services/chat-functionality/edit-message.service';
 import { FileUploadService } from '../shared-services/chat-functionality/file-upload.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -64,7 +65,10 @@ export class ChatComponent implements AfterViewInit, OnInit {
     private lastTwoEmojiService: LastTwoEmojisService,
     public time: TimeFormatingService,
     public mAndC: MentionAndChannelDropdownService,
-    public fileUpload: FileUploadService) {
+    public fileUpload: FileUploadService,
+    public edit: EditMessageService,
+  ) {
+
 
     this.allChannels = mAndC.allChannels;
     this.allUsers = mAndC.allUsers;
@@ -94,6 +98,18 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.isChatDataLoaded = false;
     this.loadAllMessages();
 
+
+    // If loading user data via service is necessary 
+    // this.userData.loadUserData().then(() => {
+    //   this.user = this.userData.user;
+    //   this.specific = this.userData.specific;
+    //   this.sendingUser = this.userData.sendingUser;
+    //   this.passiveUser = this.userData.passiveUser;
+    // }).catch(error => {
+    //   console.error('Error loading user data', error);
+    // });
+  
+    
     this.databaseService.loadUser(this.userId).then(user => {
       this.user = user;
     })
@@ -147,24 +163,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
   }
 
   //load functions
-  // loadUsersOfUser() {
-  //   this.databaseService.loadAllUsers().then(userList => {
-  //     this.allUsers = userList;
-  //     console.log('All Users:', this.allUsers);
-  //   }).catch(error => {
-  //     console.error('Fehler beim Laden der Benutzer:', error);
-  //   });
-  // }
-
-
-  // loadChannlesofUser() {
-  //   this.databaseService.loadAllUserChannels(this.userId).then(channel => {
-  //     this.allChannels = channel;
-  //     console.log('channels:');
-  //     console.log(this.allChannels);
-  //   })
-  // }
-
   loadAllMessages() {
     this.databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
       this.list = messageList;
@@ -359,43 +357,18 @@ export class ChatComponent implements AfterViewInit, OnInit {
     }
   }
 
+  // Trigger click on fileupload input field
   @ViewChild('fileInput') fileInput!: ElementRef;
 
   triggerFileInput(): void {
     this.fileInput.nativeElement.click();
   }
 
-
-  // Editing Message
-
-  isEditing: boolean = false;
-  editContent: string = '';
-  selectedMessageIdEdit: string | null = null;
-
-  toggleMessageEdit(messageId: string) {
-    if (this.selectedMessageIdEdit === messageId) {
-      this.selectedMessageIdEdit = null;
-    } else {
-      this.selectedMessageIdEdit = messageId;
-    }
-  }
-
-  editMessage(message: ConversationMessage) {
-    this.toggleMessageEdit(message.messageId)
-    this.isEditing = true;
-    this.editContent = message.content;
-  }
-
-  cancelEditMessage(message: ConversationMessage) {
-    this.isEditing = false;
-    this.editContent = '';
-    this.selectedMessageIdEdit = null;
-  }
-
+  // Edit Message
   updateMessage(message: ConversationMessage) {
-    const updatedContent = this.editContent;
-    this.isEditing = false;
-    this.selectedMessageIdEdit = null;
+    const updatedContent = this.edit.editContent;
+    this.edit.isEditing = false;
+    this.edit.selectedMessageIdEdit = null;
     message.content = updatedContent;
 
     this.databaseService.updateMessage(message, this.specific).then(() => {
@@ -403,6 +376,8 @@ export class ChatComponent implements AfterViewInit, OnInit {
     }).catch(error => {
       console.error('Error updating message: ', error);
     });
+
+    this.loadAllMessages();
   }
 }
 

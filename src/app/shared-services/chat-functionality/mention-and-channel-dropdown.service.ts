@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { User } from '../../../models/user.class';
 import { Channel } from '../../../models/channel.class';
 import { DatabaseService } from '../../database.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

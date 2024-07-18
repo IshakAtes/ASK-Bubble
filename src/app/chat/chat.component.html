@@ -67,7 +67,7 @@
                     </div>
                     }
                     <img src="../../assets/img/reactionbar_answer.png" alt="">
-                    <img src="../../assets/img/reactionbar_edit.png" (click)="editMessage(message)" alt="">
+                    <img src="../../assets/img/reactionbar_edit.png" (click)="edit.editMessage(message)" alt="">
                 </div>
 
                 <div>
@@ -81,12 +81,12 @@
                     </div>
 
                     <div class="own-massage-content-bubble">
-                        @if (isEditing && selectedMessageIdEdit === message.messageId) {
+                        @if (edit.isEditing && edit.selectedMessageIdEdit === message.messageId) {
                         <div class="edit-message-content-bubble">
-                            <textarea type="text" [(ngModel)]="editContent"></textarea>
+                            <textarea type="text" [(ngModel)]="edit.editContent"></textarea>
                             <div class="edit-message-content-bubble-BTN-div">
                                 <button (click)="updateMessage(message)">Speichern</button>
-                                <button (click)="cancelEditMessage(message)">Abbrechen</button>
+                                <button (click)="edit.cancelEditMessage()">Abbrechen</button>
                             </div>
                         </div>
                         }@else {
