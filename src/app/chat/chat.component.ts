@@ -145,6 +145,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.mAndC.loadUsersOfUser();
     this.mAndC.loadChannlesofUser();
     this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.userId);
+    
 
 
     setTimeout(() => {
@@ -173,6 +174,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     });
   }
 
+  //kopieren
   loadAllMessageReactions() {
     for (let i = 0; i < this.list.length; i++) {
       const list = this.list[i];
@@ -186,6 +188,8 @@ export class ChatComponent implements AfterViewInit, OnInit {
 
   content = '';
 
+
+//kopieren
   saveNewMessage() {
     this.list = [];
     let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specific, this.content, this.userId, this.fileUpload.downloadURL)
@@ -206,6 +210,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.fileUpload.downloadURL = '';
   }
 
+  // Auslagern Service
   // group together all reaction based on their messageId and count them to display the right count in html
   groupReactions() {
     this.groupedReactions = new Map();
@@ -231,6 +236,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     });
   }
 
+  // Auslagern in Service - Daten aus user.service
   //display and hide the reaction info on hover and retun the right text based on reaction(s) creator(s)
   emojiInfoVisible: boolean = false;
   hoveredReaction: { emoji: string, count: number, users: string[] } | null = null;
@@ -270,7 +276,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     }
   }
 
-
+  //kopieren
   // save message reaction
   async saveNewMessageReaction(event: any, convo: ConversationMessage, userId: string, reactionbar?: string) {
     let emoji: string
@@ -293,6 +299,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     await this.databaseService.addConversationMessageReaction(this.specific, convo, reaction)
     await this.loadAllMessageReactions();
 
+    // Funktion wird in Service ausgelagert
     this.checkIfEmojiIsAlreadyInUsedLastEmojis(emoji, userId);
     this.mAndC.loadUsersOfUser();
     this.mAndC.loadChannlesofUser()
@@ -304,7 +311,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.mAndC.selectedMessageId = null;
   }
 
-
+  //Auslagern in Service
   checkIfEmojiIsAlreadyInUsedLastEmojis(emoji: string, userId: string) {
     let usedLastEmoji = this.user.usedLastTwoEmojis[0]
     let usedSecondEmoji = this.user.usedLastTwoEmojis[1]
@@ -323,7 +330,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     }, 2000);
   }
 
-
+  // später anschauen 
   // search messages
   filteredList: Array<ConversationMessage> = [];
 
@@ -341,6 +348,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     }
   }
 
+  //kopieren
   // Focusing tesxtarea after component is initilized 
   setFocus(): void {
     setTimeout(() => {
@@ -348,6 +356,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     }, 10);
   }
 
+  //kopieren
   // Scroll to the bottom of the chatarea 
   scrollToBottom(): void {
     try {
@@ -357,6 +366,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     }
   }
 
+  //kopieren
   // Trigger click on fileupload input field
   @ViewChild('fileInput') fileInput!: ElementRef;
 
@@ -364,6 +374,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.fileInput.nativeElement.click();
   }
 
+  //kopieren
   // Edit Message
   updateMessage(message: ConversationMessage) {
     const updatedContent = this.edit.editContent;
