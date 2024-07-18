@@ -12,6 +12,7 @@ import { Conversation } from '../../models/conversation.class';
 import { User } from '../../models/user.class';
 import { CreateConversationComponent } from '../create-conversation/create-conversation.component';
 import { HeaderComponent } from '../header/header.component';
+import { AuthService } from '../shared-services/auth.service';
 
 @Component({
   selector: 'app-main',
@@ -21,6 +22,7 @@ import { HeaderComponent } from '../header/header.component';
   styleUrl: './main.component.scss'
 })
 export class MainComponent{
+  authService = inject(AuthService);
   conversation: boolean = false;
   channel: boolean = false;
   isWSVisible: boolean = true;
@@ -39,6 +41,8 @@ export class MainComponent{
   
   constructor(public userservice: UserService, public database: DatabaseService){
     userservice.getDeviceWidth();
+    console.log(this.authService.checkUserStatus());
+    
   }
 
   ngOnChanges(){
