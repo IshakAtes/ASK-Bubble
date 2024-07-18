@@ -103,10 +103,8 @@ export class DialogChooseAvatarComponent {
 
   createUser() {
     this.us.userCache.avatarUrl = this.selectedAvatar;
-    console.log(this.us.userCache);
     this.us.addUser(this.us.userCache);
     this.authRegistration();
-    // this.fb.createUserWithEmailAndPassword(this.fb.auth, this.us.userCache.email, this.us.userCache.password)
     this.sendRegisteredMail();
     console.log('userCache:', this.us.userCache);
     this.database.addUser(this.us.userCache);
