@@ -3,8 +3,8 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../user.service';
-import { Firestore, collection, doc, updateDoc } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
+import { AuthService } from '../shared-services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +14,9 @@ import { User } from '../../models/user.class';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  firestore: Firestore = inject(Firestore)
+  authService = inject(AuthService);
+  errorMessage: string | null = null;
+  authMessage: boolean | null = false;
   hub = inject(UserService)
   isPressed = false;
   myForm: FormGroup;
@@ -64,6 +66,22 @@ export class LoginComponent {
   }
 
 
+  acceptedAuth() {
+    this.authService
+      .login(this.myForm.value.mail, this.myForm.value.pw)
+      .subscribe({
+        next: () => {
+        console.log('user auth Login');
+        this.authMessage = true;
+      },
+      error: (err) => {
+        this.errorMessage = err.code;
+        console.log(this.errorMessage);
+      },
+    });
+  }
+
+
   async normalSignIn () {
     if (this.us.guest) {
       await this.us.addUser(this.hub.guestData);
@@ -77,8 +95,9 @@ export class LoginComponent {
         console.log('Kein Gastbenutzer gefunden, erstelle neuen Gastbenutzer');
       }
     } else {
+      this.acceptedAuth();
       const acceptedUser = await this.us.getUser(this.myForm.value.mail, this.myForm.value.pw);
-      if (this.myForm.valid && acceptedUser) {
+      if (this.myForm.valid && acceptedUser || this.authMessage) {
         try {
           this.us.loggedUser = acceptedUser;
           this.us.userOnline(this.us.loggedUser.userId);

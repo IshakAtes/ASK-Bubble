@@ -1,4 +1,4 @@
-import { Injectable, inject, OnInit } from '@angular/core';
+import { Injectable, inject, OnInit, Component } from '@angular/core';
 import { User } from '../models/user.class';
 import { Firestore, collection, addDoc, updateDoc, doc, onSnapshot } from '@angular/fire/firestore';
 import { getDocs, query, where } from "firebase/firestore";
@@ -9,6 +9,7 @@ import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DatabaseService } from './database.service';
 import { Conversation } from '../models/conversation.class';
+import { Auth } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,7 @@ export class UserService {
 
 
   //TODO - hiernach suchen wenns live geht und umgestellt werden soll
-  activeUserMail: string = 'simon@dummy.de' 
+  activeUserMail: string = 'simon@dummy.de' //'ishakfeuer@gmail.com'  //'simon.w@gmx.net' //'simon@dummy.de' 
 
 
 
@@ -239,6 +240,7 @@ export class UserService {
       this.usersFromActiveUserConversationList.push(loadedUser);
     })
   }
+
 
   getDeviceWidth(){
     this.deviceWidth = window.innerWidth;

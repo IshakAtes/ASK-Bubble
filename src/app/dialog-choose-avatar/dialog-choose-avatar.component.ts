@@ -5,6 +5,8 @@ import { UserService } from '../user.service';
 import { HttpClient } from '@angular/common/http';
 import { HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AuthService } from '../shared-services/auth.service';
+import { DatabaseService } from '../database.service';
 
 
 
@@ -18,6 +20,7 @@ import { Observable } from 'rxjs';
 
 
 export class DialogChooseAvatarComponent {
+  authService = inject(AuthService)
   http = inject(HttpClient);
   images: string[] = [
     '../../assets/img/defaultAvatars/defaultFemale1.png',
@@ -29,9 +32,10 @@ export class DialogChooseAvatarComponent {
   ];
   selectedAvatar: string = "";
   userCreated: boolean = false;
+  errorMessage: string | null = null;
 
 
-  constructor(private router: Router, public us: UserService) {}
+  constructor(private router: Router, public us: UserService, public database: DatabaseService) {}
 
   post = {
     endPoint: 'https://bubble.ishakates.com/sendSignUp.php',
@@ -80,18 +84,39 @@ export class DialogChooseAvatarComponent {
   triggerFileUpload(fileInput: HTMLInputElement): void {
     fileInput.click();
   }
+
+
+  authRegistration() {
+    this.authService
+      .register(this.us.userCache.email, this.us.userCache.name, this.us.userCache.password)
+      .subscribe({
+        next: () => {
+        console.log('user registred');
+      },
+      error: (err) => {
+        this.errorMessage = err.code;
+        console.log(this.errorMessage);
+      },
+    });
+  }
   
 
   createUser() {
     this.us.userCache.avatarUrl = this.selectedAvatar;
-    console.log(this.us.userCache);
     this.us.addUser(this.us.userCache);
+    this.authRegistration();
     this.sendRegisteredMail();
-    // console.log(this.us.userCache);
-    // setTimeout(() => {
-    //   this.userCreated = false;
-    //   this.router.navigate(['/']);
-    // }, 2000);
+    console.log('userCache:', this.us.userCache);
+    this.database.addUser(this.us.userCache);
+
+    setTimeout(() => {
+      this.database.getUser(this.us.userCache.email)
+        .then(user =>{
+          this.database.addConversation(this.database.createConversation(user.userId, user.userId))
+        })
+    }, 1000);
+    this.sendRegisteredMail();
+  
   }
 
   selectDummyAvatar(item: any) {

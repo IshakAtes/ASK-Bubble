@@ -35,6 +35,7 @@
                 (changeReloadStatus)="setReloadToFalse($event)"
                 (userLeftChannel)="userLeftChannel()"
                 
+                
                 [activeUser]="userservice.activeUserObject"
                 [channelBig]="channelBig"
                 [channel]="currentChannel"
@@ -84,6 +85,7 @@
                 <app-channel
                     (changeReloadStatus)="setReloadToFalse($event)"
                     (userLeftChannel)="userLeftChannel()"
+                    
                     [activeUser]="userservice.activeUserObject"
                     [channelBig]="channelBig"
                     [channel]="currentChannel"

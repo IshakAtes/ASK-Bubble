@@ -145,6 +145,8 @@ export class MainComponent{
     this.channel = false;
   }
 
+  
+
 
   changeWSVisibility(){
     if(this.isWSVisible){
