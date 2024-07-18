@@ -58,8 +58,8 @@
                     }
 
                     <img src="../../assets/img/reactionbar_add_reaction.png"
-                        (click)="toggleEmoticonsReactionbar(message.messageId)" alt="">
-                    @if (selectedMessageId === message.messageId) {
+                        (click)="mAndC.toggleEmoticonsReactionbar(message.messageId)" alt="">
+                    @if (mAndC.selectedMessageId === message.messageId) {
                     <div class="emoticon-reaction-div">
                         <emoji-mart class="emoji-mart"
                             (emojiSelect)="saveNewMessageReaction($event, message, user.userId)"
@@ -153,8 +153,8 @@
                     <img src="../../assets/img/reactionbar_answer.png" alt="">
                     }
                     <img src="../../assets/img/reactionbar_add_reaction.png"
-                        (click)="toggleEmoticonsReactionbar(message.messageId)" alt="">
-                    @if (selectedMessageId === message.messageId) {
+                        (click)="mAndC.toggleEmoticonsReactionbar(message.messageId)" alt="">
+                    @if (mAndC.selectedMessageId === message.messageId) {
                     <div class="emoticon-reaction-div">
                         <emoji-mart class="emoji-mart"
                             (emojiSelect)="saveNewMessageReaction($event, message, passiveUser.userId)"
@@ -223,16 +223,16 @@
 
         <div class="message-container">
             <!-- Emojis -->
-            @if (showEmoticons) {
+            @if (mAndC.showEmoticons) {
             <div class="emoticon-div">
-                <emoji-mart class="emoji-mart" (emojiSelect)="addEmoji($event)" title="Choose your emoji"></emoji-mart>
+                <emoji-mart class="emoji-mart" (emojiSelect)="mAndC.addEmoji($event)" title="Choose your emoji"></emoji-mart>
             </div>
             }
             <!-- Erwähnungen -->
-            @if (showMention) {
+            @if (mAndC.showMention) {
             <div class="mention-div">
                 @for (users of mAndC.allUsers; track $index) {
-                <div class="mention-list-element" (click)="addMention(users.name)">{{users.name}}</div>
+                <div class="mention-list-element" (click)="mAndC.addMention(users.name)">{{users.name}}</div>
                 }
             </div>
             }
@@ -313,9 +313,9 @@
                             alt=""></button>
                     <input #fileInput type="file" style="display: none;" (change)="fileUpload.onFileSelected($event)">
                     <div class="line"></div>
-                    <button (click)="toggleEmoticons()" class="action-button"><img
+                    <button (click)="mAndC.toggleEmoticons()" class="action-button"><img
                             src="../../assets/img/emoticon_icon.png" alt=""></button>
-                    <button (click)="toggleMention()" class="action-button"><img src="../../assets/img/mention_icon.png"
+                    <button (click)="mAndC.toggleMention()" class="action-button"><img src="../../assets/img/mention_icon.png"
                             alt=""></button>
                 </div>
 

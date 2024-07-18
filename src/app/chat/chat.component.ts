@@ -82,6 +82,12 @@ export class ChatComponent implements AfterViewInit, OnInit {
         console.log(this.fileUploadError);
       }, 2500);
     });
+
+    this.mAndC.getFocusTrigger().subscribe(() => {
+      if (this.myTextarea) {
+        this.myTextarea.nativeElement.focus();
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -181,8 +187,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
   }
 
   online: boolean = true;
-  showEmoticons: boolean = false;
-  showMention: boolean = false;
   content = '';
 
   saveNewMessage() {
@@ -300,7 +304,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
       this.groupReactions()
     }, 1000);
 
-    this.selectedMessageId = null;
+    this.mAndC.selectedMessageId = null;
   }
 
 
@@ -319,7 +323,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     setTimeout(() => {
       this.setFocus();
       this.scrollToBottom();
-    }, 4000);
+    }, 2000);
   }
 
 
@@ -354,44 +358,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
     } catch (err) {
       console.error('Scroll to bottom failed', err);
     }
-  }
-
-  // toggeling emoticons and mentions divs and selecting emoticons
-  selectedMessageId: string | null = null;
-
-  toggleEmoticons() {
-    if (this.showMention) {
-      this.showMention = false;
-    }
-    this.showEmoticons = !this.showEmoticons;
-  }
-
-
-  toggleEmoticonsReactionbar(messageId: string) {
-    if (this.selectedMessageId === messageId) {
-      this.selectedMessageId = null;
-    } else {
-      this.selectedMessageId = messageId;
-    }
-  }
-
-  toggleMention() {
-    if (this.showEmoticons) {
-      this.showEmoticons = false;
-    }
-    this.showMention = !this.showMention;
-  }
-
-  addEmoji(event: any) {
-    this.content = `${this.content}${event.emoji.native}`;
-    this.showEmoticons = false;
-    this.setFocus();
-  }
-
-  addMention(mention: string) {
-    this.content = `${this.content} @${mention}`;
-    this.showMention = false;
-    this.setFocus();
   }
 
   @ViewChild('fileInput') fileInput!: ElementRef;
