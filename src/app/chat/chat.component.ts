@@ -173,6 +173,8 @@ export class ChatComponent implements AfterViewInit, OnInit {
     });
   }
 
+  
+
   loadAllMessageReactions() {
     for (let i = 0; i < this.list.length; i++) {
       const list = this.list[i];
@@ -186,6 +188,8 @@ export class ChatComponent implements AfterViewInit, OnInit {
 
   content = '';
 
+
+ 
   saveNewMessage() {
     this.list = [];
     let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specific, this.content, this.userId, this.fileUpload.downloadURL)

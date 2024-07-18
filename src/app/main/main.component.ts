@@ -28,6 +28,7 @@ export class MainComponent{
   isWSVisible: boolean = true;
   channelBig: boolean = false;
   reloadChannel: boolean = false;
+  thread: boolean = true;
   
 
 
@@ -142,6 +143,7 @@ export class MainComponent{
     this.channel = false;
     this.conversation = false;
   }
+
 
   userLeftChannel(){
     console.log('function from main triggered')

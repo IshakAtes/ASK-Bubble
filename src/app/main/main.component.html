@@ -25,6 +25,8 @@
             [activeUserConversationList]="userservice.activeUserConversationList"
             ></app-workspace>
         }
+        
+
     
         
         @if(conversation){
@@ -48,6 +50,13 @@
             (changeToChannel)="changeChannel($event)"
             (changeToConversation)="changeConversation($event)"
             ></app-create-conversation>
+        }
+
+        @if(thread){
+            <app-thread>
+
+                
+            </app-thread>
         }
     </section>
 }
