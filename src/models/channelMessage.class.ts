@@ -1,7 +1,9 @@
+import { Timestamp } from "firebase/firestore";
+
 export class ChannelMessage {
     channelId: string;
     content: string;
-    createdAt: Date;
+    createdAt: Timestamp;
     createdBy: string;
     fileUrl: string;
     threadId: string;

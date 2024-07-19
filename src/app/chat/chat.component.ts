@@ -342,6 +342,10 @@ export class ChatComponent implements AfterViewInit, OnInit {
     }, 2000);
   }
 
+
+
+
+
   // später anschauen 
   // search messages
   filteredList: Array<ConversationMessage> = [];

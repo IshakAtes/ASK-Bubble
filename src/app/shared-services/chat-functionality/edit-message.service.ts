@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ConversationMessage } from '../../../models/conversationMessage.class';
 import { DatabaseService } from '../../database.service';
+import { ChannelMessage } from '../../../models/channelMessage.class';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class EditMessageService {
      }
    }
  
-   editMessage(message: ConversationMessage) {
+   editMessage(message: ConversationMessage | ChannelMessage) {
      this.toggleMessageEdit(message.messageId)
      this.isEditing = true;
      this.editContent = message.content;

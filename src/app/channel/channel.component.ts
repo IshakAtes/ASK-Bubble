@@ -11,13 +11,20 @@ import { DialogShowMemberListComponent } from '../dialog-show-member-list/dialog
 import { DialogShowChannelSettingsComponent } from '../dialog-show-channel-settings/dialog-show-channel-settings.component';
 import { UserService } from '../user.service';
 import { TimeFormatingService } from '../shared-services/chat-functionality/time-formating.service';
+import { EditMessageService } from '../shared-services/chat-functionality/edit-message.service';
+import { FileUploadService } from '../shared-services/chat-functionality/file-upload.service';
+import { GeneralChatService } from '../shared-services/chat-functionality/general-chat.service';
+import { LastTwoEmojisService } from '../shared-services/chat-functionality/last-two-emojis.service';
+import { MentionAndChannelDropdownService } from '../shared-services/chat-functionality/mention-and-channel-dropdown.service';
+import { Reaction } from '../../models/reactions.class';
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
 
 
 
 @Component({
   selector: 'app-channel',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PickerModule],
   templateUrl: './channel.component.html',
   styleUrls: ['./channel.component.scss', './channelResp.component.scss']
 })
@@ -40,20 +47,58 @@ export class ChannelComponent implements OnInit {
   messageList: Array<ChannelMessage>
   channelCreator: User;
 
+  reactions: Array<Reaction> = []; //Behaviour Subject wird noch hinzugefügt
+  groupedReactions: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
+  allChannels: Array<Channel> = [];
+  allUsers = [] as Array<User>;
+  
   isdataLoaded: boolean = false;
+
+  content: string = '';
+  fileUploadError: string | null = null;
  
   @ViewChild('main') main: ElementRef 
+  @ViewChild('lastDiv') lastDiv: ElementRef<HTMLDivElement>;
+  @ViewChild('myTextarea') myTextarea!: ElementRef<HTMLTextAreaElement>;
 
   constructor(public dialog: MatDialog, private database: DatabaseService, 
-    public time: TimeFormatingService,
-    public us: UserService)
+    public us: UserService,
+    public editService: EditMessageService,
+    public fileService: FileUploadService,
+    public chatService: GeneralChatService,
+    public twoEmoji: LastTwoEmojisService,
+    public mAndC: MentionAndChannelDropdownService,
+    public time: TimeFormatingService){
+      this.allChannels = mAndC.allChannels;
+      this.allUsers = mAndC.allUsers;
   
-    {
-
+      this.reactions = chatService.reactions;
+      this.chatService.groupedReactions$.subscribe(groupedReactions => {
+        // debugger
+        this.groupedReactions = groupedReactions;
+        console.log('Updated groupedReactions:', this.groupedReactions);
+      });
+  
+      this.mAndC.content.subscribe(newContent => {
+        this.content = newContent;
+      });
+  
+      this.fileService.fileUploadError$.subscribe(error => {
+        this.fileUploadError = error;
+        console.log(this.fileUploadError);
+  
+        setTimeout(() => {
+          this.fileUploadError = null;
+          console.log(this.fileUploadError);
+        }, 2500);
+      });
+  
+      this.mAndC.getFocusTrigger().subscribe(() => {
+        if (this.myTextarea) {
+          this.myTextarea.nativeElement.focus();
+        }
+      });
   }
-
-
-
 
   ngOnInit(){
     this.memberList = [];
@@ -71,17 +116,6 @@ export class ChannelComponent implements OnInit {
     }, 500);
     console.log('ngOnInit channel triggered')
   }
-
-
-  changeReload(){
-    this.changeReloadStatus.emit()
-  }
-
-  reloadWorkspace(){
-    this.reloadWorkspaceStatus.emit(true);
-  }
-
-
 
   ngOnChanges(){
     console.log(this.reload);
@@ -105,6 +139,14 @@ export class ChannelComponent implements OnInit {
     }
   }
 
+
+  changeReload(){
+    this.changeReloadStatus.emit()
+  }
+
+  reloadWorkspace(){
+    this.reloadWorkspaceStatus.emit(true);
+  }
 
 
   loadMemberList(): Promise<void>{
@@ -133,16 +175,152 @@ export class ChannelComponent implements OnInit {
     })
   }
 
+
+  //neu
+
+    //kopieren
+    loadAllMessageReactions() {
+      for (let i = 0; i < this.messageList.length; i++) {
+        const list = this.messageList[i];
+        //loadchannelmessagesreaction schreiben
+        this.database.loadConversationMessagesReactions(this.activeUser.userId, this.conversationId, list.messageId).then(reaction => {
+          reaction.forEach(reaction => {
+            this.reactions.push(reaction)
+          });
+        })
+      }
+    }
+
+
+  //kopieren
+  saveNewMessage() {
+    this.messageList = [];
+    let newMessage: ChannelMessage = this.database.createChannelMessage(this.channel, this.content, this.activeUser.userId, this.fileService.downloadURL)
+
+    this.database.addChannelMessage(this.channel, newMessage)
+
+    this.content = '';
+
+    this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId).then(messageList => {
+      this.messageList = messageList;
+      this.messageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+    })
+
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 10);
+
+    this.fileService.downloadURL = '';
+  }
+
+  //group reactions funktioniert noch nicht
+
+
+  //group reactions, showtooltip, hidetooltip, get reachtionUser
+  //get reachtionText die ausgelagert sind
+
+
+    //kopieren
+  // save message reaction
+  async saveNewMessageReaction(event: any, message: ChannelMessage, userId: string, reactionbar?: string) {
+    let emoji: string
+    if (reactionbar) {
+      emoji = reactionbar
+    } else {
+      emoji = event.emoji.native
+    }
+
+    const userAlreadyReacted = this.reactions.some(reaction =>
+      reaction.messageId === message.messageId && reaction.emoji === emoji && reaction.userId === userId
+    );
+    if (userAlreadyReacted) {
+      console.log('User has already reacted with this emoji');
+      return;
+    }
+
+    this.reactions = [];
+    let reaction = this.database.createChannelMessageReaction(emoji, userId, this.activeUser.name, message);
+    await this.database.addChannelMessageReaction(this.channel, message, reaction)
+    await this.loadAllMessageReactions();
+
   
+    this.chatService.checkIfEmojiIsAlreadyInUsedLastEmojis(emoji, userId);  // Funktion wird in Service ausgelagert
+    
+    this.mAndC.loadUsersOfUser();
+    this.mAndC.loadChannlesofUser()
+
+    setTimeout(() => {
+      this.chatService.groupReactions(this.messageList)
+    }, 1000);
+
+    this.mAndC.selectedMessageId = null;
+  }
+
+
+
+  //kopieren
+  // Edit Message
+  updateMessage(message: ChannelMessage) {
+    const updatedContent = this.editService.editContent;
+    this.editService.isEditing = false;
+    this.editService.selectedMessageIdEdit = null;
+    message.content = updatedContent;
+
+
+    //function schreiben
+    this.database.updateChannelMessage(message, this.channel).then(() => { 
+      console.log('Message updated successfully');
+    }).catch(error => {
+      console.error('Error updating message: ', error);
+    });
+
+    this.loadChannelMessages();
+  }
+
+  
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.setFocus();
+      this.scrollToBottom();
+    }, 2000);
+  }
+
+    //kopieren
+  // Focusing tesxtarea after component is initilized 
+  setFocus(): void {
+    setTimeout(() => {
+      this.myTextarea.nativeElement.focus();
+    }, 10);
+  }
+
+    //kopieren
+  // Scroll to the bottom of the chatarea 
+  scrollToBottom(): void {
+    try {
+      this.lastDiv.nativeElement.scrollIntoView();
+    } catch (err) {
+      console.error('Scroll to bottom failed', err);
+    }
+  }
+
+
+    //kopieren
+  // Trigger click on fileupload input field
+  @ViewChild('fileInput') fileInput!: ElementRef;
+
+  triggerFileInput(): void {
+    this.fileInput.nativeElement.click();
+  }
+
+
+
+
+  //old and relevant
   showAddMember(){
     const channelInfo = this.dialog.open(DialogAddAdditionalMemberComponent);
     channelInfo.componentInstance.currentChannel = this.channel;
     channelInfo.afterClosed().subscribe(result => {
-      /*
-      if(result){
-        this.updatedMemberList.emit(true);
-      }
-      */
       this.isdataLoaded = false;
       setTimeout(() => {
         this.isdataLoaded = true;
@@ -169,11 +347,9 @@ export class ChannelComponent implements OnInit {
       if(result){
         this.userLeftChannel.emit(true);
       }
-
     })
-    
-
-   
   }
+
+
 
 }

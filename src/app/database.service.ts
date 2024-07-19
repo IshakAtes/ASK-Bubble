@@ -10,6 +10,7 @@ import { ConversationMessage } from '../models/conversationMessage.class';
 import { Timestamp, deleteDoc, setDoc } from 'firebase/firestore';
 import { updateDoc, doc } from 'firebase/firestore'; // Korrigiert den Importpfad
 import { WorkspaceComponent } from './workspace/workspace.component';
+import { timestamp } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -56,7 +57,7 @@ export class DatabaseService {
     const randomNumber = Math.random()
     channelMessage.channelId = channel.channelId;
     channelMessage.content = content;
-    channelMessage.createdAt = new Date();
+    channelMessage.createdAt = Timestamp.fromDate(new Date());
     channelMessage.createdBy = createdBy;
     channelMessage.fileUrl = fileUrl ? fileUrl : '';
     channelMessage.threadId = threadId ? threadId: '';
@@ -65,12 +66,13 @@ export class DatabaseService {
   }
 
 
-  createChannelMessageReaction(emoji: string, userId: string, channelMessage: ChannelMessage): Reaction{
+  createChannelMessageReaction(emoji: string, userId: string, userName: string, channelMessage: ChannelMessage): Reaction{
     let reaction = {} as Reaction;
     const randomNumber = Math.random()
     reaction.emoji = emoji;
     reaction.userId = userId;
     reaction.messageId = channelMessage.messageId;
+    reaction.userName = userName;
     reaction.reactionId = 'CHA-MSG-REACT-' + randomNumber;
     return reaction
   }
@@ -391,7 +393,7 @@ export class DatabaseService {
                         fileUrl: messageData['fileUrl'],
                         threadId: messageData['threadId'],
                         messageId: messageData['messageId'],
-                        toJSON: function (): { channelId: string; content: string; createdAt: Date; createdBy: string; fileUrl: string; threadId: string; messageId: string; } {
+                        toJSON: function (): { channelId: string; content: string; createdAt: Timestamp; createdBy: string; fileUrl: string; threadId: string; messageId: string; } {
                           throw new Error('Function not implemented.');
                         }
                       };
@@ -737,6 +739,11 @@ export class DatabaseService {
     }).catch(error => {
       console.error('Error updating message: ', error);
     });
+  }
+
+
+  updateChannelMessage(message: ChannelMessage, channel: Channel){
+
   }
 
   
