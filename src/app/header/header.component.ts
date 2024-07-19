@@ -1,10 +1,12 @@
-import { Component, EventEmitter, Output, Input } from '@angular/core';
+import { Component, EventEmitter, Output, Input, inject } from '@angular/core';
 import { ChatComponent } from '../chat/chat.component';
 import { UserService } from '../user.service';
 import { User } from '../../models/user.class';
 import { CommonModule, NgStyle } from '@angular/common';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogShowUserProfilComponent } from '../dialog-show-user-profil/dialog-show-user-profil.component';
+import { AuthService } from '../shared-services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -14,9 +16,11 @@ import { DialogShowUserProfilComponent } from '../dialog-show-user-profil/dialog
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent  {
+  authService = inject(AuthService);
   hovered: boolean = false;
   dropdownOpen: boolean = false;
   activeUser: User = this.us.loggedUser;
+  router = inject(Router);
   
   @Output() search: EventEmitter<string> = new EventEmitter<string>(); //Ist das noch notwendig
   
@@ -33,7 +37,9 @@ export class HeaderComponent  {
   }
 
   logout() {
-    this.us.logout();
+    this.authService.logout();
+    this.us.loggedUser = new User();
+    this.router.navigate(['']);
   }
 
   onSearch(event: any): void {

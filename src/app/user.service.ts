@@ -10,12 +10,14 @@ import { Router } from '@angular/router';
 import { DatabaseService } from './database.service';
 import { Conversation } from '../models/conversation.class';
 import { Auth } from '@angular/fire/auth';
+import { AuthService } from './shared-services/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class UserService {
+  // authService = inject(AuthService)
   loggedUser: User;
   firestore: Firestore = inject(Firestore)
   userCache: User;
@@ -74,6 +76,7 @@ export class UserService {
 
   logout() {
     this.loggedUser = new User();
+    // this.authService.logout();
     this.router.navigate(['']);
   }
 
