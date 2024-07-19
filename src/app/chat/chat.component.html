@@ -113,14 +113,14 @@
 
                     <div class="reaction-bar">
                         @for (reaction of groupedReactions.get(message.messageId); track $index) {
-                        <div class="emoji-div" (mouseenter)="showTooltip(reaction)" (mouseleave)="hideTooltip()">
+                        <div class="emoji-div" (mouseenter)="chat.showTooltip(reaction)" (mouseleave)="chat.hideTooltip()">
                             {{ reaction.emoji }} {{ reaction.count }}
 
-                            @if (emojiInfoVisible && hoveredReaction === reaction) {
+                            @if (chat.emojiInfoVisible && chat.hoveredReaction === reaction) {
                             <div class="emoji-info">
                                 <div class="emojo-info-emoji-div">{{ reaction.emoji }}</div>
-                                <div class="emojo-info-user-div">{{ getReactionUser(reaction.users) }}</div>
-                                <div class="emojo-info-text-div">{{ getReactionText(reaction.users) }}</div>
+                                <div class="emojo-info-user-div">{{ chat.getReactionUser(reaction.users) }}</div>
+                                <div class="emojo-info-text-div">{{ chat.getReactionText(reaction.users) }}</div>
                             </div>
                             }
                         </div>
@@ -187,14 +187,14 @@
 
                     <div class="reaction-bar">
                         @for (reaction of groupedReactions.get(message.messageId); track $index) {
-                        <div class="emoji-div" (mouseenter)="showTooltip(reaction)" (mouseleave)="hideTooltip()">
+                        <div class="emoji-div" (mouseenter)="chat.showTooltip(reaction)" (mouseleave)="chat.hideTooltip()">
                             {{ reaction.emoji }} {{ reaction.count }}
 
-                            @if (emojiInfoVisible && hoveredReaction === reaction) {
+                            @if (chat.emojiInfoVisible && chat.hoveredReaction === reaction) {
                             <div class="emoji-info">
                                 <div class="emojo-info-emoji-div">{{ reaction.emoji }}</div>
-                                <div class="emojo-info-user-div">{{ getReactionUser(reaction.users) }}</div>
-                                <div class="emojo-info-text-div">{{ getReactionText(reaction.users) }}</div>
+                                <div class="emojo-info-user-div">{{ chat.getReactionUser(reaction.users) }}</div>
+                                <div class="emojo-info-text-div">{{ chat.getReactionText(reaction.users) }}</div>
                             </div>
                             }
                         </div>
