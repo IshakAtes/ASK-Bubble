@@ -21,7 +21,7 @@ export class AuthService {
     const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, password
     ).then(response => updateProfile(response.user, {displayName: username}),
     );
-    this.activeUser$ = this.us.loggedUser;
+    // this.activeUser$ = this.us.loggedUser;
     return from(promise);
   }
 

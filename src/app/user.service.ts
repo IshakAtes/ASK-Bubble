@@ -74,12 +74,6 @@ export class UserService {
   }
 
 
-  logout() {
-    this.loggedUser = new User();
-    // this.authService.logout();
-    this.router.navigate(['']);
-  }
-
   
   async checkEmail(email: string, myForm: FormGroup): Promise<void> {
     try {

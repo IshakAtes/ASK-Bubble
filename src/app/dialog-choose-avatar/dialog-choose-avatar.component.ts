@@ -103,20 +103,16 @@ export class DialogChooseAvatarComponent {
 
   createUser() {
     this.us.userCache.avatarUrl = this.selectedAvatar;
-    this.us.addUser(this.us.userCache);
-    this.authRegistration();
-    this.sendRegisteredMail();
     console.log('userCache:', this.us.userCache);
     this.database.addUser(this.us.userCache);
-
+    this.authRegistration();
+    this.sendRegisteredMail();
     setTimeout(() => {
       this.database.getUser(this.us.userCache.email)
         .then(user =>{
           this.database.addConversation(this.database.createConversation(user.userId, user.userId))
         })
     }, 1000);
-    this.sendRegisteredMail();
-  
   }
 
   selectDummyAvatar(item: any) {

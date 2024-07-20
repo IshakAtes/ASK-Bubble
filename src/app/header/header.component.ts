@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [ChatComponent, CommonModule, NgStyle], //Ist das noch notwendig
+  imports: [ChatComponent, CommonModule, NgStyle],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
@@ -22,7 +22,7 @@ export class HeaderComponent  {
   activeUser: User = this.us.loggedUser;
   router = inject(Router);
   
-  @Output() search: EventEmitter<string> = new EventEmitter<string>(); //Ist das noch notwendig
+  @Output() search: EventEmitter<string> = new EventEmitter<string>();
   
   
   @Output() showWorkspace = new EventEmitter<boolean>();
@@ -43,7 +43,7 @@ export class HeaderComponent  {
   }
 
   onSearch(event: any): void {
-    this.search.emit(event.target.value); //Ist das noch notwendig
+    this.search.emit(event.target.value);
   }
 
   viewWorkspace(){
