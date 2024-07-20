@@ -76,7 +76,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
 
     this.reactions = chat.reactions;
     this.chat.groupedReactions$.subscribe(groupedReactions => {
-      // debugger
       this.groupedReactions = groupedReactions;
       console.log('Updated groupedReactions:', this.groupedReactions);
     });
@@ -220,72 +219,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.fileUpload.downloadURL = '';
   }
 
-  // Auslagern Service
-  // group together all reaction based on their messageId and count them to display the right count in html
-  // groupReactions() {
-  //   this.groupedReactions = new Map();
-
-  //   this.list.forEach(message => {
-  //     const reactionMap = new Map<string, { count: number, users: string[] }>();
-
-  //     this.reactions
-  //       .filter(reaction => reaction.messageId === message.messageId)
-  //       .forEach(reaction => {
-  //         if (!reactionMap.has(reaction.emoji)) {
-  //           reactionMap.set(reaction.emoji, { count: 0, users: [] });
-  //         }
-  //         const reactionData = reactionMap.get(reaction.emoji)!;
-  //         reactionData.count += 1;
-  //         reactionData.users.push(reaction.userName);
-  //       });
-
-  //     this.groupedReactions.set(
-  //       message.messageId,
-  //       Array.from(reactionMap.entries()).map(([emoji, { count, users }]) => ({ emoji, count, users }))
-  //     );
-  //   });
-  // }
-
-  // Auslagern in Service - Daten aus user.service
-  //display and hide the reaction info on hover and retun the right text based on reaction(s) creator(s)
-  // emojiInfoVisible: boolean = false;
-  // hoveredReaction: { emoji: string, count: number, users: string[] } | null = null;
-
-  // showTooltip(reaction: { emoji: string, count: number, users: string[] }) {
-  //   this.hoveredReaction = reaction;
-  //   this.emojiInfoVisible = true;
-  // }
-
-  // hideTooltip() {
-  //   this.emojiInfoVisible = false;
-  //   this.hoveredReaction = null;
-  // }
-
-  // getReactionUser(users: string[]): string {
-  //   const userName = this.userName;
-  //   const userText = users.map(user => user === userName ? 'du' : user);
-  //   const formattedUserText = userText.map(user => `${user}`);
-
-  //   if (userText.length === 1) {
-  //     return formattedUserText[0];
-  //   } else if (userText.length === 2) {
-  //     return `${formattedUserText[0]} und ${formattedUserText[1]}`;
-  //   } else {
-  //     return `${formattedUserText.slice(0, -1).join(', ')} und ${formattedUserText[formattedUserText.length - 1]}`;
-  //   }
-  // }
-
-  // getReactionText(users: string[]): string {
-  //   const userName = this.userName;
-  //   const userText = users.map(user => user === userName ? 'du' : user);
-
-  //   if (userText.length === 1) {
-  //     return userText[0] === 'du' ? 'hast darauf reagiert' : 'hat darauf reagiert';
-  //   } else {
-  //     return 'haben darauf reagiert';
-  //   }
-  // }
-
+  
   //kopieren
   // save message reaction
   async saveNewMessageReaction(event: any, convo: ConversationMessage, userId: string, reactionbar?: string) {
@@ -309,27 +243,19 @@ export class ChatComponent implements AfterViewInit, OnInit {
     await this.databaseService.addConversationMessageReaction(this.specific, convo, reaction)
     await this.loadAllMessageReactions();
 
-    // setTimeout(() => {
-      this.chat.groupReactions(this.list)
-    // }, 1500);
+    // Änderung nach FR
+    this.chat.reactions = this.reactions
 
-    // Funktion wird in Service ausgelagert
-    this.checkIfEmojiIsAlreadyInUsedLastEmojis(emoji, userId);
+     setTimeout(() => {
+      this.chat.groupReactions(this.list)
+     }, 500);
+
+     //änderung nach FR
+    this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
     this.mAndC.loadUsersOfUser();
     this.mAndC.loadChannlesofUser()
 
-    
-
     this.mAndC.selectedMessageId = null;
-  }
-
-  //Auslagern in Service
-  checkIfEmojiIsAlreadyInUsedLastEmojis(emoji: string, userId: string) {
-    let usedLastEmoji = this.user.usedLastTwoEmojis[0]
-    let usedSecondEmoji = this.user.usedLastTwoEmojis[1]
-    if (usedSecondEmoji != emoji && usedLastEmoji != emoji) {
-      this.databaseService.updateUsedLastTwoEmojis(userId, usedSecondEmoji || usedLastEmoji, emoji)
-    }
   }
 
   @ViewChild('myTextarea') myTextarea!: ElementRef<HTMLTextAreaElement>;
@@ -341,9 +267,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
       this.scrollToBottom();
     }, 2000);
   }
-
-
-
 
 
   // später anschauen 

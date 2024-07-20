@@ -3,6 +3,8 @@ import { BehaviorSubject } from 'rxjs';
 import { ConversationMessage } from '../../../models/conversationMessage.class';
 import { Reaction } from '../../../models/reactions.class';
 import { ChannelMessage } from '../../../models/channelMessage.class';
+import { User } from '../../../models/user.class';
+import { DatabaseService } from '../../database.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,14 +15,15 @@ export class GeneralChatService {
   userName = 'Simon Weirauch';
   conversationId = 'CONV-HTMknmA28FP56EIqrtZo-0.4380479343879251';
 
-  constructor() { }
+  //Änderung nach FR
+  constructor(public databaseService: DatabaseService) { }
 
   private groupedReactions: BehaviorSubject<Map<string, Array<{ emoji: string, count: number, users: string[] }>>> = new BehaviorSubject(new Map());
   groupedReactions$ = this.groupedReactions.asObservable();
   reactions: Array<Reaction> = [];
+  
 
  async groupReactions(messageList: Array<ConversationMessage> | Array<ChannelMessage>) {
-  debugger
     const groupedReactions = new Map<string, Array<{ emoji: string, count: number, users: string[] }>>();
 
     messageList.forEach(message => {
@@ -44,6 +47,17 @@ export class GeneralChatService {
     });
 
     this.groupedReactions.next(groupedReactions);
+  }
+
+   //Änderung nach FR
+  checkIfEmojiIsAlreadyInUsedLastEmojis(user:User,emoji: string, userId: string) {
+     //Änderung nach FR
+    let usedLastEmoji = user.usedLastTwoEmojis[0]
+     //Änderung nach FR
+    let usedSecondEmoji = user.usedLastTwoEmojis[1]
+    if (usedSecondEmoji != emoji && usedLastEmoji != emoji) {
+      this.databaseService.updateUsedLastTwoEmojis(userId, usedSecondEmoji || usedLastEmoji, emoji)
+    }
   }
 
   //display and hide the reaction info on hover and retun the right text based on reaction(s) creator(s)
