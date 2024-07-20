@@ -190,6 +190,19 @@
     line-height: 24.55px;
 }
 
+.own-file-div {
+    img {
+        width: 150px;
+        height: 150px;
+    }
+
+    a {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+}
+
 .answer-bar {
     display: flex;
     align-items: center;
@@ -215,6 +228,53 @@
     gap: 30px;
     padding: 25px 45px 25px 45px;
     flex-direction: row-reverse;
+    position: relative;
+    &:hover {
+        background: #ECEEFE;
+
+        .own-reactionbar {
+            display: flex;
+        }
+    }
+}
+
+
+.own-reactionbar {
+    position: absolute;
+    width: 255px;
+    height: 46px;
+    padding: 3px 15px 3px 20px;
+    display: none;
+    gap: 5px;
+    border-radius: 25px 25px 0px 25px;
+    border: 1px solid #ADB0D9;
+    background: #FFFFFF;
+    left: 0px;
+    top: 0px;
+
+    img {
+        border-radius: 50%;
+
+        &:hover {
+            cursor: pointer;
+            background-color: #ECEEFE;
+        }
+    }
+}
+
+.reactionbar-emoji-div {
+    width: 47px;
+    height: 46px;
+    font-size: 23px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    border-radius: 50%;
+
+    &:hover {
+        cursor: pointer;
+        background-color: #ECEEFE;
+    }
 }
 
 .own-message-header {
@@ -230,6 +290,42 @@
     border-radius: 30px 0px 30px 30px;
     background: #797EF3;
     color: white;
+}
+
+.edit-message-content-bubble {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    textarea {
+        min-width: 300px;
+        max-width: 700px;
+        background: #484df4;
+        color: white;
+    }
+
+    button {
+        width: 100px;
+        height: 34px;
+        border-radius: 50px;
+        background: #444DF2;
+        color: white;
+    }
+}
+
+.edit-message-content-bubble-BTN-div{
+    display: flex;
+    gap: 10px;
+
+    button {
+        width: 100px;
+        height: 34px;
+        border-radius: 50px;
+        background: #444DF2;
+        color: white;
+    }
+
 }
 
 .own-answer-bar {
@@ -292,6 +388,150 @@
 
 .channelBig{
     width: 100vw !important;
+}
+
+
+.emoticon-div {
+    position: absolute;
+    bottom: 185px;
+}
+
+.emoticon-reaction-div {
+    position: absolute;
+    bottom: 50px;
+}
+
+.mention-list-element {
+    cursor: pointer;
+}
+
+.mention-div {
+    position: absolute;
+    width: 250px;
+    max-height: 250px;
+    overflow-y: scroll;
+    background-color: white;
+    padding: 12px;
+    border-radius: 20px;
+    border: 1px solid #ADB0D9;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    bottom: 185px;
+}
+
+.message-container {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    bottom: 185px;
+    width: 250px;
+    max-height: 250px;
+    overflow-y: scroll;
+    background: white;
+    padding: 12px;
+    border-radius: 20px;
+    border: 1px solid #ADB0D9;
+    z-index: 1000;
+}
+
+.dropdown-item {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background: #f0f0f0;
+}
+
+.file-upload-error-div {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+
+    p {
+        margin: 0;
+    }
+}
+
+.reaction-bar {
+    display: flex;
+    gap: 10px;
+}
+
+.emoji-div {
+    // width: 70px;
+    // height: 34px;
+    position: relative;
+    padding: 5px 10px 5px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    border: 1px solid #ADB0D9;
+    //z-index: 9;
+}
+
+.emoji-info {
+    position: absolute;
+    width: 158px;
+    height: 112px;
+    left: 32px;
+    bottom: 29px;
+    padding: 15px 10px 15px 10px;
+    gap: 5px;
+    border-radius: 30px 30px 30px 0px;
+    background: #444DF2;
+
+    color: white;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.emojo-info-emoji-div {
+    font-size: 28px;
+}
+
+.emojo-info-user-div {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 24.55px;
+}
+
+.emojo-info-text-div {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 21.82px;
+}
+
+.upload-preview-div {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+}
+
+.upload-preview-BTN {
+    width: 100px;
+    height: 34px;
+    border-radius: 50px;
+    background: #444DF2;
+    color: white;
+}
+
+.upload-preview {
+    width: 50px;
+    height: 50px;
 }
 
 

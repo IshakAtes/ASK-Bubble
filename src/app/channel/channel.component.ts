@@ -176,23 +176,20 @@ export class ChannelComponent implements OnInit {
   }
 
 
-  //neu
-
-    //kopieren
-    loadAllMessageReactions() {
-      for (let i = 0; i < this.messageList.length; i++) {
-        const list = this.messageList[i];
-        //loadchannelmessagesreaction schreiben
-        this.database.loadConversationMessagesReactions(this.activeUser.userId, this.conversationId, list.messageId).then(reaction => {
-          reaction.forEach(reaction => {
-            this.reactions.push(reaction)
-          });
-        })
-      }
+  loadAllMessageReactions() {
+    for (let i = 0; i < this.messageList.length; i++) {
+      const list = this.messageList[i];
+      this.database.loadChannelMessagesReactions(this.activeUser.userId, this.channel.channelId, list.messageId)
+      .then(reaction => {
+        reaction.forEach(reaction => {
+          this.reactions.push(reaction)
+        });
+      })
     }
+  }
 
 
-  //kopieren
+
   saveNewMessage() {
     this.messageList = [];
     let newMessage: ChannelMessage = this.database.createChannelMessage(this.channel, this.content, this.activeUser.userId, this.fileService.downloadURL)
@@ -213,14 +210,8 @@ export class ChannelComponent implements OnInit {
     this.fileService.downloadURL = '';
   }
 
-  //group reactions funktioniert noch nicht
+  //group reactions aus chatservice funktioniert noch nicht
 
-
-  //group reactions, showtooltip, hidetooltip, get reachtionUser
-  //get reachtionText die ausgelagert sind
-
-
-    //kopieren
   // save message reaction
   async saveNewMessageReaction(event: any, message: ChannelMessage, userId: string, reactionbar?: string) {
     let emoji: string
@@ -244,7 +235,7 @@ export class ChannelComponent implements OnInit {
     await this.loadAllMessageReactions();
 
   
-    this.chatService.checkIfEmojiIsAlreadyInUsedLastEmojis(emoji, userId);  // Funktion wird in Service ausgelagert
+    //this.chatService.checkIfEmojiIsAlreadyInUsedLastEmojis(emoji, userId);  // Funktion wird in Service ausgelagert
     
     this.mAndC.loadUsersOfUser();
     this.mAndC.loadChannlesofUser()
@@ -252,33 +243,21 @@ export class ChannelComponent implements OnInit {
     setTimeout(() => {
       this.chatService.groupReactions(this.messageList)
     }, 1000);
-
     this.mAndC.selectedMessageId = null;
   }
 
 
-
-  //kopieren
   // Edit Message
   updateMessage(message: ChannelMessage) {
     const updatedContent = this.editService.editContent;
     this.editService.isEditing = false;
     this.editService.selectedMessageIdEdit = null;
     message.content = updatedContent;
-
-
-    //function schreiben
-    this.database.updateChannelMessage(message, this.channel).then(() => { 
-      console.log('Message updated successfully');
-    }).catch(error => {
-      console.error('Error updating message: ', error);
-    });
-
+    this.database.updateChannelMessage(message, this.channel)
     this.loadChannelMessages();
   }
 
   
-
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.setFocus();
@@ -286,7 +265,6 @@ export class ChannelComponent implements OnInit {
     }, 2000);
   }
 
-    //kopieren
   // Focusing tesxtarea after component is initilized 
   setFocus(): void {
     setTimeout(() => {
@@ -294,18 +272,19 @@ export class ChannelComponent implements OnInit {
     }, 10);
   }
 
-    //kopieren
   // Scroll to the bottom of the chatarea 
   scrollToBottom(): void {
     try {
-      this.lastDiv.nativeElement.scrollIntoView();
+      if(this.messageList.length > 0){
+        this.lastDiv.nativeElement.scrollIntoView();
+      }
+      
     } catch (err) {
       console.error('Scroll to bottom failed', err);
     }
   }
 
 
-    //kopieren
   // Trigger click on fileupload input field
   @ViewChild('fileInput') fileInput!: ElementRef;
 
@@ -314,9 +293,6 @@ export class ChannelComponent implements OnInit {
   }
 
 
-
-
-  //old and relevant
   showAddMember(){
     const channelInfo = this.dialog.open(DialogAddAdditionalMemberComponent);
     channelInfo.componentInstance.currentChannel = this.channel;
@@ -349,7 +325,5 @@ export class ChannelComponent implements OnInit {
       }
     })
   }
-
-
 
 }

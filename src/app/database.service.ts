@@ -465,6 +465,32 @@ export class DatabaseService {
     });
    }
 
+   loadChannelMessagesReactions(userId: string, channelId: string, channelMessageId: string): Promise<Array<Reaction>> {
+    return new Promise<Array<Reaction>>((resolve, reject) => {
+      const reactionList = [] as Array<Reaction>;
+      
+      const path = `users/${userId}/channels/${channelId}/channelmessages/${channelMessageId}/reactions`;
+      const reactionsCollection = collection(this.firestore, path);
+      
+      onSnapshot(reactionsCollection, (snapshot) => {
+        snapshot.forEach((doc) => {
+          const reactionData = doc.data();
+          const reactionObject = {
+            emoji: reactionData['emoji'],
+            messageId: reactionData['messageId'],
+            reactionId: reactionData['reactionId'],
+            userId: reactionData['userId'],
+            userName: reactionData['userName'],
+          } as Reaction;
+          reactionList.push(reactionObject);
+        });
+        resolve(reactionList);
+      }, (error) => {
+        reject(error);
+      });
+    });
+  }
+
 
    /* CONVERSATION FUNCTIONS*/
   loadAllConversations(): Promise<Array<Conversation>>{
@@ -743,7 +769,34 @@ export class DatabaseService {
 
 
   updateChannelMessage(message: ChannelMessage, channel: Channel){
+    
+    channel.membersId.forEach(user => {
+      updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/' + message.channelId + '/channelmessages/'), message.messageId), message.toJSON())
+    })
+    
 
+    /*
+    const creatorMessageRef = doc(
+      this.firestore,
+      'users/' + conversation.createdBy + '/channels/' + message.channelId + '/channelmessages',
+      message.messageId
+    );
+  
+    const recipientMessageRef = doc(
+      this.firestore,
+      'users/' + conversation.recipientId + '/channels/' + message.channelId + '/channelmessages',
+      message.messageId
+    );
+  
+    return Promise.all([
+      updateDoc(creatorMessageRef, { content: message.content }),
+      updateDoc(recipientMessageRef, { content: message.content })
+    ]).then(() => {
+      console.log('Message updated successfully for both users');
+    }).catch(error => {
+      console.error('Error updating message: ', error);
+    });
+    */
   }
 
   
