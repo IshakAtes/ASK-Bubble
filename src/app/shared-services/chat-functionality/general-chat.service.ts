@@ -15,7 +15,7 @@ export class GeneralChatService {
   userName = 'Simon Weirauch';
   conversationId = 'CONV-HTMknmA28FP56EIqrtZo-0.4380479343879251';
 
-  //Änderung nach FR
+ 
   constructor(public databaseService: DatabaseService) { }
 
   private groupedReactions: BehaviorSubject<Map<string, Array<{ emoji: string, count: number, users: string[] }>>> = new BehaviorSubject(new Map());
@@ -49,11 +49,11 @@ export class GeneralChatService {
     this.groupedReactions.next(groupedReactions);
   }
 
-   //Änderung nach FR
+
   checkIfEmojiIsAlreadyInUsedLastEmojis(user:User,emoji: string, userId: string) {
-     //Änderung nach FR
+
     let usedLastEmoji = user.usedLastTwoEmojis[0]
-     //Änderung nach FR
+
     let usedSecondEmoji = user.usedLastTwoEmojis[1]
     if (usedSecondEmoji != emoji && usedLastEmoji != emoji) {
       this.databaseService.updateUsedLastTwoEmojis(userId, usedSecondEmoji || usedLastEmoji, emoji)

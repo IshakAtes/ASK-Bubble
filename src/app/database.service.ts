@@ -769,34 +769,10 @@ export class DatabaseService {
 
 
   updateChannelMessage(message: ChannelMessage, channel: Channel){
-    
+    let messageObject = new ChannelMessage(message);
     channel.membersId.forEach(user => {
-      updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/' + message.channelId + '/channelmessages/'), message.messageId), message.toJSON())
+      updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/' + message.channelId + '/channelmessages/'), message.messageId), messageObject.toJSON())
     })
-    
-
-    /*
-    const creatorMessageRef = doc(
-      this.firestore,
-      'users/' + conversation.createdBy + '/channels/' + message.channelId + '/channelmessages',
-      message.messageId
-    );
-  
-    const recipientMessageRef = doc(
-      this.firestore,
-      'users/' + conversation.recipientId + '/channels/' + message.channelId + '/channelmessages',
-      message.messageId
-    );
-  
-    return Promise.all([
-      updateDoc(creatorMessageRef, { content: message.content }),
-      updateDoc(recipientMessageRef, { content: message.content })
-    ]).then(() => {
-      console.log('Message updated successfully for both users');
-    }).catch(error => {
-      console.error('Error updating message: ', error);
-    });
-    */
   }
 
   

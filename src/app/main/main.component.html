@@ -30,7 +30,9 @@
     
         
         @if(conversation){
-            <app-chat></app-chat>
+            <app-chat
+            [specific]="currentConversation"
+            ></app-chat>
         }
         @else if(channel) {
             <app-channel
@@ -85,7 +87,7 @@
         @else {
             @if(conversation){
                 <app-chat
-                
+                [specific]="currentConversation"
                 
                 
                 ></app-chat>

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, OnInit, Input } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { UserService } from '../user.service';
 import { Conversation } from '../../models/conversation.class';
@@ -26,6 +26,11 @@ import { GeneralChatService } from '../shared-services/chat-functionality/genera
   styleUrl: './chat.component.scss'
 })
 export class ChatComponent implements AfterViewInit, OnInit {
+  
+  //input Data from main component
+  @Input() specific: Conversation;
+  
+  
   allUsers = [] as Array<User>;
   user: User;
 
@@ -33,14 +38,17 @@ export class ChatComponent implements AfterViewInit, OnInit {
   list: Array<ConversationMessage> = [];
   dates: Array<string> = [];
 
-  allConversations: Array<Conversation> = [];
-  specificConversation: Array<Conversation> = [];
+ 
+
+
 
   allChannels: Array<Channel> = [];
 
   reactions: Array<Reaction> = [];
   groupedReactions: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
   userEmojis$: Observable<Array<string>>;
+
+  isChatDataLoaded: boolean = true;
 
   // userId = 'HTMknmA28FP56EIqrtZo';
   // userName = 'Kerim Tasci';
@@ -50,13 +58,11 @@ export class ChatComponent implements AfterViewInit, OnInit {
   userName = 'Simon Weirauch';
   conversationId = 'CONV-HTMknmA28FP56EIqrtZo-0.4380479343879251';
 
-  /*test START Simon*/
-  specific: Conversation;
+
   sendingUser: User;
   passiveUser: User;
 
-  isChatDataLoaded: boolean = true;
-  /*Test END Simon*/
+  
 
   fileUploadError: string | null = null;
 
@@ -243,14 +249,14 @@ export class ChatComponent implements AfterViewInit, OnInit {
     await this.databaseService.addConversationMessageReaction(this.specific, convo, reaction)
     await this.loadAllMessageReactions();
 
-    // Änderung nach FR
+
     this.chat.reactions = this.reactions
 
      setTimeout(() => {
       this.chat.groupReactions(this.list)
      }, 500);
 
-     //änderung nach FR
+
     this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
     this.mAndC.loadUsersOfUser();
     this.mAndC.loadChannlesofUser()
