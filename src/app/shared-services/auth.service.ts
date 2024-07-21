@@ -45,8 +45,8 @@ export class AuthService {
         // https://firebase.google.com/docs/reference/js/auth.user
         const uid = user.uid;
         // this.us.loggedUser
-        console.log('authState uid', uid);
-        
+        console.log('authState uid', user);
+        this.us.updateUserToken(user.email, uid);
         // ...
       } else {
         // User is signed out
