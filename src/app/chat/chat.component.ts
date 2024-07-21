@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, OnInit, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { UserService } from '../user.service';
 import { Conversation } from '../../models/conversation.class';
@@ -29,42 +29,36 @@ export class ChatComponent implements AfterViewInit, OnInit {
   
   //input Data from main component
   @Input() specific: Conversation;
+  @Input() user: User
+
+
+
+  @Output() changeReloadStatus = new EventEmitter<boolean>();
   
-  
-  allUsers = [] as Array<User>;
-  user: User;
-
-  messages = [] as Array<ConversationMessage>;
-  list: Array<ConversationMessage> = [];
-  dates: Array<string> = [];
-
- 
-
-
-
-  allChannels: Array<Channel> = [];
-
-  reactions: Array<Reaction> = [];
-  groupedReactions: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
-  userEmojis$: Observable<Array<string>>;
-
-  isChatDataLoaded: boolean = true;
-
-  // userId = 'HTMknmA28FP56EIqrtZo';
-  // userName = 'Kerim Tasci';
-  // conversationId = 'CONV-HTMknmA28FP56EIqrtZo-0.4380479343879251';
-
-  userId = 'Adxrm7CExizb76lVrknu';
-  userName = 'Simon Weirauch';
-  conversationId = 'CONV-HTMknmA28FP56EIqrtZo-0.4380479343879251';
-
 
   sendingUser: User;
   passiveUser: User;
 
-  
+  allUsers = [] as Array<User>;
+  list: Array<ConversationMessage> = [];
+  allChannels: Array<Channel> = [];
+  reactions: Array<Reaction> = [];
 
+  isChatDataLoaded: boolean = true;
+  userEmojis$: Observable<Array<string>>;
   fileUploadError: string | null = null;
+  groupedReactions: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
+
+
+  
+  // userId = 'HTMknmA28FP56EIqrtZo';
+  // userName = 'Kerim Tasci';
+  // conversationId = 'CONV-HTMknmA28FP56EIqrtZo-0.4380479343879251';
+
+  // userId =  'Adxrm7CExizb76lVrknu';
+  //userName = 'Simon Weirauch';
+  //conversationId = 'CONV-HTMknmA28FP56EIqrtZo-0.4380479343879251';
+
 
   constructor(public databaseService: DatabaseService,
     public userService: UserService,
@@ -107,30 +101,38 @@ export class ChatComponent implements AfterViewInit, OnInit {
     });
   }
 
-  ngOnInit(): void {
+  changeReload(){
+    this.changeReloadStatus.emit()
+  }
+
+
+  ngOnChanges(){
     this.isChatDataLoaded = false;
+    this.sendingUser = new User()
+    this.passiveUser = new User()
+    
+    this.list = [];
+    this.reactions = [];
+
+    console.log('chat onchange triggered')
+    console.log('current Conversation:')
+    console.log(this.specific)
+    
     this.loadAllMessages();
 
-
-    // If loading user data via service is necessary 
-    // this.userData.loadUserData().then(() => {
-    //   this.user = this.userData.user;
-    //   this.specific = this.userData.specific;
-    //   this.sendingUser = this.userData.sendingUser;
-    //   this.passiveUser = this.userData.passiveUser;
-    // }).catch(error => {
-    //   console.error('Error loading user data', error);
-    // });
-  
     
-    this.databaseService.loadUser(this.userId).then(user => {
-      this.user = user;
-    })
 
-    this.databaseService.loadSpecificUserConversation(this.userId, this.conversationId)
-      .then(conversation => {
-        this.specific = conversation;
-        console.log('this is the searched Conversation', this.specific)
+  
+   //DO MENSIONS WORK? allUsers = [] as Array<User>;
+
+   //DO MENTIONS ALL CHANNEL WORK? allChannels: Array<Channel> = [];
+   // reactions: Array<Reaction> = [];
+
+
+    //this.changeReload();
+    
+  
+
 
         this.databaseService.loadUser(this.specific.createdBy)
           .then(creatorUser => {
@@ -153,11 +155,92 @@ export class ChatComponent implements AfterViewInit, OnInit {
               this.passiveUser = recipientUser;
             }
           })
-      })
 
     this.mAndC.loadUsersOfUser();
     this.mAndC.loadChannlesofUser();
-    this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.userId);
+    this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.user.userId);
+    
+
+
+    setTimeout(() => {
+      this.loadAllMessageReactions();
+      console.log('reactions');
+      console.log(this.reactions);
+    }, 1500);
+
+
+    setTimeout(() => {
+      this.chat.groupReactions(this.list);
+      console.log('groupreaction');
+      console.log(this.groupedReactions);
+      this.isChatDataLoaded = true;
+    }, 2000);
+  }
+
+
+
+
+  ngOnInit(): void {
+    this.isChatDataLoaded = false;
+    this.loadAllMessages();
+    console.log('current Conversation:')
+    console.log(this.specific)
+
+
+    // If loading user data via service is necessary 
+    // this.userData.loadUserData().then(() => {
+    //   this.user = this.userData.user;
+    //   this.specific = this.userData.specific;
+    //   this.sendingUser = this.userData.sendingUser;
+    //   this.passiveUser = this.userData.passiveUser;
+    // }).catch(error => {
+    //   console.error('Error loading user data', error);
+    // });
+  
+    
+    /*
+    this.databaseService.loadUser(this.userId).then(user => {
+      this.user = user;
+    })
+    */
+
+    /*
+    this.databaseService.loadSpecificUserConversation(this.userId, this.conversationId)
+      .then(conversation => {
+        this.specific = conversation;
+        console.log('this is the searched Conversation', this.specific)
+      
+    */
+
+        this.databaseService.loadUser(this.specific.createdBy)
+          .then(creatorUser => {
+            if (creatorUser.userId == this.user.userId) {
+              this.sendingUser = creatorUser;
+              console.log('this is the creatorUser', this.sendingUser)
+            }
+            else {
+              this.passiveUser = creatorUser;
+            }
+          })
+
+        this.databaseService.loadUser(this.specific.recipientId)
+          .then(recipientUser => {
+            if (recipientUser.userId == this.user.userId) {
+              this.sendingUser = recipientUser;
+              console.log('this is the recipientUser', this.passiveUser)
+            }
+            else {
+              this.passiveUser = recipientUser;
+            }
+          })
+
+      /*    
+      })
+      */
+
+    this.mAndC.loadUsersOfUser();
+    this.mAndC.loadChannlesofUser();
+    this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.user.userId);
     
 
 
@@ -178,7 +261,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
 
   //load functions
   loadAllMessages() {
-    this.databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
+    this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId).then(messageList => {
       this.list = messageList;
       this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
 
@@ -191,7 +274,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
   loadAllMessageReactions() {
     for (let i = 0; i < this.list.length; i++) {
       const list = this.list[i];
-      this.databaseService.loadConversationMessagesReactions(this.userId, this.conversationId, list.messageId).then(reaction => {
+      this.databaseService.loadConversationMessagesReactions(this.user.userId, this.specific.conversationId, list.messageId).then(reaction => {
         reaction.forEach(reaction => {
           this.reactions.push(reaction)
         });
@@ -207,13 +290,13 @@ export class ChatComponent implements AfterViewInit, OnInit {
 //kopieren
   saveNewMessage() {
     this.list = [];
-    let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specific, this.content, this.userId, this.fileUpload.downloadURL)
+    let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specific, this.content, this.user.userId, this.fileUpload.downloadURL)
 
     this.databaseService.addConversationMessage(this.specific, newMessage)
 
     this.content = '';
 
-    this.databaseService.loadConversationMessages(this.userId, this.conversationId).then(messageList => {
+    this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId).then(messageList => {
       this.list = messageList;
       this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
     })
@@ -245,7 +328,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     }
 
     this.reactions = [];
-    let reaction = this.databaseService.createConversationMessageReaction(emoji, userId, this.userName, convo);
+    let reaction = this.databaseService.createConversationMessageReaction(emoji, userId, this.user.name, convo);
     await this.databaseService.addConversationMessageReaction(this.specific, convo, reaction)
     await this.loadAllMessageReactions();
 
@@ -305,7 +388,10 @@ export class ChatComponent implements AfterViewInit, OnInit {
   // Scroll to the bottom of the chatarea 
   scrollToBottom(): void {
     try {
-      this.lastDiv.nativeElement.scrollIntoView();
+      if(this.list.length > 0){
+        this.lastDiv.nativeElement.scrollIntoView();
+      }
+
     } catch (err) {
       console.error('Scroll to bottom failed', err);
     }

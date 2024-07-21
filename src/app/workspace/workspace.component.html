@@ -123,6 +123,8 @@
                     <!--ConversationBody has to be filled with data from database-->
                     @if(userService.activeUserOwnConversation){
                         <div [ngClass]="{'d-none': hideConversationBody}" class="conversationBody">
+                            
+                            
                             <button (click)="openConversation(userService.activeUserOwnConversation)">
                                 <img src="{{userService.activeUserObject.avatarUrl}}" alt="">
                                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
