@@ -158,9 +158,6 @@ export class CreateConversationComponent {
 
 
 
-
-
-
   openNewConversation(user: User){
     let newConversation = this.database.createConversation(this.userId, user.userId)
     console.log('create new conversation' + newConversation)

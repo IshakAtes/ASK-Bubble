@@ -266,9 +266,6 @@ export class UserService {
           })
         */
         
-        console.log('users from active user conversation list' ,this.usersFromActiveUserConversationList)
-        console.log('new activeconversationlist' ,this.activeUserConversationList)
-        console.log('selected as own conversation:', this.activeUserOwnConversation);
 
         
       });
@@ -280,13 +277,25 @@ export class UserService {
 
 
   checkOwnConversation(conversation: Conversation){
-    let conversationObject = new Conversation(conversation)
     
     if(conversation.createdBy == this.activeUserObject.userId && conversation.recipientId == this.activeUserObject.userId){
       //debugger TODO;
       this.activeUserOwnConversation = conversation
       this.activeUserConversationList.splice(this.activeUserConversationList.indexOf(conversation), 1);
+      this.database.loadUser(conversation.createdBy)
+        .then(user => {
+          //console.log('users before splice' , this.usersFromActiveUserConversationList)
+      
+          //this.usersFromActiveUserConversationList.splice(this.usersFromActiveUserConversationList.indexOf(user), 1);
+          //console.log('users after splice' , this.usersFromActiveUserConversationList)
 
+
+          console.log('users from active user conversation list' ,this.usersFromActiveUserConversationList)
+          console.log('new activeconversationlist' ,this.activeUserConversationList)
+          console.log('selected as own conversation:', this.activeUserOwnConversation);
+  
+        })
+      
 
     }
   }

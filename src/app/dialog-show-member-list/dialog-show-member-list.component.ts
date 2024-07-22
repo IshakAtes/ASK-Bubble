@@ -7,6 +7,7 @@ import { User } from '../../models/user.class';
 import { CommonModule } from '@angular/common';
 import { DialogAddAdditionalMemberComponent } from '../dialog-add-additional-member/dialog-add-additional-member.component';
 import { DialogUserProfileComponent } from '../dialog-user-profile/dialog-user-profile.component';
+import { Conversation } from '../../models/conversation.class';
 
 @Component({
   selector: 'app-dialog-show-member-list',
@@ -50,6 +51,12 @@ export class DialogShowMemberListComponent {
     console.log(user.userId);
     const profileInfo = this.dialog.open(DialogUserProfileComponent);
     profileInfo.componentInstance.shownUser = user;
+
+    profileInfo.afterClosed().subscribe((conversation) => {
+      if(conversation){
+        this.dialogRef.close(conversation)
+      }
+    })
   }
 
 }

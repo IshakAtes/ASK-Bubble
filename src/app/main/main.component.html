@@ -41,6 +41,7 @@
             <app-channel
                 (changeReloadStatus)="setReloadToFalse($event)"
                 (userLeftChannel)="userLeftChannel()"
+                (openConversation)="changeConversation($event)"
                 
                 
                 [activeUser]="userservice.activeUserObject"

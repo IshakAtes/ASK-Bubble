@@ -1,5 +1,8 @@
 @import url(../app.component.scss);
 
+
+
+
 .main-chat {
     height: 902px;
     width: 989px;
@@ -433,8 +436,15 @@
 }
 
 .emoticon-reaction-div {
+    /* vorher
     position: absolute;
     bottom: 50px;
+    */
+
+    //nachher
+    position: absolute;
+    top: 50px !important;
+    z-index: 9999;
 }
 
 .mention-list-element {

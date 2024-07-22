@@ -18,6 +18,7 @@ import { LastTwoEmojisService } from '../shared-services/chat-functionality/last
 import { MentionAndChannelDropdownService } from '../shared-services/chat-functionality/mention-and-channel-dropdown.service';
 import { Reaction } from '../../models/reactions.class';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { Conversation } from '../../models/conversation.class';
 
 
 
@@ -42,6 +43,7 @@ export class ChannelComponent implements OnInit {
   @Output() reloadWorkspaceStatus = new EventEmitter<boolean>();
   @Output() userLeftChannel = new EventEmitter<boolean>();
   @Output() updatedMemberList = new EventEmitter<boolean>();
+  @Output() openConversation = new EventEmitter<Conversation>();
 
   memberList: Array<User> = [];
   messageList: Array<ChannelMessage>
@@ -103,13 +105,21 @@ export class ChannelComponent implements OnInit {
   ngOnInit(){
     this.memberList = [];
     this.messageList = [];
+
     setTimeout(() => {
       Promise.all([
         this.loadMemberList(),
         this.loadChannelMessages(),
-        this.loadChannelCreator()
+        this.loadChannelCreator(),
+        this.loadAllMessageReactions(),
       ]).then(() => {
-        this.isdataLoaded = true;
+        setTimeout(() => {
+          this.loadAllMessageReactions()
+        }, 700);
+        setTimeout(() => {
+          this.chatService.groupReactions(this.messageList)
+          this.isdataLoaded = true;  
+        }, 1000);
       }).catch(error => {
         console.log('this ', error)
       });
@@ -121,6 +131,7 @@ export class ChannelComponent implements OnInit {
     console.log(this.reload);
     console.log('channel on change triggered')
     if(this.reload){
+
       this.memberList = [];
       this.messageList = [];
       this.isdataLoaded = false;
@@ -128,14 +139,21 @@ export class ChannelComponent implements OnInit {
         Promise.all([
           this.loadMemberList(),
           this.loadChannelMessages(),
-          this.loadChannelCreator()
+          this.loadChannelCreator(),
+          
         ]).then(() => {
-          this.changeReload(); //Important to be able to load another channel
-          this.isdataLoaded = true;
+          setTimeout(() => {
+            this.loadAllMessageReactions()
+          }, 1500);
+          setTimeout(() => {
+            this.chatService.groupReactions(this.messageList)
+            this.changeReload(); //Important to be able to load another channel
+            this.isdataLoaded = true;  
+          }, 2000);
         }).catch(error => {
           console.log('this ', error)
         });
-      }, 500);
+      }, 1000);
     }
   }
 
@@ -314,6 +332,13 @@ export class ChannelComponent implements OnInit {
   showMemberList(){
     const channelInfo = this.dialog.open(DialogShowMemberListComponent);
     channelInfo.componentInstance.currentChannel = this.channel;
+    channelInfo.afterClosed().subscribe((conversation) => {
+      if(conversation){
+        console.log('convo is in channel from user Profile and show member list:', conversation)
+        this.openConversation.emit(conversation)
+      }
+    })
+    
   }
 
 

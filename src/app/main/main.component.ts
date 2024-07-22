@@ -31,15 +31,11 @@ export class MainComponent{
   thread: boolean = true;
   
 
-
-
   currentConversation: Conversation;
   currentChannel: Channel;
 
 
 
-
-  
   constructor(public userservice: UserService, public database: DatabaseService){
     userservice.getDeviceWidth();
     console.log(this.authService.checkUserStatus());

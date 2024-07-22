@@ -26,24 +26,22 @@ export class WorkspaceComponent {
   
 
 
- // activeUser = new User()
- inputUser: string = '';
- inputFocused: boolean =  false;
- isdataLoaded: boolean = true;
- hideUserContainer: boolean = true;
- userlist: Array<User> = [];
- channelList: Array<Channel> = [];
- foundUserList: Array<User> = [];
- foundChannelList: Array<Channel> = [];
- filteredList: Array<ConversationMessage> = [];
- conversationList: Array<Conversation> = [];
 
+  inputUser: string = '';
 
+  inputFocused: boolean =  false;
+  isdataLoaded: boolean = true;
+  hideUserContainer: boolean = true;
   hideConversationBody: boolean = false;
   hideChannelBody: boolean = false;
 
+  userlist: Array<User> = [];
+  channelList: Array<Channel> = [];
+  foundUserList: Array<User> = [];
+  foundChannelList: Array<Channel> = [];
+  filteredList: Array<ConversationMessage> = [];
+  conversationList: Array<Conversation> = [];
 
-  userSimon: string = 'simon@dummy.de';
 
   @Input() activeUserChannels: Array<Channel> 
   @Input() activeUserConversationList: Array<Conversation> 
@@ -51,7 +49,7 @@ export class WorkspaceComponent {
   @Input() activeUser: User
 
 
-  //output data to main component
+ 
   @Output() changeToChannel = new EventEmitter<Channel>();
   @Output() changeToConversation = new EventEmitter<Conversation>();
   @Output() changeToNewConversation = new EventEmitter<Conversation>();

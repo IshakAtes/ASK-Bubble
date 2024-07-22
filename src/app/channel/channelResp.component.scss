@@ -14,6 +14,14 @@
 
     } 
 
+    ::ng-deep .emoji-mart {
+        width: calc(100% - 20px) !important;
+    }
+
+    ::ng-deep .emoji-mart-dark {
+        width: calc(100%) !important;
+    }
+
     
     .main-chat {
         height: calc(100vh - 80px);
@@ -67,7 +75,8 @@
     .message {
         display: flex;
         padding: 20px 16px 20px 16px;
-        gap: 20px;
+        justify-content: center;
+        gap: 10px;
     }
     
     .avatar {
@@ -89,7 +98,8 @@
     .message-header {
         display: flex;
         align-items: center;
-        gap: 20px;
+        gap: 5px;
+        padding: 0px 10px 0px 0px;
     }
 
     .massage-content-bubble {
@@ -115,9 +125,16 @@
     .own-message {
         width: calc(100% - 20px);
         display: flex;
-        gap: 30px;
+        justify-content: center;
+        gap: 10px;
         padding: 20px 16px 20px 16px;
         flex-direction: row-reverse;
+    }
+
+
+    .own-message-header {
+        gap: 5px;
+        padding: 0px 10px 0px 0px;
     }
 
     .own-answer-bar {

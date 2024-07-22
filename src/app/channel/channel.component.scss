@@ -398,7 +398,8 @@
 
 .emoticon-reaction-div {
     position: absolute;
-    bottom: 50px;
+    top: 50px !important;
+    z-index: 9999;
 }
 
 .mention-list-element {
