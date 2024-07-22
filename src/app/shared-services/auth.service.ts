@@ -13,15 +13,17 @@ export class AuthService {
   us = inject(UserService)
   user$ = user(this.firebaseAuth);
   activeUser$ = new User();
+  errorMessage: string | null = null;
 
   constructor() { }
 
 
   register(email: string, username: string, password: string): Observable <void> {
     const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, password
-    ).then(response => updateProfile(response.user, {displayName: username}),
+    ).then(response => updateProfile(response.user, {displayName: username}).then(() => {
+        this.us.userCache['uid'] = response.user.uid;
+      })
     );
-    // this.activeUser$ = this.us.loggedUser;
     return from(promise);
   }
 
@@ -46,7 +48,7 @@ export class AuthService {
         const uid = user.uid;
         // this.us.loggedUser
         console.log('authState uid', user);
-        this.us.updateUserToken(user.email, uid);
+        // this.us.updateUserToken(user.email, uid);
         // ...
       } else {
         // User is signed out
@@ -54,6 +56,19 @@ export class AuthService {
         
         // ...
       }
+    });
+  }
+
+
+  authRegistration() {
+    this.register(this.us.userCache.email, this.us.userCache.name, this.us.userCache.password)
+      .subscribe({
+        next: () => {
+      },
+      error: (err) => {
+        this.errorMessage = err.code;
+        console.log(this.errorMessage);
+      },
     });
   }
 
