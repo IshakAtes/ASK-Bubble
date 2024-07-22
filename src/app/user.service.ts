@@ -206,6 +206,7 @@ export class UserService {
 
 
   loadActiveUserConversations(){
+    
     this.isWorkspaceDataLoaded = false;
     this.activeUserConversationList = [];
     this.usersFromActiveUserConversationList = [];
@@ -214,29 +215,73 @@ export class UserService {
       .then(userConversations => {
         this.activeUserConversationList = userConversations;
         userConversations.forEach(conversation =>{
-          if(!(conversation.createdBy == conversation.recipientId)){ //filter out Conversation with self
             if(conversation.createdBy == user.userId){
+              this.checkOwnConversation(conversation)
               this.getRecievedConversation(conversation);
               console.log(this.usersFromActiveUserConversationList)
             }else{
+              this.checkOwnConversation(conversation)
               this.getCreatedConversation(conversation);
               console.log(this.usersFromActiveUserConversationList)
             }
-          }
+
+
+
+
+          /*
           else{
-            this.activeUserOwnConversation = conversation;
-            console.log(this.activeUserOwnConversation);
+            
+            if(conversation.conversationNameCreator == user.userId && conversation.conversationNameRecipient == user.userId){
+              this.activeUserOwnConversation = conversation;
+              //splice
+
+            }
+
+            console.log('selected as own conversation:', this.activeUserOwnConversation);
+            console.log('users from active user conversation list' ,this.usersFromActiveUserConversationList)
           }
+          */
         })
-        this.isWorkspaceDataLoaded = true;
+        
+        /*
+        this.activeUserConversationList.forEach(conversation => {
+          if(conversation.conversationNameCreator == user.userId && conversation.conversationNameRecipient == user.userId){
+              this.activeUserOwnConversation = conversation
+              console.log('selected as own conversation:', this.activeUserOwnConversation);
+
+            }
+          })
+        */
+        
+        console.log('users from active user conversation list' ,this.usersFromActiveUserConversationList)
+        console.log('new activeconversationlist' ,this.activeUserConversationList)
+        console.log('selected as own conversation:', this.activeUserOwnConversation);
+
+        
       });
     })
+    this.isWorkspaceDataLoaded = true;
+
+
   }
 
+
+  checkOwnConversation(conversation: Conversation){
+    let conversationObject = new Conversation(conversation)
+    
+    if(conversation.createdBy == this.activeUserObject.userId && conversation.recipientId == this.activeUserObject.userId){
+      //debugger TODO;
+      this.activeUserOwnConversation = conversation
+      this.activeUserConversationList.splice(this.activeUserConversationList.indexOf(conversation), 1);
+
+
+    }
+  }
 
   getCreatedConversation(conversation: Conversation){
     this.database.loadUser(conversation.createdBy)
     .then(loadedUser => {
+      console.log('pushed by createdConvo', loadedUser)
       this.usersFromActiveUserConversationList.push(loadedUser);
     })
   }
@@ -245,6 +290,7 @@ export class UserService {
   getRecievedConversation(conversation: Conversation){
     this.database.loadUser(conversation.recipientId)
     .then(loadedUser => {
+      console.log('pushed by recieved', loadedUser)
       this.usersFromActiveUserConversationList.push(loadedUser);
     })
   }

@@ -36,6 +36,81 @@
         
     }
 
+    .userlistContainer{
+        width: 65%;
+        height: 211px;
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 70px;
+        left: 5%;
+        z-index: 99;
+        padding: 40px;
+        gap: 20px;
+        border-radius: 0px 30px 30px 30px;
+        opacity: 0px;
+        border: 1px solid #535AF1;
+        overflow: auto;
+        background-color: #FFFFFF;
+            .userList {
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                width: fit-content;
+                padding: 0px;
+                
+                .channelContainer {
+                    display: flex;
+    
+                    >p {
+                        margin: 0 10px 0 0;
+                    }
+                }
+                
+                >div {
+                    display: flex;
+                    align-items: center;
+                    >img{
+                        width: 50px;
+                        height: 50px;
+                        gap: 0px;
+                        border-radius: 30px;
+                        opacity: 0px;
+                    }
+                   
+                    >svg{
+                        display: flex;
+                        position: relative;
+                        right: 15px;
+                        top: 18px;
+                    }
+            
+                    span {
+                        display: flex;
+                        position: relative;
+                        width: fit-content;
+                        height: 25px;
+                        gap: 0px;
+                        opacity: 0px;
+                        font-family: Nunito;
+                        font-size: 18px;
+                        font-weight: 400;
+                        line-height: 24.55px;
+                        text-align: left;
+                    }
+                }
+            }
+        
+            .userList:hover {
+                background-color: #ECEEFE;
+                border-radius: 20px;
+            }
+       }
+       
+       .userlistContainer::-webkit-scrollbar {
+        display: none;
+       }
+
     .bgContainer{
         display: flex;
         position: fixed;
@@ -82,12 +157,12 @@
                 height: 25px;
                 @include nunito17Placeholder;
                 color: #686868;
-
             }
-    
+
             :focus {
                 border: 1px solid #444DF2;
             }
+            
         }
     }
 

@@ -212,7 +212,6 @@ export class ChannelComponent implements OnInit {
 
   //group reactions aus chatservice funktioniert noch nicht
 
-  // save message reaction
   async saveNewMessageReaction(event: any, message: ChannelMessage, userId: string, reactionbar?: string) {
     let emoji: string
     if (reactionbar) {
@@ -229,21 +228,27 @@ export class ChannelComponent implements OnInit {
       return;
     }
 
+
     this.reactions = [];
     let reaction = this.database.createChannelMessageReaction(emoji, userId, this.activeUser.name, message);
     await this.database.addChannelMessageReaction(this.channel, message, reaction)
     await this.loadAllMessageReactions();
 
-  
-    //this.chatService.checkIfEmojiIsAlreadyInUsedLastEmojis(emoji, userId);  // Funktion wird in Service ausgelagert
-    
-    this.mAndC.loadUsersOfUser();
-    this.mAndC.loadChannlesofUser()
+    this.chatService.reactions = this.reactions;
 
     setTimeout(() => {
       this.chatService.groupReactions(this.messageList)
-    }, 1000);
+    }, 500);
+  
+    this.chatService.checkIfEmojiIsAlreadyInUsedLastEmojis(this.activeUser ,emoji, userId);
+    this.mAndC.loadUsersOfUser();
+    this.mAndC.loadChannlesofUser()
+
+
     this.mAndC.selectedMessageId = null;
+
+
+  
   }
 
 

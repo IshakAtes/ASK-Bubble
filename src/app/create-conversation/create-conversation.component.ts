@@ -127,19 +127,6 @@ export class CreateConversationComponent {
             break;
           }
         }
-        //else kann ggf weg nach genügend testen
-        else{
-          /*
-          console.log('Durchgang ' + (this.conversationList.indexOf(conversation) + 1) + ' von ' + this.conversationList.length)
-          if((this.conversationList.indexOf(conversation) +1) ==  this.conversationList.length){
-            console.log('nothing found in last iteration')
-            console.log('No Conversation was found --> create new Conversation')
-            //this.openNewConversation(user);
-          }
-          */
-
-        }
-
       }
 
 
@@ -156,18 +143,6 @@ export class CreateConversationComponent {
             this.changeToConversation.emit(conversation);
             break;
           }
-        }
-        //else kann ggf weg, wenn genug getestet wurde!!
-        else{
-          /*
-          console.log('Durchgang ' + (this.conversationList.indexOf(conversation) + 1) + ' von ' + this.conversationList.length)
-          console.log('react from first')
-          if((this.conversationList.indexOf(conversation) +1) == this.conversationList.length) {
-            console.log('nothing found in last iteration')
-            console.log('No Conversation was found --> create new Conversation')
-            //this.openNewConversation(user);
-          }
-          */
         }
       }
       else{

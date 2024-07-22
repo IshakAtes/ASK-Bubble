@@ -30,7 +30,12 @@
     
         
         @if(conversation){
-            <app-chat></app-chat>
+            <app-chat
+            (changeReloadStatus)="setReloadToFalse($event)"
+            
+            [specific]="currentConversation"
+            [user]="userservice.activeUserObject"
+            ></app-chat>
         }
         @else if(channel) {
             <app-channel
@@ -85,8 +90,10 @@
         @else {
             @if(conversation){
                 <app-chat
+                (changeReloadStatus)="setReloadToFalse($event)"
                 
-                
+                [specific]="currentConversation"
+                [user]="userservice.activeUserObject"
                 
                 ></app-chat>
             }

@@ -44,7 +44,7 @@
                 }
             }
 
-            @if (message.createdBy == userId) {
+            @if (message.createdBy == user.userId) {
             <div class="own-message">
                 <div class="own-reactionbar">
                     @if (user.usedLastTwoEmojis) {
@@ -286,7 +286,7 @@
             
             @if(!fileUploadError && !fileUpload.fileUploading) {
 
-            @if(userId == sendingUser.userId){
+            @if(user.userId == sendingUser.userId){
             <textarea (input)="mAndC.onInput($event)" #myTextarea [(ngModel)]="content" class="message-input"
                 placeholder="Nachricht an {{passiveUser.name}}">
             </textarea>
