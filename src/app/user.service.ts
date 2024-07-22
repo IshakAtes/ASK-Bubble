@@ -17,7 +17,6 @@ import { AuthService } from './shared-services/auth.service';
 })
 
 export class UserService {
-  // authService = inject(AuthService)
   loggedUser: User;
   firestore: Firestore = inject(Firestore)
   userCache: User;
@@ -56,29 +55,16 @@ export class UserService {
   }
 
 
-  async updateUserToken(email: string | null, uid: any) {
-    if (!email) {
-      console.error('Email darf nicht null sein.');
-      return;
-    }
-  
-    try {
-      const userCollection = collection(this.firestore, 'users');
-      const q = query(userCollection, where('email', '==', email));
-      const querySnapshot = await getDocs(q);
-  
-      if (!querySnapshot.empty) {
-        querySnapshot.forEach(async (documentSnapshot) => {
-          const userDocRef = doc(this.firestore, 'users', documentSnapshot.id);
-          await updateDoc(userDocRef, { uid: uid });
-          console.log(`User mit E-Mail ${email} erfolgreich aktualisiert.`);
-        });
-      } else {
-        console.log(`Kein Benutzer mit der E-Mail ${email} gefunden.`);
-      }
-    } catch (error) {
-      console.error('Fehler beim Abrufen oder Aktualisieren der Dokumente:', error);
-    }
+
+  createAndSaveUser() {
+    console.log('userCache:', this.userCache);
+    this.addUser(this.userCache);
+    setTimeout(() => {
+      this.database.getUser(this.userCache.email)
+        .then(user =>{
+          this.database.addConversation(this.database.createConversation(user.userId, user.userId))
+        })
+    }, 1000);
   }
 
 
@@ -111,7 +97,8 @@ export class UserService {
             password: formValues.pw,
             status: 'offline',
             avatarUrl: '',
-            userId: ''
+            userId: '',
+            uid: '',
           });
           this.userCache = newUser;
           this.router.navigate(['/choosingAvatar']);
