@@ -30,6 +30,8 @@ export class UserService {
   activeUserConversationList: Array<Conversation> = [];
   usersFromActiveUserConversationList: Array<User> = [];
   activeUserOwnConversation: Conversation;
+ 
+  
   activeUserObject: User;
   isWorkspaceDataLoaded: boolean = true;
   deviceWidth: number
@@ -45,13 +47,11 @@ export class UserService {
   constructor(private http: HttpClient, private router: Router, public database: DatabaseService) { 
     this.loadActiveUserChannels();
     this.loadActiveUserConversations();
-    //console.log(this.activeUserObject.userId)
+
+    //console.log('active user conversationList', this.activeUserConversationList)
+    //console.log('users' , this.usersFromActiveUserConversationList)
+    //console.log('activeUserOwn' ,this.activeUserOwnConversation)
     
-
-
-
-
-
   }
 
 
@@ -204,7 +204,7 @@ export class UserService {
     })
   }
 
-
+  /*
   loadActiveUserConversations(){
     
     this.isWorkspaceDataLoaded = false;
@@ -213,94 +213,125 @@ export class UserService {
     this.database.getUser(this.activeUserMail).then(user =>{
       this.database.loadAllUserConversations(user.userId)
       .then(userConversations => {
-        this.activeUserConversationList = userConversations;
+        
         userConversations.forEach(conversation =>{
-            if(conversation.createdBy == user.userId){
-              this.checkOwnConversation(conversation)
-              this.getRecievedConversation(conversation);
-              console.log(this.usersFromActiveUserConversationList)
+          this.activeUserConversationList.push(conversation);
+          
+          if(conversation.createdBy == user.userId){
+              debugger
+              this.getUserRecievedBy(conversation).then(() =>{
+              this.checkOwnConversation(this.activeUserConversationList)
+              });
+              
             }else{
-              this.checkOwnConversation(conversation)
-              this.getCreatedConversation(conversation);
-              console.log(this.usersFromActiveUserConversationList)
-            }
-
-
-
-
-          /*
-          else{
-            
-            if(conversation.conversationNameCreator == user.userId && conversation.conversationNameRecipient == user.userId){
-              this.activeUserOwnConversation = conversation;
-              //splice
-
-            }
-
-            console.log('selected as own conversation:', this.activeUserOwnConversation);
-            console.log('users from active user conversation list' ,this.usersFromActiveUserConversationList)
+              debugger
+              this.getUserCreatedBy(conversation).then(() => {
+              this.checkOwnConversation(this.activeUserConversationList)
+              });
           }
-          */
+
+          if(conversation.createdBy == this.activeUserObject.userId && conversation.recipientId == this.activeUserObject.userId){
+            this.activeUserOwnConversation = conversation
+          }
+
         })
-        
-        /*
-        this.activeUserConversationList.forEach(conversation => {
-          if(conversation.conversationNameCreator == user.userId && conversation.conversationNameRecipient == user.userId){
-              this.activeUserOwnConversation = conversation
-              console.log('selected as own conversation:', this.activeUserOwnConversation);
 
-            }
-          })
-        */
-        
-
-        
       });
     })
+  }
+  */
+
+
+  loadActiveUserConversations() {
+    this.isWorkspaceDataLoaded = false;
+    this.activeUserConversationList = [];
+    this.usersFromActiveUserConversationList = [];
+    this.database.getUser(this.activeUserMail).then(user => {
+      this.database.loadAllUserConversations(user.userId)
+        .then(userConversations => {
+          const promises = userConversations.map(conversation => {
+            this.activeUserConversationList.push(conversation);
+  
+            const userPromise = conversation.createdBy === user.userId
+              ? this.getUserRecievedBy(conversation)
+              : this.getUserCreatedBy(conversation);
+  
+            return userPromise.then(() => {
+              this.checkOwnConversation(this.activeUserConversationList);
+            }).then(() => {
+              if (conversation.createdBy === this.activeUserObject.userId &&
+                  conversation.recipientId === this.activeUserObject.userId) {
+                this.activeUserOwnConversation = conversation;
+              }
+            });
+          });
+  
+          // Wait for all promises to complete
+          return Promise.all(promises);
+        })
+        .then(() => {
+          console.log('activeUserOwn', this.activeUserOwnConversation);
+        });
+    });
+  }
+
+
+  checkOwnConversation(conversationList: Conversation[]){
+    //debugger
+
+    conversationList.forEach(conversation => {
+      if(conversation.createdBy == this.activeUserObject.userId && conversation.recipientId == this.activeUserObject.userId){
+
+        //this.activeUserOwnConversation = conversation;
+        this.activeUserConversationList.splice(this.activeUserConversationList.indexOf(conversation), 1);
+      }
+    });
+
+
+    
+    //debugger;
+    this.usersFromActiveUserConversationList.forEach(user => {
+      if(user.userId == this.activeUserObject.userId){
+        this.usersFromActiveUserConversationList.splice(this.usersFromActiveUserConversationList.indexOf(user), 1);
+      }
+    })
+
     this.isWorkspaceDataLoaded = true;
 
-
   }
+ 
 
-
-  checkOwnConversation(conversation: Conversation){
-    
-    if(conversation.createdBy == this.activeUserObject.userId && conversation.recipientId == this.activeUserObject.userId){
-      //debugger TODO;
-      this.activeUserOwnConversation = conversation
-      this.activeUserConversationList.splice(this.activeUserConversationList.indexOf(conversation), 1);
+  getUserCreatedBy(conversation: Conversation): Promise<User>{
+    return new Promise<User>((resolve, reject) =>{
       this.database.loadUser(conversation.createdBy)
-        .then(user => {
-          //console.log('users before splice' , this.usersFromActiveUserConversationList)
-      
-          //this.usersFromActiveUserConversationList.splice(this.usersFromActiveUserConversationList.indexOf(user), 1);
-          //console.log('users after splice' , this.usersFromActiveUserConversationList)
-
-
-          console.log('users from active user conversation list' ,this.usersFromActiveUserConversationList)
-          console.log('new activeconversationlist' ,this.activeUserConversationList)
-          console.log('selected as own conversation:', this.activeUserOwnConversation);
-  
-        })
-      
-
-    }
-  }
-
-  getCreatedConversation(conversation: Conversation){
-    this.database.loadUser(conversation.createdBy)
-    .then(loadedUser => {
-      console.log('pushed by createdConvo', loadedUser)
-      this.usersFromActiveUserConversationList.push(loadedUser);
+      .then(loadedUser => {
+        console.log('pushed by created', loadedUser)
+        debugger
+        this.usersFromActiveUserConversationList.push(loadedUser);
+        resolve(loadedUser)
+      },
+      (error) =>{
+        reject(error)
+      }
+    )
     })
+
   }
 
 
-  getRecievedConversation(conversation: Conversation){
-    this.database.loadUser(conversation.recipientId)
-    .then(loadedUser => {
-      console.log('pushed by recieved', loadedUser)
-      this.usersFromActiveUserConversationList.push(loadedUser);
+  getUserRecievedBy(conversation: Conversation): Promise<User>{
+    return new Promise<User>((resolve, reject) =>{
+      this.database.loadUser(conversation.recipientId)
+      .then(loadedUser => {
+        console.log('pushed by recieved', loadedUser)
+        debugger
+        this.usersFromActiveUserConversationList.push(loadedUser);
+        resolve(loadedUser)
+      },
+      (error) =>{
+        reject(error)
+      }
+    )
     })
   }
 

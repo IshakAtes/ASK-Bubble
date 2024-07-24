@@ -111,7 +111,6 @@ export class WorkspaceComponent {
 
   openConversation(conversation: Conversation){
     console.log('open conversation with', conversation)
-    console.log('activeUserConversationList', this.userService.activeUserConversationList)
     this.changeToConversation.emit(conversation);
   }
 

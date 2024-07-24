@@ -92,8 +92,9 @@ export class MainComponent{
 
   changeConversation(conversation: Conversation){
     if(this.userservice.deviceWidth > 500){
+      debugger
       this.currentConversation = conversation;
-      //this.reloadConversation?
+      //this.reloadConversation = true;
       this.conversation = true;
       this.channel = false;
       this.userservice.loadActiveUserConversations();

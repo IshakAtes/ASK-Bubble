@@ -104,7 +104,13 @@ export class DialogAddChannelMembersComponent {
       }
     }
     else{
-      console.log('add team to DB');
+      this.userlist.forEach(user => {
+        this.memberIdList.push(user.userId)
+      })
+      this.memberIdList.push(this.activeUser)
+      this.database.addChannel(this.database.createChannel(this.channelCache.createdBy, this.channelCache.description, this.memberIdList, this.channelCache.name))
+      this.us.loadActiveUserChannels();
+      this.dialogRef.close();
     }
   }
 
