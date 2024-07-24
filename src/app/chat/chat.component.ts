@@ -23,7 +23,9 @@ import { GeneralChatService } from '../shared-services/chat-functionality/genera
   standalone: true,
   imports: [FormsModule, PickerModule, HeaderComponent, CommonModule],
   templateUrl: './chat.component.html',
-  styleUrl: './chat.component.scss'
+  styleUrls: ['./chat.component.scss', './chatResp.component.scss']
+
+
 })
 export class ChatComponent implements AfterViewInit, OnInit {
   

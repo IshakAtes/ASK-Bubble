@@ -4,8 +4,8 @@
 
 
 .main-chat {
-    height: 902px;
-    width: 989px;
+    height: 940px;
+    width: 51.5vw; //989px
     background-color: white;
     border-radius: 30px;
     position: relative;
@@ -58,8 +58,16 @@
     }
 }
 
+.message-container-orientation{
+    display: flex;
+    justify-content: center;
+    margin-top: -40px;
+
+}
+
 .chat-area {
-    max-height: 40vh;
+    height: 600px;
+    //max-height: 40vh;
     overflow-y: scroll;
 }
 
@@ -266,8 +274,8 @@
     border-radius: 25px 25px 0px 25px;
     border: 1px solid #ADB0D9;
     background: #FFFFFF;
-    left: 40px;
-    top: -20px;
+    left: 0px;
+    top: 0px;
 
     img {
         border-radius: 50%;
@@ -366,6 +374,8 @@
 
 
 .message-container {
+    width: 90%;
+    max-width: 100%;
     position: relative;
     display: flex;
     flex-direction: column;

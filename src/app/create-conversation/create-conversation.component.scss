@@ -32,14 +32,10 @@
             text-align: left;
         }
 
-        :focus {
-            border: 1px solid #444DF2;
+        &:focus {
+            outline: none;
         }
     }
-
-    
-
-
 }
 
 .channelname {
