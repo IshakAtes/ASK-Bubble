@@ -45,12 +45,8 @@ export class UserService {
 
 
   constructor(private http: HttpClient, private router: Router, public database: DatabaseService) { 
-    this.loadActiveUserChannels();
-    this.loadActiveUserConversations();
-
-    //console.log('active user conversationList', this.activeUserConversationList)
-    //console.log('users' , this.usersFromActiveUserConversationList)
-    //console.log('activeUserOwn' ,this.activeUserOwnConversation)
+    this.loadActiveUserChannels();    //muss nach dem login aufgerufen werden
+    this.loadActiveUserConversations(); //muss nach dem login aufgerufen werden
     
   }
 
@@ -306,7 +302,7 @@ export class UserService {
       this.database.loadUser(conversation.createdBy)
       .then(loadedUser => {
         console.log('pushed by created', loadedUser)
-        debugger
+        //debugger
         this.usersFromActiveUserConversationList.push(loadedUser);
         resolve(loadedUser)
       },
@@ -324,7 +320,7 @@ export class UserService {
       this.database.loadUser(conversation.recipientId)
       .then(loadedUser => {
         console.log('pushed by recieved', loadedUser)
-        debugger
+        //debugger
         this.usersFromActiveUserConversationList.push(loadedUser);
         resolve(loadedUser)
       },
