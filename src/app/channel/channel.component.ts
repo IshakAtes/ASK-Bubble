@@ -319,11 +319,13 @@ export class ChannelComponent implements OnInit {
   showAddMember(){
     const channelInfo = this.dialog.open(DialogAddAdditionalMemberComponent);
     channelInfo.componentInstance.currentChannel = this.channel;
-    channelInfo.afterClosed().subscribe(result => {
+    channelInfo.afterClosed().subscribe(() => {
       this.isdataLoaded = false;
-      setTimeout(() => {
+      this.memberList = [];
+      this.loadMemberList().then(()=>{
         this.isdataLoaded = true;
-      }, 500);
+      })
+
 
     })
   }

@@ -11,10 +11,25 @@
     
             <div class="member-bar-wrapper" >
                 <div class="member-bar" (click)="showMemberList()">
-                
-                    <div class="memberdiscs-div">
-                        <img *ngFor="let user of memberList" src="{{user.avatarUrl}}" alt="">
-                    </div>
+                    
+                    @if(memberList.length > 4){
+                        @for (user of memberList; track $index) {
+                            @if($index < 4){
+                                <div class="memberdiscs-div">
+                                    <img src="{{user.avatarUrl}}" alt="">
+                                </div>
+                            }
+                        }
+                        <div class="membercount">
+                            <span>+ {{channel.membersId.length - 4}}</span>
+                        </div>
+                    }
+                    @else{
+                        <div class="memberdiscs-div">
+                            <img *ngFor="let user of memberList" src="{{user.avatarUrl}}" alt="">
+                        </div>
+                    }
+
     
                     <div class="membercount">
                         <span>{{channel.membersId.length}}</span>

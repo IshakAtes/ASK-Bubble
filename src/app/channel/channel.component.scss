@@ -33,7 +33,8 @@
         font-size: 24px;
         font-weight: 700;
         line-height: 32.74px;
-        width: 180px;
+        width: fit-content;
+        max-width: 180px;
         overflow: hidden;
         display: flex;
         text-wrap: nowrap;
@@ -81,7 +82,7 @@
     img {
         width: 40px;
         height: 40px;
-        margin: -6px;
+        margin: -14px;
         border-radius: 30px;
         border: 2px solid #FFFFFF
     }

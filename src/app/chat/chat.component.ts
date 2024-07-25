@@ -116,47 +116,41 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.list = [];
     this.reactions = [];
 
-    console.log('chat onchange triggered')
-    console.log('current Conversation:')
-    console.log(this.specific)
+
+    //defining passiveUser if specific = ConversationWithSelf
+    if(this.specific.createdBy == this.specific.recipientId){
+      this.databaseService.loadUser(this.specific.createdBy)
+      .then(creatorUser => {
+        if (creatorUser.userId == this.user.userId) {
+          this.passiveUser = creatorUser;
+        }
+
+    })
+    }
     
-    this.loadAllMessages();
+    this.loadAllMessages(); 
 
-    
+    this.databaseService.loadUser(this.specific.createdBy)
+      .then(creatorUser => {
+        if (creatorUser.userId == this.user.userId) {
+          this.sendingUser = creatorUser;
+          console.log('this is the creatorUser', this.sendingUser)
+        }
+        else {
+          this.passiveUser = creatorUser;
+        }
+    })
 
-  
-   //DO MENSIONS WORK? allUsers = [] as Array<User>;
-
-   //DO MENTIONS ALL CHANNEL WORK? allChannels: Array<Channel> = [];
-   // reactions: Array<Reaction> = [];
-
-
-    //this.changeReload();
-    
-  
-
-
-        this.databaseService.loadUser(this.specific.createdBy)
-          .then(creatorUser => {
-            if (creatorUser.userId == this.user.userId) {
-              this.sendingUser = creatorUser;
-              console.log('this is the creatorUser', this.sendingUser)
-            }
-            else {
-              this.passiveUser = creatorUser;
-            }
-          })
-
-        this.databaseService.loadUser(this.specific.recipientId)
-          .then(recipientUser => {
-            if (recipientUser.userId == this.user.userId) {
-              this.sendingUser = recipientUser;
-              console.log('this is the recipientUser', this.passiveUser)
-            }
-            else {
-              this.passiveUser = recipientUser;
-            }
-          })
+    this.databaseService.loadUser(this.specific.recipientId)
+      .then(recipientUser => {
+        if (recipientUser.userId == this.user.userId) {
+          this.sendingUser = recipientUser;
+          console.log('this is the recipientUser', this.passiveUser)
+        }
+        else {
+          this.passiveUser = recipientUser;
+        }
+      })
 
     this.mAndC.loadUsersOfUser();
     this.mAndC.loadChannlesofUser();

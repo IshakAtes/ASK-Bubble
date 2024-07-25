@@ -61,7 +61,7 @@
 .message-container-orientation{
     display: flex;
     justify-content: center;
-    margin-top: -40px;
+    //margin-top: -40px;
 
 }
 
@@ -383,7 +383,7 @@
     height: 145px;
 
     padding: 20px;
-    margin: 25px 45px;
+    //margin: 25px 45px;
     border-radius: 20px;
     border: 1px solid #ADB0D9;
 }
@@ -446,12 +446,6 @@
 }
 
 .emoticon-reaction-div {
-    /* vorher
-    position: absolute;
-    bottom: 50px;
-    */
-
-    //nachher
     position: absolute;
     top: 50px !important;
     z-index: 9999;

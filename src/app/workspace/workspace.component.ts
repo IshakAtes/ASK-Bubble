@@ -47,6 +47,7 @@ export class WorkspaceComponent {
   @Input() activeUserConversationList: Array<Conversation> 
   @Input() usersFromActiveUserConversationList: Array<User> 
   @Input() activeUser: User
+  @Input() reload: boolean;
 
 
  
@@ -57,10 +58,7 @@ export class WorkspaceComponent {
 
 
   constructor(public dialog: MatDialog, public us: UserService){  
-    console.log('constructor of workspace triggered')
-    console.log(this.userService.activeUserOwnConversation)
-    this.userService.isWorkspaceDataLoaded = false;
-    
+   
     this.loadUserList();
     this.loadUserChannel();
     this.loadUserConversation();
@@ -69,7 +67,9 @@ export class WorkspaceComponent {
 
 
   ngOnChanges(){
-    console.log('workspace on change triggered')
+    if(this.reload){
+      
+    }
   }
 
 
@@ -78,7 +78,6 @@ export class WorkspaceComponent {
       this.userlist = [];
       this.database.loadAllUsers().then(allUsers =>{
         this.userlist = allUsers;
-        console.log(this.userlist)
       })
     }, 500);
   }
@@ -89,7 +88,6 @@ export class WorkspaceComponent {
       this.channelList = [];
       this.database.loadAllUserChannels(this.activeUser.userId).then(allChannel => {
         this.channelList = allChannel;
-        console.log(this.channelList)
       })
     }, 600);
   }
@@ -100,9 +98,7 @@ export class WorkspaceComponent {
       this.conversationList = [];
       this.database.loadAllUserConversations(this.activeUser.userId).then(allConversations => {
         this.conversationList = allConversations;
-        this.userService.isWorkspaceDataLoaded = true;
-        console.log('ConversationList')
-        console.log(this.conversationList)
+        //this.userService.isWorkspaceDataLoaded = true;
       })
     }, 700);
   }
@@ -120,8 +116,6 @@ export class WorkspaceComponent {
 
   createNewConversation(user: User){
     let newConversation = this.database.createConversation(this.activeUser.userId, user.userId)
-    console.log('create new conversation' + newConversation)
-    console.log(newConversation)
     this.database.addConversation(newConversation);
     this.us.loadActiveUserConversations();
     
@@ -188,16 +182,13 @@ export class WorkspaceComponent {
     if(this.inputUser.startsWith('@')){
       let searchUser = this.inputUser.substring(1);
       this.foundUserList = this.userlist.filter((user) => user.name.toLowerCase().startsWith(searchUser));
-      console.log(this.foundUserList)
     }
     else if(this.inputUser.startsWith('#')){
       let searchChannel = this.inputUser.substring(1);
       this.foundChannelList = this.channelList.filter((channel) => channel.name.toLowerCase().startsWith(searchChannel))
-      console.log(this.foundChannelList)
     }
     else{
       this.foundUserList = this.userlist.filter((user) => user.email.toLowerCase().startsWith(this.inputUser));
-      console.log(this.foundUserList)
     }
   }
 
@@ -226,8 +217,6 @@ export class WorkspaceComponent {
           }
         }
       }
-
-
       else if(conversation.createdBy == user.userId){
         if(conversation.recipientId == this.activeUser.userId){
           console.log('A Conversation was Found --> open Conversation via emit')

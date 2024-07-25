@@ -195,9 +195,16 @@
     }
 
     .message-container {
-            height: 103px;
-            padding: 20px;
-            margin: 0px;
+        height: 103px;
+        padding: 20px;
+        margin: 0px;
+    }
+
+
+    .dropdown-menu {
+        position: absolute;
+        bottom: 145px;
+        left: 5px;
     }
 
 }

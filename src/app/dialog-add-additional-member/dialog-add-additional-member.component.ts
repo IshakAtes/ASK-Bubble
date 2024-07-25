@@ -162,7 +162,7 @@ export class DialogAddAdditionalMemberComponent {
       this.newChannel = new Channel(this.currentChannel);
       this.addChannelToNewMembers();
       this.updateChannel();
-      this.dialogRef.close(true);
+      this.dialogRef.close();
     }
   }
 
