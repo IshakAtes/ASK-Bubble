@@ -19,11 +19,13 @@ import { AuthService } from './shared-services/auth.service';
 export class UserService {
   loggedUser: User;
   firestore: Firestore = inject(Firestore)
+  dataBase = inject(DatabaseService);
   userCache: User;
   wrongLogin: boolean = false;
   resetUserPw: any;
   guest: boolean = false;
   guestData: User;
+  userToken: string;
   private baseUrl = 'http://localhost:4200';
 
   activeUserChannels: Array<Channel> = [];
@@ -46,18 +48,15 @@ export class UserService {
     this.loadActiveUserChannels();
     this.loadActiveUserConversations();
     //console.log(this.activeUserObject.userId)
-    
-
-
-
-
 
   }
 
 
 
   createAndSaveUser() {
-    console.log('userCache:', this.userCache);
+    this.userCache['uid'] = this.userToken;
+    console.log('usercache', this.userCache);
+    
     this.addUser(this.userCache);
     setTimeout(() => {
       this.database.getUser(this.userCache.email)
@@ -98,7 +97,7 @@ export class UserService {
             status: 'offline',
             avatarUrl: '',
             userId: '',
-            uid: '',
+            uid: null,
           });
           this.userCache = newUser;
           this.router.navigate(['/choosingAvatar']);
@@ -128,8 +127,11 @@ export class UserService {
     });
   }
 
-  addUser(user: User){
-    addDoc(collection(this.firestore, 'users'), user.toJSON());
+
+  addUser(user: User) {
+    addDoc(collection(this.firestore, 'users'), user.toJSON())
+    .then(() => console.log('User erfolgreich hinzugefügt', user))
+    .catch((error) => console.error('Fehler beim Hinzufügen des Benutzers:', error));
   }
 
 
@@ -151,7 +153,8 @@ export class UserService {
               avatarUrl: userData['avatarUrl'],
               userId: user.id,
               logIn: userData['logIn'],
-              usedLastTwoEmojis: userData['usedLastTwoEmojis']
+              usedLastTwoEmojis: userData['usedLastTwoEmojis'],
+              uid: userData['uid']
             });
             this.wrongLogin = false; // Setze auf false, da gültiger Benutzer gefunden wurde
             resolve(activeUser);

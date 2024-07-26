@@ -7,7 +7,7 @@ export class User {
     userId: string;
     logIn: string;
     usedLastTwoEmojis: Array<string>;
-    uid: string;
+    uid: string | null;
 
     constructor(obj?: any){
         this.email = obj ? obj.email : '';
@@ -17,8 +17,8 @@ export class User {
         this.avatarUrl = obj ? obj.avatarUrl : '/assets/img/unUsedDefault.png';
         this.userId = obj ? obj.userId : '';
         this.logIn = obj && obj.logIn || 'https://bubble.ishakates.com/';
-        this.usedLastTwoEmojis = obj && obj.usedLastTwoEmojis ? obj.usedLastTwoEmojis : [];
-        this.uid = obj ? obj.uid : '';
+        this.usedLastTwoEmojis = obj && obj.usedLastTwoEmojis ? obj.usedLastTwoEmojis : ['✅', '🙌'];
+        this.uid = obj ? obj.uid : null;
     }
 
     public toJSON(){

@@ -84,12 +84,12 @@ export class DialogChooseAvatarComponent {
   }
 
 
-  createUser() {
+  async createUser() {
     this.us.userCache.avatarUrl = this.selectedAvatar;
-    this.authService.authRegistration();
-    this.us.createAndSaveUser();
+    await this.authService.authRegistration();
     this.sendRegisteredMail();
   }
+  
 
   selectDummyAvatar(item: any) {
     this.selectedAvatar = item;

@@ -1,5 +1,5 @@
 import { CommonModule, NgStyle } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../user.service';
@@ -13,7 +13,7 @@ import { AuthService } from '../shared-services/auth.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   authService = inject(AuthService);
   errorMessage: string | null = null;
   authMessage: boolean | null = false;
@@ -39,6 +39,13 @@ export class LoginComponent {
       pw: ['', [Validators.required, Validators.minLength(5)]],
       mail: ['', [Validators.required, Validators.email]],
     });
+    this.authService.getToken();
+  }
+
+  ngOnInit(): void {
+    this.authService.getToken();
+    console.log('get Token finished');
+    
   }
 
   
@@ -56,7 +63,7 @@ export class LoginComponent {
 
 
   googleAuthentification() {
-    console.log('Google wurde angeklickt');
+    this.authService.googleAuth();
   }
 
 
