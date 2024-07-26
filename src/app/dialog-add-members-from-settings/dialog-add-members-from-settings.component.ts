@@ -26,7 +26,7 @@ export class DialogAddMembersFromSettingsComponent {
   hideUserContainer: boolean = true;
   inputFocused: boolean =  false;
   
-  activeUser: string = 'Adxrm7CExizb76lVrknu'
+  activeUser: string = this.us.activeUserObject.userId
   searchUser: string = '';
   resultRadioButton: string;
 

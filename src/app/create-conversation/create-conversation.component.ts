@@ -64,7 +64,6 @@ export class CreateConversationComponent {
       this.userlist = [];
       this.database.loadAllUsers().then(allUsers =>{
         this.userlist = allUsers;
-        console.log(this.userlist)
       })
     }, 200);
   }
@@ -75,7 +74,6 @@ export class CreateConversationComponent {
       this.channelList = [];
       this.database.loadAllUserChannels(this.userId).then(allChannel => {
         this.channelList = allChannel;
-        console.log(this.channelList)
       })
     }, 200);
   }
@@ -86,8 +84,6 @@ export class CreateConversationComponent {
       this.conversationList = [];
       this.database.loadAllUserConversations(this.userId).then(allConversations => {
         this.conversationList = allConversations;
-        console.log('ConversationList')
-        console.log(this.conversationList)
       })
     }, 200);
   }
@@ -158,13 +154,8 @@ export class CreateConversationComponent {
 
 
 
-
-
-
   openNewConversation(user: User){
     let newConversation = this.database.createConversation(this.userId, user.userId)
-    console.log('create new conversation' + newConversation)
-    console.log(newConversation)
     this.database.addConversation(newConversation);
     this.us.loadActiveUserConversations();
     

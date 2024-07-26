@@ -31,28 +31,18 @@ export class MainComponent{
   thread: boolean = true;
   
 
-
-
   currentConversation: Conversation;
   currentChannel: Channel;
 
 
 
-
-  
   constructor(public userservice: UserService, public database: DatabaseService){
     userservice.getDeviceWidth();
     console.log(this.authService.checkUserStatus());
     
   }
 
-  ngOnChanges(){
-    console.log('triggered on change from main')
-  }
 
-  ngAfterViewInit(){
-    console.log('triggered afterViewInit from main')
-  }
 
 
 
@@ -63,8 +53,8 @@ export class MainComponent{
     if(this.userservice.deviceWidth > 500){
       //ts settings for desktopView
       if(this.channel){
-        this.currentChannel = channel;
         this.reloadChannel = true;
+        this.currentChannel = channel;
         this.conversation = false;
         this.channel = true;
       }
@@ -95,19 +85,22 @@ export class MainComponent{
 
 
   changeConversation(conversation: Conversation){
+   
+    console.log(this.userservice.activeUserOwnConversation)
+    console.log('emitted conversation', conversation)
     if(this.userservice.deviceWidth > 500){
       this.currentConversation = conversation;
-      //this.reloadConversation?
+      //this.reloadConversation = true;
       this.conversation = true;
       this.channel = false;
-      this.userservice.loadActiveUserConversations();
+      //this.userservice.loadActiveUserConversations();
     }
     else{
       this.currentConversation = conversation;
       this.conversation = true;
       this.channel = false;
       this.isWSVisible = false;
-      this.userservice.loadActiveUserConversations();
+      //this.userservice.loadActiveUserConversations();
     }
 
     
@@ -146,7 +139,7 @@ export class MainComponent{
 
 
   userLeftChannel(){
-    console.log('function from main triggered')
+
     this.conversation = false;
     this.channel = false;
   }

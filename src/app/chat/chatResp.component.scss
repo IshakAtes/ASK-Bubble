@@ -27,7 +27,6 @@
         bottom: 145px;
         left: 0px;
     }
-
     
     .main-chat {
         height: calc(100vh - 80px);
@@ -72,7 +71,6 @@
 
         }
     }
-
 
 
     .channelname {
@@ -124,6 +122,11 @@
         gap: 8px;
         width: 58vw;
     }
+
+    .mention-div {
+        bottom: 145px;
+        left: 0px;
+    }
     
     .message-header {
         display: flex;
@@ -145,11 +148,6 @@
         line-height: 24.55px;
     }
 
-
-    .mention-div {
-        bottom: 145px;
-        left: 0px;
-    }
 
 
     //OWN ANSWER
@@ -197,7 +195,9 @@
     }
 
     .message-container {
-            height: 103px;
+        height: 103px;
+        padding: 20px;
+        margin: 0px;
     }
 
 
