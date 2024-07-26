@@ -35,6 +35,7 @@ export class DatabaseService {
     user.avatarUrl = avatarUrl;
     user.userId = '';
     user.usedLastTwoEmojis = ['✅', '🙌']
+    user.uid = null;
     return user
   }
 
@@ -135,6 +136,7 @@ export class DatabaseService {
           addedUser.avatarUrl = userData['avatarUrl']
           addedUser.userId = foundUser.id 
           addedUser.usedLastTwoEmojis = userData['usedLastTwoEmojis']
+          addedUser.uid = userData['uid']
         }
       })
       this.updateUser(addedUser);
@@ -228,7 +230,9 @@ export class DatabaseService {
             activeUser.status = userData['status']
             activeUser.avatarUrl = userData['avatarUrl']
             activeUser.userId = user.id 
+            activeUser.logIn = userData['logIn']
             activeUser.usedLastTwoEmojis = userData['usedLastTwoEmojis']
+            activeUser.uid = userData['uid']
           }
         })
         resolve(activeUser);
