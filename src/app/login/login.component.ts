@@ -28,7 +28,8 @@ export class LoginComponent implements OnInit {
     avatarUrl: '../../assets/img/unUsedDefault.png',
     userId: '',
     logIn: 'https://bubble.ishakates.com/',
-    usedLastTwoEmojis: ''
+    usedLastTwoEmojis: ['✅', '🙌'],
+    uid: 'null'
   });
 
   constructor(private fb: FormBuilder, private router: Router, public us: UserService) {
