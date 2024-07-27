@@ -52,29 +52,34 @@ export class MentionAndChannelDropdownService {
 
 
   onInput(event: any): void {
+    debugger
     const input = event.target.value;
     this.content.next(input); // Aktualisiere den Inhalt hier
     const lastChar = input[input.length - 1];
     console.log(lastChar);
-    
+
 
     // Überprüfen, ob das letzte Zeichen ein Trigger-Zeichen ist
     if (lastChar === '#' || lastChar === '@') {
       console.log(lastChar);
-      
+
       this.showDropdown = true;
       this.filterItems(input, lastChar);
     } else if (this.showDropdown) {
       // Überprüfen, ob der Eingabetext ein Trigger-Zeichen enthält
       const hashIndex = input.lastIndexOf('#');
       const atIndex = input.lastIndexOf('@');
-      console.log('#',hashIndex);
+      console.log('#', hashIndex);
       console.log('@', atIndex);
-      
 
-      if (hashIndex === -1 && atIndex === -1 || hashIndex!=lastChar || atIndex!=lastChar) {
+      debugger
+      if (hashIndex === -1 && atIndex === -1) {
         this.showDropdown = false;
-      } else {
+      } 
+      else if (lastChar === ' ') {
+        this.showDropdown = false;
+      } 
+      else {
         const triggerChar = hashIndex > atIndex ? '#' : '@';
         this.filterItems(input, triggerChar);
       }
