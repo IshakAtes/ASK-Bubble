@@ -14,9 +14,9 @@ import { signInWithRedirect, getRedirectResult, signInWithPopup, GoogleAuthProvi
 export class AuthService {
   firebaseAuth = inject(Auth);
   us = inject(UserService);
-  activeUser$ = new User();
   errorMessage: string | null = null;
   provider = new GoogleAuthProvider();
+  userToken: string;
 
   constructor() {}
 
@@ -24,14 +24,14 @@ export class AuthService {
   async googleAuth() {
     console.log('google Provider', this.provider);
     this.provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-    const auth = getAuth();
-    await signInWithRedirect(auth, this.provider);
+    // const auth = getAuth();
+    await signInWithRedirect(this.firebaseAuth, this.provider);
     await this.getToken();
   }
 
   getToken() {
-    const auth = getAuth();
-    getRedirectResult(auth)
+    // const auth = getAuth();
+    getRedirectResult(this.firebaseAuth)
       .then((result: any) => {
         // This gives you a Google Access Token. You can use it to access Google APIs.
         const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -49,7 +49,7 @@ export class AuthService {
         const errorCode = error.code;
         const errorMessage = error.message;
         // The email of the user's account used.
-        const email = error.customData.email;
+        const email = error.customData.email; 
         console.log('erorr Detect', errorCode, errorMessage, email);
         
         // The AuthCredential type that was used.
@@ -104,7 +104,9 @@ export class AuthService {
 
   login(email: string, password: string,): Observable <void> {
     const promise = signInWithEmailAndPassword(this.firebaseAuth, email, password
-    ).then(() => {});
+    ).then((response) => {
+      this.userToken = response.user.uid;
+    });
     return from(promise);
   }
 
@@ -120,13 +122,13 @@ export class AuthService {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/auth.user
         const uid = user.uid;
-        // this.us.loggedUser
+        // this.us.loggedUser['name'] = user.displayName ? user.displayName : '';
         console.log('authState uid', user);
-        // this.us.updateUserToken(user.email, uid);
+        console.log(this.us.loggedUser);
         // ...
       } else {
         // User is signed out
-        console.log('authState logged out', this.activeUser$);
+        console.log('authState logged out');
         
         // ...
       }

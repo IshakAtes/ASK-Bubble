@@ -44,8 +44,8 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.getToken();
-    console.log('get Token finished');
+    // this.authService.getToken();
+    // console.log('get Token finished');
     
   }
 
@@ -74,22 +74,6 @@ export class LoginComponent implements OnInit {
   }
 
 
-  acceptedAuth() {
-    this.authService
-      .login(this.myForm.value.mail, this.myForm.value.pw)
-      .subscribe({
-        next: () => {
-        console.log('user auth Login');
-        this.authMessage = true;
-      },
-      error: (err) => {
-        this.errorMessage = err.code;
-        console.log(this.errorMessage);
-      },
-    });
-  }
-
-
   async normalSignIn () {
     if (this.us.guest) {
       await this.us.addUser(this.hub.guestData);
@@ -103,18 +87,39 @@ export class LoginComponent implements OnInit {
         console.log('Kein Gastbenutzer gefunden, erstelle neuen Gastbenutzer');
       }
     } else {
-      this.acceptedAuth();
-      const acceptedUser = await this.us.getUser(this.myForm.value.mail, this.myForm.value.pw);
-      if (this.myForm.valid && acceptedUser || this.authMessage) {
-        try {
-          this.us.loggedUser = acceptedUser;
-          this.us.userOnline(this.us.loggedUser.userId);
-          this.router.navigate(['/main']);
-          console.log(this.us.loggedUser);
-        } catch (error) {
-          console.error('Fehler beim Abrufen des Benutzers:', error);
-        }
-      } 
+      this.acceptedAuth(); 
+    }
+  }
+
+
+  acceptedAuth() {
+    this.authService
+      .login(this.myForm.value.mail, this.myForm.value.pw)
+      .subscribe({
+        next: () => {
+          this.logCorrectUser();
+        console.log('user auth Login', this.authService.userToken);
+        this.authMessage = true;
+      },
+      error: (err) => {
+        this.errorMessage = err.code;
+        console.log(this.errorMessage);
+      },
+    });
+  }
+
+
+  async logCorrectUser() {
+    const acceptedUser = await this.us.getUser(this.myForm.value.mail, this.myForm.value.pw);
+    if (this.myForm.valid && acceptedUser || this.authMessage) {
+      try {
+        this.us.loggedUser = acceptedUser;
+        this.us.userOnline(this.us.loggedUser.userId);
+        this.router.navigate(['/main']);
+        console.log(this.us.loggedUser);
+      } catch (error) {
+        console.error('Fehler beim Abrufen des Benutzers:', error);
+      }
     }
   }
 
