@@ -49,15 +49,6 @@ export class UserService {
   constructor(private http: HttpClient, private router: Router, public database: DatabaseService) { 
     this.loadActiveUserChannels();    //muss nach dem login aufgerufen werden
     this.loadActiveUserConversations(); //muss nach dem login aufgerufen werden
-    setTimeout(() => {
-      console.log('active user channels', this.activeUserChannels)
-      console.log('active user Conversations', this.activeUserConversationList)
-      console.log('users from active ConversationList', this.usersFromActiveUserConversationList)
-      console.log('activeUserOwnConversation', this.activeUserOwnConversation)
-      console.log('activeuserobject', this.activeUserObject)
-      
-    }, 5000);
-    
   }
 
 
@@ -198,6 +189,9 @@ export class UserService {
   }
 
 
+  /**
+   * loads all channels for the active user
+   */
   loadActiveUserChannels(){
     this.activeUserChannels = [];
     this.isWorkspaceDataLoaded = false;
@@ -205,8 +199,6 @@ export class UserService {
       this.activeUserObject = user;
       this.database.loadAllUserChannels(user.userId).then(userChannels => {
         this.activeUserChannels = userChannels
-        //this.isWorkspaceDataLoaded = true;
-
       });
     })
   }
@@ -219,9 +211,9 @@ export class UserService {
     this.database.getUser(this.activeUserMail).then(user => {
       this.database.loadAllUserConversations(user.userId)
         .then(userConversations => {
+          
           const promises = userConversations.map(conversation => {
             this.activeUserConversationList.push(conversation);
-  
             const userPromise = conversation.createdBy === user.userId
               ? this.getUserRecievedBy(conversation)
               : this.getUserCreatedBy(conversation);
@@ -232,12 +224,9 @@ export class UserService {
               if (conversation.createdBy === this.activeUserObject.userId &&
                   conversation.recipientId === this.activeUserObject.userId) {
                   this.activeUserOwnConversation = conversation;
-                  console.log('activeUserOwn First', this.activeUserOwnConversation);
               }
             });
           });
-  
-          // Wait for all promises to complete
           return Promise.all(promises);
         })
         .then(() => {
@@ -245,40 +234,38 @@ export class UserService {
           this.database.loadSpecificUserConversation(this.activeUserObject.userId, this.activeUserOwnConversation.conversationId)
             .then((conversation => {
               this.activeUserOwnConversation = conversation
-              console.log('activeUserOwn Second', this.activeUserOwnConversation);
               this.isWorkspaceDataLoaded = true;
-
             }))
         });
     });
   }
 
 
+  /**
+   * searches the conversation list and looks for the own conversation with the
+   * active user
+   * @param conversationList conversationlist
+   */
   checkOwnConversation(conversationList: Conversation[]){
-    //debugger
-
     conversationList.forEach(conversation => {
       if(conversation.createdBy == this.activeUserObject.userId && conversation.recipientId == this.activeUserObject.userId){
-
-        //this.activeUserOwnConversation = conversation;
         this.activeUserConversationList.splice(this.activeUserConversationList.indexOf(conversation), 1);
       }
     });
-
-
-    
-    //debugger;
     this.usersFromActiveUserConversationList.forEach(user => {
       if(user.userId == this.activeUserObject.userId){
         this.usersFromActiveUserConversationList.splice(this.usersFromActiveUserConversationList.indexOf(user), 1);
       }
     })
-
-    
-
   }
  
 
+  /**
+   * loads a user from the database based on the creator
+   * of the current conversation
+   * @param conversation conversationobject
+   * @returns userobject
+   */
   getUserCreatedBy(conversation: Conversation): Promise<User>{
     return new Promise<User>((resolve, reject) =>{
       this.database.loadUser(conversation.createdBy)
@@ -291,10 +278,15 @@ export class UserService {
       }
     )
     })
-
   }
 
 
+  /**
+   * loads a user from the database based on the recipient
+   * of the current conversation
+   * @param conversation conversationobject
+   * @returns userobject
+  */
   getUserRecievedBy(conversation: Conversation): Promise<User>{
     return new Promise<User>((resolve, reject) =>{
       this.database.loadUser(conversation.recipientId)
@@ -310,6 +302,9 @@ export class UserService {
   }
 
 
+  /**
+   * gehts the width of the current device
+   */
   getDeviceWidth(){
     this.deviceWidth = window.innerWidth;
   }

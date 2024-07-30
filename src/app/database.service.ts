@@ -18,7 +18,6 @@ import { timestamp } from 'rxjs';
 export class DatabaseService {
   firestore: Firestore = inject(Firestore)
   
-  workspace: WorkspaceComponent;
 
   constructor() { 
     
@@ -141,20 +140,11 @@ export class DatabaseService {
       })
       this.updateUser(addedUser);
     })
-
-
   }
 
 
 
-  
-
   addChannel(channel: Channel){
-     
-    //wird doppelt vergeben hier ist das Problem mit SET
-
-
-
     let channelObject = new Channel(channel)
     channel.membersId.forEach(userId => {
       setDoc(doc(this.firestore, 'users/' + userId + '/channels', channel.channelId), channelObject.toJSON());
@@ -472,7 +462,6 @@ export class DatabaseService {
    loadChannelMessagesReactions(userId: string, channelId: string, channelMessageId: string): Promise<Array<Reaction>> {
     return new Promise<Array<Reaction>>((resolve, reject) => {
       const reactionList = [] as Array<Reaction>;
-      
       const path = `users/${userId}/channels/${channelId}/channelmessages/${channelMessageId}/reactions`;
       const reactionsCollection = collection(this.firestore, path);
       
@@ -644,27 +633,6 @@ export class DatabaseService {
       })
     })
   }
-
-  
-  // loadConversationMessagesReactions(userId: string, conversationId: string, conversationMessageId: string): Promise<Array<Reaction>>{
-  //   return new Promise<Array<Reaction>>((resolve, reject) =>{
-  //     const reactionList = [] as Array<Reaction>
-  //     onSnapshot(collection(this.firestore, 'users/' + userId + '/conversations/' + conversationId + '/conversationmessages' + conversationMessageId + '/reactions'), (reactions) => {
-  //       reactions.forEach(reactions => {
-  //         const reactionData = reactions.data();
-  //         const reactionObject = {} as Reaction;
-  //         reactionObject.emoji = reactionData['emoji'];
-  //         reactionObject.messageId = reactionData['messageId'];
-  //         reactionObject.reactionId = reactionData['reactionId'];
-  //         reactionObject.userId = reactionData['userId'];
-  //         reactionList.push(reactionObject);
-  //       })
-  //       resolve(reactionList);
-  //     },(error) => {
-  //       reject(error)
-  //     })
-  //   })
-  // }
 
   loadConversationMessagesReactions(userId: string, conversationId: string, conversationMessageId: string): Promise<Array<Reaction>> {
     return new Promise<Array<Reaction>>((resolve, reject) => {

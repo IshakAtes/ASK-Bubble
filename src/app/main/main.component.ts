@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, OnChanges, AfterViewChecked, AfterViewInit, } from '@angular/core';
+import { Component, inject} from '@angular/core';
 import { WorkspaceComponent } from '../workspace/workspace.component';
 import { ChannelComponent } from '../channel/channel.component';
 import { ChatComponent } from '../chat/chat.component';
@@ -7,9 +7,7 @@ import { DatabaseService } from '../database.service';
 import { Channel } from '../../models/channel.class';
 import { UserService } from '../user.service';
 import { CommonModule } from '@angular/common';
-import { MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { Conversation } from '../../models/conversation.class';
-import { User } from '../../models/user.class';
 import { CreateConversationComponent } from '../create-conversation/create-conversation.component';
 import { HeaderComponent } from '../header/header.component';
 import { AuthService } from '../shared-services/auth.service';
@@ -30,7 +28,6 @@ export class MainComponent{
   reloadChannel: boolean = false;
   thread: boolean = true;
   
-
   currentConversation: Conversation;
   currentChannel: Channel;
 
@@ -39,74 +36,84 @@ export class MainComponent{
   constructor(public userservice: UserService, public database: DatabaseService){
     userservice.getDeviceWidth();
     console.log(this.authService.checkUserStatus());
-    
   }
 
 
-
-
-
-
-
+  /**
+   * opens a the channel view
+   * @param channel channelobject
+   */
   changeChannel(channel: Channel){
+    if(this.userservice.deviceWidth > 500){
+      this.getDesktopChannelView(channel);
+    }
+    else{
+      this.getMobileChannelView(channel);
+    }
+  }
+
+
+  /**
+   * sets the variables according to deskotp view
+   * @param channel channelobject
+   */
+  getDesktopChannelView(channel: Channel){
     //if switch happens between channels a reload is needed!
-    if(this.userservice.deviceWidth > 500){
-      //ts settings for desktopView
-      if(this.channel){
-        this.reloadChannel = true;
-        this.currentChannel = channel;
-        this.conversation = false;
-        this.channel = true;
-      }
-      else{
-        this.currentChannel = channel;
-        this.conversation = false;
-        this.channel = true;
-      }
+    if(this.channel){
+      this.reloadChannel = true;
+      this.currentChannel = channel;
+      this.conversation = false;
+      this.channel = true;
     }
     else{
-      //ts settings for mobile view
-      if(this.channel){
-        this.currentChannel = channel;
-        this.reloadChannel = true;
-        this.conversation = false;
-        this.channel = true;
-      }
-      else{
-        this.currentChannel = channel;
-        this.conversation = false;
-        this.channel = true;
-      }
-      this.isWSVisible = false;
+      this.currentChannel = channel;
+      this.conversation = false;
+      this.channel = true;
     }
-
   }
 
 
+  /**
+   * sets the variables according to mobile view
+   * @param channel channelobject
+   */
+  getMobileChannelView(channel: Channel){
+    if(this.channel){
+      this.currentChannel = channel;
+      this.reloadChannel = true;
+      this.conversation = false;
+      this.channel = true;
+    }
+    else{
+      this.currentChannel = channel;
+      this.conversation = false;
+      this.channel = true;
+    }
+    this.isWSVisible = false;
+  }
 
+
+  /**
+   * changes the view to the an existing conversation
+   */
   changeConversation(conversation: Conversation){
-   
-    console.log(this.userservice.activeUserOwnConversation)
-    console.log('emitted conversation', conversation)
     if(this.userservice.deviceWidth > 500){
       this.currentConversation = conversation;
-      //this.reloadConversation = true;
       this.conversation = true;
       this.channel = false;
-      //this.userservice.loadActiveUserConversations();
     }
     else{
       this.currentConversation = conversation;
       this.conversation = true;
       this.channel = false;
       this.isWSVisible = false;
-      //this.userservice.loadActiveUserConversations();
     }
-
-    
   }
 
 
+  /**
+   * changes the view to the new conversation
+   */
   changeNewConversation(){
     if(this.userservice.deviceWidth > 500){
       this.reloadChannel = false;
@@ -119,18 +126,21 @@ export class MainComponent{
       this.channel = false;
       this.isWSVisible = false;
     }
-
   }
 
   
-
+  /**
+  * reloads the channel component
+  * @param reload boolean
+  */
   setReloadToFalse(reload: boolean){
     this.reloadChannel = false;
-    console.log('reload from setReloadToFalse (main):')
-    console.log('reload', this.reloadChannel)
   }
 
 
+  /**
+   * switches view to workspace
+   */
   viewWorkspace(){
     this.isWSVisible = true
     this.channel = false;
@@ -138,15 +148,18 @@ export class MainComponent{
   }
 
 
+  /**
+   * shows the default view after leaving a channel
+   */
   userLeftChannel(){
-
     this.conversation = false;
     this.channel = false;
   }
 
-  
 
-
+  /**
+   * changes the visibility of the workspace
+   */
   changeWSVisibility(){
     if(this.isWSVisible){
       this.isWSVisible = false;

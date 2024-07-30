@@ -24,45 +24,77 @@ export class DialogUserProfileComponent {
   }
 
 
-
+  /**
+   * opens a conversation with the selected User
+   * @param user userobject
+   */
   openConversation(user: User){
-
     for(let conversation of this.conversationList){
       if(conversation.createdBy == this.activeUser.userId){
-        if(conversation.recipientId == user.userId){
-          this.dialogRef.close(conversation);
-          break;
-        }
-        else if(conversation.createdBy == user.userId){
-          if(conversation.recipientId == this.activeUser.userId){
-            this.dialogRef.close(conversation);
-            break;
-          }
-        }
+        if(this.checkSelectedUser(conversation, user)){break;}
       }
       else if(conversation.createdBy == user.userId){
-        if(conversation.recipientId == this.activeUser.userId){
-          this.dialogRef.close(conversation);
-          break;
-        }
-        else if(conversation.createdBy == this.activeUser.userId){
-          if(conversation.recipientId == user.userId){
-            this.dialogRef.close(conversation);
-            break;
-          }
-        }
+        if(this.checkActiveUser(conversation, user)){break;}
       }
       else{
         if((this.conversationList.indexOf(conversation) +1) == this.conversationList.length) {
           this.openNewConversation(user);
         }
       }
-
     }
   }
 
 
+  /**
+   * checks the current conversation in the for-loop (for-loop through all conversations of the user) 
+   * if the recipient or the creator of the conversation matches the selected user and opens the conversation
+   * if true
+   * @param conversation conversationobject
+   * @param user userobject
+   */
+  checkSelectedUser(conversation: Conversation, user: User): boolean{
+    if(conversation.recipientId == user.userId){
+      this.dialogRef.close(conversation);
+      return true;
+    }
+    else if(conversation.createdBy == user.userId){
+      if(conversation.recipientId == this.activeUser.userId){
+        this.dialogRef.close(conversation);
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  /**
+   * checks the current conversation in the for-loop (for-loop through all conversations of the user) 
+   * if the recipient or the creator of the conversation matches the active user and opens the conversation
+   * if true
+   * @param conversation conversationobject
+   * @param user userobject
+   */
+  checkActiveUser(conversation: Conversation, user: User): boolean{
+    if(conversation.recipientId == this.activeUser.userId){
+      this.dialogRef.close(conversation);
+      return true;;
+    }
+    else if(conversation.createdBy == this.activeUser.userId){
+      if(conversation.recipientId == user.userId){
+        this.dialogRef.close(conversation);
+        return true;;
+      }
+    }
+    return false;
+  }
+
+
+  /**
+   * opens a conversation with the user of the opened profile
+   * @param user userobject
+   */
   openNewConversation(user: User){
+    debugger
     let newConversation = this.database.createConversation(this.activeUser.userId, user.userId);
     this.database.addConversation(newConversation);
     this.userService.loadActiveUserConversations();
@@ -71,7 +103,5 @@ export class DialogUserProfileComponent {
       this.dialogRef.close(newConversation);
     }, 400);
   }
-
-
 
 }

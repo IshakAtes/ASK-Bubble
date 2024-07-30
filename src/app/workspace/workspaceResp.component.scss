@@ -125,12 +125,13 @@
         border-radius: 100px;
         opacity: 0px;
         background-color: #444DF2;
-
+        z-index: 99;
  
         
         
 
         svg {   
+           
             path {
                 fill: white;
             }
@@ -251,9 +252,13 @@
 
 @media (max-width: 390px) {
     section {
-
         height: 100vh;
+    }
+}
 
-        
+
+@media (max-height: 670px) {
+    section {
+        height: 100%;
     }
 }

@@ -22,12 +22,20 @@ export class DialogShowSelectedUserComponent {
   }
 
 
-  
+  /**
+   * opens the profile dialog of the selected user
+   * @param user userobject
+  */
   openProfile(user: User){
     const profileInfo = this.dialog.open(DialogUserProfileComponent);
     profileInfo.componentInstance.shownUser = user;
   }
 
+
+  /**
+   * removes the user from the selected user list
+   * @param user userobject
+   */
   removeUser(user: User){
     this.selectedUserList.splice(this.selectedUserList.indexOf(user), 1);
   }

@@ -39,13 +39,17 @@ export class DialogShowChannelSettingsComponent {
 
   
   constructor(public dialogRef: MatDialogRef<DialogShowChannelSettingsComponent>, public dialog: MatDialog, public us: UserService){
-    this.database.loadUser('Adxrm7CExizb76lVrknu')
+    this.database.loadUser(us.activeUserObject.userId)
       .then(user =>{
         this.activeUser = user;
     })
     this.setUserlist();
   }
 
+
+  /**
+   * creates the userlist of the channel members
+   */
   setUserlist(){
     setTimeout(() => {
       this.currentChannel.membersId.forEach(userId => {
@@ -58,20 +62,22 @@ export class DialogShowChannelSettingsComponent {
   }
 
 
+  /**
+   * opens the profile dialog of the selected user
+   * @param user userobject
+   */
   openProfile(user: User){
-    console.log(user.userId);
     const profileInfo = this.dialog.open(DialogUserProfileComponent);
     profileInfo.componentInstance.shownUser = user;
   }
 
-  ngOnChanges(){
-    console.log('triggered on change from show channel settings')
-  }
 
+  /**
+   * lets the active user leave the channel
+   */
   leaveChannel(){
     this.newChannel = new Channel(this.currentChannel);
     this.newChannel.membersId.splice(this.newChannel.membersId.indexOf(this.activeUser.userId), 1)
-    console.log('This user leaves the channel: ' + this.activeUser.userId)
     this.database.updateChannelMembers(new Channel(this.newChannel));
     this.database.deleteChannel(new Channel(this.newChannel), this.activeUser.userId)
     this.us.loadActiveUserChannels();
@@ -79,6 +85,10 @@ export class DialogShowChannelSettingsComponent {
   }
 
 
+  /**
+   * changes the view of the name or description input field to edit mode
+   * @param value name or descritpion
+   */
   changeToEditView(value: string){
     if(value == 'name'){
       if(this.showEditNameInput){this.showEditNameInput = false;}
@@ -91,6 +101,10 @@ export class DialogShowChannelSettingsComponent {
   }
 
 
+  /**
+   * checks the content and if the content is valid a channel object
+   * with the new name is created and updated in the database
+   */
   saveChangedChannelName(){
     this.validateContent()
     .then(bool => {
@@ -107,6 +121,10 @@ export class DialogShowChannelSettingsComponent {
   }
 
 
+  /**
+   * checks if the channel name already exists in the database
+   * @returns boolean
+   */
   validateContent(): Promise<boolean>{
     return new Promise<boolean>((resolve, reject) =>{
       this.database.loadAllChannels()
@@ -125,6 +143,10 @@ export class DialogShowChannelSettingsComponent {
   }
 
 
+  /**
+   * checks the content and if the content is valid a channel object
+   * with the new description is created and updated in the database
+   */
   saveChangedChannelDescription(){
     this.currentChannel.description = this.newChannelDescription;
     this.database.updateChannelName(new Channel(this.currentChannel))
@@ -133,12 +155,18 @@ export class DialogShowChannelSettingsComponent {
   }
 
 
+  /**
+   * sets all variables to their default value
+   */
   setDefault(){
     this.errorMessage.nativeElement.innerHTML = '';
   }
 
+
+  /**
+   * opens a dialog where new members can be added to the channel
+   */
   showAddMember(){
-    //create new component
     const channelInfo = this.dialog.open(DialogAddMembersFromSettingsComponent);
     channelInfo.componentInstance.currentChannel = this.currentChannel;
     this.dialogRef.close();

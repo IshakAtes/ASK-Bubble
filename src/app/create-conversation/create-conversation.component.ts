@@ -17,38 +17,24 @@ import { UserService } from '../user.service';
   styleUrl: './create-conversation.component.scss'
 })
 export class CreateConversationComponent {
-  //input Data from main component
 
   @Input() channelBig: boolean;
 
-
-
-  //outputData to main component
   @Output() changeReloadStatus = new EventEmitter<boolean>();
   @Output() changeToChannel = new EventEmitter<Channel>()
   @Output() changeToConversation = new EventEmitter<Conversation>()
-  
   
   hideUserContainer: boolean = true;
   inputFocused: boolean =  false;
   isdataLoaded: boolean = true;
 
-
-  userId = 'Adxrm7CExizb76lVrknu';
-
-
   inputUser: string = '';
 
-
- 
   userlist: Array<User> = [];
   channelList: Array<Channel> = [];
   conversationList: Array<Conversation> = [];
   foundUserList: Array<User> = [];
   foundChannelList: Array<Channel> = [];
-
-
-
 
 
   constructor(public dialog: MatDialog, private database: DatabaseService, public us: UserService){
@@ -58,37 +44,48 @@ export class CreateConversationComponent {
   }
 
 
-
+  /**
+   * loads the userlist from database
+  */
   loadUserList() {
     setTimeout(() => {
       this.userlist = [];
       this.database.loadAllUsers().then(allUsers =>{
         this.userlist = allUsers;
       })
-    }, 200);
+    }, 1000);
   }
 
 
+  /**
+   * loads the channellist for the user from database
+  */
   loadUserChannel(){
     setTimeout(() => {
       this.channelList = [];
-      this.database.loadAllUserChannels(this.userId).then(allChannel => {
+      this.database.loadAllUserChannels(this.us.activeUserObject.userId).then(allChannel => {
         this.channelList = allChannel;
       })
-    }, 200);
+    }, 1000);
   }
 
 
+  /**
+   * loads the conversationlist for the user from database
+  */
   loadUserConversation(){
     setTimeout(() => {
       this.conversationList = [];
-      this.database.loadAllUserConversations(this.userId).then(allConversations => {
+      this.database.loadAllUserConversations(this.us.activeUserObject.userId).then(allConversations => {
         this.conversationList = allConversations;
       })
-    }, 200);
+    }, 1000);
   }
 
 
+  /**
+   * filters the channel or users depending on the input of the user
+   */
   showFilteredUser(){
     if(this.inputUser.startsWith('@')){
       let searchUser = this.inputUser.substring(1);
@@ -104,73 +101,33 @@ export class CreateConversationComponent {
   }
 
 
-
-  selectUser(user: User){
-
-    for(let conversation of this.conversationList){
-      if(conversation.createdBy == this.userId){
-        if(conversation.recipientId == user.userId){
-
-          console.log('A Conversation was Found --> open Conversation via emit')
-          this.changeToConversation.emit(conversation);
-          break;
-        }
-        else if(conversation.createdBy == user.userId){
-          if(conversation.recipientId == this.userId){
-
-            console.log('A Conversation was Found --> open Conversation via emit')
-            this.changeToConversation.emit(conversation);
-            break;
-          }
-        }
-      }
-
-
-      else if(conversation.createdBy == user.userId){
-        if(conversation.recipientId == this.userId){
-          console.log('A Conversation was Found --> open Conversation via emit')
-          this.changeToConversation.emit(conversation);
-          break;
-        }
-        else if(conversation.createdBy == this.userId){
-
-          if(conversation.recipientId == user.userId){
-            console.log('A Conversation was Found --> open Conversation via emit')
-            this.changeToConversation.emit(conversation);
-            break;
-          }
-        }
-      }
-      else{
-        if((this.conversationList.indexOf(conversation) +1) == this.conversationList.length) {
-          console.log('nothing found in last iteration')
-          console.log('No Conversation was found --> create new Conversation')
-          this.openNewConversation(user);
-        }
-      }
-
-    }
-  }
-
-
-
+  /**
+   * creates a new conversation with a user and sends the information regarding the new created conversation
+   * to the main component
+   * @param user userObject
+   */
   openNewConversation(user: User){
-    let newConversation = this.database.createConversation(this.userId, user.userId)
+    let newConversation = this.database.createConversation(this.us.activeUserObject.userId, user.userId)
     this.database.addConversation(newConversation);
     this.us.loadActiveUserConversations();
-    
     setTimeout(() => {
       this.changeToConversation.emit(newConversation);
     }, 200);
-
   }
 
 
+  /**
+   * Sends the channelobject to main component
+   * @param channel channelobject that will be send to main component
+   */
   selectChannel(channel: Channel){
     this.changeToChannel.emit(channel);
   }
 
 
+  /**
+   * hides or shows the container where the filtered users are displayed
+   */
   changeUserContainerVisibility(){
     if(this.hideUserContainer){
       this.hideUserContainer = false;
@@ -181,6 +138,10 @@ export class CreateConversationComponent {
     console.log('check input focus error ');
   }
 
+  
+  /**
+   * detects if the inputfield is focused or not at thats the varibles accordingly
+   */
   detectInputFocus(){
     if(this.inputFocused){
       this.inputFocused = false;
@@ -190,5 +151,84 @@ export class CreateConversationComponent {
     }
   }
 
+
+  /**
+   * opens a conversation with the selected User
+   * @param user userobject
+   */
+  selectUser(user: User){
+    for(let conversation of this.conversationList){
+      if(conversation.createdBy == this.us.activeUserObject.userId){
+        if(this.checkSelectedUser(conversation, user)){
+          break;
+        };
+      }
+      else if(conversation.createdBy == user.userId){
+        if(this.checkActiveUser(conversation, user)){
+          break;
+        };
+      }
+      else{
+        this.createNewConversation(conversation, user);
+      }
+    }
+  }
+
+
+  /**
+   * checks the current conversation in the for-loop (for-loop through all conversations of the user) 
+   * if the recipient or the creator of the conversation matches the selected user and opens the conversation
+   * if true
+   * @param conversation conversationobject
+   * @param user userobject
+   */
+  checkSelectedUser(conversation: Conversation, user: User): boolean{
+    if(conversation.recipientId == user.userId){
+      this.changeToConversation.emit(conversation);
+      return true
+    }
+    else if(conversation.createdBy == user.userId){
+      if(conversation.recipientId == this.us.activeUserObject.userId){
+        this.changeToConversation.emit(conversation);
+        return true
+      }
+    }
+    return false
+  }
+
+
+  /**
+   * checks the current conversation in the for-loop (for-loop through all conversations of the user) 
+   * if the recipient or the creator of the conversation matches the active user and opens the conversation
+   * if true
+   * @param conversation conversationobject
+   * @param user userobject
+   */
+  checkActiveUser(conversation: Conversation, user: User): boolean{
+    if(conversation.recipientId == this.us.activeUserObject.userId){
+      this.changeToConversation.emit(conversation);
+      return true;
+    }
+    else if(conversation.createdBy == this.us.activeUserObject.userId){
+      if(conversation.recipientId == user.userId){
+        this.changeToConversation.emit(conversation);
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  /**
+   * Creates a new Conversation with the selected user and opens it
+   *  because the previous checks did not result in true
+   * @param conversation conversationobject
+   * @param user userobject
+   */
+  createNewConversation(conversation: Conversation, user: User){
+    if((this.conversationList.indexOf(conversation) +1) == this.conversationList.length) {
+      this.openNewConversation(user);
+    }
+  }
 
 }
