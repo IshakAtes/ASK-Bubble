@@ -142,8 +142,19 @@ export class UserService {
 
   addUser(user: User) {
     addDoc(collection(this.firestore, 'users'), user.toJSON())
-    .then(() => console.log('User erfolgreich hinzugefügt', user))
+    .then((data) => {
+      console.log('User erfolgreich hinzugefügt', data);
+      this.pushUserId(data.id);
+    })
     .catch((error) => console.error('Fehler beim Hinzufügen des Benutzers:', error));
+  }
+
+
+  pushUserId(id: string) {
+    const userDocRef = doc(this.firestore, "users", id);
+    updateDoc(userDocRef, {
+      userId: id
+    });
   }
 
 

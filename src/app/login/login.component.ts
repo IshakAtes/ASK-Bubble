@@ -76,7 +76,6 @@ export class LoginComponent implements OnInit {
 
   async signIn() {
     if (this.us.guest) {
-      // await this.us.addUser(this.hub.guestData);
       try {
         this.authAsGuest();
       } catch (error) {
@@ -90,6 +89,7 @@ export class LoginComponent implements OnInit {
 
 
   authAsGuest() {
+    console.log('Log');
     this.authService
       .login(this.myForm.value.mail, this.myForm.value.pw)
       .subscribe({
@@ -98,6 +98,7 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => {
         this.errorMessage = err.code;
+        this.authService.register(this.guestLog.email, this.guestLog.name, this.guestPw);
         console.log(this.errorMessage);
       },
     });
@@ -139,7 +140,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  
+
   onMouseDown() {
     this.isPressed = true;
   }
