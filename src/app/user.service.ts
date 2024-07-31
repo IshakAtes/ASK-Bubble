@@ -60,7 +60,8 @@ export class UserService {
     setTimeout(() => {
       this.database.getUser(this.userCache.email)
         .then(user =>{
-          this.database.addConversation(this.database.createConversation(user.userId, user.userId))
+          this.database.addConversation(this.database.createConversation(user.userId, user.userId));
+          this.userToken = '';
         })
     }, 1000);
   }

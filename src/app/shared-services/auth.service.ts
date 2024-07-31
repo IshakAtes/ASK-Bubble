@@ -16,7 +16,7 @@ export class AuthService {
   us = inject(UserService);
   errorMessage: string | null = null;
   provider = new GoogleAuthProvider();
-  userToken: string;
+  
 
   constructor() {}
 
@@ -106,7 +106,7 @@ export class AuthService {
   login(email: string, password: string,): Observable <void> {
     const promise = signInWithEmailAndPassword(this.firebaseAuth, email, password
     ).then((response) => {
-      this.userToken = response.user.uid;
+      this.us.userToken = response.user.uid;
     });
     return from(promise);
   }

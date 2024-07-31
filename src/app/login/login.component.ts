@@ -97,7 +97,6 @@ export class LoginComponent implements OnInit {
       .login(this.myForm.value.mail, this.myForm.value.pw)
       .subscribe({
         next: () => {
-        console.log('user auth Login', this.authService.userToken);
         // this.authMessage = true;
         this.logCorrectUser();
       },
@@ -110,16 +109,18 @@ export class LoginComponent implements OnInit {
 
 
   async logCorrectUser() {
-    const acceptedUser = await this.us.getUser(this.myForm.value.mail, this.authService.userToken);
+    const acceptedUser = await this.us.getUser(this.myForm.value.mail, this.us.userToken);
     if (this.myForm.valid && acceptedUser || this.authMessage) {
       try {
         this.us.loggedUser = acceptedUser;
         this.us.userOnline(this.us.loggedUser.userId);
         this.router.navigate(['/main']);
-        console.log(this.us.loggedUser);
+        this.us.userToken = '';
       } catch (error) {
         console.error('Fehler beim Abrufen des Benutzers:', error);
       }
+    } else {
+      this.us.userToken = '';
     }
   }
 
