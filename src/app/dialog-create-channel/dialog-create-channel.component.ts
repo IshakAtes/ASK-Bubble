@@ -33,6 +33,10 @@ export class DialogCreateChannelComponent {
   }
 
 
+  /**
+   * checks if the name input field is empty and enables / disables
+   * the button
+   */
   checkContent(){
     if(this.channelName == ''){
       this.buttonDisabled = true;
@@ -43,6 +47,10 @@ export class DialogCreateChannelComponent {
   }
 
 
+  /**
+   * checks if the channel name already exists in the database
+   * @returns boolean
+   */
   validateContent(): Promise<boolean>{
     return new Promise<boolean>((resolve, reject) =>{
       this.database.loadAllChannels()
@@ -61,14 +69,16 @@ export class DialogCreateChannelComponent {
   }
   
 
+  /**
+   * checks the content and if the content is valid a channel object
+   * with all the relevant information is created and passed to the next dialog
+   */
   saveChannelInformation(){
     this.validateContent()
       .then(bool => {
         if(bool){
           this.channelCache = this.database.createChannel(this.activeUser, this.description, [], this.channelName)
-          const channelInfo = this.dialog.open(DialogAddChannelMembersComponent, {
-            panelClass: 'customDialog',
-          })
+          const channelInfo = this.dialog.open(DialogAddChannelMembersComponent, {panelClass: 'customDialog'})
           channelInfo.componentInstance.channelCache = this.database.createChannel(this.activeUser, this.description, [], this.channelName);
           this.dialogRef.close();
         }

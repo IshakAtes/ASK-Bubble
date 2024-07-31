@@ -32,7 +32,6 @@
         @if(conversation){
             <app-chat
             (changeReloadStatus)="setReloadToFalse($event)"
-            
             [specific]="currentConversation"
             [user]="userservice.activeUserObject"
             ></app-chat>

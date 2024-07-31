@@ -43,12 +43,19 @@ export class DialogAddAdditionalMemberComponent {
   }
 
   
+  /**
+   * loads userlist and creates the selection of users that could
+   * possibly be added to channel
+   */
   setUserlist(){
     this.loadUserList();
     this.createPossibleUserSelection();
   }
   
 
+  /**
+   * loads all users into a userlist variable
+   */
   loadUserList(){
     setTimeout(() => {
       this.userlist = [];
@@ -64,6 +71,11 @@ export class DialogAddAdditionalMemberComponent {
   }
 
 
+  /**
+   * takes the list of all users and splices the
+   * members of the current channel to get the possible
+   * new members
+   */
   createPossibleUserSelection(){
     setTimeout(() => {
       this.currentChannel.membersId.forEach(memberid => {
@@ -77,6 +89,11 @@ export class DialogAddAdditionalMemberComponent {
   }
 
 
+  /**
+   * checks if the selected User was already selected and give notice to the user or
+   * adds the selected user to the selected user list
+   * @param user userobject
+   */
   selectUser(user: User){
     let doubleSelection: boolean = false
     this.selectedUserList.forEach(selectedUser => {
@@ -94,6 +111,10 @@ export class DialogAddAdditionalMemberComponent {
   }
 
 
+  /**
+   * add the user to the selected user list and sets everything to default
+   * @param user userobject
+   */
   addUserToSelectedUserList(user: User){
     this.selectedUserList.push(user);
     this.setDefault();
@@ -101,18 +122,22 @@ export class DialogAddAdditionalMemberComponent {
   }
 
 
+  /**
+   * checks the length of the inputfield
+   */
   checkInputWidth(){
     if(this.selectedList.nativeElement.offsetWidth > 500){
       this.selectedListWidthMobile = this.selectedList.nativeElement.offsetWidth
-      console.log(this.selectedListWidthMobile)
     }
     else{
       this.selectedListWidthMobile = this.selectedList.nativeElement.offsetWidth
-      console.log(this.selectedListWidthMobile)
     }
   }
 
 
+  /**
+   * sets all variables to their default value
+   */
   setDefault(){
     this.inputFocused =  false;
     this.hideUserContainer = true;
@@ -121,6 +146,10 @@ export class DialogAddAdditionalMemberComponent {
   }
 
 
+  /**
+   * removes the user from the selected user list
+   * @param user userobject
+   */
   removeUser(user: User){
     this.selectedUserList.splice(this.selectedUserList.indexOf(user), 1);
     this.setDefault();
@@ -128,6 +157,9 @@ export class DialogAddAdditionalMemberComponent {
   }
 
 
+  /**
+   * hides or shows the container where the filtered users are displayed
+   */
   changeUserContainerVisibility(){
     if(this.hideUserContainer){
       this.hideUserContainer = false;
@@ -139,6 +171,9 @@ export class DialogAddAdditionalMemberComponent {
   }
 
 
+  /**
+   * detects if the inputfield is focused or not at thats the varibles accordingly
+   */
   detectInputFocus(){
     if(this.inputFocused){
       this.inputFocused = false;
@@ -149,11 +184,16 @@ export class DialogAddAdditionalMemberComponent {
   }
 
 
+  /**shows the found users */
   showFilteredUser(){
     this.foundUserList = this.userlist.filter((user) => user.name.toLowerCase().startsWith(this.searchUser));
   }
 
 
+  /**
+   * creates the new channelobject with the new added members after checking if
+   * at least one new member was added to the selected user list
+   */
   addNewMembers(){
     if(this.selectedUserList.length == 0){
       this.errorMessage.nativeElement.innerHTML = 'Bitte wählen Sie weitere Nutzer aus';
@@ -167,6 +207,9 @@ export class DialogAddAdditionalMemberComponent {
   }
 
 
+  /**
+   * adds the new channel to the new Members in the database
+   */
   addChannelToNewMembers(){
     this.newChannel.membersId = [];
     this.selectedUserList.forEach(user =>{
@@ -176,6 +219,9 @@ export class DialogAddAdditionalMemberComponent {
   }
 
 
+  /**
+   * updates the channelobject for the old members in the database
+   */
   updateChannel(){
     this.selectedUserList.forEach(user => {
       this.currentChannel.membersId.push(user.userId)
@@ -185,14 +231,15 @@ export class DialogAddAdditionalMemberComponent {
   }
 
 
+  /**
+   * opens a list that shows the current selection of users which
+   * will be added to the channel
+   */
   openSelectedUserList(){
     const userlistInfo = this.dialog.open(DialogShowSelectedUserComponent);
-    
     userlistInfo.afterClosed().subscribe( () => {
       this.selectedUserList = userlistInfo.componentInstance.selectedUserList;
     })
-    
-    
     userlistInfo.componentInstance.selectedUserList = this.selectedUserList;
   }
 

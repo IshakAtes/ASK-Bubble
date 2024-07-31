@@ -27,7 +27,10 @@ export class DialogShowMemberListComponent {
     this.setUserlist();
   }
 
-  
+
+  /**
+   * creates the userlist of the channel members
+   */
   setUserlist(){
     setTimeout(() => {
       this.currentChannel.membersId.forEach(userId => {
@@ -40,6 +43,9 @@ export class DialogShowMemberListComponent {
   }
 
 
+  /**
+   * opens a dialog where new members can be added to the channel
+   */
   showAddMember(){
     const channelInfo = this.dialog.open(DialogAddAdditionalMemberComponent);
     channelInfo.componentInstance.currentChannel = this.currentChannel;
@@ -47,11 +53,13 @@ export class DialogShowMemberListComponent {
   }
   
 
+  /**
+   * opens the profile dialog of the selected user
+   * @param user userobject
+   */
   openProfile(user: User){
-    console.log(user.userId);
     const profileInfo = this.dialog.open(DialogUserProfileComponent);
     profileInfo.componentInstance.shownUser = user;
-
     profileInfo.afterClosed().subscribe((conversation) => {
       if(conversation){
         this.dialogRef.close(conversation)

@@ -41,11 +41,12 @@ export class DialogAddChannelMembersComponent {
 
   constructor(public dialogRef: MatDialogRef<DialogAddChannelMembersComponent>, public dialog: MatDialog, public us: UserService){
     this.loadUserList();
-
-    
   }
 
 
+  /**
+  * loads the userlist from database
+  */
   loadUserList(){
     this.database.loadAllUsers().then(allUsers =>{
       this.userlist = allUsers
@@ -58,11 +59,17 @@ export class DialogAddChannelMembersComponent {
   }
 
 
+  /**shows the found users */
   showFilteredUser(){
     this.foundUserList = this.userlist.filter((user) => user.name.toLowerCase().startsWith(this.searchUser));
   }
 
 
+  /**
+   * checks if the selected User was already selected and give notice to the user or
+   * adds the selected user to the selected user list
+   * @param user userobject
+   */
   selectUser(user: User){
     let doubleSelection: boolean = false
     this.selectedUserList.forEach(selectedUser => {if(selectedUser.email == user.email){doubleSelection = true;}})
@@ -75,17 +82,23 @@ export class DialogAddChannelMembersComponent {
     else{
       this.selectedUserList.push(user);
       this.setDefault();
-
     }
   }
 
   
+  /**
+   * removes the user from the selected user list
+   * @param user userobject
+   */
   removeUser(user: User){
     this.selectedUserList.splice(this.selectedUserList.indexOf(user), 1);
     this.setDefault();
   }
  
 
+  /**
+   * sets all variables to their default value
+   */
   setDefault(){
     this.inputFocused =  false;
     this.hideUserContainer = true;
@@ -94,14 +107,13 @@ export class DialogAddChannelMembersComponent {
   }
 
   
+  /**
+   * creates a new channel either with the specific user selection as members or with all user
+   * as members of the new channel
+   */
   createNewChannel(){    
     if(this.resultRadioButton == "selection"){
-      if(this.selectedUserList.length == 0){
-        this.errorMessage.nativeElement.innerHTML = 'Bitte wählen Sie weitere Nutzer aus';
-      }
-      else{
-        this.addSelectionToDB();
-      }
+      this.checkSelection();
     }
     else{
       this.userlist.forEach(user => {
@@ -115,8 +127,24 @@ export class DialogAddChannelMembersComponent {
   }
 
 
+  /**
+   * checks if there was made a selection of at least one user
+   */
+  checkSelection(){
+    if(this.selectedUserList.length == 0){
+      this.errorMessage.nativeElement.innerHTML = 'Bitte wählen Sie weitere Nutzer aus';
+    }
+    else{
+      this.addSelectionToDB();
+    }
+  }
+
+
+  /**
+   * creates a new channel and adds that channel to every member
+   * of the channel in the database
+   */
   addSelectionToDB(){
-      console.log('add selection to DB');
       this.selectedUserList.forEach(user => {
         this.memberIdList.push(user.userId)
       })
@@ -124,10 +152,14 @@ export class DialogAddChannelMembersComponent {
       this.database.addChannel(this.database.createChannel(this.channelCache.createdBy, this.channelCache.description, this.memberIdList, this.channelCache.name))
       this.us.loadActiveUserChannels();
       this.dialogRef.close();
-
   }
 
 
+  /**
+   * if the value of the radio button is show the input field to add a 
+   * user selection is shown
+   * @param value hide or show to check the value of the radiobutton
+   */
   changeUserInputVisibility(value: string){
     if(value == 'hide'){
       this.hideUserInput = true;
@@ -135,10 +167,12 @@ export class DialogAddChannelMembersComponent {
     else{
       this.hideUserInput = false;
     }
-    console.log('check input focus error ');
   }
 
 
+  /**
+   * hides or shows the container where the filtered users are displayed
+   */
   changeUserContainerVisibility(){
     if(this.hideUserContainer){
       this.hideUserContainer = false;
@@ -150,6 +184,9 @@ export class DialogAddChannelMembersComponent {
   }
 
 
+  /**
+   * detects if the inputfield is focused or not at thats the varibles accordingly
+   */
   detectInputFocus(){
     if(this.inputFocused){
       this.inputFocused = false;
@@ -160,6 +197,9 @@ export class DialogAddChannelMembersComponent {
   }
 
 
+  /**
+   * opens a list of the currently selected users of the channel
+   */
   openSelectedUserList(){
     const userlistInfo = this.dialog.open(DialogShowSelectedUserComponent);
     userlistInfo.componentInstance.selectedUserList = this.selectedUserList;

@@ -11,13 +11,14 @@ import { Timestamp, deleteDoc, setDoc } from 'firebase/firestore';
 import { updateDoc, doc } from 'firebase/firestore'; // Korrigiert den Importpfad
 import { WorkspaceComponent } from './workspace/workspace.component';
 import { timestamp } from 'rxjs';
+import { Thread } from '../models/thread.class';
+import { ThreadMessage } from '../models/threadMessage';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DatabaseService {
-  firestore: Firestore = inject(Firestore)
-  
+  firestore: Firestore = inject(Firestore)  
   workspace: WorkspaceComponent;
 
   constructor() { 
@@ -115,6 +116,30 @@ export class DatabaseService {
     reaction.reactionId = 'CONV-MSG-REACT-' + randomNumber;
     return reaction
   }
+
+  createThread(conversationMessage: ConversationMessage, sendingUser: User, receivingUser: User): Thread{
+    let thread = {} as Thread;
+    const randomNumber = Math.random();
+    thread.messageId = conversationMessage.messageId
+    thread.threadId = 'THR-' + conversationMessage.createdBy + '-' + randomNumber;
+    thread.threadNameCreator = sendingUser.name;
+    thread.threadNameRecipient = receivingUser.name;
+    conversationMessage.threadId = thread.threadId;
+    return thread;
+  }
+
+  createThreadMessage(conversation: Conversation, content: string, createdBy: string, thread: Thread, fileUrl?: string): ConversationMessage{
+    let threadMessage = {} as ThreadMessage;
+    threadMessage.conversationId = conversation.conversationId;
+    threadMessage.content = content;
+    threadMessage.createdAt = Timestamp.fromDate(new Date());
+    threadMessage.createdBy = createdBy;
+    threadMessage.threadId = thread.threadId
+    threadMessage.messageId = thread.messageId
+    threadMessage.fileUrl = fileUrl ? fileUrl : '';
+    return threadMessage
+  }
+
 
 
 
