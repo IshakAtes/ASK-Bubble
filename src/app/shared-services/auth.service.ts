@@ -71,9 +71,10 @@ export class AuthService {
 
 
   async authRegistration() {
-    await this.register(this.us.userCache.email, this.us.userCache.name, this.us.userCache.password)
+    await this.register(this.us.userCache.email, this.us.userCache.name, this.us.pwCache)
       .subscribe({
         next: () => {
+          this.us.pwCache = '';
           this.us.createAndSaveUser()
       },
       error: (err) => {

@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
   hub = inject(UserService)
   isPressed = false;
   myForm: FormGroup;
-  guestLog: User = new User({
+  guestLog = {
     email: 'guest@mail.com',
     name: 'John Doe',
     password: 'guest123',
@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
     logIn: 'https://bubble.ishakates.com/',
     usedLastTwoEmojis: ['✅', '🙌'],
     uid: 'null'
-  });
+  };
 
   constructor(private fb: FormBuilder, private router: Router, public us: UserService) {
     console.log(this.us.loadAllUsers());
@@ -78,7 +78,7 @@ export class LoginComponent implements OnInit {
     if (this.us.guest) {
       await this.us.addUser(this.hub.guestData);
       try {
-        const guestUser = await this.us.getUser(this.hub.guestData.email, this.hub.guestData.password);
+        const guestUser = await this.us.getUser(this.hub.guestData.email, this.guestLog.password);
         this.us.guest = false;
         this.us.loggedUser = guestUser;
         this.us.userOnline(this.us.loggedUser.userId);
@@ -97,9 +97,9 @@ export class LoginComponent implements OnInit {
       .login(this.myForm.value.mail, this.myForm.value.pw)
       .subscribe({
         next: () => {
-          this.logCorrectUser();
         console.log('user auth Login', this.authService.userToken);
-        this.authMessage = true;
+        // this.authMessage = true;
+        this.logCorrectUser();
       },
       error: (err) => {
         this.errorMessage = err.code;
@@ -110,7 +110,7 @@ export class LoginComponent implements OnInit {
 
 
   async logCorrectUser() {
-    const acceptedUser = await this.us.getUser(this.myForm.value.mail, this.myForm.value.pw);
+    const acceptedUser = await this.us.getUser(this.myForm.value.mail, this.authService.userToken);
     if (this.myForm.valid && acceptedUser || this.authMessage) {
       try {
         this.us.loggedUser = acceptedUser;

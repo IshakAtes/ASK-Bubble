@@ -24,8 +24,9 @@ export class UserService {
   wrongLogin: boolean = false;
   resetUserPw: any;
   guest: boolean = false;
-  guestData: User;
+  guestData: any;
   userToken: string;
+  pwCache: string = '';
   private baseUrl = 'http://localhost:4200';
 
   activeUserChannels: Array<Channel> = [];
@@ -64,8 +65,6 @@ export class UserService {
 
   createAndSaveUser() {
     this.userCache['uid'] = this.userToken;
-    console.log('usercache', this.userCache);
-    
     this.addUser(this.userCache);
     setTimeout(() => {
       this.database.getUser(this.userCache.email)
@@ -102,13 +101,13 @@ export class UserService {
           const newUser = new User({
             email: formValues.mail,
             name: formValues.name,
-            password: formValues.pw,
             status: 'offline',
             avatarUrl: '',
             userId: '',
             uid: null,
           });
           this.userCache = newUser;
+          this.pwCache = formValues.pw;
           this.router.navigate(['/choosingAvatar']);
       } else {
         querySnapshot.forEach((doc) => {
@@ -144,7 +143,7 @@ export class UserService {
   }
 
 
-  getUser(email: string, password: string): Promise<User> {
+  getUser(email: string, token: string): Promise<User> {
     return new Promise<User>((resolve, reject) => {
       const usersCollection = collection(this.firestore, 'users');
       this.wrongLogin = true; // Setze standardmäßig auf true, bis ein gültiger Benutzer gefunden wird
@@ -153,11 +152,10 @@ export class UserService {
         users.forEach(user => {
           const userData = user.data();
   
-          if (userData['email'] === email && userData['password'] === password) {
+          if (userData['email'] === email && userData['uid'] === token) {
             const activeUser = new User({
               email: userData['email'],
               name: userData['name'],
-              password: userData['password'],
               status: userData['status'],
               avatarUrl: userData['avatarUrl'],
               userId: user.id,

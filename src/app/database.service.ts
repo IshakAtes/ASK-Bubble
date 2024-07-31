@@ -30,7 +30,6 @@ export class DatabaseService {
     const user = {} as User
     user.email = email
     user.name = name;
-    user.password = password;
     user.status = status;
     user.avatarUrl = avatarUrl;
     user.userId = '';
@@ -131,7 +130,6 @@ export class DatabaseService {
         if(userData['email'] == user.email){
           addedUser.email = userData['email'] 
           addedUser.name = userData['name']
-          addedUser.password = userData['password']
           addedUser.status = userData['status']
           addedUser.avatarUrl = userData['avatarUrl']
           addedUser.userId = foundUser.id 
@@ -226,7 +224,6 @@ export class DatabaseService {
           if(userData['email'] == email){
             activeUser.email = userData['email'] 
             activeUser.name = userData['name']
-            activeUser.password = userData['password']
             activeUser.status = userData['status']
             activeUser.avatarUrl = userData['avatarUrl']
             activeUser.userId = user.id 
@@ -252,7 +249,6 @@ export class DatabaseService {
           if(user.id == userId){
             foundUser.email = userData['email'] 
             foundUser.name = userData['name']
-            foundUser.password = userData['password']
             foundUser.status = userData['status']
             foundUser.avatarUrl = userData['avatarUrl']
             foundUser.userId = user.id
@@ -277,7 +273,6 @@ export class DatabaseService {
           userObject.avatarUrl = userData['avatarUrl'];
           userObject.email = userData['email'];
           userObject.name = userData['name'];
-          userObject.password = userData['password'];
           userObject.status = userData['status'];
           userObject.userId = user.id;
           userObject.usedLastTwoEmojis = userData['usedLastTwoEmojis']
