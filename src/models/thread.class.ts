@@ -1,22 +1,22 @@
 export class Thread {
-    emoji: string;
-    userId: string;
     messageId: string;
-    reactionId: string;
+    threadId: string;
+    threadNameCreator: string;
+    threadNameRecipient: string;
 
     constructor(obj?: any){
-        this.emoji = obj ? obj.emoji : '';
-        this.userId = obj ? obj.userId : '';
         this.messageId = obj ? obj.messageId : '';
-        this.reactionId = obj ? obj.reactionId : '';
+        this.threadId = obj ? obj.threadId : '';
+        this.threadNameCreator = obj ? obj.threadNameCreator : '';
+        this.threadNameRecipient = obj ? obj.threadNameRecipient : '';
     }
 
     public toJSON(){
         return {
-            emoji: this.emoji,
-            userId: this.userId,
             messageId: this.messageId,
-            reactionId: this.reactionId,
+            threadId: this.threadId,
+            threadNameCreator: this.threadNameCreator,
+            threadNameRecipient: this.threadNameRecipient,
         }
     }
 }
