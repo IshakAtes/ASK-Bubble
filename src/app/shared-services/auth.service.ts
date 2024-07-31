@@ -64,6 +64,9 @@ export class AuthService {
     ).then(response => updateProfile(response.user, {displayName: username}).then(() => {
         // this.us.userCache['uid'] = response.user.uid;
         this.us.userToken = response.user.uid;
+        if (this.us.guest) {
+          this.us.createAndSaveGuest();
+        }
       })
     );
     return from(promise);
@@ -83,24 +86,6 @@ export class AuthService {
       },
     });
   }
-
-  // register(email: string, username: string, password: string): Observable<void> {
-  //   return from(
-  //     createUserWithEmailAndPassword(this.firebaseAuth, email, password)
-  //       .then(response => {
-  //         return updateProfile(response.user, { displayName: username })
-  //           .then(() => {
-  //             this.us.userCache['uid'] = response.user.uid;
-  //             console.log(this.us.userCache);
-  //           });
-  //       })
-  //       .catch(error => {
-  //         // Hier kannst du Fehlerbehandlung hinzufügen
-  //         console.error('Fehler beim Registrieren:', error);
-  //         throw error; // Fehler weiterwerfen, damit sie in der Observable-Kette behandelt werden können
-  //       })
-  //   );
-  // }
   
 
   login(email: string, password: string,): Observable <void> {
@@ -124,13 +109,12 @@ export class AuthService {
         // https://firebase.google.com/docs/reference/js/auth.user
         const uid = user.uid;
         // this.us.loggedUser['name'] = user.displayName ? user.displayName : '';
-        console.log('authState uid', user);
+        console.log('authState', user);
         console.log(this.us.loggedUser);
         // ...
       } else {
         // User is signed out
-        console.log('authState logged out');
-        
+        console.log('authState logged out', this.us.loggedUser, 'user variable', user);        
         // ...
       }
     });

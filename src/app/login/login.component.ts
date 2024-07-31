@@ -20,17 +20,17 @@ export class LoginComponent implements OnInit {
   hub = inject(UserService)
   isPressed = false;
   myForm: FormGroup;
-  guestLog = {
+  guestPw: string = 'guest123';
+  guestLog: User = new User({
     email: 'guest@mail.com',
     name: 'John Doe',
-    password: 'guest123',
     status: 'offline',
     avatarUrl: '../../assets/img/unUsedDefault.png',
     userId: '',
     logIn: 'https://bubble.ishakates.com/',
     usedLastTwoEmojis: ['✅', '🙌'],
-    uid: 'null'
-  };
+    uid: null
+  });
 
   constructor(private fb: FormBuilder, private router: Router, public us: UserService) {
     console.log(this.us.loadAllUsers());
@@ -53,12 +53,12 @@ export class LoginComponent implements OnInit {
   async onSubmit() {
     if (this.us.guest) {
       this.myForm.setValue({
-        pw: this.guestLog.password,
+        pw: this.guestPw,
         mail: this.guestLog.email
       });
-      await this.normalSignIn();
+      await this.signIn();
     } else {
-      await this.normalSignIn(); 
+      await this.signIn(); 
     }
   }
 
@@ -74,21 +74,34 @@ export class LoginComponent implements OnInit {
   }
 
 
-  async normalSignIn () {
+  async signIn() {
     if (this.us.guest) {
-      await this.us.addUser(this.hub.guestData);
+      // await this.us.addUser(this.hub.guestData);
       try {
-        const guestUser = await this.us.getUser(this.hub.guestData.email, this.guestLog.password);
-        this.us.guest = false;
-        this.us.loggedUser = guestUser;
-        this.us.userOnline(this.us.loggedUser.userId);
-        this.router.navigate(['/main']);
+        this.authAsGuest();
       } catch (error) {
         console.log('Kein Gastbenutzer gefunden, erstelle neuen Gastbenutzer');
+        this.authService.register(this.guestLog.email, this.guestLog.name, this.guestPw);
       }
     } else {
       this.acceptedAuth(); 
     }
+  }
+
+
+  authAsGuest() {
+    this.authService
+      .login(this.myForm.value.mail, this.myForm.value.pw)
+      .subscribe({
+        next: () => {
+        this.logCorrectUser();
+      },
+      error: (err) => {
+        this.errorMessage = err.code;
+        console.log(this.errorMessage);
+      },
+    });
+
   }
 
 
@@ -108,6 +121,7 @@ export class LoginComponent implements OnInit {
   }
 
 
+
   async logCorrectUser() {
     const acceptedUser = await this.us.getUser(this.myForm.value.mail, this.us.userToken);
     if (this.myForm.valid && acceptedUser || this.authMessage) {
@@ -115,6 +129,7 @@ export class LoginComponent implements OnInit {
         this.us.loggedUser = acceptedUser;
         this.us.userOnline(this.us.loggedUser.userId);
         this.router.navigate(['/main']);
+        this.us.guest = false;
         this.us.userToken = '';
       } catch (error) {
         console.error('Fehler beim Abrufen des Benutzers:', error);
@@ -124,7 +139,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-
+  
   onMouseDown() {
     this.isPressed = true;
   }

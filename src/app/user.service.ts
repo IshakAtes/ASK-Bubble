@@ -24,7 +24,7 @@ export class UserService {
   wrongLogin: boolean = false;
   resetUserPw: any;
   guest: boolean = false;
-  guestData: any;
+  guestData: User;
   userToken: string;
   pwCache: string = '';
   private baseUrl = 'http://localhost:4200';
@@ -66,6 +66,18 @@ export class UserService {
     }, 1000);
   }
 
+
+  createAndSaveGuest() {
+    this.guestData.uid = this.userToken;
+    this.addUser(this.guestData);
+    setTimeout(() => {
+      this.database.getUser(this.guestData.email)
+        .then(user =>{
+          this.database.addConversation(this.database.createConversation(user.userId, user.userId));
+          this.userToken = '';
+        })
+    }, 1000);
+  }
 
   
   upload(file: File): Observable<HttpEvent<any>> {
@@ -155,6 +167,7 @@ export class UserService {
               usedLastTwoEmojis: userData['usedLastTwoEmojis'],
               uid: userData['uid']
             });
+            console.log('getUser Token', activeUser);
             this.wrongLogin = false; // Setze auf false, da gültiger Benutzer gefunden wurde
             resolve(activeUser);
           }
