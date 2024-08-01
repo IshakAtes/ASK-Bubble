@@ -5,7 +5,9 @@
 
 .main-chat {
     height: 940px;
-    width: 51.5vw; //989px
+    width: 38vw; //989px
+    min-width: 460px;
+    max-width: 989px;
     background-color: white;
     border-radius: 30px;
     position: relative;
@@ -374,7 +376,7 @@
 
 
 .message-container {
-    width: 90%;
+    width: 85%;
     max-width: 100%;
     position: relative;
     display: flex;

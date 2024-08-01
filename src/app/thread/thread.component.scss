@@ -2,14 +2,16 @@
 
 .main-thread {
     height: 940px;
-    width: 485px;
+    width: 22.5vw;          //485px;
+    min-width: 260px;
+    max-width: 485px;
     background-color: white;
     border-radius: 30px;
     position: relative;
 }
 
 .main-thread-header {
-    height: 104px;
+    height:  96px; //104px;
     padding: 32px 40px 32px 40px;
     display: flex;
     gap: 0px;
@@ -51,4 +53,18 @@
 .thread-message-separator-line {
     width: 296px;
     border: 1px solid #ADB0D9;
+}
+
+
+@media (max-width: 1650px) {
+.main-thread {
+    height: 940px;
+    width: 29vw;          //485px;
+    min-width: 260px;
+    max-width: 485px;
+    background-color: white;
+    border-radius: 30px;
+    position: relative;
+}
+
 }

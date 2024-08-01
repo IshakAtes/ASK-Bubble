@@ -1,6 +1,8 @@
 .main-chat {
     height: 940px;
-    width: 51.5vw;
+    width: 51vw;
+    min-width: 430px;
+    max-width: 989px;
     background-color: white;
     border-radius: 30px;
     position: relative;
@@ -234,6 +236,23 @@
    .userlistContainer::-webkit-scrollbar {
     display: none;
    }
+
+   @media (max-width: 1650px) {
+        .main-chat {
+            width: 41.5vw;
+            min-width: 430px;
+            max-width: 989px;
+        }
+   }
+
+   @media (max-width: 1350px) {
+    .main-chat {
+        width: 38.5vw;
+        min-width: 460px;
+        max-width: 989px;
+    }
+}
+
 
    @media (max-width: 850px) {
 

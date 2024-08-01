@@ -1,3 +1,33 @@
+@media (max-width: 1650px) {
+    .main-chat {
+        width: 41.5vw;
+        min-width: 460px;
+        max-width: 989px;
+    }
+}
+
+@media (max-width: 1350px) {
+    .main-chat {
+        width: 38.5vw;
+        min-width: 460px;
+        max-width: 989px;
+    }
+}
+
+
+@media (max-width: 1450px) {
+    .membercount {
+        display: none;
+
+    }
+
+    .memberdiscs-div {
+        display: none;
+       
+    }
+}
+
+
 @media (max-width: 500px) {
     
     ::ng-deep .customDialog {

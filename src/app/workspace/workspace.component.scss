@@ -3,7 +3,10 @@ section {
     position: relative;
     align-items: center;
     flex-direction: column;
-    width: 306px;
+    width: 20vw;       //306px
+
+    min-width: 270px;
+    max-width: 306px;
     height: 876px;
     padding: 32px 30px 32px 30px;
     gap: 25px;
