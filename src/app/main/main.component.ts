@@ -44,7 +44,7 @@ export class MainComponent{
    * @param channel channelobject
    */
   changeChannel(channel: Channel){
-    if(this.userservice.deviceWidth > 500){
+    if(this.userservice.deviceWidth > 850){
       this.getDesktopChannelView(channel);
     }
     else{
@@ -97,7 +97,7 @@ export class MainComponent{
    * changes the view to the an existing conversation
    */
   changeConversation(conversation: Conversation){
-    if(this.userservice.deviceWidth > 500){
+    if(this.userservice.deviceWidth > 850){
       this.currentConversation = conversation;
       this.conversation = true;
       this.channel = false;
@@ -115,16 +115,18 @@ export class MainComponent{
    * changes the view to the new conversation
    */
   changeNewConversation(){
-    if(this.userservice.deviceWidth > 500){
+    if(this.userservice.deviceWidth > 850){
       this.reloadChannel = false;
       this.conversation = false;
       this.channel = false;
+      this.thread = false;
     }
     else{
       this.reloadChannel = false;
       this.conversation = false;
       this.channel = false;
       this.isWSVisible = false;
+      this.thread = false;
     }
   }
 

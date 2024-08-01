@@ -1,83 +1,137 @@
 
-@if(userservice.deviceWidth > 500){
-    <!--HTML for desktop view-->
-    <section>
-        <div class="closeWorkspace" (click)="changeWSVisibility()">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="8" y="8" width="16" height="16" rx="1" stroke="black" stroke-width="2"/>
-                <path d="M13.7142 7.99997V24" stroke="black" stroke-width="2"/>
-                <path d="M19.4285 18.2857L17.4964 16.3535C17.3011 16.1583 17.3011 15.8417 17.4964 15.6464L19.4285 13.7143" stroke="black" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-    
-            <span>Workspace-Menü-schließen</span>
-        </div>
-    
-        <app-header></app-header>
-    
-    @if(isWSVisible){
-            <app-workspace
-            (changeToChannel)="changeChannel($event)"
-            (changeToConversation)="changeConversation($event)"
-            (changeToNewConversation)="changeNewConversation()"
-            [activeUserChannels]="userservice.activeUserChannels"
-            [activeUser]="userservice.activeUserObject"
-            [usersFromActiveUserConversationList]="userservice.usersFromActiveUserConversationList"
-            [activeUserConversationList]="userservice.activeUserConversationList"
-            ></app-workspace>
-        }
-        
+@if(userservice.deviceWidth < 850){
+        <!--HTML for mobile view-->
+        <section>
 
-    
-        
-        @if(conversation){
-            <app-chat
-            (changeReloadStatus)="setReloadToFalse($event)"
-            [specific]="currentConversation"
-            [user]="userservice.activeUserObject"
-            ></app-chat>
-        }
-        @else if(channel) {
-            <app-channel
-                (changeReloadStatus)="setReloadToFalse($event)"
-                (userLeftChannel)="userLeftChannel()"
-                (openConversation)="changeConversation($event)"
-                
-                
-                [activeUser]="userservice.activeUserObject"
-                [channelBig]="channelBig"
-                [channel]="currentChannel"
-                [reload]="reloadChannel"
-            ></app-channel>
-        }
-        @else {
-            <app-create-conversation
-            [channelBig]="channelBig"
-            (changeToChannel)="changeChannel($event)"
-            (changeToConversation)="changeConversation($event)"
-            ></app-create-conversation>
-        }
+            <app-header
+             (showWorkspace)="viewWorkspace()"
+             [isWSVisible]="isWSVisible"
+            >
+             
+            </app-header>
+     
+             @if(isWSVisible){
+                 <app-workspace
+                     (changeToChannel)="changeChannel($event)"
+                     (changeToConversation)="changeConversation($event)"
+                     (changeToNewConversation)="changeNewConversation()"
+                     [activeUserChannels]="userservice.activeUserChannels"
+                     [activeUser]="userservice.activeUserObject"
+                     [usersFromActiveUserConversationList]="userservice.usersFromActiveUserConversationList"
+                     [activeUserConversationList]="userservice.activeUserConversationList"
+                 ></app-workspace>
+             }
+             @else {
+                 @if(conversation){
+                     <app-chat
+                     (changeReloadStatus)="setReloadToFalse($event)"
+                     
+                     [specific]="currentConversation"
+                     [user]="userservice.activeUserObject"
+                     
+                     ></app-chat>
+                 }
+                 @else if(channel) {
+                     <app-channel
+                         (changeReloadStatus)="setReloadToFalse($event)"
+                         (userLeftChannel)="userLeftChannel()"
+                         
+                         [activeUser]="userservice.activeUserObject"
+                         [channelBig]="channelBig"
+                         [channel]="currentChannel"
+                         [reload]="reloadChannel"
+                     ></app-channel>
+                 }
+                 @else {
+                     <app-create-conversation
+                         [channelBig]="channelBig"
+                         (changeToChannel)="changeChannel($event)"
+                         (changeToConversation)="changeConversation($event)"
+                     ></app-create-conversation>
+                 }
+             }
+         </section>
+}
 
-        @if(thread){
-            <app-thread>
-                
-                
-            </app-thread>
-        }
-    </section>
+@else if(userservice.deviceWidth < 1200){
+
+            <!--HTML for small view-->
+            <section>
+
+                <div class="closeWorkspace" (click)="changeWSVisibility()">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="8" y="8" width="16" height="16" rx="1" stroke="black" stroke-width="2"/>
+                        <path d="M13.7142 7.99997V24" stroke="black" stroke-width="2"/>
+                        <path d="M19.4285 18.2857L17.4964 16.3535C17.3011 16.1583 17.3011 15.8417 17.4964 15.6464L19.4285 13.7143" stroke="black" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+            
+                    <span>Workspace-Menü-schließen</span>
+                </div>
+            
+                <app-header></app-header>
+         
+                 
+                <app-workspace
+                    (changeToChannel)="changeChannel($event)"
+                    (changeToConversation)="changeConversation($event)"
+                    (changeToNewConversation)="changeNewConversation()"
+                    [activeUserChannels]="userservice.activeUserChannels"
+                    [activeUser]="userservice.activeUserObject"
+                    [usersFromActiveUserConversationList]="userservice.usersFromActiveUserConversationList"
+                    [activeUserConversationList]="userservice.activeUserConversationList"
+                ></app-workspace>
+                 
+                 
+                @if(conversation){
+                    <app-chat
+                    (changeReloadStatus)="setReloadToFalse($event)"
+                    [specific]="currentConversation"
+                    [user]="userservice.activeUserObject"
+                    ></app-chat>
+                }
+                @else if(channel) {
+                    <app-channel
+                        (changeReloadStatus)="setReloadToFalse($event)"
+                        (userLeftChannel)="userLeftChannel()"
+                        
+                        [activeUser]="userservice.activeUserObject"
+                        [channelBig]="channelBig"
+                        [channel]="currentChannel"
+                        [reload]="reloadChannel"
+                    ></app-channel>
+                }
+                @else if(thread) {
+                    <app-thread>
+    
+                    </app-thread>
+                }
+                @else {
+                    <app-create-conversation
+                        [channelBig]="channelBig"
+                        (changeToChannel)="changeChannel($event)"
+                        (changeToConversation)="changeConversation($event)"
+                    ></app-create-conversation>
+                }
+                 
+             </section>
 }
 @else {
-    <!--HTML for mobile view-->
-    <section>
-
-       <app-header
-        (showWorkspace)="viewWorkspace()"
-        [isWSVisible]="isWSVisible"
-       >
+        <!--HTML for desktop view-->
+        <section>
+            <div class="closeWorkspace" (click)="changeWSVisibility()">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="8" y="8" width="16" height="16" rx="1" stroke="black" stroke-width="2"/>
+                    <path d="M13.7142 7.99997V24" stroke="black" stroke-width="2"/>
+                    <path d="M19.4285 18.2857L17.4964 16.3535C17.3011 16.1583 17.3011 15.8417 17.4964 15.6464L19.4285 13.7143" stroke="black" stroke-width="2" stroke-linecap="round"/>
+                </svg>
         
-       </app-header>
-
+                <span>Workspace-Menü-schließen</span>
+            </div>
+        
+            <app-header></app-header>
+        
         @if(isWSVisible){
-            <app-workspace
+                <app-workspace
                 (changeToChannel)="changeChannel($event)"
                 (changeToConversation)="changeConversation($event)"
                 (changeToNewConversation)="changeNewConversation()"
@@ -85,22 +139,23 @@
                 [activeUser]="userservice.activeUserObject"
                 [usersFromActiveUserConversationList]="userservice.usersFromActiveUserConversationList"
                 [activeUserConversationList]="userservice.activeUserConversationList"
-            ></app-workspace>
-        }
-        @else {
+                ></app-workspace>
+            }
+            
+            
             @if(conversation){
                 <app-chat
                 (changeReloadStatus)="setReloadToFalse($event)"
-                
                 [specific]="currentConversation"
                 [user]="userservice.activeUserObject"
-                
                 ></app-chat>
             }
             @else if(channel) {
                 <app-channel
                     (changeReloadStatus)="setReloadToFalse($event)"
                     (userLeftChannel)="userLeftChannel()"
+                    (openConversation)="changeConversation($event)"
+                    
                     
                     [activeUser]="userservice.activeUserObject"
                     [channelBig]="channelBig"
@@ -110,13 +165,23 @@
             }
             @else {
                 <app-create-conversation
-                    [channelBig]="channelBig"
-                    (changeToChannel)="changeChannel($event)"
-                    (changeToConversation)="changeConversation($event)"
+                [channelBig]="channelBig"
+                (changeToChannel)="changeChannel($event)"
+                (changeToConversation)="changeConversation($event)"
                 ></app-create-conversation>
             }
-        }
-    </section>
+    
+            @if(thread){
+                <app-thread>
+                    
+                    
+                </app-thread>
+            }
+        </section>
+    
+    
+    
+
 }
 
 

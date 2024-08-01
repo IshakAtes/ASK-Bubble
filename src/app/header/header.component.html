@@ -1,7 +1,7 @@
 <div *ngIf="us.isWorkspaceDataLoaded; else loadingTemplate" #main>
    
 
-    @if(us.deviceWidth > 500){
+    @if(us.deviceWidth > 850){
         <!--Desktop View-->
         <header>
             <div class="overlay" *ngIf="dropdownOpen" (click)="toggleDropdown()"></div>

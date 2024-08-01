@@ -57,14 +57,37 @@
 
 
 @media (max-width: 1650px) {
-.main-thread {
-    height: 940px;
-    width: 29vw;          //485px;
-    min-width: 260px;
-    max-width: 485px;
-    background-color: white;
-    border-radius: 30px;
-    position: relative;
+    .main-thread {
+        width: 29vw;
+        min-width: 260px;
+        max-width: 485px;
+    }
+
 }
 
+
+@media (max-width: 1200px) {
+    .main-thread {
+        width: 65vw;
+        min-width: 260px;
+        max-width: 989px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .main-thread {
+        width: 61vw;
+    }
+}
+
+@media (max-width: 1000px) {
+    .main-thread {
+        width: 57vw;
+    }
+}
+
+@media (max-width: 900px) {
+    .main-thread {
+        width: 53vw;
+    }
 }

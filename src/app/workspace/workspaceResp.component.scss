@@ -27,12 +27,14 @@
 
 
 //Baseline
-@media (max-width: 500px) {
+@media (max-width: 850px) {
     section {
         width: 100vw;
         height: calc(100vh - 90px);
         padding: 32px 0px 0px 0px;
         border-radius: 0px;
+        min-width: 270px;
+        max-width: 100%;
         
     }
 
@@ -44,7 +46,7 @@
         position: absolute;
         top: 70px;
         left: 5%;
-        z-index: 99;
+        z-index: 98;
         padding: 40px;
         gap: 20px;
         border-radius: 0px 30px 30px 30px;
@@ -125,7 +127,7 @@
         border-radius: 100px;
         opacity: 0px;
         background-color: #444DF2;
-        z-index: 99;
+        z-index: 98;
  
         
         

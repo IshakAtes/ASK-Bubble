@@ -6,7 +6,7 @@
         <div class="channelname">
             <span>Neue Nachricht</span>
         </div>
-        @if(us.deviceWidth > 500) {
+        @if(us.deviceWidth > 850) {
             <input (focus)="detectInputFocus(); changeUserContainerVisibility()" (input)="showFilteredUser()" [(ngModel)]="inputUser" type="text" placeholder="An: #channel oder @jemand oder E-Mail Adresse">
         }
         @else {

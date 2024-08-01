@@ -15,9 +15,6 @@ header {
     min-width: 320px;
     //max-width: 356px;
     //width: 20vw;       //306px
-    
-
-   
 }
 
 .searchBar {
@@ -136,9 +133,9 @@ header {
 
   
 
-@media (max-width: 500px) {
+@media (max-width: 850px) {
     header{
-        width: calc(100vw - 27px);
+        width: calc(100vw - 32px);
         display: flex;
         justify-content: space-between;
         align-items: center;
