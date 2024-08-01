@@ -91,3 +91,10 @@
         width: 53vw;
     }
 }
+
+
+@media (max-height: 670px) {
+    .chat-area {
+        height: 63vh;
+    }
+}

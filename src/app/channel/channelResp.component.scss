@@ -86,7 +86,7 @@
 
     
     .main-chat {
-        height: calc(100vh - 80px);
+        height: 100vh;
         width: 100vw;
         background-color: white;
         border-radius: 0px;
@@ -154,7 +154,7 @@
 
 
     .chat-area {
-        height: 63vh;
+        height: 70vh;
         overflow-y: scroll;
         overflow-x: hidden;
     }
@@ -318,5 +318,18 @@
     .time-separator {
         position: relative;
         right: 12%;
+    }
+}
+
+@media (max-height: 741px) {
+    .chat-area {
+        height: 65vh;
+    }
+}
+
+
+@media (max-height: 670px) {
+    .chat-area {
+        height: 63vh;
     }
 }

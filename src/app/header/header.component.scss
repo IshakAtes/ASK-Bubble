@@ -1,7 +1,7 @@
 header {
     width: 100%;
     display: flex;
-    //justify-content: space-between;
+    justify-content: space-between;
     align-items: center;
     position: absolute;
     padding-left: 30px;
@@ -23,7 +23,7 @@ header {
         display: flex;
         max-width: 989px;
         min-width: 230px;
-        width: 27vw;
+        width: 33vw;
         height: 32px;
         top: 25px;
         left: 406px;
@@ -43,6 +43,7 @@ header {
     align-items: center;
     position: relative; /* Wichtig für die Positionierung des Dropdowns */
     cursor: pointer; /* Zeiger-Cursor beim Überfahren mit der Maus */
+    right: 20px;
 
     >span {
         font-family: "Nunito";
@@ -131,7 +132,66 @@ header {
     z-index: 999;
 }
 
-  
+@media (max-width: 1350px) {
+
+    .loggedUserBar {
+        justify-content: flex-end;
+        width: 100%;
+        right: 0px;
+        >span {
+            display: none;
+        }
+
+        img {
+            margin-left: 0px;
+        }
+    }
+
+    header {
+        justify-content: unset;
+    }
+}
+
+
+@media (max-width: 1200px) {
+    .loggedUserBar {
+        right: 30px;
+    }
+
+    header {
+        justify-content: unset;
+    }
+}
+
+
+@media (max-width: 1200px) {
+    .loggedUserBar {
+        right: 0px;
+    }
+}
+
+
+@media (max-width: 1000px) {
+    .loggedUserBar {
+        right: 30px;
+    }
+    
+    .searchBar {
+    
+        input {
+            width: 30vw;
+        }
+    }
+}
+
+
+@media (max-width: 900px) {
+    .loggedUserBar {
+        right: 20px;
+    }
+}
+
+
 
 @media (max-width: 850px) {
     header{

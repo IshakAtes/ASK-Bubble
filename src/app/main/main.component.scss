@@ -88,27 +88,39 @@ app-chat {
         background-color: #ECEEFE;
         position: fixed;
         z-index: 99;
+        overflow-y: scroll;
+        overflow-x: hidden;
     }
 
     app-workspace {
         margin-right: 0px;
         margin-left: 0px;
         margin-top: 80px;
+        overflow-y: scroll;
+        overflow-x: hidden;
     }
     
     app-channel {
         margin-top: 80px;
+        overflow-y: scroll;
+        overflow-x: hidden;
     }
     
     app-create-conversation {
         margin-top: 80px;
+        overflow-y: scroll;
+        overflow-x: hidden;
     }
 
     app-chat {
         margin-top: 80px;
+        overflow-y: scroll;
+        overflow-x: hidden;
     }
 
     app-thread{
         margin-top: 80px;
+        overflow-y: scroll;
+        overflow-x: hidden;
     }
 }
