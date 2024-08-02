@@ -178,7 +178,6 @@ export class UserService {
               usedLastTwoEmojis: userData['usedLastTwoEmojis'],
               uid: userData['uid']
             });
-            console.log('getUser Token', activeUser);
             this.wrongLogin = false; // Setze auf false, da gültiger Benutzer gefunden wurde
             resolve(activeUser);
           }

@@ -54,7 +54,6 @@ export class HeaderComponent  {
     this.hovered = false;
     event.stopPropagation();
     this.toggleDropdown();
-    console.log('Öffne Profil-Dialog');
     
     // Öffne den Dialog mit den Benutzerdaten
     const dialogRef = this.dialog.open(DialogShowUserProfilComponent, {

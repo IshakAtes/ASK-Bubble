@@ -102,23 +102,52 @@ export class AuthService {
   }
 
 
+  // checkUserStatus() {
+  //   onAuthStateChanged(this.firebaseAuth, (user) => {
+  //     if (user) {
+  //       // User is signed in, see docs for a list of available properties
+  //       // https://firebase.google.com/docs/reference/js/auth.user
+  //       const uid = user.uid;
+  //       // this.us.loggedUser['name'] = user.displayName ? user.displayName : '';
+  //       console.log('authState', user);
+  //       const activeUser = this.us.getUser(user.email ?? '', user.uid);
+  //       console.log(activeUser);
+        
+  //       console.log(this.us.loggedUser);
+  //       // ...
+  //     } else {
+  //       // User is signed out
+  //       console.log('authState logged out', this.us.loggedUser, 'user variable', user);        
+  //       // ...
+  //     }
+  //   });
+  // }
+
+
   checkUserStatus() {
     onAuthStateChanged(this.firebaseAuth, (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/auth.user
         const uid = user.uid;
-        // this.us.loggedUser['name'] = user.displayName ? user.displayName : '';
         console.log('authState', user);
-        console.log(this.us.loggedUser);
+        this.us.getUser(user.email ?? '', user.uid).then((activeUser) => {
+          console.log('activeUser:', activeUser);
+          this.us.loggedUser = activeUser;
+          console.log('loggedUser', this.us.loggedUser);
+        }).catch((error) => {
+          console.error('Fehler beim Abrufen des Benutzers:', error);
+        });
+  
         // ...
       } else {
         // User is signed out
-        console.log('authState logged out', this.us.loggedUser, 'user variable', user);        
+        console.log('authState logged out', this.us.loggedUser, 'user variable', user);
         // ...
       }
     });
   }
+  
 
 
 }

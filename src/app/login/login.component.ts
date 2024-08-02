@@ -89,7 +89,6 @@ export class LoginComponent implements OnInit {
 
 
   authAsGuest() {
-    console.log('Log');
     this.authService
       .login(this.myForm.value.mail, this.myForm.value.pw)
       .subscribe({
