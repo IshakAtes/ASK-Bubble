@@ -19,7 +19,6 @@ export class HeaderComponent  {
   authService = inject(AuthService);
   hovered: boolean = false;
   dropdownOpen: boolean = false;
-  activeUser: User = this.us.loggedUser;
   router = inject(Router);
   
   @Output() search: EventEmitter<string> = new EventEmitter<string>();
@@ -57,7 +56,7 @@ export class HeaderComponent  {
     
     // Öffne den Dialog mit den Benutzerdaten
     const dialogRef = this.dialog.open(DialogShowUserProfilComponent, {
-      data: { user: this.activeUser } // Daten, die an den Dialog übergeben werden
+      data: { user: this.us.loggedUser } // Daten, die an den Dialog übergeben werden
     });
 
   }
