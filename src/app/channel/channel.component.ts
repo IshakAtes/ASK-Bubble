@@ -73,28 +73,10 @@ export class ChannelComponent implements OnInit {
       
       this.allChannels = mAndC.allChannels;
       this.allUsers = mAndC.allUsers;
-  
       this.reactions = chatService.reactions;
-      this.chatService.groupedReactions$.subscribe(groupedReactions => {
-        // debugger
-        this.groupedReactions = groupedReactions;
-        console.log('Updated groupedReactions:', this.groupedReactions);
-      });
-  
-      this.mAndC.content.subscribe(newContent => {
-        this.content = newContent;
-      });
-  
-      this.fileService.fileUploadError$.subscribe(error => {
-        this.fileUploadError = error;
-        console.log(this.fileUploadError);
-  
-        setTimeout(() => {
-          this.fileUploadError = null;
-          console.log(this.fileUploadError);
-        }, 2500);
-      });
-  
+      this.chatService.groupedReactions$.subscribe(groupedReactions => {this.groupedReactions = groupedReactions;});
+      this.mAndC.content.subscribe(newContent => {this.content = newContent;});
+      this.handleFileUploadError();
       this.mAndC.getFocusTrigger().subscribe(() => {
         if (this.myTextarea) {
           this.myTextarea.nativeElement.focus();
@@ -102,10 +84,26 @@ export class ChannelComponent implements OnInit {
       });
   }
 
+
+  /**
+   * handles the fileupload error
+   */
+  handleFileUploadError(){
+    this.fileService.fileUploadError$.subscribe(error => {
+      this.fileUploadError = error;
+      setTimeout(() => {
+        this.fileUploadError = null;
+      }, 2500);
+    });
+  }
+
+
+  /**
+   * loads all needed data after DOM is loaded
+   */
   ngOnInit(){
     this.memberList = [];
     this.messageList = [];
-
     setTimeout(() => {
       Promise.all([
         this.loadMemberList(),
@@ -113,19 +111,32 @@ export class ChannelComponent implements OnInit {
         this.loadChannelCreator(),
         this.loadAllMessageReactions(),
       ]).then(() => {
-        setTimeout(() => {
-          this.loadAllMessageReactions()
-        }, 700);
-        setTimeout(() => {
-          this.chatService.groupReactions(this.messageList)
-          this.isdataLoaded = true;  
-        }, 1000);
+        this.initializeChannel();
       }).catch(error => {
         console.log('this ', error)
       });
     }, 500);
   }
 
+
+  /**
+   * loads all message reactions and groups them after DOM
+   * is loaded
+   */
+  initializeChannel(){
+    setTimeout(() => {
+      this.loadAllMessageReactions()
+    }, 700);
+    setTimeout(() => {
+      this.chatService.groupReactions(this.messageList)
+      this.isdataLoaded = true;  
+    }, 1000);
+  }
+
+
+  /**
+   * reloads the data after a change happend in the channel
+   */
   ngOnChanges(){
     if(this.reload){
       this.memberList = [];
@@ -137,19 +148,26 @@ export class ChannelComponent implements OnInit {
           this.loadChannelMessages(),
           this.loadChannelCreator(),
         ]).then(() => {
-          setTimeout(() => {
-            this.loadAllMessageReactions()
-          }, 1500);
-          setTimeout(() => {
-            this.chatService.groupReactions(this.messageList)
-            this.changeReload(); //Important to be able to load another channel
-            this.isdataLoaded = true;  
-          }, 2000);
-        }).catch(error => {
-          console.log('this ', error)
-        });
+          this.initializeChannelAfterChange()
+        }).catch(error => {console.log('this ', error)});
       }, 1000);
     }
+  }
+
+
+  /**
+   * loads all message reactions and groups them after something changed
+   * in the channel
+   */
+  initializeChannelAfterChange(){
+    setTimeout(() => {
+      this.loadAllMessageReactions()
+    }, 1500);
+    setTimeout(() => {
+      this.chatService.groupReactions(this.messageList)
+      this.changeReload(); //Important to be able to load another channel
+      this.isdataLoaded = true;  
+    }, 2000);
   }
 
 
@@ -236,7 +254,9 @@ export class ChannelComponent implements OnInit {
   }
 
 
-
+  /**
+   * saves the new message into the database and displays it in the chat area
+   */
   saveNewMessage() {
     this.messageList = [];
     let newMessage: ChannelMessage = this.database.createChannelMessage(this.channel, this.content, this.activeUser.userId, this.fileService.downloadURL)
@@ -253,26 +273,25 @@ export class ChannelComponent implements OnInit {
   }
 
 
+  /**
+   * saves the message reaction to the database
+   * @param event 
+   * @param message channelmessage object
+   * @param userId userid
+   * @param reactionbar infos about the last two used emoji
+   * @returns returns nothing if the user already used the selected emoji
+   */
   async saveNewMessageReaction(event: any, message: ChannelMessage, userId: string, reactionbar?: string) {
     let emoji: string
     if (reactionbar) {emoji = reactionbar} else {emoji = event.emoji.native}
-    const userAlreadyReacted = this.reactions.some(reaction =>
-      reaction.messageId === message.messageId && reaction.emoji === emoji && reaction.userId === userId
-    );
-    if (userAlreadyReacted) {
-      console.log('User has already reacted with this emoji');
-      return;
-    }
-
-
+    const userAlreadyReacted = this.reactions.some(reaction => reaction.messageId === message.messageId && reaction.emoji === emoji && reaction.userId === userId);
+    if (userAlreadyReacted) {console.log('User has already reacted with this emoji');return;}
     this.reactions = [];
     let reaction = this.database.createChannelMessageReaction(emoji, userId, this.activeUser.name, message);
     await this.database.addChannelMessageReaction(this.channel, message, reaction)
     await this.loadAllMessageReactions();
     this.chatService.reactions = this.reactions;
-
     setTimeout(() => {this.chatService.groupReactions(this.messageList)}, 500);
-  
     this.chatService.checkIfEmojiIsAlreadyInUsedLastEmojis(this.activeUser ,emoji, userId);
     this.mAndC.loadUsersOfUser();
     this.mAndC.loadChannlesofUser()

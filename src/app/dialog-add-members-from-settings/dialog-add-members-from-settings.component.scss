@@ -403,7 +403,7 @@ section {
         opacity: 0px;
         gap: 25px;
         position: relative;
-        right: 40px;
+        right: 85px; //40
 
         >svg {
             width: 100%;
@@ -461,6 +461,14 @@ section {
         width: 100%;
     }
 }
+
+
+@media (max-width: 500px) {
+    section {
+        right: 40px;
+    }
+}
+
 
 
 @media (max-width: 438px) {

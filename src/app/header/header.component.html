@@ -33,7 +33,7 @@
                 <div>
                     <img src="/assets/img/Logo.png" alt="Logo">
                 </div>
-                <img (click)="toggleDropdown()" src="../../assets/img/defaultAvatars/defaultFemale1.png" alt="Logo">
+                <img (click)="toggleDropdown()" src="{{us.activeUserObject.avatarUrl}}" alt="Logo">            
                 
                 <!-- Dropdown-Menü -->
                 <div class="dropdown" *ngIf="dropdownOpen">
@@ -90,8 +90,7 @@
                     </div>
                 </div>
         
-                <img (click)="toggleDropdown()" src="../../assets/img/defaultAvatars/defaultFemale1.png" alt="Logo">
-            
+                <img (click)="toggleDropdown()" src="{{us.activeUserObject.avatarUrl}}" alt="Logo">            
                 <!-- Dropdown-Menü -->
                 <div class="dropdown" *ngIf="dropdownOpen">
                     <svg style="width: 100%;" (click)="toggleDropdown()" width="390" height="6" viewBox="0 0 390 6" fill="none" xmlns="http://www.w3.org/2000/svg">
