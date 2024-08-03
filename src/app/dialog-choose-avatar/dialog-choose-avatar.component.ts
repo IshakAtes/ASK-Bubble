@@ -95,7 +95,5 @@ export class DialogChooseAvatarComponent {
     this.selectedAvatar = item;
   }
 
-  uploadAvatarImage() {
-  }
 
 }
