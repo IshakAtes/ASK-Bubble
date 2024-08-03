@@ -4,11 +4,13 @@ import { User } from '../../models/user.class';
 import { DatabaseService } from '../database.service';
 import { UserService } from '../user.service';
 import { Conversation } from '../../models/conversation.class';
+import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dialog-show-user-profil',
   standalone: true,
-  imports: [],
+  imports: [NgIf, FormsModule],
   templateUrl: './dialog-show-user-profil.component.html',
   styleUrl: './dialog-show-user-profil.component.scss'
 })
@@ -16,6 +18,7 @@ export class DialogShowUserProfilComponent {
   userData: User;
   database = inject(DatabaseService)
   us = inject(UserService)
+  editMode: boolean = false;
 
   @Input() activeUser: User
 
@@ -27,6 +30,12 @@ export class DialogShowUserProfilComponent {
   ) {
     this.userData = data.user;
     console.log('show User', this.userData);
+  }
+
+
+  openEditTemplate() {
+    this.editMode = true;
+
   }
 
 
@@ -53,6 +62,7 @@ export class DialogShowUserProfilComponent {
   // }
 
   onClose(): void {
+    this.editMode = false;
     this.dialogRef.close();
   }
 
