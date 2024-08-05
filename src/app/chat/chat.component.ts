@@ -17,6 +17,7 @@ import { FileUploadService } from '../shared-services/chat-functionality/file-up
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { GeneralChatService } from '../shared-services/chat-functionality/general-chat.service';
+import { Thread } from '../../models/thread.class';
 
 @Component({
   selector: 'app-chat',
@@ -416,6 +417,17 @@ export class ChatComponent implements AfterViewInit, OnInit {
     });
 
     this.loadAllMessages();
+  }
+
+  createOrOpenThread(message: ConversationMessage){
+    
+
+    // debugger
+  
+    let thread: Thread = this.databaseService.createThread(message, this.sendingUser, this.passiveUser)
+    console.log(thread);
+    // this.databaseService.addThread(thread)
+    
   }
 }
 

@@ -142,6 +142,24 @@ export class DatabaseService {
 
 
 
+  addThread(thread: Thread){
+    //add converstaion to creator
+    // setDoc(doc(this.firestore, 'users/' + conversation.createdBy + '/conversations', conversation.conversationId), conversation);
+    setDoc(doc(this.firestore, 'users/' + thread.threadNameCreator + '/threads/', thread.threadId), thread);
+    //add conversation to recipient
+      setDoc(doc(this.firestore, 'users/' + thread.threadNameRecipient + '/threads/', thread.threadNameRecipient), thread);
+  
+      // /users/7NkpQiqqRbeWDyMAXqCE/conversations/CONV-Adxrm7CExizb76lVrknu-0.9989840950446485/conversationmessages/CONV-MSG-0.9494644781037647
+    }
+
+
+  addThreadMessage(thread: Thread, threadMessage: ThreadMessage){
+    //add Message to creator
+    setDoc(doc(this.firestore, 'users/' + thread.threadNameCreator + '/threads/' + threadMessage.conversationId + '/threadmessages', threadMessage.messageId), threadMessage);
+    //add Message to recipient
+    setDoc(doc(this.firestore, 'users/' + thread.threadNameRecipient + '/threads/' + threadMessage.conversationId + '/threadmessages', threadMessage.messageId), threadMessage);
+  }
+
 
   /*create database entry functions */
   addUser(user: User){

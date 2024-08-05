@@ -67,7 +67,7 @@
                             title="Choose your emoji"></emoji-mart>
                     </div>
                     }
-                    <img src="../../assets/img/reactionbar_answer.png" alt="">
+                    <img (click)="createOrOpenThread(message)" src="../../assets/img/reactionbar_answer.png" alt="">
                     <img src="../../assets/img/reactionbar_edit.png" (click)="edit.editMessage(message)" alt="">
                 </div>
 
@@ -165,7 +165,7 @@
                             title="Choose your emoji"></emoji-mart>
                     </div>
                     }
-                    <img src="../../assets/img/reactionbar_answer.png" alt="">
+                    <img (click)="createOrOpenThread(message)" src="../../assets/img/reactionbar_answer.png" alt="">
                 </div>
                 <div>
                     <div class="avatar-div">
