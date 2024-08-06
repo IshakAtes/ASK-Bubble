@@ -11,6 +11,7 @@ import { Conversation } from '../../models/conversation.class';
 import { CreateConversationComponent } from '../create-conversation/create-conversation.component';
 import { HeaderComponent } from '../header/header.component';
 import { AuthService } from '../shared-services/auth.service';
+import { Thread } from '../../models/thread.class';
 
 @Component({
   selector: 'app-main',
@@ -26,10 +27,12 @@ export class MainComponent{
   isWSVisible: boolean = true;
   channelBig: boolean = false;
   reloadChannel: boolean = false;
-  thread: boolean = true;
+  thread: boolean = false;
+  
   
   currentConversation: Conversation;
   currentChannel: Channel;
+  currentThread: Thread;
 
 
 
@@ -70,6 +73,11 @@ export class MainComponent{
       this.conversation = false;
       this.channel = true;
     }
+  }
+
+  openThread(thread: Thread){
+    this.thread = true;
+    this.currentThread = thread;
   }
 
 

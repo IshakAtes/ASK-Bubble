@@ -53,7 +53,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
   @ViewChild('myTextarea') myTextarea!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('lastDiv') lastDiv: ElementRef<HTMLDivElement>;
 
-
+  @Output() emitThread = new EventEmitter<Thread>();
   // userId =  'Adxrm7CExizb76lVrknu';
   //userName = 'Simon Weirauch';
   //conversationId = 'CONV-HTMknmA28FP56EIqrtZo-0.4380479343879251';
@@ -104,6 +104,10 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.changeReloadStatus.emit()
   }
 
+
+  openThread(thread: Thread){
+    this.emitThread.emit(thread)
+  }
 
   ngOnChanges() {
     this.isChatDataLoaded = false;
@@ -405,6 +409,7 @@ createOrOpenThread(message: ConversationMessage) {
       .then(oldThread => {
         console.log(oldThread);
         this.thread$.next(oldThread);
+        this.openThread(oldThread);
       })
       .catch(error => console.error('Error loading thread:', error));
   } else {
@@ -412,7 +417,9 @@ createOrOpenThread(message: ConversationMessage) {
     console.log(thread);
     this.databaseService.addThread(thread)
     this.databaseService.updateMessageThreadId(thread)
+    this.openThread(thread);
     this.thread$.next(thread)
+
   }
 }
 

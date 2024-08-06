@@ -16,19 +16,22 @@ import { FileUploadService } from '../shared-services/chat-functionality/file-up
 import { EditMessageService } from '../shared-services/chat-functionality/edit-message.service';
 import { GeneralChatService } from '../shared-services/chat-functionality/general-chat.service';
 import { ThreadService } from '../shared-services/thread.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-thread',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, FormsModule],
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss'
 })
 export class ThreadComponent implements AfterViewInit {
 
-  currentThread: Thread | null = null;
+
 
   //input Data from main component
+  @Input() currentThread: Thread;
   @Input() specific: Conversation;
   @Input() user: User
 
@@ -97,11 +100,13 @@ export class ThreadComponent implements AfterViewInit {
 
  
   ngAfterViewInit() {
+    /*
     debugger
     this.chatComp.thread$.subscribe(thread => {
       this.currentThread = thread;
       console.log('Current thread:', thread);
     });
+    */
   }
 
 //   ngOnChanges() {
