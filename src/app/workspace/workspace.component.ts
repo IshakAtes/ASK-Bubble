@@ -200,7 +200,6 @@ export class WorkspaceComponent {
     else{
       this.hideUserContainer = true;
     }
-    console.log('check input focus error ');
   }
 
 

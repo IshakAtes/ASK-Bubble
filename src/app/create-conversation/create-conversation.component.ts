@@ -135,7 +135,6 @@ export class CreateConversationComponent {
     else{
       this.hideUserContainer = true;
     }
-    console.log('check input focus error ');
   }
 
   

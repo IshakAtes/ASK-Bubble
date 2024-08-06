@@ -27,7 +27,16 @@ export class DatabaseService {
 
   /*create object Functions */
 
-  createUser(email: string, name: string, password: string, status: string, avatarUrl: any): User {
+
+  /**
+   * creates a user object
+   * @param email email-adress
+   * @param name name of user
+   * @param status online or offline status
+   * @param avatarUrl url of user image
+   * @returns user object
+   */
+  createUser(email: string, name: string, status: string, avatarUrl: any): User {
     const user = {} as User
     user.email = email
     user.name = name;
@@ -40,6 +49,14 @@ export class DatabaseService {
   }
 
 
+  /**
+   * creates a channel object
+   * @param createdBy user who created the channel
+   * @param description description of the channel
+   * @param membersId user id´s from the members of the channel
+   * @param channelName name of the channel
+   * @returns channel object
+   */
   createChannel(createdBy: string, description: string, membersId: Array<string>, channelName: string): Channel {
     let channel = {} as Channel
     const randomNumber = Math.random();
@@ -53,6 +70,15 @@ export class DatabaseService {
   }
 
 
+  /**
+   * creates a messageobject in a channel
+   * @param channel channelobject
+   * @param content content of the message
+   * @param createdBy id of the creator of the message
+   * @param fileUrl file url if the message is a file
+   * @param threadId thread id if the message is within a thread
+   * @returns messageobject
+   */
   createChannelMessage(channel: Channel, content: string, createdBy: string, fileUrl?: string, threadId?: string): ChannelMessage {
     let channelMessage = {} as ChannelMessage
     const randomNumber = Math.random()
@@ -67,6 +93,14 @@ export class DatabaseService {
   }
 
 
+  /**
+   * create a reactionobject on a message
+   * @param emoji selected emoji
+   * @param userId id of the user who created the reaction
+   * @param userName name of the user who created the reaction
+   * @param channelMessage channelmessage object
+   * @returns reaction object
+   */
   createChannelMessageReaction(emoji: string, userId: string, userName: string, channelMessage: ChannelMessage): Reaction {
     let reaction = {} as Reaction;
     const randomNumber = Math.random()
@@ -78,6 +112,13 @@ export class DatabaseService {
     return reaction
   }
 
+
+  /**
+   * conversation object
+   * @param createdBy id of the user who created the conversation
+   * @param recipientId id of the user who recieves the conversation
+   * @returns conversation object
+   */
   createConversation(createdBy: string, recipientId: string): Conversation {
     const conversation = {} as Conversation
     const randomNumber = Math.random();
@@ -91,6 +132,15 @@ export class DatabaseService {
   }
 
 
+  /**
+   * creates a messageobject in a conversation
+   * @param conversation conversation object
+   * @param content content of the message
+   * @param createdBy id of the creator of the message
+   * @param fileUrl file url if the message is a file
+   * @param threadId thread id if the message is within a thread
+   * @returns messageobject
+   */
   createConversationMessage(conversation: Conversation, content: string, createdBy: string, fileUrl?: string, threadId?: string): ConversationMessage {
     let conversationMessage = {} as ConversationMessage;
     const randomNumber = Math.random();
@@ -105,7 +155,14 @@ export class DatabaseService {
   }
 
 
-
+  /**
+   * create a reactionobject on a conversation
+   * @param emoji selected emoji
+   * @param userId id of the user who created the reaction
+   * @param userName name of the user who created the reaction
+   * @param conversationMessage conversationmessage object
+   * @returns reaction object
+   */
   createConversationMessageReaction(emoji: string, userId: string, userName: string, conversationMessage: ConversationMessage): Reaction {
     let reaction = {} as Reaction;
     const randomNumber = Math.random();
@@ -117,6 +174,14 @@ export class DatabaseService {
     return reaction
   }
 
+
+  /**
+   * creates a thread object
+   * @param conversationMessage message object
+   * @param sendingUser userobject of the user who sends the message
+   * @param receivingUser userobject of the user who recieves the message
+   * @returns trhead object
+   */
   createThread(conversationMessage: ConversationMessage, sendingUser: User, receivingUser: User): Thread {
     let thread = {} as Thread;
     const randomNumber = Math.random();
@@ -131,6 +196,16 @@ export class DatabaseService {
     return thread;
   }
 
+
+  /**
+   * creates a message object for a thread
+   * @param conversation conversationobject
+   * @param content content of the message
+   * @param createdBy user who created the message
+   * @param thread thread of the message
+   * @param fileUrl file url if the message is a file
+   * @returns message object
+   */
   createThreadMessage(conversation: Conversation, content: string, createdBy: string, thread: Thread, fileUrl?: string): ConversationMessage {
     let threadMessage = {} as ThreadMessage;
     threadMessage.conversationId = conversation.conversationId;
@@ -144,6 +219,10 @@ export class DatabaseService {
   }
 
 
+  /**
+   * adds a threadobject to the database
+   * @param thread threadobject
+   */
   addThread(thread: Thread) {
     //add converstaion to creator
     setDoc(doc(this.firestore, 'users/' + thread.createdBy + '/conversations', thread.conversationId + '/conversationmessages/' + thread.messageId + '/threads/', thread.threadId), thread);
@@ -152,6 +231,11 @@ export class DatabaseService {
   }
 
 
+  /**
+   * adds the thread message to the database
+   * @param thread threadobject
+   * @param threadMessage messageobject
+   */
   addThreadMessage(thread: Thread, threadMessage: ThreadMessage) {
     //add Message to creator
     setDoc(doc(this.firestore, 'users/' + thread.threadNameCreator + '/threads/' + threadMessage.conversationId + '/threadmessages', threadMessage.messageId), threadMessage);
@@ -160,6 +244,12 @@ export class DatabaseService {
   }
 
 
+  /**
+   * loads all messages of a specific thread
+   * @param message conversationmessage object
+   * @param sendingUser active user
+   * @returns list of all threads of the active user
+   */
   loadSpecificThread(message: ConversationMessage, sendingUser: User): Promise<Thread> {
     return new Promise<Thread>((resolve, reject) => {
       const threadObject = {} as Thread;
@@ -188,13 +278,14 @@ export class DatabaseService {
   }
 
 
-  
-
-
   /*create database entry functions */
+
+  /**
+   * adds a user to the database
+   * @param user user object
+   */
   addUser(user: User) {
     addDoc(collection(this.firestore, 'users'), user.toJSON());
-
     //Add user ID to userobject in database
     onSnapshot(collection(this.firestore, 'users'), (foundUsers) => {
       const addedUser = {} as User
@@ -212,14 +303,13 @@ export class DatabaseService {
       })
       this.updateUser(addedUser);
     })
-
-
   }
 
 
-
-
-
+  /**
+   * adds a channel object to the database
+   * @param channel channel object
+   */
   addChannel(channel: Channel) {
     let channelObject = new Channel(channel)
     channel.membersId.forEach(userId => {
@@ -228,6 +318,11 @@ export class DatabaseService {
   }
 
 
+  /**
+   * adds a channel message object to the database
+   * @param channel channel object
+   * @param channelMessage message object
+   */
   addChannelMessage(channel: Channel, channelMessage: ChannelMessage) {
     channel.membersId.forEach(userId => {
       setDoc(doc(this.firestore, 'users/' + userId + '/channels/' + channel.channelId + '/channelmessages', channelMessage.messageId), channelMessage);
@@ -235,11 +330,12 @@ export class DatabaseService {
   }
 
 
-  addChannelMessageThread(channel: Channel, channelMessage: ChannelMessage,) {
-
-  }
-
-
+  /**
+   * adds a reaction to a channel message object to the database
+   * @param channel channel object
+   * @param channelMessage message object
+   * @param reaction reaction object
+   */
   addChannelMessageReaction(channel: Channel, channelMessage: ChannelMessage, reaction: Reaction) {
     channel.membersId.forEach(userId => {
       setDoc(doc(this.firestore, 'users/' + userId + '/channels/'
@@ -248,6 +344,10 @@ export class DatabaseService {
   }
 
 
+  /**
+   * adds a conversation object to the database
+   * @param conversation conversation object
+   */
   addConversation(conversation: Conversation) {
     //add converstaion to creator
     setDoc(doc(this.firestore, 'users/' + conversation.createdBy + '/conversations', conversation.conversationId), conversation);
@@ -258,6 +358,11 @@ export class DatabaseService {
   }
 
 
+  /**
+   * adds a conversation message object to the database
+   * @param conversation conversation object
+   * @param conversationMessage message object
+   */
   addConversationMessage(conversation: Conversation, conversationMessage: ConversationMessage) {
     //add Message to creator
     setDoc(doc(this.firestore, 'users/' + conversation.createdBy + '/conversations/' + conversationMessage.conversationId + '/conversationmessages', conversationMessage.messageId), conversationMessage);
@@ -266,12 +371,12 @@ export class DatabaseService {
   }
 
 
-
-  addConversationMessageThread() {
-
-  }
-
-
+  /**
+   * adds a reaction for a conversation message to the database
+   * @param conversation conversation object
+   * @param conversationMessage message object
+   * @param reaction reaction object
+   */
   addConversationMessageReaction(conversation: Conversation, conversationMessage: ConversationMessage, reaction: Reaction) {
     //add reaction to creator message
     setDoc(doc(this.firestore, 'users/' + conversation.createdBy + '/conversations/'
@@ -283,6 +388,12 @@ export class DatabaseService {
 
 
   /*read functions */
+
+  /**
+   * loads a user with the specific email adress
+   * @param email email adress of the user
+   * @returns user object
+   */
   getUser(email: string): Promise<User> {
     return new Promise<User>((resolve, reject) => {
       const activeUser = {} as User;
@@ -308,6 +419,11 @@ export class DatabaseService {
   }
 
 
+  /**
+   * loads a user with the specific user id
+   * @param userId user id
+   * @returns user object
+   */
   loadUser(userId: string): Promise<User> {
     return new Promise<User>((resolve, reject) => {
       const foundUser = {} as User;
@@ -331,6 +447,10 @@ export class DatabaseService {
   }
 
 
+  /**
+   * loads a list with all user objects
+   * @returns list of user objects
+   */
   loadAllUsers(): Promise<Array<User>> {
     return new Promise<Array<User>>((resolve, reject) => {
       const userList = [] as Array<User>
@@ -354,6 +474,10 @@ export class DatabaseService {
   }
 
 
+  /**
+   * loads a list of all channels
+   * @returns list of all channels
+   */
   loadAllChannels(): Promise<Array<Channel>> {
     return new Promise<Array<Channel>>((resolve, reject) => {
       const channelList = [] as Array<Channel>
@@ -386,6 +510,11 @@ export class DatabaseService {
   }
 
 
+  /**
+   * loads a list of all channels where a specific user is a member
+   * @param userId user id
+   * @returns list of user channels
+   */
   loadAllUserChannels(userId: string): Promise<Array<Channel>> {
     return new Promise<Array<Channel>>((resolve, reject) => {
       const channelList = [] as Array<Channel>
@@ -414,6 +543,12 @@ export class DatabaseService {
   }
 
 
+  /**
+   * loads one specific channel where a specific user is a member
+   * @param userId user id
+   * @param channelId channel id
+   * @returns chnanel object
+   */
   loadSpecificUserChannel(userId: string, channelId: string): Promise<Channel> {
     return new Promise<Channel>((resolve, reject) => {
       const channelObject = {} as Channel
@@ -437,6 +572,10 @@ export class DatabaseService {
   }
 
 
+  /**
+   * loads a list of all messsages in all channels
+   * @returns list of all messages created for channels
+   */
   loadAllChannelMessages() {
     return new Promise<Array<ChannelMessage>>((resolve, reject) => {
       const messageList: Array<ChannelMessage> = [];
@@ -485,6 +624,12 @@ export class DatabaseService {
   }
 
 
+  /**
+   * loads all messages of a specific channel where a specific user is a member
+   * @param userId user id
+   * @param channelId channel id
+   * @returns list of messages of a specific channel
+   */
   loadChannelMessages(userId: string, channelId: string): Promise<Array<ChannelMessage>> {
     return new Promise<Array<ChannelMessage>>((resolve, reject) => {
       const messageList = [] as Array<ChannelMessage>
@@ -509,6 +654,13 @@ export class DatabaseService {
   }
 
 
+  /**
+   * loads a specific message of a channel
+   * @param userId user id
+   * @param channelId channel id
+   * @param messageId message id
+   * @returns message object
+   */
   loadSpecificChannelMessage(userId: string, channelId: string, messageId: string): Promise<ChannelMessage> {
     return new Promise<ChannelMessage>((resolve, reject) => {
       const specificMessage = {} as ChannelMessage
@@ -532,6 +684,14 @@ export class DatabaseService {
     });
   }
 
+
+  /**
+   * loads all reactions of a message in a channel
+   * @param userId user id
+   * @param channelId channel id
+   * @param channelMessageId message id
+   * @returns list of reactions of a single message in the channel
+   */
   loadChannelMessagesReactions(userId: string, channelId: string, channelMessageId: string): Promise<Array<Reaction>> {
     return new Promise<Array<Reaction>>((resolve, reject) => {
       const reactionList = [] as Array<Reaction>;
@@ -560,6 +720,11 @@ export class DatabaseService {
 
 
   /* CONVERSATION FUNCTIONS*/
+
+  /**
+   * loads all conversations
+   * @returns list of all conversations
+   */
   loadAllConversations(): Promise<Array<Conversation>> {
     return new Promise<Array<Conversation>>((resolve, reject) => {
       const conversationList = [] as Array<Conversation>
@@ -592,6 +757,11 @@ export class DatabaseService {
   }
 
 
+  /**
+   * loads all conversations from a specific user
+   * @param userId user id
+   * @returns list of all conversations from a user
+   */
   loadAllUserConversations(userId: string): Promise<Array<Conversation>> {
     return new Promise<Array<Conversation>>((resolve, reject) => {
       const ConversationList = [] as Array<Conversation>
@@ -615,6 +785,12 @@ export class DatabaseService {
   }
 
 
+  /**
+   * loads a specific conversation between two users
+   * @param userId user id
+   * @param conversationId conversation id
+   * @returns conversation object
+   */
   loadSpecificUserConversation(userId: string, conversationId: string): Promise<Conversation> {
     return new Promise<Conversation>((resolve, reject) => {
       const conversationObject = {} as Conversation
@@ -638,6 +814,10 @@ export class DatabaseService {
   }
 
 
+  /**
+   * loads a list of all conversation messages
+   * @returns list of all conversation messages
+   */
   loadAllConversationMessages(): Promise<Array<ConversationMessage>> {
     return new Promise<Array<ConversationMessage>>((resolve, reject) => {
       const messageList: Array<ConversationMessage> = [];
@@ -684,7 +864,12 @@ export class DatabaseService {
   }
 
 
-
+  /**
+   * loads all messages of a specific conversation
+   * @param userId user id
+   * @param conversationId conversation id
+   * @returns list of conversation messages
+   */
   loadConversationMessages(userId: string, conversationId: string): Promise<Array<ConversationMessage>> {
     return new Promise<Array<ConversationMessage>>((resolve, reject) => {
       const messageList = [] as Array<ConversationMessage>
@@ -709,6 +894,13 @@ export class DatabaseService {
   }
 
 
+  /**
+   * loads all reactions of a message in a conversation
+   * @param userId user id
+   * @param conversationId conversation id
+   * @param conversationMessageId message id
+   * @returns list of reactions of a conversation message
+   */
   loadConversationMessagesReactions(userId: string, conversationId: string, conversationMessageId: string): Promise<Array<Reaction>> {
     return new Promise<Array<Reaction>>((resolve, reject) => {
       const reactionList = [] as Array<Reaction>;
@@ -734,6 +926,14 @@ export class DatabaseService {
     });
   }
 
+
+  /**
+   * loads a single message in a conversation
+   * @param userId user id
+   * @param conversationId conversation id
+   * @param messageId message id
+   * @returns message object
+   */
   loadSpecificConversationMessage(userId: string, conversationId: string, messageId: string): Promise<ConversationMessage> {
     return new Promise<ConversationMessage>((resolve, reject) => {
       const messageObject = {} as ConversationMessage
@@ -760,23 +960,32 @@ export class DatabaseService {
 
   /*update functions */
 
+  /**
+   * updates the properties of a user object in the database
+   * @param user user object
+   */
   updateUser(user: User) {
     let userObject = new User(user)
     updateDoc(doc(collection(this.firestore, 'users/'), user.userId), userObject.toJSON());
   }
 
 
+  /**
+   * updates the properties of a channel object in the database
+   * @param channel channel object
+   */
   updateChannelMembers(channel: Channel) {
-    //SET
     let channelObject = new Channel(channel);
-
     channel.membersId.forEach(user => {
       updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/'), channel.channelId), channelObject.toJSON());
     })
-
   }
 
 
+  /**
+   * updates the properties of a channel object in the database
+   * @param channel channel object
+   */
   updateChannelName(channel: Channel) {
     channel.membersId.forEach(user => {
       updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/'), channel.channelId), channel.toJSON())
@@ -784,11 +993,22 @@ export class DatabaseService {
   }
 
 
+  /**
+   * updates the last two emojis in the user object
+   * @param userId user id
+   * @param emoji1 emoji string 1
+   * @param emoji2 emoji string 2
+   */
   updateUsedLastTwoEmojis(userId: string, emoji1: string, emoji2: string) {
     updateDoc(doc(this.firestore, 'users', userId), 'usedLastTwoEmojis', [emoji1, emoji2]);
   }
 
 
+  /**
+   * updates the messageid of the thread object
+   * @param thread threadobject
+   * @returns error or confirmation message
+   */
   updateMessageThreadId(thread: Thread) {
     const creatorMessageRef = doc(
       this.firestore,
@@ -813,6 +1033,13 @@ export class DatabaseService {
 
   }
 
+
+  /**
+   * updates message object from a conversation
+   * @param message message object
+   * @param conversation conversation object
+   * @returns error or confirmation message
+   */
   updateMessage(message: ConversationMessage, conversation: Conversation): Promise<void> {
     const creatorMessageRef = doc(
       this.firestore,
@@ -836,6 +1063,11 @@ export class DatabaseService {
   }
 
 
+  /**
+   * updates the message object in a channel
+   * @param message message object
+   * @param channel channel object
+   */
   updateChannelMessage(message: ChannelMessage, channel: Channel) {
     let messageObject = new ChannelMessage(message);
     channel.membersId.forEach(user => {
@@ -845,6 +1077,11 @@ export class DatabaseService {
 
 
   /*delete functions */
+  /**
+   * deletes a channelobject from a specific user in the database
+   * @param channel channel id
+   * @param userId user id
+   */
   deleteChannel(channel: Channel, userId: string) {
     deleteDoc(doc(collection(this.firestore, 'users/' + userId + '/channels/'), channel.channelId));
   }
