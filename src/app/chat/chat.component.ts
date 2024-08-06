@@ -184,17 +184,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
     console.log(this.specific)
 
 
-    // If loading user data via service is necessary 
-    // this.userData.loadUserData().then(() => {
-    //   this.user = this.userData.user;
-    //   this.specific = this.userData.specific;
-    //   this.sendingUser = this.userData.sendingUser;
-    //   this.passiveUser = this.userData.passiveUser;
-    // }).catch(error => {
-    //   console.error('Error loading user data', error);
-    // });
-
-
     /*
     this.databaseService.loadUser(this.userId).then(user => {
       this.user = user;
