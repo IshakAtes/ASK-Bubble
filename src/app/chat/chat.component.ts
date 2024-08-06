@@ -14,7 +14,7 @@ import { TimeFormatingService } from '../shared-services/chat-functionality/time
 import { MentionAndChannelDropdownService } from '../shared-services/chat-functionality/mention-and-channel-dropdown.service';
 import { EditMessageService } from '../shared-services/chat-functionality/edit-message.service';
 import { FileUploadService } from '../shared-services/chat-functionality/file-upload.service';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { GeneralChatService } from '../shared-services/chat-functionality/general-chat.service';
 import { Thread } from '../../models/thread.class';
@@ -34,10 +34,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
   @Input() specific: Conversation;
   @Input() user: User
 
-
-
   @Output() changeReloadStatus = new EventEmitter<boolean>();
-
 
   sendingUser: User;
   passiveUser: User;
@@ -51,7 +48,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
   userEmojis$: Observable<Array<string>>;
   fileUploadError: string | null = null;
   groupedReactions: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
-
 
 
   // userId = 'HTMknmA28FP56EIqrtZo';
@@ -408,15 +404,23 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.loadAllMessages();
   }
 
-  createOrOpenThread(message: ConversationMessage) {
+  thread$ = new BehaviorSubject<Thread | null>(null);
 
-    if (message.threadId != '') {
-      console.log('thread already exists');
+  createOrOpenThread(message: ConversationMessage) {
+    if (message.threadId !== '') {
+      console.log('Thread already exists');
+      this.databaseService.loadSpecificThread(message, this.sendingUser)
+        .then(oldThread => {
+          console.log(oldThread);
+          this.thread$.next(oldThread); // Update the BehaviorSubject with the existing thread
+        })
+        .catch(error => console.error('Error loading thread:', error));
     } else {
-      let thread: Thread = this.databaseService.createThread(message, this.sendingUser, this.passiveUser)
+      const thread: Thread = this.databaseService.createThread(message, this.sendingUser, this.passiveUser);
       console.log(thread);
       this.databaseService.addThread(thread)
       this.databaseService.updateMessageThreadId(thread)
+      this.thread$.next(thread)
     }
   }
 }
