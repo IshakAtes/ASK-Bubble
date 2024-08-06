@@ -120,10 +120,13 @@ export class DatabaseService {
   createThread(conversationMessage: ConversationMessage, sendingUser: User, receivingUser: User): Thread{
     let thread = {} as Thread;
     const randomNumber = Math.random();
-    thread.messageId = conversationMessage.messageId
+    thread.conversationId = conversationMessage.conversationId;
+    thread.messageId = conversationMessage.messageId;
     thread.threadId = 'THR-' + conversationMessage.createdBy + '-' + randomNumber;
     thread.threadNameCreator = sendingUser.name;
     thread.threadNameRecipient = receivingUser.name;
+    thread.createdBy = sendingUser.userId
+    thread.recipientId = receivingUser.userId;
     conversationMessage.threadId = thread.threadId;
     return thread;
   }
@@ -144,13 +147,10 @@ export class DatabaseService {
 
   addThread(thread: Thread){
     //add converstaion to creator
-    // setDoc(doc(this.firestore, 'users/' + conversation.createdBy + '/conversations', conversation.conversationId), conversation);
-    setDoc(doc(this.firestore, 'users/' + thread.threadNameCreator + '/threads/', thread.threadId), thread);
+    setDoc(doc(this.firestore, 'users/' + thread.createdBy + '/conversations', thread.conversationId + '/conversationmessages/' + thread.messageId + '/threads/', thread.threadId), thread);
     //add conversation to recipient
-      setDoc(doc(this.firestore, 'users/' + thread.threadNameRecipient + '/threads/', thread.threadNameRecipient), thread);
-  
-      // /users/7NkpQiqqRbeWDyMAXqCE/conversations/CONV-Adxrm7CExizb76lVrknu-0.9989840950446485/conversationmessages/CONV-MSG-0.9494644781037647
-    }
+      setDoc(doc(this.firestore, 'users/' + thread.recipientId + '/conversations', thread.conversationId + '/conversationmessages/' + thread.messageId + '/threads/', thread.threadId), thread);
+      }
 
 
   addThreadMessage(thread: Thread, threadMessage: ThreadMessage){
@@ -758,6 +758,30 @@ export class DatabaseService {
     updateDoc(doc(this.firestore, 'users', userId), 'usedLastTwoEmojis', [emoji1, emoji2]);
   }
 
+
+  updateMessageThreadId(thread:Thread){
+    const creatorMessageRef = doc(
+      this.firestore,
+      'users/' + thread.createdBy + '/conversations/' + thread.conversationId + '/conversationmessages',
+      thread.messageId
+    );
+  
+    const recipientMessageRef = doc(
+      this.firestore,
+      'users/' + thread.recipientId + '/conversations/' + thread.conversationId + '/conversationmessages',
+      thread.messageId
+    );
+
+    return Promise.all([
+      updateDoc(creatorMessageRef, { threadId: thread.threadId }),
+      updateDoc(recipientMessageRef, { threadId: thread.threadId })
+    ]).then(() => {
+      console.log('Message updated successfully for both users');
+    }).catch(error => {
+      console.error('Error updating message: ', error);
+    });
+
+  }
   
   updateMessage(message: ConversationMessage, conversation: Conversation): Promise<void> {
     const creatorMessageRef = doc(
@@ -771,7 +795,6 @@ export class DatabaseService {
       'users/' + conversation.recipientId + '/conversations/' + message.conversationId + '/conversationmessages',
       message.messageId
     );
-  
     return Promise.all([
       updateDoc(creatorMessageRef, { content: message.content }),
       updateDoc(recipientMessageRef, { content: message.content })

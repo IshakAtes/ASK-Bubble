@@ -29,7 +29,7 @@ import { Thread } from '../../models/thread.class';
 
 })
 export class ChatComponent implements AfterViewInit, OnInit {
-  
+
   //input Data from main component
   @Input() specific: Conversation;
   @Input() user: User
@@ -37,7 +37,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
 
 
   @Output() changeReloadStatus = new EventEmitter<boolean>();
-  
+
 
   sendingUser: User;
   passiveUser: User;
@@ -53,7 +53,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
   groupedReactions: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
 
 
-  
+
   // userId = 'HTMknmA28FP56EIqrtZo';
   // userName = 'Kerim Tasci';
   // conversationId = 'CONV-HTMknmA28FP56EIqrtZo-0.4380479343879251';
@@ -104,32 +104,32 @@ export class ChatComponent implements AfterViewInit, OnInit {
     });
   }
 
-  changeReload(){
+  changeReload() {
     this.changeReloadStatus.emit()
   }
 
 
-  ngOnChanges(){
+  ngOnChanges() {
     this.isChatDataLoaded = false;
     this.sendingUser = new User()
     this.passiveUser = new User()
-    
+
     this.list = [];
     this.reactions = [];
 
 
     //defining passiveUser if specific = ConversationWithSelf
-    if(this.specific.createdBy == this.specific.recipientId){
+    if (this.specific.createdBy == this.specific.recipientId) {
       this.databaseService.loadUser(this.specific.createdBy)
-      .then(creatorUser => {
-        if (creatorUser.userId == this.user.userId) {
-          this.passiveUser = creatorUser;
-        }
+        .then(creatorUser => {
+          if (creatorUser.userId == this.user.userId) {
+            this.passiveUser = creatorUser;
+          }
 
-    })
+        })
     }
-    
-    this.loadAllMessages(); 
+
+    this.loadAllMessages();
 
     this.databaseService.loadUser(this.specific.createdBy)
       .then(creatorUser => {
@@ -140,7 +140,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
         else {
           this.passiveUser = creatorUser;
         }
-    })
+      })
 
     this.databaseService.loadUser(this.specific.recipientId)
       .then(recipientUser => {
@@ -156,7 +156,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.mAndC.loadUsersOfUser();
     this.mAndC.loadChannlesofUser();
     this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.user.userId);
-    
+
 
 
     setTimeout(() => {
@@ -193,8 +193,8 @@ export class ChatComponent implements AfterViewInit, OnInit {
     // }).catch(error => {
     //   console.error('Error loading user data', error);
     // });
-  
-    
+
+
     /*
     this.databaseService.loadUser(this.userId).then(user => {
       this.user = user;
@@ -209,36 +209,36 @@ export class ChatComponent implements AfterViewInit, OnInit {
       
     */
 
-        this.databaseService.loadUser(this.specific.createdBy)
-          .then(creatorUser => {
-            if (creatorUser.userId == this.user.userId) {
-              this.sendingUser = creatorUser;
-              console.log('this is the creatorUser', this.sendingUser)
-            }
-            else {
-              this.passiveUser = creatorUser;
-            }
-          })
-
-        this.databaseService.loadUser(this.specific.recipientId)
-          .then(recipientUser => {
-            if (recipientUser.userId == this.user.userId) {
-              this.sendingUser = recipientUser;
-              console.log('this is the recipientUser', this.passiveUser)
-            }
-            else {
-              this.passiveUser = recipientUser;
-            }
-          })
-
-      /*    
+    this.databaseService.loadUser(this.specific.createdBy)
+      .then(creatorUser => {
+        if (creatorUser.userId == this.user.userId) {
+          this.sendingUser = creatorUser;
+          console.log('this is the creatorUser', this.sendingUser)
+        }
+        else {
+          this.passiveUser = creatorUser;
+        }
       })
-      */
+
+    this.databaseService.loadUser(this.specific.recipientId)
+      .then(recipientUser => {
+        if (recipientUser.userId == this.user.userId) {
+          this.sendingUser = recipientUser;
+          console.log('this is the recipientUser', this.passiveUser)
+        }
+        else {
+          this.passiveUser = recipientUser;
+        }
+      })
+
+    /*    
+    })
+    */
 
     this.mAndC.loadUsersOfUser();
     this.mAndC.loadChannlesofUser();
     this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.user.userId);
-    
+
 
 
     setTimeout(() => {
@@ -282,9 +282,9 @@ export class ChatComponent implements AfterViewInit, OnInit {
   content = '';
 
 
- 
 
-//kopieren
+
+  //kopieren
   saveNewMessage() {
     this.list = [];
     let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specific, this.content, this.user.userId, this.fileUpload.downloadURL)
@@ -305,7 +305,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.fileUpload.downloadURL = '';
   }
 
-  
+
   //kopieren
   // save message reaction
   async saveNewMessageReaction(event: any, convo: ConversationMessage, userId: string, reactionbar?: string) {
@@ -332,9 +332,9 @@ export class ChatComponent implements AfterViewInit, OnInit {
 
     this.chat.reactions = this.reactions
 
-     setTimeout(() => {
+    setTimeout(() => {
       this.chat.groupReactions(this.list)
-     }, 500);
+    }, 500);
 
 
     this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
@@ -385,7 +385,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
   // Scroll to the bottom of the chatarea 
   scrollToBottom(): void {
     try {
-      if(this.list.length > 0){
+      if (this.list.length > 0) {
         this.lastDiv.nativeElement.scrollIntoView();
       }
 
@@ -419,15 +419,16 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.loadAllMessages();
   }
 
-  createOrOpenThread(message: ConversationMessage){
-    
+  createOrOpenThread(message: ConversationMessage) {
 
-    // debugger
-  
-    let thread: Thread = this.databaseService.createThread(message, this.sendingUser, this.passiveUser)
-    console.log(thread);
-    // this.databaseService.addThread(thread)
-    
+    if (message.threadId != '') {
+      console.log('thread already exists');
+    } else {
+      let thread: Thread = this.databaseService.createThread(message, this.sendingUser, this.passiveUser)
+      console.log(thread);
+      this.databaseService.addThread(thread)
+      this.databaseService.updateMessageThreadId(thread)
+    }
   }
 }
 
