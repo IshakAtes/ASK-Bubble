@@ -18,6 +18,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { GeneralChatService } from '../shared-services/chat-functionality/general-chat.service';
 import { Thread } from '../../models/thread.class';
+import { ThreadService } from '../shared-services/thread.service';
 
 @Component({
   selector: 'app-chat',
@@ -25,8 +26,6 @@ import { Thread } from '../../models/thread.class';
   imports: [FormsModule, PickerModule, HeaderComponent, CommonModule],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss', './chatResp.component.scss']
-
-
 })
 export class ChatComponent implements AfterViewInit, OnInit {
 
@@ -38,6 +37,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
 
   sendingUser: User;
   passiveUser: User;
+  
 
   allUsers = [] as Array<User>;
   list: Array<ConversationMessage> = [];
@@ -49,10 +49,10 @@ export class ChatComponent implements AfterViewInit, OnInit {
   fileUploadError: string | null = null;
   groupedReactions: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
 
+  content = '';
+  @ViewChild('myTextarea') myTextarea!: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('lastDiv') lastDiv: ElementRef<HTMLDivElement>;
 
-  // userId = 'HTMknmA28FP56EIqrtZo';
-  // userName = 'Kerim Tasci';
-  // conversationId = 'CONV-HTMknmA28FP56EIqrtZo-0.4380479343879251';
 
   // userId =  'Adxrm7CExizb76lVrknu';
   //userName = 'Simon Weirauch';
@@ -67,8 +67,8 @@ export class ChatComponent implements AfterViewInit, OnInit {
     public fileUpload: FileUploadService,
     public edit: EditMessageService,
     public chat: GeneralChatService,
+    public thread: ThreadService,
   ) {
-
 
     this.allChannels = mAndC.allChannels;
     this.allUsers = mAndC.allUsers;
@@ -171,8 +171,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
   }
 
 
-
-
   ngOnInit(): void {
     this.isChatDataLoaded = false;
     this.loadAllMessages();
@@ -264,11 +262,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     }
   }
 
-  content = '';
-
-
-
-
+  
   //kopieren
   saveNewMessage() {
     this.list = [];
@@ -329,8 +323,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.mAndC.selectedMessageId = null;
   }
 
-  @ViewChild('myTextarea') myTextarea!: ElementRef<HTMLTextAreaElement>;
-  @ViewChild('lastDiv') lastDiv: ElementRef<HTMLDivElement>;
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -406,22 +398,24 @@ export class ChatComponent implements AfterViewInit, OnInit {
 
   thread$ = new BehaviorSubject<Thread | null>(null);
 
-  createOrOpenThread(message: ConversationMessage) {
-    if (message.threadId !== '') {
-      console.log('Thread already exists');
-      this.databaseService.loadSpecificThread(message, this.sendingUser)
-        .then(oldThread => {
-          console.log(oldThread);
-          this.thread$.next(oldThread); // Update the BehaviorSubject with the existing thread
-        })
-        .catch(error => console.error('Error loading thread:', error));
-    } else {
-      const thread: Thread = this.databaseService.createThread(message, this.sendingUser, this.passiveUser);
-      console.log(thread);
-      this.databaseService.addThread(thread)
-      this.databaseService.updateMessageThreadId(thread)
-      this.thread$.next(thread)
-    }
+createOrOpenThread(message: ConversationMessage) {
+  if (message.threadId !== '') {
+    console.log('Thread already exists');
+    this.databaseService.loadSpecificThread(message, this.sendingUser)
+      .then(oldThread => {
+        console.log(oldThread);
+        this.thread$.next(oldThread);
+      })
+      .catch(error => console.error('Error loading thread:', error));
+  } else {
+    const thread: Thread = this.databaseService.createThread(message, this.sendingUser, this.passiveUser);
+    console.log(thread);
+    this.databaseService.addThread(thread)
+    this.databaseService.updateMessageThreadId(thread)
+    this.thread$.next(thread)
   }
+}
+
+
 }
 
