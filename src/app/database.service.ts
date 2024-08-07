@@ -437,6 +437,9 @@ export class DatabaseService {
             foundUser.avatarUrl = userData['avatarUrl']
             foundUser.userId = user.id
             foundUser.usedLastTwoEmojis = userData['usedLastTwoEmojis']
+            //added
+            foundUser.uid = userData['uid']
+            foundUser.logIn = userData['logIn']
           }
         })
         resolve(foundUser);
