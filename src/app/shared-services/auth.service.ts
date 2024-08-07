@@ -20,44 +20,46 @@ export class AuthService {
 
   constructor() {}
 
-  async changeUserData(avatar: string | null | undefined, name: string, email: string, currentPassword: string | null) {
+
+  async changeUserData(email: string, newEmail: string, currentPassword: string | null, name: string, avatar: string | undefined | null) {
     const auth = this.firebaseAuth;
     const fbUser = auth.currentUser;
-
-    if (fbUser) {
-      console.log('currentUser', fbUser);
+  
       try {
-        // this.sendVerificationEmail(email);
-        // Update email
-        if (email !== fbUser.email) {
-          await updateEmail(fbUser, email);
-          await sendEmailVerification(fbUser);
-          console.log('Verification email sent to', email, currentPassword);
-        }
-        // Update profile
-        await updateProfile(fbUser, {
-          displayName: name,
-          photoURL: avatar ?? '../../assets/img/unUsedDefault.png'
-        }).then(() => {
-          // Profile updated!
+        if (fbUser) {
+          console.log('currentUser', fbUser);
+          // Update email
+          if (newEmail !== fbUser.email) {
+            // Reauthenticate the user with the current email and password
+            const credential = EmailAuthProvider.credential(email, currentPassword ?? '');
+            await reauthenticateWithCredential(fbUser, credential);
+            await updateEmail(fbUser, newEmail);
+            await sendEmailVerification(fbUser);
+            await this.us.changeEmail(email, newEmail, name, avatar)
+            console.log('Verification email sent to', newEmail);
+          }
+    
+          if (name !== fbUser.displayName) {
+            await this.us.changeUserName(name, fbUser.uid)
+          }
+
+          if (avatar !== fbUser.photoURL) {
+            await this.us.changeAvatar(avatar, fbUser.uid);
+          }
+
+          // Update profile
+          await updateProfile(fbUser, {
+            displayName: name,
+            photoURL: avatar ?? '/assets/img/unUsedDefault.png'
+          }); 
           console.log('Profile updated!', fbUser);
-          // Update local user object
-          // Update local user object
-          // let updatedUser: User = this.us.loggedUser;
-          // updatedUser.name = name,
-          // updatedUser.email = email,
-          // updatedUser.avatarUrl =  avatar ?? '../../assets/img/unUsedDefault.png';
-          // this.us.loggedUser = updatedUser;
-          // console.log('Successfully updated user', this.us.loggedUser);
-        }).catch((error) => {
-          console.error('Error updating profile:', error);
-          this.errorMessage = error.message;
-        });
+      } else {
+        console.error('Current user or password is null');
+      }
       } catch (error: any) {
         console.error('Error updating user:', error);
         this.errorMessage = error.message;
       }
-    }
   }
 
 

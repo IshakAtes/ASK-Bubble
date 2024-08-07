@@ -38,11 +38,11 @@ export class DialogShowUserProfilComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.userData = data.user;
-    this.myForm = this.fb.group({
-      name: [this.userData.name, [Validators.minLength(6)]],
-      email: [this.userData.email, [Validators.email]],
-      password: ['', [Validators.maxLength(6)]]
-    });
+    // this.myForm = this.fb.group({
+    //   name: [this.userData.name, [Validators.minLength(6)]],
+    //   email: [this.userData.email, [Validators.email]],
+    //   password: ['', [Validators.maxLength(6)]]
+    // });
   }
 
 
@@ -50,7 +50,7 @@ export class DialogShowUserProfilComponent implements OnInit {
     this.myForm = this.fb.group({
       name: [this.userData.name, [Validators.minLength(6)]],
       email: [this.userData.email, [Validators.email]],
-      password: ['', [Validators.maxLength(6)]]
+      password: ['', [Validators.minLength(6)]]
     });
   }
 
@@ -60,22 +60,20 @@ export class DialogShowUserProfilComponent implements OnInit {
 
 
 
-  editUser() {
-    console.log('userData before edit', this.userData);
-    this.userData.avatarUrl = this.selectedAvatar;
-    this.userData.name = this.myForm.value.name;
-    this.userData.email = this.myForm.value.email;
+  async editUser() {
     console.log('editForm', this.myForm.value, 'userData after edit', this.userData);
   
     // Erfasse das aktuelle Passwort nur, wenn die E-Mail geändert wurde
     const currentPassword: string | null = this.showPasswordInput ? this.userPassword : null;
   
-    this.authService.changeUserData(
-      this.selectedAvatar, 
-      this.myForm.value.name, 
+    await this.authService.changeUserData(
       this.myForm.value.email,
-      currentPassword
+      this.userData.email,
+      currentPassword,
+      this.userData.name,
+      this.userData.avatarUrl
     );
+    this.editMode = false;
   }
   
 
