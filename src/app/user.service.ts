@@ -53,6 +53,80 @@ export class UserService {
   }
 
 
+  changeEmail(currentMail: string, newEmail: string, newName: string, avatar: string | undefined | null): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      const usersCollection = collection(this.firestore, 'users');
+
+      onSnapshot(usersCollection, (users) => {
+        users.forEach(user => {
+          const userData = user.data();
+  
+          if (userData['email'] === currentMail) {
+            const userDocRef = doc(this.firestore, "users", userData['userId']);
+            updateDoc(userDocRef, {
+              email: newEmail,
+              name: newName,
+              avatarUrl: avatar
+            });
+            resolve(userData);
+          }
+        });
+      }, (error) => {
+        reject(error);
+      });
+    });
+  }
+
+
+
+  changeUserName(newName: string, token: string): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      const usersCollection = collection(this.firestore, 'users');
+
+      onSnapshot(usersCollection, (users) => {
+        users.forEach(async user => {
+          const userData = user.data();
+  
+          if (userData['uid'] === token) {
+            const userDocRef = doc(this.firestore, "users", userData['userId']);
+            await updateDoc(userDocRef, {
+              name: newName,
+            });
+            resolve(newName);
+          }
+        });
+      }, (error) => {
+        reject(error);
+      });
+    });
+  }
+
+
+  changeAvatar(avatar: string | undefined | null, token: string): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      const usersCollection = collection(this.firestore, 'users');
+
+      onSnapshot(usersCollection, (users) => {
+        users.forEach(async user => {
+          const userData = user.data();
+  
+          if (userData['uid'] === token) {
+            const userDocRef = doc(this.firestore, "users", userData['userId']);
+            await updateDoc(userDocRef, {
+              avatarUrl: avatar,
+            });
+            resolve(avatar);
+          } else {
+            console.log('Dein Profilbild konnte nicht geändert werden');
+          }
+        });
+      }, (error) => {
+        reject(error);
+      });
+    });
+  }
+
+
 
   createAndSaveUser() {
     this.userCache['uid'] = this.userToken;

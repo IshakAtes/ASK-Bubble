@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, user } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateEmail, updatePassword, user, updateProfile, sendEmailVerification } from '@angular/fire/auth';
 import { from, Observable } from 'rxjs';
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { EmailAuthProvider, getAuth, onAuthStateChanged, UserCredential, reauthenticateWithCredential } from "firebase/auth";
 import { UserService } from '../user.service';
 import { User } from '../../models/user.class';
 import { signInWithRedirect, getRedirectResult, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
@@ -20,6 +20,65 @@ export class AuthService {
 
   constructor() {}
 
+
+  async changeUserData(email: string, newEmail: string, currentPassword: string | null, name: string, avatar: string | undefined | null) {
+    const auth = this.firebaseAuth;
+    const fbUser = auth.currentUser;
+  
+      try {
+        if (fbUser) {
+          console.log('currentUser', fbUser);
+          // Update email
+          if (newEmail !== fbUser.email) {
+            // Reauthenticate the user with the current email and password
+            const credential = EmailAuthProvider.credential(email, currentPassword ?? '');
+            await reauthenticateWithCredential(fbUser, credential);
+            await updateEmail(fbUser, newEmail);
+            await sendEmailVerification(fbUser);
+            await this.us.changeEmail(email, newEmail, name, avatar)
+            console.log('Verification email sent to', newEmail);
+          }
+    
+          if (name !== fbUser.displayName) {
+            await this.us.changeUserName(name, fbUser.uid)
+          }
+
+          if (avatar !== fbUser.photoURL) {
+            await this.us.changeAvatar(avatar, fbUser.uid);
+          }
+
+          // Update profile
+          await updateProfile(fbUser, {
+            displayName: name,
+            photoURL: avatar ?? '/assets/img/unUsedDefault.png'
+          }); 
+          console.log('Profile updated!', fbUser);
+      } else {
+        console.error('Current user or password is null');
+      }
+      } catch (error: any) {
+        console.error('Error updating user:', error);
+        this.errorMessage = error.message;
+      }
+  }
+
+
+  // async sendVerificationEmail(newEmail: string) {
+  //   const auth = this.firebaseAuth;
+  //   const currentUser = auth.currentUser;
+
+  //   if (currentUser) {
+  //     try {
+  //       await updateEmail(currentUser, newEmail);
+  //       await sendEmailVerification(currentUser);
+  //       console.log('Verification email sent to', newEmail);
+  //     } catch (error: any) {
+  //       console.error('Error sending verification email:', error);
+  //       this.errorMessage = error.message;
+  //     }
+  //   }
+  // }
+  
 
   async googleAuth() {
     console.log('google Provider', this.provider);
@@ -102,27 +161,6 @@ export class AuthService {
   }
 
 
-  // checkUserStatus() {
-  //   onAuthStateChanged(this.firebaseAuth, (user) => {
-  //     if (user) {
-  //       // User is signed in, see docs for a list of available properties
-  //       // https://firebase.google.com/docs/reference/js/auth.user
-  //       const uid = user.uid;
-  //       // this.us.loggedUser['name'] = user.displayName ? user.displayName : '';
-  //       console.log('authState', user);
-  //       const activeUser = this.us.getUser(user.email ?? '', user.uid);
-  //       console.log(activeUser);
-        
-  //       console.log(this.us.loggedUser);
-  //       // ...
-  //     } else {
-  //       // User is signed out
-  //       console.log('authState logged out', this.us.loggedUser, 'user variable', user);        
-  //       // ...
-  //     }
-  //   });
-  // }
-
 
   checkUserStatus() {
     onAuthStateChanged(this.firebaseAuth, (user) => {
@@ -130,11 +168,10 @@ export class AuthService {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/auth.user
         const uid = user.uid;
-        console.log('authState', user);
         this.us.getUser(user.email ?? '', user.uid).then((activeUser) => {
           console.log('activeUser:', activeUser);
           this.us.loggedUser = activeUser;
-          console.log('loggedUser', this.us.loggedUser);
+          // console.log('loggedUser', this.us.loggedUser);
         }).catch((error) => {
           console.error('Fehler beim Abrufen des Benutzers:', error);
         });
