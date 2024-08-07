@@ -296,6 +296,28 @@ section {
     }
 
 
+    .avatarImageCt {
+        width: 180px;
+        height: 180px;
+        border: 8px solid #fff;
+        border-radius: 50%;
+        background-size: cover;
+        object-fit: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        cursor: pointer;
+        transition: ease-in-out 125ms;
+        &:hover {
+            border: 8px solid #E6E6E6;
+        }
+    }
+
+
+    #fileInput {
+        display: none;
+    }
+
+
     @media (max-width: 850px) {
         ::ng-deep .cdk-overlay-container{
             .cdk-global-overlay-wrapper {
