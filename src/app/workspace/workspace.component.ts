@@ -70,7 +70,7 @@ export class WorkspaceComponent {
       this.database.loadAllUsers().then(allUsers =>{
         this.userlist = allUsers;
       })
-    }, 500);
+    }, 1500);
   }
 
 
@@ -83,7 +83,7 @@ export class WorkspaceComponent {
       this.database.loadAllUserChannels(this.activeUser.userId).then(allChannel => {
         this.channelList = allChannel;
       })
-    }, 600);
+    }, 1600);
   }
 
 
@@ -96,7 +96,7 @@ export class WorkspaceComponent {
       this.database.loadAllUserConversations(this.activeUser.userId).then(allConversations => {
         this.conversationList = allConversations;
       })
-    }, 700);
+    }, 1700);
   }
 
 

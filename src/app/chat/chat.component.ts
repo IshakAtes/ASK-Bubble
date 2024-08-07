@@ -400,15 +400,12 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.loadAllMessages();
   }
 
-  thread$ = new BehaviorSubject<Thread | null>(null);
-
 createOrOpenThread(message: ConversationMessage) {
   if (message.threadId !== '') {
     console.log('Thread already exists');
     this.databaseService.loadSpecificThread(message, this.sendingUser)
       .then(oldThread => {
         console.log(oldThread);
-        this.thread$.next(oldThread);
         this.openThread(oldThread);
       })
       .catch(error => console.error('Error loading thread:', error));
@@ -418,8 +415,6 @@ createOrOpenThread(message: ConversationMessage) {
     this.databaseService.addThread(thread)
     this.databaseService.updateMessageThreadId(thread)
     this.openThread(thread);
-    this.thread$.next(thread)
-
   }
 }
 

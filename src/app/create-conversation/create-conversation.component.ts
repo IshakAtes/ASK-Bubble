@@ -66,7 +66,7 @@ export class CreateConversationComponent {
       this.database.loadAllUserChannels(this.us.activeUserObject.userId).then(allChannel => {
         this.channelList = allChannel;
       })
-    }, 1000);
+    }, 2000);
   }
 
 
@@ -79,7 +79,7 @@ export class CreateConversationComponent {
       this.database.loadAllUserConversations(this.us.activeUserObject.userId).then(allConversations => {
         this.conversationList = allConversations;
       })
-    }, 1000);
+    }, 2000);
   }
 
 
