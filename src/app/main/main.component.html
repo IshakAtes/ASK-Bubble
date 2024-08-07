@@ -43,19 +43,22 @@
                          [reload]="reloadChannel"
                      ></app-channel>
                  }
+                 @else if(thread){
+                    <app-thread
+                    [user]="userservice.activeUserObject"
+                    [currentThread]="currentThread"
+                    [specific]="currentConversation"
+                    (emitCloseThread)="closeThread($event)"
+                    > 
+
+                    </app-thread>
+                 }
                  @else {
                      <app-create-conversation
                          [channelBig]="channelBig"
                          (changeToChannel)="changeChannel($event)"
                          (changeToConversation)="changeConversation($event)"
                      ></app-create-conversation>
-
-                     <!--
-                        <app-thread> 
-
-                     </app-thread>
-                     -->
-
                  }
                 
              }
@@ -115,6 +118,7 @@
                         [user]="userservice.activeUserObject"
                         [currentThread]="currentThread"
                         [specific]="currentConversation"
+                        (emitCloseThread)="closeThread($event)"
                     >
                        
                     </app-thread>
@@ -144,7 +148,7 @@
         
             <app-header></app-header>
         
-        @if(isWSVisible){
+            @if(isWSVisible){
                 <app-workspace
                 (changeToChannel)="changeChannel($event)"
                 (changeToConversation)="changeConversation($event)"
@@ -187,9 +191,13 @@
             }
     
             @if(thread){
-                <app-thread>
-                    
-                    
+                <app-thread
+                [user]="userservice.activeUserObject"
+                [currentThread]="currentThread"
+                [specific]="currentConversation"
+                (emitCloseThread)="closeThread($event)"
+                >
+
                 </app-thread>
             }
         </section>

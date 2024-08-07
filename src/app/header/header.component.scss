@@ -16,6 +16,7 @@ header {
     min-width: 320px;
     //max-width: 356px;
     //width: 20vw;       //306px
+   
 }
 
 .searchBar {
@@ -211,6 +212,11 @@ header {
             height: fit-content;
             gap: 0px;
 
+
+            >svg {
+                cursor: pointer;
+            }
+
             >img {
                 height: 45px;
                 width: 161.5px;
@@ -221,6 +227,7 @@ header {
                 align-items: center;
                 height: 50px;
                 gap: 10px;
+                cursor: pointer;
                 
                 >img {
                     width: 50px;
@@ -240,6 +247,7 @@ header {
             width: 50px;
             height: 50px;
             border-radius: 60px;
+            cursor: pointer;
         }
     }
 
