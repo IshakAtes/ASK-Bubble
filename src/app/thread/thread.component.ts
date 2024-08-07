@@ -38,7 +38,7 @@ export class ThreadComponent implements AfterViewInit {
   sendingUser: User;
   passiveUser: User;
 
-  @Output() changeReloadStatus = new EventEmitter<boolean>();
+  @Output() emitCloseThread = new EventEmitter<string>();
 
   allUsers = [] as Array<User>;
   list: Array<ConversationMessage> = [];
@@ -107,6 +107,15 @@ export class ThreadComponent implements AfterViewInit {
       console.log('Current thread:', thread);
     });
     */
+  }
+
+  closeThread(){
+    //this.emitCloseThread.emit('conversation')
+
+
+    console.log(this.currentThread)
+    console.log(this.specific)
+    console.log(this.user)
   }
 
 //   ngOnChanges() {

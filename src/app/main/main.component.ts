@@ -67,17 +67,14 @@ export class MainComponent{
       this.currentChannel = channel;
       this.conversation = false;
       this.channel = true;
+      this.thread = false;
     }
     else{
       this.currentChannel = channel;
       this.conversation = false;
       this.channel = true;
+      this.thread = false;
     }
-  }
-
-  openThread(thread: Thread){
-    this.thread = true;
-    this.currentThread = thread;
   }
 
 
@@ -91,11 +88,13 @@ export class MainComponent{
       this.reloadChannel = true;
       this.conversation = false;
       this.channel = true;
+      this.thread = false;
     }
     else{
       this.currentChannel = channel;
       this.conversation = false;
       this.channel = true;
+      this.thread = false;
     }
     this.isWSVisible = false;
   }
@@ -109,12 +108,14 @@ export class MainComponent{
       this.currentConversation = conversation;
       this.conversation = true;
       this.channel = false;
+      this.thread = false;
     }
     else{
       this.currentConversation = conversation;
       this.conversation = true;
       this.channel = false;
       this.isWSVisible = false;
+      this.thread = false;
     }
   }
 
@@ -135,6 +136,45 @@ export class MainComponent{
       this.channel = false;
       this.isWSVisible = false;
       this.thread = false;
+    }
+  }
+
+
+  openThread(thread: Thread){
+    this.currentThread = thread;
+    if(this.userservice.deviceWidth < 1200){
+      this.thread = true;
+      this.conversation = false;
+      this.channel = false;
+      /*
+      if(location = 'conversation'){
+        this.conversation = true;
+        this.channel = false;
+      }
+      else{
+        this.conversation = false;
+        this.channel = true;
+      }
+      */
+    }
+    else{
+      this.thread = true;
+    }
+    
+    
+  }
+
+  closeThread(location: string){
+    debugger
+    if(location == 'conversation'){
+      this.thread = false;
+      this.channel = false;
+      this.conversation = true;
+    }
+    else{
+      this.thread = false;
+      this.channel = true;
+      this.conversation = false;
     }
   }
 
