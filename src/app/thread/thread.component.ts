@@ -110,12 +110,10 @@ export class ThreadComponent implements AfterViewInit {
   }
 
   closeThread(){
-    //this.emitCloseThread.emit('conversation')
+    this.emitCloseThread.emit('conversation')
 
 
-    console.log(this.currentThread)
-    console.log(this.specific)
-    console.log(this.user)
+
   }
 
 //   ngOnChanges() {

@@ -12,6 +12,7 @@ import { CreateConversationComponent } from '../create-conversation/create-conve
 import { HeaderComponent } from '../header/header.component';
 import { AuthService } from '../shared-services/auth.service';
 import { Thread } from '../../models/thread.class';
+import { ChannelThread } from '../../models/channelThread.class';
 
 @Component({
   selector: 'app-main',
@@ -33,6 +34,7 @@ export class MainComponent{
   currentConversation: Conversation;
   currentChannel: Channel;
   currentThread: Thread;
+  currentChannelThread: ChannelThread;
 
 
 
@@ -160,12 +162,15 @@ export class MainComponent{
     else{
       this.thread = true;
     }
-    
-    
   }
 
+  /*TODO main component html config input variables channelThread and normal Thread */
+  openChannelThread(thread: ChannelThread){
+    this.currentChannelThread = thread;
+  }
+
+  
   closeThread(location: string){
-    debugger
     if(location == 'conversation'){
       this.thread = false;
       this.channel = false;

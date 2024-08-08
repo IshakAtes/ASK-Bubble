@@ -13,6 +13,7 @@ import { WorkspaceComponent } from './workspace/workspace.component';
 import { timestamp } from 'rxjs';
 import { Thread } from '../models/thread.class';
 import { ThreadMessage } from '../models/threadMessage';
+import { ChannelThread } from '../models/channelThread.class';
 
 @Injectable({
   providedIn: 'root'
@@ -277,6 +278,142 @@ export class DatabaseService {
     });
   }
 
+
+
+/*Channel Thread Functions */
+
+  /**
+   * creates a thread object
+   * @param channelMessage message object
+   * @param sendingUser userobject of the user who sends the message
+   * @param receivingUser userobject of the user who recieves the message
+   * @returns thread object
+   */
+  createChannelThread(channelMessage: ChannelMessage, channel: Channel): ChannelThread {
+    let thread = {} as ChannelThread;
+    const randomNumber = Math.random();
+    thread.channelId = channelMessage.channelId;
+    thread.messageId = channelMessage.messageId;
+    thread.threadId = 'THR-' + channelMessage.createdBy + '-' + randomNumber;
+    thread.threadNameCreator = channel.createdBy;
+    thread.threadNameRecipients = channel.membersId;
+    thread.createdBy = channelMessage.createdBy
+    thread.recipientIds = channel.membersId;
+    channelMessage.threadId = thread.threadId;
+    return thread;
+  }
+
+      /**
+   * loads all messages of a specific thread
+   * @param message conversationmessage object
+   * @param sendingUser active user
+   * @returns list of all threads of the active user
+   */
+      loadSpecificChannelThread(message: ChannelMessage, channel: Channel): Promise<ChannelThread> {
+        return new Promise<ChannelThread>((resolve, reject) => {
+          const threadObject = {} as ChannelThread;
+      
+          const threadRef = doc(this.firestore, 'users/' + channel.createdBy + '/channels/', message.channelId + '/channelmessages/' + message.messageId + '/threads/' + message.threadId);
+          
+          onSnapshot(threadRef, (docSnapshot) => {
+            if (docSnapshot.exists()) {
+              const threadData = docSnapshot.data();
+              threadObject.channelId = threadData['channelId'];
+              threadObject.messageId = threadData['messageId'];
+              threadObject.threadId = threadData['threadId'];
+              threadObject.threadNameCreator = threadData['threadNameCreator'];
+              threadObject.threadNameRecipients = threadData['threadNameRecipients'];
+              threadObject.createdBy = threadData['createdBy'];
+              threadObject.recipientIds = threadData['recipientIds'];
+              
+              resolve(threadObject);
+            } else {
+              reject(new Error("Thread not found"));
+            }
+          }, (error) => {
+            reject(error);
+          });
+        });
+      }
+
+    /**
+   * adds a threadobject to the database
+   * @param thread threadobject
+   */
+    addChannelThread(thread: ChannelThread, channel: Channel) {
+      
+      channel.membersId.forEach(userId => {
+        setDoc(doc(this.firestore, 'users/' + userId + '/channels/' + thread.channelId + '/channelmessages/' + thread.messageId + '/threads/', thread.threadId), thread);
+      });
+    }
+
+
+  /*DONE */
+
+
+    /**
+   * updates the messageid of the thread object
+   * @param thread threadobject
+   * @returns error or confirmation message
+   */
+    updateMessageChannelThreadId(thread: ChannelThread, channel: Channel) {
+    let channelThreadObject = new ChannelThread(thread);
+    channel.membersId.forEach(user => {
+      debugger;
+      updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/' + thread.channelId + '/channelmessages/' + thread.messageId + '/threads/'), thread.threadId), channelThreadObject.toJSON());
+    })
+  }
+
+
+
+
+
+/*TODO createchannelthreadmessage gibt conversationmessage zurück
+hier mal checken ob ich einfach channelmessage returnen kann
+*/
+
+
+  /**
+   * creates a message object for a thread
+   * @param conversation conversationobject
+   * @param content content of the message
+   * @param createdBy user who created the message
+   * @param thread thread of the message
+   * @param fileUrl file url if the message is a file
+   * @returns message object
+   */
+  createChannelThreadMessage(conversation: Conversation, content: string, createdBy: string, thread: Thread, fileUrl?: string): ConversationMessage {
+    let threadMessage = {} as ThreadMessage;
+    threadMessage.conversationId = conversation.conversationId;
+    threadMessage.content = content;
+    threadMessage.createdAt = Timestamp.fromDate(new Date());
+    threadMessage.createdBy = createdBy;
+    threadMessage.threadId = thread.threadId
+    threadMessage.messageId = thread.messageId
+    threadMessage.fileUrl = fileUrl ? fileUrl : '';
+    return threadMessage
+  }
+
+
+
+
+
+  /**
+   * adds the thread message to the database
+   * @param thread threadobject
+   * @param threadMessage messageobject
+   */
+  addChannelThreadMessage(thread: Thread, threadMessage: ThreadMessage) {
+    //add Message to creator
+    setDoc(doc(this.firestore, 'users/' + thread.threadNameCreator + '/threads/' + threadMessage.conversationId + '/threadmessages', threadMessage.messageId), threadMessage);
+    //add Message to recipient
+    setDoc(doc(this.firestore, 'users/' + thread.threadNameRecipient + '/threads/' + threadMessage.conversationId + '/threadmessages', threadMessage.messageId), threadMessage);
+  }
+
+
+
+
+  /*END CHANNEL THREAD FUNCTIONS */
 
   /*create database entry functions */
 

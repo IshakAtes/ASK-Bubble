@@ -86,7 +86,7 @@
 
     
     .main-chat {
-        height: 100vh;
+        height: calc(100vh - 80px);
         width: 100vw;
         background-color: white;
         border-radius: 0px;
@@ -154,7 +154,7 @@
 
 
     .chat-area {
-        height: 70vh;
+        height: 66vh;
         overflow-y: scroll;
         overflow-x: hidden;
     }
@@ -330,6 +330,6 @@
 
 @media (max-height: 670px) {
     .chat-area {
-        height: 63vh;
+        height: 56vh;
     }
 }

@@ -19,6 +19,9 @@ import { MentionAndChannelDropdownService } from '../shared-services/chat-functi
 import { Reaction } from '../../models/reactions.class';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { Conversation } from '../../models/conversation.class';
+import { ConversationMessage } from '../../models/conversationMessage.class';
+import { Thread } from '../../models/thread.class';
+import { ChannelThread } from '../../models/channelThread.class';
 
 
 
@@ -41,6 +44,7 @@ export class ChannelComponent implements OnInit {
   @Output() userLeftChannel = new EventEmitter<boolean>();
   @Output() updatedMemberList = new EventEmitter<boolean>();
   @Output() openConversation = new EventEmitter<Conversation>();
+  @Output() emitThread = new EventEmitter<ChannelThread>();
 
   memberList: Array<User> = [];
   messageList: Array<ChannelMessage>
@@ -390,6 +394,34 @@ export class ChannelComponent implements OnInit {
         this.userLeftChannel.emit(true);
       }
     })
+  }
+
+
+  createOrOpenThread(message: ChannelMessage) {
+    console.log('open thread')
+    console.log(message)
+    
+    if (message.threadId !== '') {
+      console.log('Thread already exists');
+      this.database.loadSpecificChannelThread(message, this.channel)
+        .then(oldThread => {
+          console.log(oldThread);
+          this.openThread(oldThread);
+        })
+        .catch(error => console.error('Error loading thread:', error));
+    } else {
+      const thread: ChannelThread = this.database.createChannelThread(message, this.channel);
+      console.log(thread);
+      this.database.addChannelThread(thread, this.channel)
+      //this.database.updateMessageChannelThreadId(thread, this.channel)
+      this.openThread(thread);
+    }
+   
+  }
+
+
+  openThread(thread: ChannelThread){
+    this.emitThread.emit(thread)
   }
 
 }
