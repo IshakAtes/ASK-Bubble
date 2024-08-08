@@ -142,46 +142,46 @@ export class ThreadComponent implements AfterViewInit {
   }
 
 //   ngOnChanges() {
-//     // this.sendingUser = new User()
-//     // this.passiveUser = new User()
+// //     // this.sendingUser = new User()
+// //     // this.passiveUser = new User()
 
-    //defining passiveUser if specific = ConversationWithSelf
-    if (this.specific.createdBy == this.specific.recipientId) {
-      this.databaseService.loadUser(this.specific.createdBy)
-        .then(creatorUser => {
-          if (creatorUser.userId == this.user.userId) {
-            this.passiveUser = creatorUser;
-          }
+//     //defining passiveUser if specific = ConversationWithSelf
+//     if (this.specific.createdBy == this.specific.recipientId) {
+//       this.databaseService.loadUser(this.specific.createdBy)
+//         .then(creatorUser => {
+//           if (creatorUser.userId == this.user.userId) {
+//             this.passiveUser = creatorUser;
+//           }
 
-        })
-    }
+//         })
+//     }
 
-    this.databaseService.loadUser(this.specific.createdBy)
-      .then(creatorUser => {
-        if (creatorUser.userId == this.user.userId) {
-          this.sendingUser = creatorUser;
-          console.log('this is the creatorUser', this.sendingUser)
-        }
-        else {
-          this.passiveUser = creatorUser;
-        }
-      })
+//     this.databaseService.loadUser(this.specific.createdBy)
+//       .then(creatorUser => {
+//         if (creatorUser.userId == this.user.userId) {
+//           this.sendingUser = creatorUser;
+//           console.log('this is the creatorUser', this.sendingUser)
+//         }
+//         else {
+//           this.passiveUser = creatorUser;
+//         }
+//       })
 
-    this.databaseService.loadUser(this.specific.recipientId)
-      .then(recipientUser => {
-        if (recipientUser.userId == this.user.userId) {
-          this.sendingUser = recipientUser;
-          console.log('this is the recipientUser', this.passiveUser)
-        }
-        else {
-          this.passiveUser = recipientUser;
-        }
-      })
+//     this.databaseService.loadUser(this.specific.recipientId)
+//       .then(recipientUser => {
+//         if (recipientUser.userId == this.user.userId) {
+//           this.sendingUser = recipientUser;
+//           console.log('this is the recipientUser', this.passiveUser)
+//         }
+//         else {
+//           this.passiveUser = recipientUser;
+//         }
+//       })
 
-      console.log('active', this.sendingUser);
+//       console.log('active', this.sendingUser);
       
-      console.log('passiv',this.passiveUser);     
-}
+//       console.log('passiv',this.passiveUser);     
+// }
 
 async saveNewMessageReaction(event: any, convo: ConversationMessage, userId: string, reactionbar?: string) {
   let emoji: string
