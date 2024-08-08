@@ -207,8 +207,10 @@ export class DatabaseService {
    * @param fileUrl file url if the message is a file
    * @returns message object
    */
-  createThreadMessage(conversation: Conversation, content: string, createdBy: string, thread: Thread, fileUrl?: string): ConversationMessage {
+  createThreadMessage(conversation: Conversation, content: string, createdBy: string, thread: Thread, fileUrl?: string): ThreadMessage {
     let threadMessage = {} as ThreadMessage;
+    const randomNumber = Math.random();
+    threadMessage.threadMessageId = 'THR-MSG-' + randomNumber;
     threadMessage.conversationId = conversation.conversationId;
     threadMessage.content = content;
     threadMessage.createdAt = Timestamp.fromDate(new Date());
@@ -239,9 +241,9 @@ export class DatabaseService {
    */
   addThreadMessage(thread: Thread, threadMessage: ThreadMessage) {
     //add Message to creator
-    setDoc(doc(this.firestore, 'users/' + thread.threadNameCreator + '/threads/' + threadMessage.conversationId + '/threadmessages', threadMessage.messageId), threadMessage);
+    setDoc(doc(this.firestore, 'users/' + thread.createdBy + '/conversations', thread.conversationId + '/conversationmessages/' + thread.messageId + '/threads/', thread.threadId + '/threadmessages', threadMessage.threadMessageId), threadMessage);
     //add Message to recipient
-    setDoc(doc(this.firestore, 'users/' + thread.threadNameRecipient + '/threads/' + threadMessage.conversationId + '/threadmessages', threadMessage.messageId), threadMessage);
+    setDoc(doc(this.firestore, 'users/' + thread.recipientId + '/conversations', thread.conversationId + '/conversationmessages/' + thread.messageId + '/threads/', thread.threadId + '/threadmessages', threadMessage.threadMessageId), threadMessage);
   }
 
 
@@ -276,6 +278,38 @@ export class DatabaseService {
         reject(error);
       });
     });
+  }
+
+  /**
+   * loads all messages of a specific thread
+   * @param thread specific thread
+   * @returns list of thread messages
+   */
+  loadThreadMessages(thread: Thread): Promise<Array<ThreadMessage>> {
+    return new Promise<Array<ThreadMessage>>((resolve, reject) => {
+      const messageList = [] as Array<ThreadMessage>
+      onSnapshot(collection(this.firestore, 'users/' + thread.createdBy + '/conversations', thread.conversationId + '/conversationmessages/' + thread.messageId + '/threads/', thread.threadId + '/threadmessages'), (messages) => {
+        messages.forEach(message => {
+          const messageData = message.data();
+          const messageObject = {} as ThreadMessage;
+          messageObject.threadMessageId = messageData ['threadMessageId']
+          messageObject.conversationId = messageData['conversationId'];
+          messageObject.content = messageData['content'];
+          messageObject.createdAt = messageData['createdAt'];
+          messageObject.createdBy = messageData['createdBy'];
+          messageObject.fileUrl = messageData['fileUrl'];
+          messageObject.threadId = messageData['threadId'];
+          messageObject.messageId = messageData['messageId'];
+          messageList.push(messageObject);
+        })
+        resolve(messageList);
+      }, (error) => {
+        reject(error)
+      })
+    })
+    
+    
+    // users/Adxrm7CExizb76lVrknu/conversations/CONV-Adxrm7CExizb76lVrknu-0.9989840950446485/conversationmessages/CONV-MSG-0.22202702605541935/threads/THR-Adxrm7CExizb76lVrknu-0.4701011034717981
   }
 
 
@@ -574,6 +608,9 @@ hier mal checken ob ich einfach channelmessage returnen kann
             foundUser.avatarUrl = userData['avatarUrl']
             foundUser.userId = user.id
             foundUser.usedLastTwoEmojis = userData['usedLastTwoEmojis']
+            //added
+            foundUser.uid = userData['uid']
+            foundUser.logIn = userData['logIn']
           }
         })
         resolve(foundUser);
