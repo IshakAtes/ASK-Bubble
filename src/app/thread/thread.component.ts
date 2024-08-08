@@ -19,11 +19,12 @@ import { ThreadService } from '../shared-services/thread.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ThreadMessage } from '../../models/threadMessage';
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
 
 @Component({
   selector: 'app-thread',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PickerModule, ],
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss'
 })
@@ -57,7 +58,11 @@ export class ThreadComponent implements AfterViewInit {
   @ViewChild('myTextarea') myTextarea!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('lastDiv') lastDiv: ElementRef<HTMLDivElement>;
 
-  @ViewChild(ChatComponent) chatComp: ChatComponent;
+  @ViewChild('fileInput') fileInput!: ElementRef;
+
+  triggerFileInput(): void {
+    this.fileInput.nativeElement.click();
+  }
 
   constructor(
     public databaseService: DatabaseService,
@@ -128,16 +133,16 @@ export class ThreadComponent implements AfterViewInit {
   }
 
   closeThread(){
-    //this.emitCloseThread.emit('conversation')
+    this.emitCloseThread.emit('conversation')
 
 
-    console.log(this.currentThread)
-    console.log(this.specific)
-    console.log(this.user)
+    // console.log(this.currentThread)
+    // console.log(this.specific)
+    // console.log(this.user)
 
-    console.log('active', this.sendingUser);
+    // console.log('active', this.sendingUser);
       
-      console.log('passiv',this.passiveUser);
+    //   console.log('passiv',this.passiveUser);
   }
 
   ngOnChanges() {
@@ -179,28 +184,111 @@ export class ThreadComponent implements AfterViewInit {
 
       console.log('active', this.sendingUser);
       
-      console.log('passiv',this.passiveUser);
-      
+      console.log('passiv',this.passiveUser);     
 }
 
-  // thread$ = new BehaviorSubject<Thread | null>(null);
+async saveNewMessageReaction(event: any, convo: ConversationMessage, userId: string, reactionbar?: string) {
+  let emoji: string
+  if (reactionbar) {
+    emoji = reactionbar
+  } else {
+    emoji = event.emoji.native
+  }
 
-  // createOrOpenThread(message: ConversationMessage) {
-  //   if (message.threadId !== '') {
-  //     console.log('Thread already exists');
-  //     this.databaseService.loadSpecificThread(message, this.sendingUser)
-  //       .then(oldThread => {
-  //         console.log(oldThread);
-  //         this.thread$.next(oldThread); // Update the BehaviorSubject with the existing thread
-  //       })
-  //       .catch(error => console.error('Error loading thread:', error));
-  //   } else {
-  //     const thread: Thread = this.databaseService.createThread(message, this.sendingUser, this.passiveUser);
-  //     console.log(thread);
-  //     this.databaseService.addThread(thread)
-  //     this.databaseService.updateMessageThreadId(thread)
-  //     this.thread$.next(thread)
-  //   }
-  // }
+  const userAlreadyReacted = this.reactions.some(reaction =>
+    reaction.messageId === convo.messageId && reaction.emoji === emoji && reaction.userId === userId
+  );
+  if (userAlreadyReacted) {
+    console.log('User has already reacted with this emoji');
+    return;
+  }
+
+  this.reactions = [];
+  let reaction = this.databaseService.createConversationMessageReaction(emoji, userId, this.user.name, convo);
+  await this.databaseService.addConversationMessageReaction(this.specific, convo, reaction)
+  await this.loadAllMessageReactions();
+
+
+  this.chat.reactions = this.reactions
+
+  setTimeout(() => {
+    this.chat.groupReactions(this.list)
+  }, 500);
+
+
+  this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
+  this.mAndC.loadUsersOfUser();
+  this.mAndC.loadChannlesofUser()
+
+  this.mAndC.selectedMessageId = null;
+}
+
+loadAllMessageReactions() {
+  for (let i = 0; i < this.list.length; i++) {
+    const list = this.list[i];
+    this.databaseService.loadConversationMessagesReactions(this.user.userId, this.specific.conversationId, list.messageId).then(reaction => {
+      reaction.forEach(reaction => {
+        this.reactions.push(reaction)
+      });
+    })
+  } 
+}
+
+updateMessage(message: ConversationMessage) {
+  const updatedContent = this.edit.editContent;
+  this.edit.isEditing = false;
+  this.edit.selectedMessageIdEdit = null;
+  message.content = updatedContent;
+
+  this.databaseService.updateMessage(message, this.specific).then(() => {
+    console.log('Message updated successfully');
+  }).catch(error => {
+    console.error('Error updating message: ', error);
+  });
+
+  this.loadAllMessages();
+}
+
+loadAllMessages() {
+  this.databaseService.loadThreadMessages(this.currentThread).then(messageList => {
+    this.list = messageList;
+    this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+
+    console.log('list');
+    console.log(this.list);
+  });
+}
+
+saveNewMessage() {
+  this.list = [];
+  let newMessage: ThreadMessage = this.databaseService.createThreadMessage(this.specific, this.content, this.user.userId, this.currentThread, this.fileUpload.downloadURL)
+
+  this.databaseService.addThreadMessage(this.currentThread, newMessage)
+
+  this.content = '';
+
+  this.databaseService.loadThreadMessages(this.currentThread).then(messageList => {
+    this.list = messageList;
+    this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+  })
+
+  setTimeout(() => {
+    this.scrollToBottom();
+  }, 10);
+
+  this.fileUpload.downloadURL = '';
+}
+
+  // Scroll to the bottom of the chatarea 
+  scrollToBottom(): void {
+    try {
+      if (this.list.length > 0) {
+        this.lastDiv.nativeElement.scrollIntoView();
+      }
+
+    } catch (err) {
+      console.error('Scroll to bottom failed', err);
+    }
+  }
 
 }

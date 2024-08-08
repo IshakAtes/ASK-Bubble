@@ -52,7 +52,7 @@ export class MentionAndChannelDropdownService {
 
 
   onInput(event: any): void {
-    debugger
+    // debugger
     const input = event.target.value;
     this.content.next(input); // Aktualisiere den Inhalt hier
     const lastChar = input[input.length - 1];
