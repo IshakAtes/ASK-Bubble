@@ -15,7 +15,6 @@ import { MentionAndChannelDropdownService } from '../shared-services/chat-functi
 import { FileUploadService } from '../shared-services/chat-functionality/file-upload.service';
 import { EditMessageService } from '../shared-services/chat-functionality/edit-message.service';
 import { GeneralChatService } from '../shared-services/chat-functionality/general-chat.service';
-import { ThreadService } from '../shared-services/thread.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ThreadMessage } from '../../models/threadMessage';
@@ -28,7 +27,7 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss'
 })
-export class ThreadComponent implements AfterViewInit {
+export class ThreadComponent{
 
 
 
@@ -49,12 +48,14 @@ export class ThreadComponent implements AfterViewInit {
 
   mainMessage : ConversationMessage;
 
-  isChatDataLoaded: boolean = true;
+  isChatDataLoaded: boolean = false;
   userEmojis$: Observable<Array<string>>;
   fileUploadError: string | null = null;
   groupedReactions: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
 
   content = '';
+
+
   @ViewChild('myTextarea') myTextarea!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('lastDiv') lastDiv: ElementRef<HTMLDivElement>;
 
@@ -104,8 +105,19 @@ export class ThreadComponent implements AfterViewInit {
       }
     });
 
-    this.loadMainMessage()
+    this.loadMainMessage();
     
+    setTimeout(() => {
+      this.loadAllMessages();
+      console.log('list');
+      console.log(this.list);
+    }, 1000);
+
+    
+    
+    setTimeout(() => {
+      this.isChatDataLoaded = true
+    }, 2000);
 
   }
 
@@ -122,66 +134,62 @@ export class ThreadComponent implements AfterViewInit {
     }, 1000);
   }
 
-  ngAfterViewInit() {
-    /*
-    debugger
-    this.chatComp.thread$.subscribe(thread => {
-      this.currentThread = thread;
-      console.log('Current thread:', thread);
-    });
-    */
-  }
 
   closeThread(){
-    this.emitCloseThread.emit('conversation')
+    // this.emitCloseThread.emit('conversation')
 
 
     console.log(this.currentThread)
     console.log(this.specific)
     console.log(this.user)
+
+    console.log(this.fileUploadError);
+    console.log(this.fileUpload.fileUploading);
+    
+    
   }
 
-//   ngOnChanges() {
-// //     // this.sendingUser = new User()
-// //     // this.passiveUser = new User()
+  ngOnChanges() {
+//     // this.sendingUser = new User()
+//     // this.passiveUser = new User()
 
-//     //defining passiveUser if specific = ConversationWithSelf
-//     if (this.specific.createdBy == this.specific.recipientId) {
-//       this.databaseService.loadUser(this.specific.createdBy)
-//         .then(creatorUser => {
-//           if (creatorUser.userId == this.user.userId) {
-//             this.passiveUser = creatorUser;
-//           }
+    //defining passiveUser if specific = ConversationWithSelf
+    if (this.specific.createdBy == this.specific.recipientId) {
+      this.databaseService.loadUser(this.specific.createdBy)
+        .then(creatorUser => {
+          if (creatorUser.userId == this.user.userId) {
+            this.passiveUser = creatorUser;
+          }
 
-//         })
-//     }
+        })
+    }
 
-//     this.databaseService.loadUser(this.specific.createdBy)
-//       .then(creatorUser => {
-//         if (creatorUser.userId == this.user.userId) {
-//           this.sendingUser = creatorUser;
-//           console.log('this is the creatorUser', this.sendingUser)
-//         }
-//         else {
-//           this.passiveUser = creatorUser;
-//         }
-//       })
+    this.databaseService.loadUser(this.specific.createdBy)
+      .then(creatorUser => {
+        if (creatorUser.userId == this.user.userId) {
+          this.sendingUser = creatorUser;
+          console.log('this is the creatorUser', this.sendingUser)
+        }
+        else {
+          this.passiveUser = creatorUser;
+        }
+      })
 
-//     this.databaseService.loadUser(this.specific.recipientId)
-//       .then(recipientUser => {
-//         if (recipientUser.userId == this.user.userId) {
-//           this.sendingUser = recipientUser;
-//           console.log('this is the recipientUser', this.passiveUser)
-//         }
-//         else {
-//           this.passiveUser = recipientUser;
-//         }
-//       })
+    this.databaseService.loadUser(this.specific.recipientId)
+      .then(recipientUser => {
+        if (recipientUser.userId == this.user.userId) {
+          this.sendingUser = recipientUser;
+          console.log('this is the recipientUser', this.passiveUser)
+        }
+        else {
+          this.passiveUser = recipientUser;
+        }
+      })
 
-//       console.log('active', this.sendingUser);
+      console.log('active', this.sendingUser);
       
-//       console.log('passiv',this.passiveUser);     
-// }
+      console.log('passiv',this.passiveUser);     
+}
 
 async saveNewMessageReaction(event: any, convo: ConversationMessage, userId: string, reactionbar?: string) {
   let emoji: string

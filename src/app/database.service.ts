@@ -416,7 +416,7 @@ hier mal checken ob ich einfach channelmessage returnen kann
    * @param fileUrl file url if the message is a file
    * @returns message object
    */
-  createChannelThreadMessage(conversation: Conversation, content: string, createdBy: string, thread: Thread, fileUrl?: string): ConversationMessage {
+  createChannelThreadMessage(conversation: Conversation, content: string, createdBy: string, thread: Thread, fileUrl?: string): ThreadMessage {
     let threadMessage = {} as ThreadMessage;
     threadMessage.conversationId = conversation.conversationId;
     threadMessage.content = content;
@@ -1014,6 +1014,7 @@ hier mal checken ob ich einfach channelmessage returnen kann
                         fileUrl: messageData['fileUrl'],
                         threadId: messageData['threadId'],
                         messageId: messageData['messageId'],
+                        
                         toJSON: function (): { conversationId: string; content: string; createdAt: Timestamp; createdBy: string; fileUrl: string; threadId: string; messageId: string; } {
                           throw new Error('Function not implemented.');
                         }

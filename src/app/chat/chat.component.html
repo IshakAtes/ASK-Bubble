@@ -32,16 +32,16 @@
 
             @for (message of list; track $index) {
             @if ($index > 0) {
-                @if (time.formatDate(time.formatTimestamp(list[$index].createdAt)) !=
-                time.formatDate(time.formatTimestamp(list[$index-1].createdAt))) 
-                {
-                <div class="time-separator">
-                    <div class="date">
-                        <span>{{time.formatDate(time.formatTimestamp(list[$index].createdAt))}}</span>
-                    </div>
-                    <div class="line"></div>
+            @if (time.formatDate(time.formatTimestamp(list[$index].createdAt)) !=
+            time.formatDate(time.formatTimestamp(list[$index-1].createdAt)))
+            {
+            <div class="time-separator">
+                <div class="date">
+                    <span>{{time.formatDate(time.formatTimestamp(list[$index].createdAt))}}</span>
                 </div>
-                }
+                <div class="line"></div>
+            </div>
+            }
             }
 
             @if (message.createdBy == user.userId) {
@@ -78,7 +78,8 @@
                     <div class="own-message-header">
                         <span class="message-header-userName">{{user.name}}</span>
                         <span
-                            class="message-header-timestamp">{{time.formatTime(time.formatTimestamp(message.createdAt))}} Uhr</span>
+                            class="message-header-timestamp">{{time.formatTime(time.formatTimestamp(message.createdAt))}}
+                            Uhr</span>
                     </div>
 
                     <div class="own-massage-content-bubble">
@@ -114,7 +115,8 @@
 
                     <div class="reaction-bar">
                         @for (reaction of groupedReactions.get(message.messageId); track $index) {
-                        <div class="emoji-div" (mouseenter)="chat.showTooltip(reaction)" (mouseleave)="chat.hideTooltip()">
+                        <div class="emoji-div" (mouseenter)="chat.showTooltip(reaction)"
+                            (mouseleave)="chat.hideTooltip()">
                             {{ reaction.emoji }} {{ reaction.count }}
 
                             @if (chat.emojiInfoVisible && chat.hoveredReaction === reaction) {
@@ -128,10 +130,12 @@
                         }
                     </div>
 
+                    @if(message.threadId !== ''){
                     <div class="own-answer-bar">
                         <span class="answer-count">2 Antworten</span>
                         <span class="last-answer">Letzte Antwort 14:56</span>
                     </div>
+                    }
                 </div>
             </div>
 
@@ -144,10 +148,10 @@
             <div class="message">
                 <div class="reactionbar">
                     @if (passiveUser.usedLastTwoEmojis) {
-                        <!-- Änderung nach FR -->
+                    <!-- Änderung nach FR -->
                     <div (click)="saveNewMessageReaction($event, message, user.userId, user.usedLastTwoEmojis[0])"
                         class="reactionbar-emoji-div">{{passiveUser.usedLastTwoEmojis[0]}}</div>
-                        <!-- Änderung nach FR -->
+                    <!-- Änderung nach FR -->
                     <div (click)="saveNewMessageReaction($event, message, user.userId, user.usedLastTwoEmojis[1])"
                         class="reactionbar-emoji-div">{{passiveUser.usedLastTwoEmojis[1]}}</div>
                     }
@@ -182,7 +186,8 @@
                     <div class="message-header">
                         <span class="message-header-userName">{{passiveUser.name}}</span>
                         <span
-                            class="message-header-timestamp">{{time.formatTime(time.formatTimestamp(message.createdAt))}} Uhr</span>
+                            class="message-header-timestamp">{{time.formatTime(time.formatTimestamp(message.createdAt))}}
+                            Uhr</span>
                     </div>
 
                     <div class="massage-content-bubble">
@@ -191,7 +196,8 @@
 
                     <div class="reaction-bar">
                         @for (reaction of groupedReactions.get(message.messageId); track $index) {
-                        <div class="emoji-div" (mouseenter)="chat.showTooltip(reaction)" (mouseleave)="chat.hideTooltip()">
+                        <div class="emoji-div" (mouseenter)="chat.showTooltip(reaction)"
+                            (mouseleave)="chat.hideTooltip()">
                             {{ reaction.emoji }} {{ reaction.count }}
 
                             @if (chat.emojiInfoVisible && chat.hoveredReaction === reaction) {
@@ -205,10 +211,13 @@
                         }
                     </div>
 
+                    @if(message.threadId !== ''){
+
                     <div class="answer-bar">
                         <span class="answer-count">2 Antworten</span>
                         <span class="last-answer">Letzte Antwort 14:56</span>
                     </div>
+                    }
                 </div>
             </div>
             }
@@ -229,7 +238,8 @@
                 <!-- Emojis -->
                 @if (mAndC.showEmoticons) {
                 <div class="emoticon-div">
-                    <emoji-mart class="emoji-mart" (emojiSelect)="mAndC.addEmoji($event)" title="Choose your emoji"></emoji-mart>
+                    <emoji-mart class="emoji-mart" (emojiSelect)="mAndC.addEmoji($event)"
+                        title="Choose your emoji"></emoji-mart>
                 </div>
                 }
                 <!-- Erwähnungen -->
@@ -283,7 +293,7 @@
                 }
 
 
-                
+
                 @if(!fileUploadError && !fileUpload.fileUploading) {
 
                 @if(user.userId == sendingUser.userId){
@@ -316,19 +326,20 @@
                 <div class="message-actions">
 
                     <div class="action-left">
-                        <button class="action-button" (click)="triggerFileInput()"> <img src="../../assets/img/add_icon.png"
-                                alt=""></button>
-                        <input #fileInput type="file" style="display: none;" (change)="fileUpload.onFileSelected($event)">
+                        <button class="action-button" (click)="triggerFileInput()"> <img
+                                src="../../assets/img/add_icon.png" alt=""></button>
+                        <input #fileInput type="file" style="display: none;"
+                            (change)="fileUpload.onFileSelected($event)">
                         <div class="line"></div>
                         <button (click)="mAndC.toggleEmoticons()" class="action-button"><img
                                 src="../../assets/img/emoticon_icon.png" alt=""></button>
-                        <button (click)="mAndC.toggleMention()" class="action-button"><img src="../../assets/img/mention_icon.png"
-                                alt=""></button>
+                        <button (click)="mAndC.toggleMention()" class="action-button"><img
+                                src="../../assets/img/mention_icon.png" alt=""></button>
                     </div>
 
                     <div class="action-right">
-                        <button (click)="saveNewMessage()" class="action-button"> <img src="../../assets/img/send_icon.png"
-                                alt=""></button>
+                        <button (click)="saveNewMessage()" class="action-button"> <img
+                                src="../../assets/img/send_icon.png" alt=""></button>
                     </div>
                 </div>
 
@@ -336,7 +347,7 @@
                 }
 
             </div>
-        </div>  
+        </div>
     </div>
 
 </div>

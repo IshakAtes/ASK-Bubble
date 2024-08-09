@@ -18,7 +18,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { GeneralChatService } from '../shared-services/chat-functionality/general-chat.service';
 import { Thread } from '../../models/thread.class';
-import { ThreadService } from '../shared-services/thread.service';
 
 @Component({
   selector: 'app-chat',
@@ -67,7 +66,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
     public fileUpload: FileUploadService,
     public edit: EditMessageService,
     public chat: GeneralChatService,
-    public thread: ThreadService,
   ) {
 
     this.allChannels = mAndC.allChannels;
