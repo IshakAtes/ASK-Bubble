@@ -19,6 +19,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ThreadMessage } from '../../models/threadMessage';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { Timestamp } from 'firebase/firestore';
 
 @Component({
   selector: 'app-thread',
@@ -136,7 +137,7 @@ export class ThreadComponent{
 
 
   closeThread(){
-    // this.emitCloseThread.emit('conversation')
+     this.emitCloseThread.emit('conversation')
 
 
     console.log(this.currentThread)
@@ -191,7 +192,7 @@ export class ThreadComponent{
       console.log('passiv',this.passiveUser);     
 }
 
-async saveNewMessageReaction(event: any, convo: ConversationMessage, userId: string, reactionbar?: string) {
+async saveNewMessageReaction(event: any, convo: ThreadMessage, userId: string, reactionbar?: string) {
   let emoji: string
   if (reactionbar) {
     emoji = reactionbar
@@ -208,8 +209,8 @@ async saveNewMessageReaction(event: any, convo: ConversationMessage, userId: str
   }
 
   this.reactions = [];
-  let reaction = this.databaseService.createConversationMessageReaction(emoji, userId, this.user.name, convo);
-  await this.databaseService.addConversationMessageReaction(this.specific, convo, reaction)
+  let reaction = this.databaseService.createThreadMessageReaction(emoji, userId, this.user.name, convo);
+  await this.databaseService.addThreadMessageReaction(this.specific, convo, reaction)
   await this.loadAllMessageReactions();
 
 
@@ -238,13 +239,13 @@ loadAllMessageReactions() {
   } 
 }
 
-updateMessage(message: ConversationMessage) {
+updateMessage(message: ThreadMessage) {
   const updatedContent = this.edit.editContent;
   this.edit.isEditing = false;
   this.edit.selectedMessageIdEdit = null;
   message.content = updatedContent;
 
-  this.databaseService.updateMessage(message, this.specific).then(() => {
+  this.databaseService.updateThreadMessage(message, this.specific).then(() => {
     console.log('Message updated successfully');
   }).catch(error => {
     console.error('Error updating message: ', error);
@@ -263,18 +264,27 @@ loadAllMessages() {
   });
 }
 
-saveNewMessage() {
+async saveNewMessage() {
   this.list = [];
   let newMessage: ThreadMessage = this.databaseService.createThreadMessage(this.specific, this.content, this.user.userId, this.currentThread, this.fileUpload.downloadURL)
+  const timestemp: Timestamp = newMessage.createdAt;
+ 
+
 
   this.databaseService.addThreadMessage(this.currentThread, newMessage)
 
   this.content = '';
 
-  this.databaseService.loadThreadMessages(this.currentThread).then(messageList => {
+  await this.databaseService.loadThreadMessages(this.currentThread).then(messageList => {
     this.list = messageList;
     this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
   })
+
+  const count: number = this.list.length;
+
+  this.databaseService.updateMessageThreadCountAndThreadTime(newMessage, this.specific, count, timestemp)
+
+
 
   setTimeout(() => {
     this.scrollToBottom();

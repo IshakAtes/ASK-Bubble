@@ -5,6 +5,7 @@ import { Reaction } from '../../../models/reactions.class';
 import { ChannelMessage } from '../../../models/channelMessage.class';
 import { User } from '../../../models/user.class';
 import { DatabaseService } from '../../database.service';
+import { ThreadMessage } from '../../../models/threadMessage';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class GeneralChatService {
   reactions: Array<Reaction> = [];
   
 
- async groupReactions(messageList: Array<ConversationMessage> | Array<ChannelMessage>) {
+ async groupReactions(messageList: Array<ConversationMessage> | Array<ChannelMessage> | Array<ThreadMessage>) {
     const groupedReactions = new Map<string, Array<{ emoji: string, count: number, users: string[] }>>();
 
     messageList.forEach(message => {

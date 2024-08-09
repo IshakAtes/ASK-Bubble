@@ -151,7 +151,9 @@ export class DatabaseService {
     conversationMessage.createdBy = createdBy;
     conversationMessage.fileUrl = fileUrl ? fileUrl : '';
     conversationMessage.threadId = threadId ? threadId : '';
-    conversationMessage.messageId = 'CONV-MSG-' + randomNumber
+    conversationMessage.messageId = 'CONV-MSG-' + randomNumber;
+    conversationMessage.threadMessageCount = 0;
+    conversationMessage.lastThreadMessage = null;
     return conversationMessage
   }
 
@@ -281,6 +283,25 @@ export class DatabaseService {
   }
 
   /**
+   * create a reactionobject on a conversation
+   * @param emoji selected emoji
+   * @param userId id of the user who created the reaction
+   * @param userName name of the user who created the reaction
+   * @param conversationMessage conversationmessage object
+   * @returns reaction object
+   */
+  createThreadMessageReaction(emoji: string, userId: string, userName: string, threadMessage: ThreadMessage): Reaction {
+    let reaction = {} as Reaction;
+    const randomNumber = Math.random();
+    reaction.emoji = emoji;
+    reaction.userId = userId;
+    reaction.userName = userName;
+    reaction.messageId = threadMessage.messageId;
+    reaction.reactionId = 'THR-MSG-REACT-' + randomNumber;
+    return reaction
+  }
+
+  /**
    * loads all messages of a specific thread
    * @param thread specific thread
    * @returns list of thread messages
@@ -307,10 +328,7 @@ export class DatabaseService {
         reject(error)
       })
     })
-    
-    
-    // users/Adxrm7CExizb76lVrknu/conversations/CONV-Adxrm7CExizb76lVrknu-0.9989840950446485/conversationmessages/CONV-MSG-0.22202702605541935/threads/THR-Adxrm7CExizb76lVrknu-0.4701011034717981
-  }
+ }
 
 
 
@@ -426,6 +444,24 @@ hier mal checken ob ich einfach channelmessage returnen kann
     threadMessage.messageId = thread.messageId
     threadMessage.fileUrl = fileUrl ? fileUrl : '';
     return threadMessage
+  }
+
+//Check if working
+
+
+   /**
+   * adds a reaction for a conversation message to the database
+   * @param conversation conversation object
+   * @param conversationMessage message object
+   * @param reaction reaction object
+   */
+   addThreadMessageReaction(conversation: Conversation, threadMessage: ThreadMessage, reaction: Reaction) {
+    //add reaction to creator message
+    setDoc(doc(this.firestore, 'users/' + conversation.createdBy + '/conversations/'
+      + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId + '/threads/' + threadMessage.threadId + '/threadmessages/' + threadMessage.threadMessageId + '/reactions', reaction.reactionId), reaction);
+    //add reaction to recipient message
+    setDoc(doc(this.firestore, 'users/' + conversation.recipientId + '/conversations/'
+      + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId + '/threads/' + threadMessage.threadId + '/threadmessages/' + threadMessage.threadMessageId + '/reactions', reaction.reactionId), reaction);
   }
 
 
@@ -1014,8 +1050,9 @@ hier mal checken ob ich einfach channelmessage returnen kann
                         fileUrl: messageData['fileUrl'],
                         threadId: messageData['threadId'],
                         messageId: messageData['messageId'],
-                        
-                        toJSON: function (): { conversationId: string; content: string; createdAt: Timestamp; createdBy: string; fileUrl: string; threadId: string; messageId: string; } {
+                        threadMessageCount: messageData['threadMessageCount'],
+                        lastThreadMessage: messageData['lastThreadMessage'],
+                        toJSON: function (): { conversationId: string; content: string; createdAt: Timestamp; createdBy: string; fileUrl: string; threadId: string; messageId: string; threadMessageCount:number; lastThreadMessage:Timestamp} {
                           throw new Error('Function not implemented.');
                         }
                       };
@@ -1059,6 +1096,8 @@ hier mal checken ob ich einfach channelmessage returnen kann
           messageObject.fileUrl = messageData['fileUrl'];
           messageObject.threadId = messageData['threadId'];
           messageObject.messageId = messageData['messageId'];
+          messageObject.threadMessageCount = messageData['threadMessageCount'];
+          messageObject.lastThreadMessage = messageData['lastThreadMessage'];
           messageList.push(messageObject);
         })
         resolve(messageList);
@@ -1249,6 +1288,66 @@ hier mal checken ob ich einfach channelmessage returnen kann
       updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/' + message.channelId + '/channelmessages/'), message.messageId), messageObject.toJSON())
     })
   }
+
+
+  // check if working
+
+    /**
+   * updates message object from a thread
+   * @param threadMessage message object
+   * @param conversation conversation object
+   * @returns error or confirmation message
+   */
+    updateThreadMessage(threadMessage: ThreadMessage, conversation: Conversation): Promise<void> {
+      const creatorMessageRef = doc(
+        this.firestore, 'users/' + conversation.createdBy + '/conversations/'
+      + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId +
+       '/threads/' + threadMessage.threadId + '/threadmessages/' + threadMessage.threadMessageId
+      );
+  
+      const recipientMessageRef = doc(
+        this.firestore, 'users/' + conversation.recipientId + '/conversations/'
+      + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId +
+       '/threads/' + threadMessage.threadId + '/threadmessages/' + threadMessage.threadMessageId
+      );
+      return Promise.all([
+        updateDoc(creatorMessageRef, { content: threadMessage.content }),
+        updateDoc(recipientMessageRef, { content: threadMessage.content })
+      ]).then(() => {
+        console.log('Message updated successfully for both users');
+      }).catch(error => {
+        console.error('Error updating message: ', error);
+      });
+    }
+
+       /**
+   * updates threadcount and thread time of a message object
+   * @param threadMessage message object
+   * @param conversation conversation object
+   * @returns error or confirmation message
+   */
+       updateMessageThreadCountAndThreadTime(threadMessage: ThreadMessage, conversation: Conversation, count: number, timestamp: Timestamp, ): Promise<void> {
+        const creatorMessageRef = doc(
+          this.firestore, 'users/' + conversation.createdBy + '/conversations/'
+        + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId 
+        );
+    
+        const recipientMessageRef = doc(
+          this.firestore, 'users/' + conversation.recipientId + '/conversations/'
+        + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId 
+        );
+        return Promise.all([
+          updateDoc(creatorMessageRef, { threadMessageCount: count }),
+          updateDoc(recipientMessageRef, { threadMessageCount: count }),
+
+          updateDoc(creatorMessageRef, { lastThreadMessage: timestamp }),
+          updateDoc(recipientMessageRef, { lastThreadMessage: timestamp }),
+        ]).then(() => {
+          console.log('Message updated successfully for both users');
+        }).catch(error => {
+          console.error('Error updating message: ', error);
+        });
+      }
 
 
   /*delete functions */
