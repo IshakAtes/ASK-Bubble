@@ -36,6 +36,7 @@
                      <app-channel
                          (changeReloadStatus)="setReloadToFalse($event)"
                          (userLeftChannel)="userLeftChannel()"
+                         (emitThread)="openChannelThread($event)"
                          
                          [activeUser]="userservice.activeUserObject"
                          [channelBig]="channelBig"
@@ -47,8 +48,11 @@
                     <app-thread
                     [user]="userservice.activeUserObject"
                     [currentThread]="currentThread"
+                    [currentChannelThread]="currentChannelThread"
+                    [channelThread]="channelThread"
                     [specific]="currentConversation"
-                    (emitCloseThread)="closeThread($event)"
+                    
+                    (emitCloseThread)="closeThread()"
                     > 
 
                     </app-thread>
@@ -106,6 +110,7 @@
                     <app-channel
                         (changeReloadStatus)="setReloadToFalse($event)"
                         (userLeftChannel)="userLeftChannel()"
+                        (emitThread)="openChannelThread($event)"
                         
                         [activeUser]="userservice.activeUserObject"
                         [channelBig]="channelBig"
@@ -117,8 +122,10 @@
                     <app-thread
                         [user]="userservice.activeUserObject"
                         [currentThread]="currentThread"
+                        [currentChannelThread]="currentChannelThread"
+                        [channelThread]="channelThread"
                         [specific]="currentConversation"
-                        (emitCloseThread)="closeThread($event)"
+                        (emitCloseThread)="closeThread()"
                     >
                        
                     </app-thread>
@@ -174,6 +181,7 @@
                     (changeReloadStatus)="setReloadToFalse($event)"
                     (userLeftChannel)="userLeftChannel()"
                     (openConversation)="changeConversation($event)"
+                    (emitThread)="openChannelThread($event)"
                     
                     
                     [activeUser]="userservice.activeUserObject"
@@ -194,8 +202,10 @@
                 <app-thread
                 [user]="userservice.activeUserObject"
                 [currentThread]="currentThread"
+                [currentChannelThread]="currentChannelThread"
+                [channelThread]="channelThread"
                 [specific]="currentConversation"
-                (emitCloseThread)="closeThread($event)"
+                (emitCloseThread)="closeThread()"
                 >
 
                 </app-thread>

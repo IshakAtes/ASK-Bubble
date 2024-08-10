@@ -29,6 +29,7 @@ export class MainComponent{
   channelBig: boolean = false;
   reloadChannel: boolean = false;
   thread: boolean = false;
+  channelThread: boolean = false;
   
   
   currentConversation: Conversation;
@@ -146,40 +147,48 @@ export class MainComponent{
     this.currentThread = thread;
     if(this.userservice.deviceWidth < 1200){
       this.thread = true;
+      this.channelThread = false;
       this.conversation = false;
       this.channel = false;
-      /*
-      if(location = 'conversation'){
-        this.conversation = true;
-        this.channel = false;
-      }
-      else{
-        this.conversation = false;
-        this.channel = true;
-      }
-      */
     }
     else{
       this.thread = true;
+      this.channelThread = false;
     }
   }
 
   /*TODO main component html config input variables channelThread and normal Thread */
   openChannelThread(thread: ChannelThread){
     this.currentChannelThread = thread;
+    if(this.userservice.deviceWidth < 1200){
+      this.thread = true;
+      this.channelThread = true;
+      this.conversation = false;
+      this.channel = false;
+    }
+    else{
+      this.thread = true;
+      this.channelThread = true;
+    }
   }
 
   
-  closeThread(location: string){
-    if(location == 'conversation'){
+  /**
+   * closes the open thread and returns the user to the
+   * previous channel or conversation
+   */
+  closeThread(){
+    if(this.channelThread){
       this.thread = false;
-      this.channel = false;
-      this.conversation = true;
+      this.channelThread = false;
+      this.channel = true;
+      this.conversation = false;
     }
     else{
       this.thread = false;
-      this.channel = true;
-      this.conversation = false;
+      this.channelThread = false;
+      this.channel = false;
+      this.conversation = true;
     }
   }
 

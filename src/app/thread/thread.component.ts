@@ -20,6 +20,9 @@ import { FormsModule } from '@angular/forms';
 import { ThreadMessage } from '../../models/threadMessage';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { Timestamp } from 'firebase/firestore';
+import { ChannelThread } from '../../models/channelThread.class';
+import { ChannelMessage } from '../../models/channelMessage.class';
+import { ChannelThreadMessage } from '../../models/channelThreadMessage';
 
 @Component({
   selector: 'app-thread',
@@ -34,8 +37,20 @@ export class ThreadComponent{
 
   //input Data from main component
   @Input() currentThread: Thread;
+
   @Input() specific: Conversation;
   @Input() user: User
+
+
+  // TEST für Channel implementation
+  @Input() currentChannelThread: ChannelThread;
+  @Input() channelThread: boolean;
+
+  mainChannelMessage : ChannelMessage;
+  channelList: Array<ChannelThreadMessage> = [];
+
+  //TEST ENDE
+
 
   sendingUser: User;
   passiveUser: User;
@@ -77,6 +92,21 @@ export class ThreadComponent{
     public chat: GeneralChatService,
   ) {
 
+
+  //  setTimeout(() => {
+  //   if(this.channelThread){
+  //     console.log('opened by channel')
+  //     console.log(this.channelThread)
+  //     console.log(this.currentChannelThread)
+  //   }
+  //   else{
+  //     console.log('opened by conversation')
+  //     console.log(this.channelThread)
+  //     console.log(this.currentThread)
+  //   }
+  //  }, 1000);
+
+
     this.allChannels = mAndC.allChannels;
     this.allUsers = mAndC.allUsers;
 
@@ -106,91 +136,91 @@ export class ThreadComponent{
       }
     });
 
-    this.loadMainMessage();
-    
-    setTimeout(() => {
-      this.loadAllMessages();
-      console.log('list');
-      console.log(this.list);
-    }, 1000);
 
-    
-    
+
+    if(this.channelThread){   
+      //Logik, falls Thread durch Channel geöffnet wird
+      this.loadMainMessage();
+      setTimeout(() => {
+        this.loadAllMessages();
+        console.log('list');
+        console.log(this.list);
+      }, 1000);
+
+      //TODO - functions für ChannelThread anpassen + Database functions schreiben und HTML checken:
+      //loadAllMessages
+      //savenewmessagereaction (convo parameter mit oder versehen?)
+      //loadallmessagereactions
+      //updatemessage
+      //savenewmessage
+      //ng on changes checken was relevant für channel ist
+    }
+    else{
+      //Logik, falls Thread durch Conversation geöffnet wird
+      this.loadMainMessage();
+      setTimeout(() => {
+        this.loadAllMessages();
+        console.log('list');
+        console.log(this.list);
+      }, 1000);
+    }
+
+
     setTimeout(() => {
       this.isChatDataLoaded = true
     }, 2000);
 
   }
 
+
+
+
   loadMainMessage() {
-    setTimeout(() => {
-      this.databaseService.loadSpecificConversationMessage(this.user.userId, this.currentThread.conversationId, this.currentThread.messageId)
-        .then(message => {
-          this.mainMessage = message;
-          console.log(this.mainMessage); // Log nach dem Laden der Nachricht
-        })
-        .catch(error => {
-          console.error('Error loading message:', error);
-        });
-    }, 1000);
-  }
-
-
-  closeThread(){
-     this.emitCloseThread.emit('conversation')
-
-
-    console.log(this.currentThread)
-    console.log(this.specific)
-    console.log(this.user)
-
-    console.log(this.fileUploadError);
-    console.log(this.fileUpload.fileUploading);
-    
-    
-  }
-
-  ngOnChanges() {
-//     // this.sendingUser = new User()
-//     // this.passiveUser = new User()
-
-    //defining passiveUser if specific = ConversationWithSelf
-    if (this.specific.createdBy == this.specific.recipientId) {
-      this.databaseService.loadUser(this.specific.createdBy)
-        .then(creatorUser => {
-          if (creatorUser.userId == this.user.userId) {
-            this.passiveUser = creatorUser;
-          }
-
-        })
+    if(this.channelThread){
+      //Logik, falls Thread durch Channel geöffnet wird
+      setTimeout(() => {
+        this.databaseService.loadSpecificChannelMessage(this.user.userId, this.currentChannelThread.channelId, this.currentChannelThread.messageId)
+          .then(message => {
+            this.mainChannelMessage = message;
+            console.log(this.mainChannelMessage); // Log nach dem Laden der Nachricht
+          })
+          .catch(error => {
+            console.error('Error loading message:', error);
+          });
+      }, 1000);
+    }
+    else{
+      //Logik, falls Thread durch Conversation geöffnet wird
+      setTimeout(() => {
+        this.databaseService.loadSpecificConversationMessage(this.user.userId, this.currentThread.conversationId, this.currentThread.messageId)
+          .then(message => {
+            this.mainMessage = message;
+            console.log(this.mainMessage); // Log nach dem Laden der Nachricht
+          })
+          .catch(error => {
+            console.error('Error loading message:', error);
+          });
+      }, 1000);
     }
 
-    this.databaseService.loadUser(this.specific.createdBy)
-      .then(creatorUser => {
-        if (creatorUser.userId == this.user.userId) {
-          this.sendingUser = creatorUser;
-          console.log('this is the creatorUser', this.sendingUser)
-        }
-        else {
-          this.passiveUser = creatorUser;
-        }
-      })
+  }
 
-    this.databaseService.loadUser(this.specific.recipientId)
-      .then(recipientUser => {
-        if (recipientUser.userId == this.user.userId) {
-          this.sendingUser = recipientUser;
-          console.log('this is the recipientUser', this.passiveUser)
-        }
-        else {
-          this.passiveUser = recipientUser;
-        }
-      })
 
-      console.log('active', this.sendingUser);
-      
-      console.log('passiv',this.passiveUser);     
-}
+  loadAllMessages() {
+    this.databaseService.loadThreadMessages(this.currentThread).then(messageList => {
+      this.list = messageList;
+      this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+  
+      console.log('list');
+      console.log(this.list);
+    });
+  }
+
+
+
+
+
+
 
 async saveNewMessageReaction(event: any, convo: ThreadMessage, userId: string, reactionbar?: string) {
   let emoji: string
@@ -228,6 +258,8 @@ async saveNewMessageReaction(event: any, convo: ThreadMessage, userId: string, r
   this.mAndC.selectedMessageId = null;
 }
 
+
+
 loadAllMessageReactions() {
   for (let i = 0; i < this.list.length; i++) {
     const list = this.list[i];
@@ -254,20 +286,16 @@ updateMessage(message: ThreadMessage) {
   this.loadAllMessages();
 }
 
-loadAllMessages() {
-  this.databaseService.loadThreadMessages(this.currentThread).then(messageList => {
-    this.list = messageList;
-    this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
 
-    console.log('list');
-    console.log(this.list);
-  });
-}
+
+
+
+
 
 async saveNewMessage() {
   this.list = [];
   let newMessage: ThreadMessage = this.databaseService.createThreadMessage(this.specific, this.content, this.user.userId, this.currentThread, this.fileUpload.downloadURL)
-  const timestemp: Timestamp = newMessage.createdAt;
+  const timestamp: Timestamp = newMessage.createdAt;
  
 
 
@@ -282,7 +310,7 @@ async saveNewMessage() {
 
   const count: number = this.list.length;
 
-  this.databaseService.updateMessageThreadCountAndThreadTime(newMessage, this.specific, count, timestemp)
+  this.databaseService.updateMessageThreadCountAndThreadTime(newMessage, this.specific, count, timestamp)
 
 
 
@@ -292,6 +320,53 @@ async saveNewMessage() {
 
   this.fileUpload.downloadURL = '';
 }
+
+
+
+ngOnChanges() {
+  //     // this.sendingUser = new User()
+  //     // this.passiveUser = new User()
+  
+      //defining passiveUser if specific = ConversationWithSelf
+      if (this.specific.createdBy == this.specific.recipientId) {
+        this.databaseService.loadUser(this.specific.createdBy)
+          .then(creatorUser => {
+            if (creatorUser.userId == this.user.userId) {
+              this.passiveUser = creatorUser;
+            }
+  
+          })
+      }
+  
+      this.databaseService.loadUser(this.specific.createdBy)
+        .then(creatorUser => {
+          if (creatorUser.userId == this.user.userId) {
+            this.sendingUser = creatorUser;
+            console.log('this is the creatorUser', this.sendingUser)
+          }
+          else {
+            this.passiveUser = creatorUser;
+          }
+        })
+  
+      this.databaseService.loadUser(this.specific.recipientId)
+        .then(recipientUser => {
+          if (recipientUser.userId == this.user.userId) {
+            this.sendingUser = recipientUser;
+            console.log('this is the recipientUser', this.passiveUser)
+          }
+          else {
+            this.passiveUser = recipientUser;
+          }
+        })
+  
+        console.log('active', this.sendingUser);
+        
+        console.log('passiv',this.passiveUser);     
+  }
+
+
+
 
   // Scroll to the bottom of the chatarea 
   scrollToBottom(): void {
@@ -303,6 +378,15 @@ async saveNewMessage() {
     } catch (err) {
       console.error('Scroll to bottom failed', err);
     }
+  }
+
+  closeThread(){
+    this.emitCloseThread.emit()
+    console.log(this.currentThread)
+    console.log(this.specific)
+    console.log(this.user)
+    console.log(this.fileUploadError);
+    console.log(this.fileUpload.fileUploading);
   }
 
 }

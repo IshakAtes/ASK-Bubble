@@ -331,8 +331,8 @@ export class DatabaseService {
  }
 
 
+  /*START CHANNEL THREAD FUNCTIONS */
 
-/*Channel Thread Functions */
 
   /**
    * creates a thread object
@@ -400,10 +400,40 @@ export class DatabaseService {
     }
 
 
-  /*DONE */
+/* TODO Channel Thread Functions */
 
 
-    /**
+    /** NEEDED FOR LOADALLMESSAGES AND SAVENEWMESSAGE IN THREAD COMPONENT
+   * loads all messages of a specific thread
+   * @param thread specific thread
+   * @returns list of thread messages
+   */
+    loadChannelThreadMessages(thread: Thread): Promise<Array<ThreadMessage>> {
+      return new Promise<Array<ThreadMessage>>((resolve, reject) => {
+        const messageList = [] as Array<ThreadMessage>
+        onSnapshot(collection(this.firestore, 'users/' + thread.createdBy + '/conversations', thread.conversationId + '/conversationmessages/' + thread.messageId + '/threads/', thread.threadId + '/threadmessages'), (messages) => {
+          messages.forEach(message => {
+            const messageData = message.data();
+            const messageObject = {} as ThreadMessage;
+            messageObject.threadMessageId = messageData ['threadMessageId']
+            messageObject.conversationId = messageData['conversationId'];
+            messageObject.content = messageData['content'];
+            messageObject.createdAt = messageData['createdAt'];
+            messageObject.createdBy = messageData['createdBy'];
+            messageObject.fileUrl = messageData['fileUrl'];
+            messageObject.threadId = messageData['threadId'];
+            messageObject.messageId = messageData['messageId'];
+            messageList.push(messageObject);
+          })
+          resolve(messageList);
+        }, (error) => {
+          reject(error)
+        })
+      })
+   }
+
+
+    /** NEEDED FOR UPDATEMESSAGE IN THREAD.COMPONENT
    * updates the messageid of the thread object
    * @param thread threadobject
    * @returns error or confirmation message
@@ -417,15 +447,24 @@ export class DatabaseService {
   }
 
 
+   /** NEEDED FOR SAVENEWMESSAGEREACTION
+   * adds a reaction for a conversation message to the database
+   * @param conversation conversation object
+   * @param conversationMessage message object
+   * @param reaction reaction object
+   */
+   addChannelThreadMessageReaction(conversation: Conversation, threadMessage: ThreadMessage, reaction: Reaction) {
+    //add reaction to creator message
+    setDoc(doc(this.firestore, 'users/' + conversation.createdBy + '/conversations/'
+      + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId + '/threads/' + threadMessage.threadId + '/threadmessages/' + threadMessage.threadMessageId + '/reactions', reaction.reactionId), reaction);
+    //add reaction to recipient message
+    setDoc(doc(this.firestore, 'users/' + conversation.recipientId + '/conversations/'
+      + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId + '/threads/' + threadMessage.threadId + '/threadmessages/' + threadMessage.threadMessageId + '/reactions', reaction.reactionId), reaction);
+  }
 
 
-
-/*TODO createchannelthreadmessage gibt conversationmessage zurück
-hier mal checken ob ich einfach channelmessage returnen kann
-*/
-
-
-  /**
+  /** NEEDED FOR SAVENEWMESSAGEREACTION AND SAVENEWMESSAGE
+   * 
    * creates a message object for a thread
    * @param conversation conversationobject
    * @param content content of the message
@@ -446,7 +485,83 @@ hier mal checken ob ich einfach channelmessage returnen kann
     return threadMessage
   }
 
-//Check if working
+
+  /** NEEDED FOR SAVENEWMESSAGEREACTION
+   * 
+   * adds the thread message to the database
+   * @param thread threadobject
+   * @param threadMessage messageobject
+   */
+  addChannelThreadMessage(thread: Thread, threadMessage: ThreadMessage) {
+    //add Message to creator
+    setDoc(doc(this.firestore, 'users/' + thread.threadNameCreator + '/threads/' + threadMessage.conversationId + '/threadmessages', threadMessage.messageId), threadMessage);
+    //add Message to recipient
+    setDoc(doc(this.firestore, 'users/' + thread.threadNameRecipient + '/threads/' + threadMessage.conversationId + '/threadmessages', threadMessage.messageId), threadMessage);
+  }
+
+
+
+    /** NEEDED FOR SAVENEWMESSAGE IN THREAD COMPONENT
+   * updates threadcount and thread time of a message object
+   * @param threadMessage message object
+   * @param conversation conversation object
+   * @returns error or confirmation message
+   */
+         updateMessageChannelThreadCountAndThreadTime(threadMessage: ThreadMessage, conversation: Conversation, count: number, timestamp: Timestamp, ): Promise<void> {
+          const creatorMessageRef = doc(
+            this.firestore, 'users/' + conversation.createdBy + '/conversations/'
+          + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId 
+          );
+      
+          const recipientMessageRef = doc(
+            this.firestore, 'users/' + conversation.recipientId + '/conversations/'
+          + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId 
+          );
+          return Promise.all([
+            updateDoc(creatorMessageRef, { threadMessageCount: count }),
+            updateDoc(recipientMessageRef, { threadMessageCount: count }),
+  
+            updateDoc(creatorMessageRef, { lastThreadMessage: timestamp }),
+            updateDoc(recipientMessageRef, { lastThreadMessage: timestamp }),
+          ]).then(() => {
+            console.log('Message updated successfully for both users');
+          }).catch(error => {
+            console.error('Error updating message: ', error);
+          });
+        }
+
+
+
+    /** NEEDED FOR UPDATEMESSAGE IN THREAD COMPONENT
+   * updates message object from a thread
+   * @param threadMessage message object
+   * @param conversation conversation object
+   * @returns error or confirmation message
+   */
+    updateChannelThreadMessage(threadMessage: ThreadMessage, conversation: Conversation): Promise<void> {
+      const creatorMessageRef = doc(
+        this.firestore, 'users/' + conversation.createdBy + '/conversations/'
+      + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId +
+       '/threads/' + threadMessage.threadId + '/threadmessages/' + threadMessage.threadMessageId
+      );
+  
+      const recipientMessageRef = doc(
+        this.firestore, 'users/' + conversation.recipientId + '/conversations/'
+      + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId +
+       '/threads/' + threadMessage.threadId + '/threadmessages/' + threadMessage.threadMessageId
+      );
+      return Promise.all([
+        updateDoc(creatorMessageRef, { content: threadMessage.content }),
+        updateDoc(recipientMessageRef, { content: threadMessage.content })
+      ]).then(() => {
+        console.log('Message updated successfully for both users');
+      }).catch(error => {
+        console.error('Error updating message: ', error);
+      });
+    }
+
+  /*END CHANNEL THREAD FUNCTIONS */
+
 
 
    /**
@@ -465,25 +580,6 @@ hier mal checken ob ich einfach channelmessage returnen kann
   }
 
 
-
-
-
-  /**
-   * adds the thread message to the database
-   * @param thread threadobject
-   * @param threadMessage messageobject
-   */
-  addChannelThreadMessage(thread: Thread, threadMessage: ThreadMessage) {
-    //add Message to creator
-    setDoc(doc(this.firestore, 'users/' + thread.threadNameCreator + '/threads/' + threadMessage.conversationId + '/threadmessages', threadMessage.messageId), threadMessage);
-    //add Message to recipient
-    setDoc(doc(this.firestore, 'users/' + thread.threadNameRecipient + '/threads/' + threadMessage.conversationId + '/threadmessages', threadMessage.messageId), threadMessage);
-  }
-
-
-
-
-  /*END CHANNEL THREAD FUNCTIONS */
 
   /*create database entry functions */
 
