@@ -50,47 +50,46 @@ export class MentionAndChannelDropdownService {
   showDropdown: boolean = false;
   filteredItems: Array<User | Channel> = [];
 
-
   onInput(event: any): void {
-    // debugger
     const input = event.target.value;
-    this.content.next(input); // Aktualisiere den Inhalt hier
-    const lastChar = input[input.length - 1];
-    console.log(lastChar);
-
-
-    // Überprüfen, ob das letzte Zeichen ein Trigger-Zeichen ist
-    if (lastChar === '#' || lastChar === '@') {
-      console.log(lastChar);
-
-      this.showDropdown = true;
-      this.filterItems(input, lastChar);
-    } else if (this.showDropdown) {
-      // Überprüfen, ob der Eingabetext ein Trigger-Zeichen enthält
-      const hashIndex = input.lastIndexOf('#');
-      const atIndex = input.lastIndexOf('@');
-      console.log('#', hashIndex);
-      console.log('@', atIndex);
-
-      debugger
-      if (hashIndex === -1 && atIndex === -1) {
-        this.showDropdown = false;
-      } 
-      else if (lastChar === ' ') {
-        this.showDropdown = false;
-      } 
-      else {
-        const triggerChar = hashIndex > atIndex ? '#' : '@';
-        this.filterItems(input, triggerChar);
+    const cursorPosition = event.target.selectionStart;
+  
+    if (cursorPosition > 0) {
+      const lastTypedChar = input[cursorPosition - 1];
+  
+      // Überprüfen, ob das zuletzt getippte Zeichen ein Trigger-Zeichen ist
+      if (lastTypedChar === '#' || lastTypedChar === '@') {
+        console.log(lastTypedChar);
+  
+        this.showDropdown = true;
+        this.filterItems(input, lastTypedChar, cursorPosition);
+      } else if (this.showDropdown) {
+        // Überprüfen, ob der Eingabetext ein Trigger-Zeichen enthält
+        const hashIndex = input.lastIndexOf('#', cursorPosition - 1);
+        const atIndex = input.lastIndexOf('@', cursorPosition - 1);
+        console.log('#', hashIndex);
+        console.log('@', atIndex);
+  
+        if (hashIndex === -1 && atIndex === -1) {
+          this.showDropdown = false;
+        } 
+        else if (lastTypedChar === ' ' || cursorPosition === 0) {
+          this.showDropdown = false;
+        } 
+        else {
+          const triggerChar = hashIndex > atIndex ? '#' : '@';
+          this.filterItems(input, triggerChar, cursorPosition);
+        }
       }
+    } else {
+      this.showDropdown = false; // Schließe das Dropdown, wenn kein Inhalt mehr vorhanden ist
     }
   }
-
-
-  filterItems(input: string, triggerChar: string): void {
-    const queryArray = input.split(triggerChar);
+  
+  filterItems(input: string, triggerChar: string, cursorPosition: number): void {
+    const queryArray = input.slice(0, cursorPosition).split(triggerChar);
     const query = queryArray.length > 1 ? queryArray.pop()?.trim().toLowerCase() : '';
-
+  
     if (query !== undefined) {
       if (triggerChar === '#') {
         this.filteredItems = this.allChannels.filter(channel => channel.name.toLowerCase().includes(query));
@@ -99,24 +98,34 @@ export class MentionAndChannelDropdownService {
       }
     }
   }
-
-
-  selectItem(item: User | Channel): void {
+  
+  
+  selectItem(item: User | Channel, textarea: HTMLTextAreaElement): void {
     const triggerChar = item.hasOwnProperty('channelId') ? '#' : '@';
-    const currentContent = this.content.getValue();
-    const inputParts = currentContent.split(triggerChar);
-
-    // Verwende 'lastPart' nur, wenn es definiert ist
-    const lastPart = inputParts.length > 0 ? inputParts.pop() : '';
-
+    const currentContent = textarea.value; // Den aktuellen Wert direkt aus der Textarea holen
+    const cursorPosition = textarea.selectionStart;
+  
+    // Finde das letzte Trigger-Zeichen vor der aktuellen Cursor-Position
+    const lastTriggerIndex = currentContent.lastIndexOf(triggerChar, cursorPosition - 1);
+    
+    // Teile den Inhalt in drei Teile auf: vor dem Trigger, das Trigger-Segment und nach dem Trigger
+    const beforeTrigger = currentContent.slice(0, lastTriggerIndex);
+    const afterTrigger = currentContent.slice(cursorPosition);
+  
     // Füge das ausgewählte Item in den bestehenden Text ein
-    const newContent = inputParts.join(triggerChar) + `${triggerChar}${item.name} ` + (lastPart ? lastPart.split(' ').slice(1).join(' ') : '');
-
+    const newContent = beforeTrigger + `${triggerChar}${item.name} ` + afterTrigger;
+  
+    // Aktualisiere das Textarea-Element und den BehaviorSubject-Wert
+    textarea.value = newContent;
     this.content.next(newContent);
     this.showDropdown = false;
-    this.triggerFocus();
+  
+    // Setze den Cursor ans Ende des neu eingefügten Texts
+    const newCursorPosition = beforeTrigger.length + triggerChar.length + item.name.length + 1;
+    textarea.setSelectionRange(newCursorPosition, newCursorPosition);
+    textarea.focus();
   }
-
+  
   triggerFocus() {
     this.focusTrigger.next();
   }

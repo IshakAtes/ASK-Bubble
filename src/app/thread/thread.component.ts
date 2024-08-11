@@ -1,12 +1,11 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
-import { ChatComponent } from '../chat/chat.component';
 import { Thread } from '../../models/thread.class';
 import { User } from '../../models/user.class';
 import { Conversation } from '../../models/conversation.class';
 import { ConversationMessage } from '../../models/conversationMessage.class';
 import { Channel } from '../../models/channel.class';
 import { Reaction } from '../../models/reactions.class';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { DatabaseService } from '../database.service';
 import { UserService } from '../user.service';
 import { LastTwoEmojisService } from '../shared-services/chat-functionality/last-two-emojis.service';
