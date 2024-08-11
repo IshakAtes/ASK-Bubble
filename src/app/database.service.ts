@@ -497,7 +497,7 @@ export class DatabaseService {
    */
     addChannelThreadMessage(thread: ChannelThread, threadMessage: ChannelThreadMessage, channel: Channel) {
       channel.membersId.forEach(userid => {
-        setDoc(doc(this.firestore, 'users/' + userid + '/channels/' + thread.channelId + '/channelmessages/' + thread.messageId + '/threads/', thread.threadId + '/threadmessages'), threadMessage);
+        setDoc(doc(this.firestore, 'users/' + userid + '/channels/' + thread.channelId + '/channelmessages/' + thread.messageId + '/threads/', thread.threadId + '/threadmessages', threadMessage.threadMessageId), threadMessage);
       });
     }
 
