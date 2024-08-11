@@ -14,6 +14,7 @@ import { timestamp } from 'rxjs';
 import { Thread } from '../models/thread.class';
 import { ThreadMessage } from '../models/threadMessage';
 import { ChannelThread } from '../models/channelThread.class';
+import { ChannelThreadMessage } from '../models/channelThreadMessage';
 
 @Injectable({
   providedIn: 'root'
@@ -393,30 +394,41 @@ export class DatabaseService {
    * @param thread threadobject
    */
     addChannelThread(thread: ChannelThread, channel: Channel) {
-      
       channel.membersId.forEach(userId => {
         setDoc(doc(this.firestore, 'users/' + userId + '/channels/' + thread.channelId + '/channelmessages/' + thread.messageId + '/threads/', thread.threadId), thread);
       });
     }
 
 
-/* TODO Channel Thread Functions */
+  /** NEEDED FOR UPDATEMESSAGE IN THREAD.COMPONENT
+   * updates the messageid of the thread object
+   * @param thread threadobject
+   * @returns error or confirmation message
+   */
+    updateMessageChannelThreadId(thread: ChannelThread, channel: Channel) {
+      let channelThreadObject = new ChannelThread(thread);
+      channel.membersId.forEach(user => {
+        debugger;
+        updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/' + thread.channelId + '/channelmessages/' + thread.messageId + '/threads/'), thread.threadId), channelThreadObject.toJSON());
+      })
+    }
 
 
-    /** NEEDED FOR LOADALLMESSAGES AND SAVENEWMESSAGE IN THREAD COMPONENT
+
+   /** NEEDED FOR LOADALLMESSAGES AND SAVENEWMESSAGE IN THREAD COMPONENT
    * loads all messages of a specific thread
    * @param thread specific thread
    * @returns list of thread messages
    */
-    loadChannelThreadMessages(thread: Thread): Promise<Array<ThreadMessage>> {
-      return new Promise<Array<ThreadMessage>>((resolve, reject) => {
-        const messageList = [] as Array<ThreadMessage>
-        onSnapshot(collection(this.firestore, 'users/' + thread.createdBy + '/conversations', thread.conversationId + '/conversationmessages/' + thread.messageId + '/threads/', thread.threadId + '/threadmessages'), (messages) => {
+    loadChannelThreadMessages(thread: ChannelThread): Promise<Array<ChannelThreadMessage>> {
+      return new Promise<Array<ChannelThreadMessage>>((resolve, reject) => {
+        const messageList = [] as Array<ChannelThreadMessage>
+        onSnapshot(collection(this.firestore, 'users/' + thread.createdBy + '/channels/' + thread.channelId + '/channelmessages/' + thread.messageId + '/threads/', thread.threadId + '/threadmessages'), (messages) => {
           messages.forEach(message => {
             const messageData = message.data();
-            const messageObject = {} as ThreadMessage;
+            const messageObject = {} as ChannelThreadMessage;
             messageObject.threadMessageId = messageData ['threadMessageId']
-            messageObject.conversationId = messageData['conversationId'];
+            messageObject.channelId = messageData['channelId'];
             messageObject.content = messageData['content'];
             messageObject.createdAt = messageData['createdAt'];
             messageObject.createdBy = messageData['createdBy'];
@@ -433,49 +445,21 @@ export class DatabaseService {
    }
 
 
-    /** NEEDED FOR UPDATEMESSAGE IN THREAD.COMPONENT
-   * updates the messageid of the thread object
-   * @param thread threadobject
-   * @returns error or confirmation message
-   */
-    updateMessageChannelThreadId(thread: ChannelThread, channel: Channel) {
-    let channelThreadObject = new ChannelThread(thread);
-    channel.membersId.forEach(user => {
-      debugger;
-      updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/' + thread.channelId + '/channelmessages/' + thread.messageId + '/threads/'), thread.threadId), channelThreadObject.toJSON());
-    })
-  }
-
-
-   /** NEEDED FOR SAVENEWMESSAGEREACTION
-   * adds a reaction for a conversation message to the database
-   * @param conversation conversation object
-   * @param conversationMessage message object
-   * @param reaction reaction object
-   */
-   addChannelThreadMessageReaction(conversation: Conversation, threadMessage: ThreadMessage, reaction: Reaction) {
-    //add reaction to creator message
-    setDoc(doc(this.firestore, 'users/' + conversation.createdBy + '/conversations/'
-      + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId + '/threads/' + threadMessage.threadId + '/threadmessages/' + threadMessage.threadMessageId + '/reactions', reaction.reactionId), reaction);
-    //add reaction to recipient message
-    setDoc(doc(this.firestore, 'users/' + conversation.recipientId + '/conversations/'
-      + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId + '/threads/' + threadMessage.threadId + '/threadmessages/' + threadMessage.threadMessageId + '/reactions', reaction.reactionId), reaction);
-  }
-
-
   /** NEEDED FOR SAVENEWMESSAGEREACTION AND SAVENEWMESSAGE
    * 
    * creates a message object for a thread
-   * @param conversation conversationobject
+   * @param channel channelobject
    * @param content content of the message
    * @param createdBy user who created the message
    * @param thread thread of the message
    * @param fileUrl file url if the message is a file
    * @returns message object
    */
-  createChannelThreadMessage(conversation: Conversation, content: string, createdBy: string, thread: Thread, fileUrl?: string): ThreadMessage {
-    let threadMessage = {} as ThreadMessage;
-    threadMessage.conversationId = conversation.conversationId;
+  createChannelThreadMessage(channel: Channel, content: string, createdBy: string, thread: ChannelThread, fileUrl?: string): ChannelThreadMessage {
+    let threadMessage = {} as ChannelThreadMessage;
+    const randomNumber = Math.random();
+    threadMessage.threadMessageId = 'THR-MSG-' + randomNumber;
+    threadMessage.channelId = channel.channelId;
     threadMessage.content = content;
     threadMessage.createdAt = Timestamp.fromDate(new Date());
     threadMessage.createdBy = createdBy;
@@ -486,81 +470,133 @@ export class DatabaseService {
   }
 
 
-  /** NEEDED FOR SAVENEWMESSAGEREACTION
-   * 
+    /**
+   * create a reactionobject on a conversation
+   * @param emoji selected emoji
+   * @param userId id of the user who created the reaction
+   * @param userName name of the user who created the reaction
+   * @param conversationMessage conversationmessage object
+   * @returns reaction object
+   */
+    createChannelThreadMessageReaction(emoji: string, userId: string, userName: string, threadMessage: ChannelThreadMessage): Reaction {
+      let reaction = {} as Reaction;
+      const randomNumber = Math.random();
+      reaction.emoji = emoji;
+      reaction.userId = userId;
+      reaction.userName = userName;
+      reaction.messageId = threadMessage.messageId;
+      reaction.reactionId = 'THR-MSG-REACT-' + randomNumber;
+      return reaction
+    }
+
+
+   /** NEEDED FOR SAVENEWMESSAGEREACTION
    * adds the thread message to the database
    * @param thread threadobject
    * @param threadMessage messageobject
    */
-  addChannelThreadMessage(thread: Thread, threadMessage: ThreadMessage) {
-    //add Message to creator
-    setDoc(doc(this.firestore, 'users/' + thread.threadNameCreator + '/threads/' + threadMessage.conversationId + '/threadmessages', threadMessage.messageId), threadMessage);
-    //add Message to recipient
-    setDoc(doc(this.firestore, 'users/' + thread.threadNameRecipient + '/threads/' + threadMessage.conversationId + '/threadmessages', threadMessage.messageId), threadMessage);
-  }
-
-
-
-    /** NEEDED FOR SAVENEWMESSAGE IN THREAD COMPONENT
-   * updates threadcount and thread time of a message object
-   * @param threadMessage message object
-   * @param conversation conversation object
-   * @returns error or confirmation message
-   */
-         updateMessageChannelThreadCountAndThreadTime(threadMessage: ThreadMessage, conversation: Conversation, count: number, timestamp: Timestamp, ): Promise<void> {
-          const creatorMessageRef = doc(
-            this.firestore, 'users/' + conversation.createdBy + '/conversations/'
-          + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId 
-          );
-      
-          const recipientMessageRef = doc(
-            this.firestore, 'users/' + conversation.recipientId + '/conversations/'
-          + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId 
-          );
-          return Promise.all([
-            updateDoc(creatorMessageRef, { threadMessageCount: count }),
-            updateDoc(recipientMessageRef, { threadMessageCount: count }),
-  
-            updateDoc(creatorMessageRef, { lastThreadMessage: timestamp }),
-            updateDoc(recipientMessageRef, { lastThreadMessage: timestamp }),
-          ]).then(() => {
-            console.log('Message updated successfully for both users');
-          }).catch(error => {
-            console.error('Error updating message: ', error);
-          });
-        }
-
-
-
-    /** NEEDED FOR UPDATEMESSAGE IN THREAD COMPONENT
-   * updates message object from a thread
-   * @param threadMessage message object
-   * @param conversation conversation object
-   * @returns error or confirmation message
-   */
-    updateChannelThreadMessage(threadMessage: ThreadMessage, conversation: Conversation): Promise<void> {
-      const creatorMessageRef = doc(
-        this.firestore, 'users/' + conversation.createdBy + '/conversations/'
-      + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId +
-       '/threads/' + threadMessage.threadId + '/threadmessages/' + threadMessage.threadMessageId
-      );
-  
-      const recipientMessageRef = doc(
-        this.firestore, 'users/' + conversation.recipientId + '/conversations/'
-      + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId +
-       '/threads/' + threadMessage.threadId + '/threadmessages/' + threadMessage.threadMessageId
-      );
-      return Promise.all([
-        updateDoc(creatorMessageRef, { content: threadMessage.content }),
-        updateDoc(recipientMessageRef, { content: threadMessage.content })
-      ]).then(() => {
-        console.log('Message updated successfully for both users');
-      }).catch(error => {
-        console.error('Error updating message: ', error);
+    addChannelThreadMessage(thread: ChannelThread, threadMessage: ChannelThreadMessage, channel: Channel) {
+      channel.membersId.forEach(userid => {
+        setDoc(doc(this.firestore, 'users/' + userid + '/channels/' + thread.channelId + '/channelmessages/' + thread.messageId + '/threads/', thread.threadId + '/threadmessages'), threadMessage);
       });
     }
 
+
+  /** NEEDED FOR SAVENEWMESSAGEREACTION
+   * adds a reaction for a conversation message to the database
+   * @param channel channel object
+   * @param threadMessage message object
+   * @param reaction reaction object
+   */
+   addChannelThreadMessageReaction(channel: Channel, threadMessage: ChannelThreadMessage, reaction: Reaction) {
+    channel.membersId.forEach(userid => {
+      setDoc(doc(this.firestore, 'users/' + userid + '/channels/' + threadMessage.channelId + '/channelmessages/' + threadMessage.messageId + '/threads/', threadMessage.threadId + '/threadmessages/' + threadMessage.threadMessageId + '/reactions'), reaction);
+    });
+  }
+
+
+  /** NEEDED FOR SAVENEWMESSAGE IN THREAD COMPONENT
+   * updates threadcount and thread time of a message object
+   * @param threadMessage message object
+   * @param channel channel object
+   * @param count thread message count
+   * @param timestamp timestamp of thread message
+   * @returns error or confirmation message
+   */
+      updateMessageChannelThreadCountAndThreadTime(threadMessage: ChannelThreadMessage, channel: Channel, count: number, timestamp: Timestamp, ) {
+      
+        channel.membersId.forEach(userid => {
+          let docRef = doc(this.firestore, 'users/' + userid + '/channels/' + threadMessage.channelId + '/channelmessages/' + threadMessage.messageId);
+          updateDoc(docRef, {threadMessageCount: count, lastThreadMessage: timestamp });
+        });
+        
+        
+        // const creatorMessageRef = doc(
+        //   this.firestore, 'users/' + conversation.createdBy + '/conversations/' + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId );
+  
+        // const recipientMessageRef = doc(
+        //   this.firestore, 'users/' + conversation.recipientId + '/conversations/'
+        // + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId 
+        // );
+        // return Promise.all([
+        //   updateDoc(creatorMessageRef, { threadMessageCount: count }),
+        //   updateDoc(recipientMessageRef, { threadMessageCount: count }),
+    
+        //   updateDoc(creatorMessageRef, { lastThreadMessage: timestamp }),
+        //   updateDoc(recipientMessageRef, { lastThreadMessage: timestamp }),
+        // ]).then(() => {
+        //   console.log('Message updated successfully for both users');
+        // }).catch(error => {
+        //   console.error('Error updating message: ', error);
+        // });
+      }
+
+      
+  /** NEEDED FOR UPDATEMESSAGE IN THREAD COMPONENT
+   * updates message object from a thread
+   * @param threadMessage message object
+   * @param channel channel object
+   * @returns error or confirmation message
+   */
+      updateChannelThreadMessage(threadMessage: ChannelThreadMessage, channel: Channel) {
+      
+        channel.membersId.forEach(userid => {
+          let docRef = doc(this.firestore, 'users/' + userid + '/channels/' + threadMessage.channelId + '/channelmessages/' + threadMessage.messageId + '/threads/' + threadMessage.threadId + '/threadmessages/' + threadMessage.threadMessageId);
+          updateDoc(docRef, {content: threadMessage.content});
+        });
+        
+        
+        // const creatorMessageRef = doc(
+        //   this.firestore, 'users/' + conversation.createdBy + '/conversations/'+ conversation.conversationId + '/conversationmessages/' + threadMessage.messageId +'/threads/' + threadMessage.threadId + '/threadmessages/' + threadMessage.threadMessageId);
+    
+        // const recipientMessageRef = doc(
+        //   this.firestore, 'users/' + conversation.recipientId + '/conversations/'
+        // + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId +
+        //  '/threads/' + threadMessage.threadId + '/threadmessages/' + threadMessage.threadMessageId
+        // );
+        // return Promise.all([
+        //   updateDoc(creatorMessageRef, { content: threadMessage.content }),
+        //   updateDoc(recipientMessageRef, { content: threadMessage.content })
+        // ]).then(() => {
+        //   console.log('Message updated successfully for both users');
+        // }).catch(error => {
+        //   console.error('Error updating message: ', error);
+        // });
+      }
+
+
+/* TODO Channel Thread Functions */
+
+
+
+
+
+
+
+
   /*END CHANNEL THREAD FUNCTIONS */
+
+
 
 
 
@@ -905,7 +941,9 @@ export class DatabaseService {
                         fileUrl: messageData['fileUrl'],
                         threadId: messageData['threadId'],
                         messageId: messageData['messageId'],
-                        toJSON: function (): { channelId: string; content: string; createdAt: Timestamp; createdBy: string; fileUrl: string; threadId: string; messageId: string; } {
+                        threadMessageCount: messageData['threadMessageCount'],
+                        lastThreadMessage: messageData['lastThreadMessage'],
+                        toJSON: function (): { channelId: string; content: string; createdAt: Timestamp; createdBy: string; fileUrl: string; threadId: string; messageId: string; threadMessageCount: number;  lastThreadMessage: Timestamp} {
                           throw new Error('Function not implemented.');
                         }
                       };

@@ -1,6 +1,7 @@
 import { Timestamp } from "firebase/firestore";
 
 export class ChannelThreadMessage {
+    threadMessageId: string;
     channelId: string;
     content: string;
     createdAt: Timestamp;
@@ -11,6 +12,7 @@ export class ChannelThreadMessage {
 
 
     constructor(obj?: any){
+        this.threadMessageId = obj ? obj.threadMessageId : '';
         this.channelId = obj ? obj.channelId : '';
         this.content = obj ? obj.content : '';
         this.createdAt = obj ? obj.createdAt : '';
@@ -22,6 +24,7 @@ export class ChannelThreadMessage {
 
     public toJSON(){
         return {
+            threadMessageId: this.threadMessageId,
             channelId: this.channelId,
             content: this.content,
             createdAt: this.createdAt,

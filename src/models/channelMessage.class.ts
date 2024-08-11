@@ -8,6 +8,8 @@ export class ChannelMessage {
     fileUrl: string;
     threadId: string;
     messageId: string;
+    threadMessageCount: number;
+    lastThreadMessage: Timestamp | null;
 
 
     constructor(obj?: any){
@@ -18,7 +20,8 @@ export class ChannelMessage {
         this.fileUrl = obj ? obj.fileUrl : '';
         this.threadId = obj ? obj.threadId : '';
         this.messageId = obj ? obj.messageId : '';
-        
+        this.threadMessageCount = obj ? obj.threadMessageCount : '';
+        this.lastThreadMessage = obj ? obj.lastThreadMessage : '';
     }
 
     public toJSON(){
@@ -30,6 +33,8 @@ export class ChannelMessage {
             fileUrl: this.fileUrl,
             threadId: this.threadId,
             messageId: this.messageId,
+            threadMessageCount: this.threadMessageCount,
+            lastThreadMessage: this.lastThreadMessage,
         }
     }
 
