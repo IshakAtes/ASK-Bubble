@@ -315,7 +315,7 @@
                         <span>Kein passendes Ergebnis</span>
                         }@else {
                         @for (item of mAndC.filteredItems; track $index) {
-                        <div class="dropdown-item" (click)="mAndC.selectItem(item)">
+                        <div class="dropdown-item" (click)="mAndC.selectItem(item, myTextarea.nativeElement)">
                             {{ item.name }}
                         </div>
                         }
@@ -721,7 +721,7 @@
                         <span>Kein passendes Ergebnis</span>
                         }@else {
                         @for (item of mAndC.filteredItems; track $index) {
-                        <div class="dropdown-item" (click)="mAndC.selectItem(item)">
+                        <div class="dropdown-item" (click)="mAndC.selectItem(item, myTextarea.nativeElement)">
                             {{ item.name }}
                         </div>
                         }
