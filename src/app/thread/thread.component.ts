@@ -46,9 +46,10 @@ export class ThreadComponent{
   @Input() channelThread: boolean;
   @Input() currentChannel: Channel
 
+
   mainChannelMessage : ChannelMessage;
   channelThreadMessageList: Array<ChannelThreadMessage> = [];
-
+  channelMemberList: Array<User>
   //TEST ENDE
 
 
@@ -137,33 +138,39 @@ export class ThreadComponent{
     });
 
 
+   
+    setTimeout(() => {
+     
+      if(this.channelThread){   
+        //Logik, falls Thread durch Channel geöffnet wird
+        this.loadMainMessage();
+        setTimeout(() => {
+          this.loadAllMessages();
+          console.log('list');
+          console.log(this.list);
+        }, 1000);
+  
+        //TODO - functions für ChannelThread anpassen + HTML checken:
+  
+      }
+      else{
+        //Logik, falls Thread durch Conversation geöffnet wird
+        this.loadMainMessage();
+        setTimeout(() => {
+          this.loadAllMessages();
+          console.log('list');
+          console.log(this.list);
+        }, 1000);
+      }
+    }, 1000);
 
-    if(this.channelThread){   
-      //Logik, falls Thread durch Channel geöffnet wird
-      this.loadMainMessage();
-      setTimeout(() => {
-        this.loadAllMessages();
-        console.log('list');
-        console.log(this.list);
-      }, 1000);
-
-      //TODO - functions für ChannelThread anpassen + HTML checken:
-
-    }
-    else{
-      //Logik, falls Thread durch Conversation geöffnet wird
-      this.loadMainMessage();
-      setTimeout(() => {
-        this.loadAllMessages();
-        console.log('list');
-        console.log(this.list);
-      }, 1000);
-    }
+    
 
 
     setTimeout(() => {
       this.isChatDataLoaded = true
-    }, 2000);
+      console.log('loaded members: ', this.channelMemberList)
+    }, 3000);
 
   }
 
@@ -177,12 +184,16 @@ export class ThreadComponent{
         this.databaseService.loadSpecificChannelMessage(this.user.userId, this.currentChannelThread.channelId, this.currentChannelThread.messageId)
           .then(message => {
             this.mainChannelMessage = message;
-            console.log(this.mainChannelMessage); // Log nach dem Laden der Nachricht
+            console.log('mainchannelMessage', this.mainChannelMessage); // Log nach dem Laden der Nachricht
           })
           .catch(error => {
             console.error('Error loading message:', error);
           });
       }, 1000);
+      setTimeout(() => {
+        this.loadMemberList()
+      }, 2000);
+
     }
     else{
       //Logik, falls Thread durch Conversation geöffnet wird
@@ -327,6 +338,8 @@ async saveNewMessage() {
 
 
 ngOnChanges() {
+  if(!this.channelThread){
+  
   //     // this.sendingUser = new User()
   //     // this.passiveUser = new User()
   
@@ -365,7 +378,9 @@ ngOnChanges() {
   
         console.log('active', this.sendingUser);
         
-        console.log('passiv',this.passiveUser);     
+        console.log('passiv',this.passiveUser);  
+  }
+   
   }
 
 
@@ -396,6 +411,24 @@ ngOnChanges() {
 
 
 //NEW
+
+
+  /**
+   * loads the memberlist of the channel
+   * @returns  promise 
+   */
+  loadMemberList(): Promise<void>{
+    const memberPromises = this.currentChannel.membersId.map(member => {
+      this.databaseService.loadUser(member)
+        .then(user => {
+          this.channelMemberList.push(user);
+        })
+    });
+    return Promise.all(memberPromises).then(() => {
+    });
+  }
+
+
 async saveNewChannelThreadMessage() {
   this.channelThreadMessageList = [];
   let newMessage: ChannelThreadMessage = this.databaseService.createChannelThreadMessage(this.currentChannel, this.content, this.user.userId, this.currentChannelThread, this.fileUpload.downloadURL)

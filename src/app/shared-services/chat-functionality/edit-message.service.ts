@@ -3,6 +3,7 @@ import { ConversationMessage } from '../../../models/conversationMessage.class';
 import { DatabaseService } from '../../database.service';
 import { ChannelMessage } from '../../../models/channelMessage.class';
 import { ThreadMessage } from '../../../models/threadMessage';
+import { ChannelThreadMessage } from '../../../models/channelThreadMessage';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class EditMessageService {
      }
    }
  
-   editMessage(message: ConversationMessage | ChannelMessage | ThreadMessage) {
+   editMessage(message: ConversationMessage | ChannelMessage | ThreadMessage | ChannelThreadMessage) {
      this.toggleMessageEdit(message.messageId)
      this.isEditing = true;
      this.editContent = message.content;
