@@ -151,10 +151,12 @@ export class MainComponent{
       this.channelThread = false;
       this.conversation = false;
       this.channel = false;
+      this.reloadChat = true;
     }
     else{
       this.thread = true;
       this.channelThread = false;
+      this.reloadChat = true;
     }
   }
 
@@ -166,10 +168,12 @@ export class MainComponent{
       this.channelThread = true;
       this.conversation = false;
       this.channel = false;
+      this.reloadChannel = true;
     }
     else{
       this.thread = true;
       this.channelThread = true;
+      this.reloadChannel = true;
     }
   }
 

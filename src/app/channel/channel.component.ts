@@ -40,7 +40,6 @@ export class ChannelComponent implements OnInit {
   @Input() activeUser: User;
 
   @Output() changeReloadStatus = new EventEmitter<boolean>();
-  @Output() reloadWorkspaceStatus = new EventEmitter<boolean>();
   @Output() userLeftChannel = new EventEmitter<boolean>();
   @Output() updatedMemberList = new EventEmitter<boolean>();
   @Output() openConversation = new EventEmitter<Conversation>();
@@ -146,7 +145,7 @@ export class ChannelComponent implements OnInit {
     if (this.reload) {
       this.memberList = [];
       this.messageList = [];
-      //this.isdataLoaded = false;
+      this.isdataLoaded = false;
       setTimeout(() => {
         Promise.all([
           this.loadMemberList(),
@@ -169,7 +168,7 @@ export class ChannelComponent implements OnInit {
     setTimeout(() => {
       this.chatService.groupReactions(this.messageList)
       .then(() => {
-        this.changeReload(); //Important to be able to load another channel
+        //this.changeReload(); //Important to be able to load another channel
         this.isdataLoaded = true;
       })
     }, 1000);
@@ -196,12 +195,6 @@ export class ChannelComponent implements OnInit {
   }
 
 
-  /**
-   * sends the info to reload the workspace to main component
-   */
-  reloadWorkspace() {
-    this.reloadWorkspaceStatus.emit(true);
-  }
 
 
   /**
@@ -239,6 +232,8 @@ export class ChannelComponent implements OnInit {
     return this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId)
       .then(messages => {
         this.messageList = messages;
+        this.messageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+
       })
   }
 
@@ -401,10 +396,7 @@ export class ChannelComponent implements OnInit {
 
 
   createOrOpenThread(message: ChannelMessage) {
-    console.log('open thread')
-    console.log(message)
-
-    if (message.threadId !== '') {
+    if(message.threadId !== '') {
       console.log('Thread already exists');
       this.database.loadSpecificChannelThread(message, this.channel)
         .then(oldThread => {
@@ -418,8 +410,11 @@ export class ChannelComponent implements OnInit {
       console.log(thread);
       this.database.addChannelThread(thread, this.channel)
       this.database.updateMessageChannelThreadId(thread, this.channel)
+      this.changeReload();
       this.openThread(thread);
+      
     }
+  
 
   }
 

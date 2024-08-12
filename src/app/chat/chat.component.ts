@@ -135,7 +135,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
 
   /*wird ggf nicht gebraucht */
   initializeChat(){
-    debugger;
+
     this.loadAllMessageReactions()
     setTimeout(() => {
       this.chat.groupReactions(this.list).then(() => {
@@ -156,7 +156,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
   }
 
   ngOnChanges() {
-    //debugger;
     this.isChatDataLoaded = false;
     this.sendingUser = new User()
     this.passiveUser = new User()
@@ -210,9 +209,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
 
   initializeChatAfterChange(){
     this.loadAllMessageReactions();
-    
     setTimeout(() => {
-      debugger;
       this.chat.groupReactions(this.list)
         .then(() => {
           this.isChatDataLoaded = true;

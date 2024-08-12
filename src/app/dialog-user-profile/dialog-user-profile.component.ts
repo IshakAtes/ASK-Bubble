@@ -94,7 +94,6 @@ export class DialogUserProfileComponent {
    * @param user userobject
    */
   openNewConversation(user: User){
-    debugger
     let newConversation = this.database.createConversation(this.activeUser.userId, user.userId);
     this.database.addConversation(newConversation);
     this.userService.loadActiveUserConversations();

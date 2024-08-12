@@ -130,6 +130,14 @@ export class ThreadComponent{
    
     setTimeout(() => {
      
+      this.loadMainMessage();
+      setTimeout(() => {
+        this.loadAllMessages();
+        console.log('list');
+        console.log(this.list);
+      }, 1000);  
+      
+      /*
       if(this.channelThread){   
         //Logik, falls Thread durch Channel geöffnet wird
         this.loadMainMessage();
@@ -148,6 +156,7 @@ export class ThreadComponent{
           console.log(this.list);
         }, 1000);
       }
+        */
     }, 1000);
 
     
@@ -180,8 +189,6 @@ export class ThreadComponent{
             console.error('Error loading message:', error);
           });
       }, 1000);
-
-
     }
     else{
       //Logik, falls Thread durch Conversation geöffnet wird
@@ -370,6 +377,21 @@ ngOnChanges() {
         console.log('active', this.sendingUser);
         
         console.log('passiv',this.passiveUser);  
+
+        this.loadMainMessage();
+        setTimeout(() => {
+          this.loadAllMessages();
+          console.log('list');
+          console.log(this.list);
+        }, 1000);
+  }
+  else{
+    this.loadMainMessage();
+    setTimeout(() => {
+      this.loadAllMessages();
+      console.log('list');
+      console.log(this.list);
+    }, 1000);
   }
    
   }
