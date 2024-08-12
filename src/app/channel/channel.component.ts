@@ -132,10 +132,9 @@ export class ChannelComponent implements OnInit {
   initializeChannel() {
     this.loadAllMessageReactions()
     setTimeout(() => {
-    this.chatService.groupReactions(this.messageList).then(() => {
+      this.chatService.groupReactions(this.messageList).then(() => {
       this.isdataLoaded = true;
     })
-
     }, 1000);
   }
 
@@ -144,7 +143,6 @@ export class ChannelComponent implements OnInit {
    * reloads the data after a change happend in the channel
    */
   ngOnChanges() {
-    //debugger;
     if (this.reload) {
       this.memberList = [];
       this.messageList = [];
@@ -167,7 +165,6 @@ export class ChannelComponent implements OnInit {
    * in the channel
    */
   initializeChannelAfterChange() {
-
     this.loadAllMessageReactions()
     setTimeout(() => {
       this.chatService.groupReactions(this.messageList)

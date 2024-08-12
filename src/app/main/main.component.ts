@@ -206,6 +206,10 @@ export class MainComponent{
     this.reloadChannel = reload
   }
 
+  /**
+   * triggers the ngonchange functions (empties chat messagelist to avoid duplicated messages in chat window )
+   * @param reload 
+   */
   setChatReloadToTrue(reload: boolean){
     this.reloadChat = reload
   }

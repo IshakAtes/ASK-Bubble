@@ -54,9 +54,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
   @ViewChild('lastDiv') lastDiv: ElementRef<HTMLDivElement>;
 
   @Output() emitThread = new EventEmitter<Thread>();
-  // userId =  'Adxrm7CExizb76lVrknu';
-  //userName = 'Simon Weirauch';
-  //conversationId = 'CONV-HTMknmA28FP56EIqrtZo-0.4380479343879251';
 
 
   constructor(public databaseService: DatabaseService,
@@ -71,35 +68,83 @@ export class ChatComponent implements AfterViewInit, OnInit {
 
     this.allChannels = mAndC.allChannels;
     this.allUsers = mAndC.allUsers;
-
     this.reactions = chat.reactions;
-    this.chat.groupedReactions$.subscribe(groupedReactions => {
-      this.groupedReactions = groupedReactions;
-      console.log('Updated groupedReactions:', this.groupedReactions);
-    });
-
+    this.chat.groupedReactions$.subscribe(groupedReactions => {this.groupedReactions = groupedReactions;});
     const newContent = '';
     this.mAndC.content.next(newContent);
-    this.mAndC.content.subscribe(newContent => {
-      this.content = newContent;
-    });
-
-    this.fileUpload.fileUploadError$.subscribe(error => {
-      this.fileUploadError = error;
-      console.log(this.fileUploadError);
-
-      setTimeout(() => {
-        this.fileUploadError = null;
-        console.log(this.fileUploadError);
-      }, 2500);
-    });
-
+    this.mAndC.content.subscribe(newContent => {this.content = newContent;});
+    this.handleFileUploadError();
     this.mAndC.getFocusTrigger().subscribe(() => {
       if (this.myTextarea) {
         this.myTextarea.nativeElement.focus();
       }
     });
   }
+
+
+  /**
+   * handles the fileupload error
+   */
+  handleFileUploadError() {
+    this.fileUpload.fileUploadError$.subscribe(error => {
+      this.fileUploadError = error;
+      setTimeout(() => {
+        this.fileUploadError = null;
+      }, 2500);
+    });
+  }
+
+
+  ngOnInit() {
+    this.isChatDataLoaded = false;
+    
+    /*
+    this.loadAllMessages().then(() => {
+      this.initializeChat()
+    });
+    */
+    
+
+    this.databaseService.loadUser(this.specific.createdBy)
+      .then(creatorUser => {
+        if (creatorUser.userId == this.user.userId) {
+          this.sendingUser = creatorUser;
+          console.log('this is the creatorUser', this.sendingUser)
+        }
+        else {
+          this.passiveUser = creatorUser;
+        }
+      })
+
+    this.databaseService.loadUser(this.specific.recipientId)
+      .then(recipientUser => {
+        if (recipientUser.userId == this.user.userId) {
+          this.sendingUser = recipientUser;
+          console.log('this is the recipientUser', this.passiveUser)
+        }
+        else {
+          this.passiveUser = recipientUser;
+        }
+      })
+
+    this.mAndC.loadUsersOfUser();
+    this.mAndC.loadChannlesofUser();
+    this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.user.userId);
+  }
+
+
+  /*wird ggf nicht gebraucht */
+  initializeChat(){
+    debugger;
+    this.loadAllMessageReactions()
+    setTimeout(() => {
+      this.chat.groupReactions(this.list).then(() => {
+        this.isChatDataLoaded = true;
+      })
+  
+      }, 1000);
+  }
+
 
   changeReload() {
     this.changeReloadStatus.emit()
@@ -112,12 +157,9 @@ export class ChatComponent implements AfterViewInit, OnInit {
 
   ngOnChanges() {
     //debugger;
-    //this.isChatDataLoaded = false;
+    this.isChatDataLoaded = false;
     this.sendingUser = new User()
     this.passiveUser = new User()
-
-    this.list = [];
-    this.reactions = [];
 
 
     //defining passiveUser if specific = ConversationWithSelf
@@ -127,11 +169,9 @@ export class ChatComponent implements AfterViewInit, OnInit {
           if (creatorUser.userId == this.user.userId) {
             this.passiveUser = creatorUser;
           }
-
         })
     }
 
-    this.loadAllMessages();
 
     this.databaseService.loadUser(this.specific.createdBy)
       .then(creatorUser => {
@@ -160,97 +200,32 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.user.userId);
 
 
+    this.loadAllMessages().then(()=> {
+      this.initializeChatAfterChange();
+    })
 
-    setTimeout(() => {
-      this.loadAllMessageReactions();
-      console.log('reactions');
-      console.log(this.reactions);
-    }, 1500);
-
-
-    setTimeout(() => {
-      this.chat.groupReactions(this.list);
-      console.log('groupreaction');
-      console.log(this.groupedReactions);
-      this.isChatDataLoaded = true;
-    }, 2000);
+    
   }
 
 
-  ngOnInit(): void {
-    this.isChatDataLoaded = false;
-    this.loadAllMessages();
-    console.log('current Conversation:')
-    console.log(this.specific)
-
-
-    /*
-    this.databaseService.loadUser(this.userId).then(user => {
-      this.user = user;
-    })
-    */
-
-    /*
-    this.databaseService.loadSpecificUserConversation(this.userId, this.conversationId)
-      .then(conversation => {
-        this.specific = conversation;
-        console.log('this is the searched Conversation', this.specific)
-      
-    */
-
-    this.databaseService.loadUser(this.specific.createdBy)
-      .then(creatorUser => {
-        if (creatorUser.userId == this.user.userId) {
-          this.sendingUser = creatorUser;
-          console.log('this is the creatorUser', this.sendingUser)
-        }
-        else {
-          this.passiveUser = creatorUser;
-        }
-      })
-
-    this.databaseService.loadUser(this.specific.recipientId)
-      .then(recipientUser => {
-        if (recipientUser.userId == this.user.userId) {
-          this.sendingUser = recipientUser;
-          console.log('this is the recipientUser', this.passiveUser)
-        }
-        else {
-          this.passiveUser = recipientUser;
-        }
-      })
-
-    /*    
-    })
-    */
-
-    this.mAndC.loadUsersOfUser();
-    this.mAndC.loadChannlesofUser();
-    this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.user.userId);
-
-
-
+  initializeChatAfterChange(){
+    this.loadAllMessageReactions();
+    
     setTimeout(() => {
-      this.loadAllMessageReactions();
-      console.log('reactions');
-      console.log(this.reactions);
-    }, 1500);
-
-
-    setTimeout(() => {
-      this.chat.groupReactions(this.list);
-      console.log('groupreaction');
-      console.log(this.groupedReactions);
-      this.isChatDataLoaded = true;
-    }, 2000);
+      debugger;
+      this.chat.groupReactions(this.list)
+        .then(() => {
+          this.isChatDataLoaded = true;
+        });
+    }, 1000);
   }
+
 
   //load functions
-  loadAllMessages() {
-    this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId).then(messageList => {
+  loadAllMessages(): Promise<void> {
+    return this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId).then(messageList => {
       this.list = messageList;
       this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-
       console.log('list');
       console.log(this.list);
     });

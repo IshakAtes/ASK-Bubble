@@ -95,20 +95,6 @@ export class ThreadComponent{
   ) {
 
 
-  //  setTimeout(() => {
-  //   if(this.channelThread){
-  //     console.log('opened by channel')
-  //     console.log(this.channelThread)
-  //     console.log(this.currentChannelThread)
-  //   }
-  //   else{
-  //     console.log('opened by conversation')
-  //     console.log(this.channelThread)
-  //     console.log(this.currentThread)
-  //   }
-  //  }, 1000);
-
-
     this.allChannels = mAndC.allChannels;
     this.allUsers = mAndC.allUsers;
 
@@ -151,10 +137,7 @@ export class ThreadComponent{
           this.loadAllMessages();
           console.log('list');
           console.log(this.list);
-        }, 1000);
-  
-        //TODO - functions für ChannelThread anpassen + HTML checken:
-  
+        }, 1000);  
       }
       else{
         //Logik, falls Thread durch Conversation geöffnet wird
