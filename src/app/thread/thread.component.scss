@@ -55,6 +55,19 @@
     border: 1px solid #ADB0D9;
 }
 
+.file-upload-error-thread-div {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+
+    p {
+        margin: 0;
+    }
+}
+
 
 @media (max-width: 1650px) {
     .main-thread {
