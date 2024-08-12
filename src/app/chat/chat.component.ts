@@ -14,7 +14,7 @@ import { TimeFormatingService } from '../shared-services/chat-functionality/time
 import { MentionAndChannelDropdownService } from '../shared-services/chat-functionality/mention-and-channel-dropdown.service';
 import { EditMessageService } from '../shared-services/chat-functionality/edit-message.service';
 import { FileUploadService } from '../shared-services/chat-functionality/file-upload.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { GeneralChatService } from '../shared-services/chat-functionality/general-chat.service';
 import { Thread } from '../../models/thread.class';
@@ -36,7 +36,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
 
   sendingUser: User;
   passiveUser: User;
-  
+
 
   allUsers = [] as Array<User>;
   list: Array<ConversationMessage> = [];
@@ -77,6 +77,8 @@ export class ChatComponent implements AfterViewInit, OnInit {
       console.log('Updated groupedReactions:', this.groupedReactions);
     });
 
+    const newContent = '';
+    this.mAndC.content.next(newContent);
     this.mAndC.content.subscribe(newContent => {
       this.content = newContent;
     });
@@ -103,7 +105,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
   }
 
 
-  openThread(thread: Thread){
+  openThread(thread: Thread) {
     this.emitThread.emit(thread)
   }
 
@@ -264,7 +266,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     }
   }
 
-  
+
   //kopieren
   saveNewMessage() {
     this.list = [];
@@ -273,6 +275,8 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.databaseService.addConversationMessage(this.specific, newMessage)
 
     this.content = '';
+    const newContent = '';
+    this.mAndC.content.next(newContent);
 
     this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId).then(messageList => {
       this.list = messageList;
@@ -398,23 +402,23 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.loadAllMessages();
   }
 
-createOrOpenThread(message: ConversationMessage) {
-  if (message.threadId !== '') {
-    console.log('Thread already exists');
-    this.databaseService.loadSpecificThread(message, this.sendingUser)
-      .then(oldThread => {
-        console.log(oldThread);
-        this.openThread(oldThread);
-      })
-      .catch(error => console.error('Error loading thread:', error));
-  } else {
-    const thread: Thread = this.databaseService.createThread(message, this.sendingUser, this.passiveUser);
-    console.log(thread);
-    this.databaseService.addThread(thread)
-    this.databaseService.updateMessageThreadId(thread)
-    this.openThread(thread);
+  createOrOpenThread(message: ConversationMessage) {
+    if (message.threadId !== '') {
+      console.log('Thread already exists');
+      this.databaseService.loadSpecificThread(message, this.sendingUser)
+        .then(oldThread => {
+          console.log(oldThread);
+          this.openThread(oldThread);
+        })
+        .catch(error => console.error('Error loading thread:', error));
+    } else {
+      const thread: Thread = this.databaseService.createThread(message, this.sendingUser, this.passiveUser);
+      console.log(thread);
+      this.databaseService.addThread(thread)
+      this.databaseService.updateMessageThreadId(thread)
+      this.openThread(thread);
+    }
   }
-}
 
 
 }

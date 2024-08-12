@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Thread } from '../../models/thread.class';
 import { User } from '../../models/user.class';
 import { Conversation } from '../../models/conversation.class';
@@ -117,7 +117,9 @@ export class ThreadComponent{
       console.log('Updated groupedReactions:', this.groupedReactions);
     });
 
-    this.mAndC.content.subscribe(newContent => {
+    const newContent = '';
+    this.mAndC.contentThread.next(newContent);
+    this.mAndC.contentThread.subscribe(newContent => {
       this.content = newContent;
     });
 
@@ -324,6 +326,8 @@ async saveNewMessage() {
   const timestamp: Timestamp = newMessage.createdAt;
   this.databaseService.addThreadMessage(this.currentThread, newMessage)
   this.content = '';
+  const newContent = '';
+  this.mAndC.contentThread.next(newContent);
   await this.databaseService.loadThreadMessages(this.currentThread).then(messageList => {
     this.list = messageList;
     this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());

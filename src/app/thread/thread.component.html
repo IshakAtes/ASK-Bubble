@@ -304,29 +304,29 @@
             <div class="message-container-orientation">
                 <div class="message-container">
                     <!-- Emojis -->
-                    @if (mAndC.showEmoticons) {
+                    @if (mAndC.showEmoticonsThread) {
                     <div class="emoticon-div">
-                        <emoji-mart class="emoji-mart" (emojiSelect)="mAndC.addEmoji($event)"
+                        <emoji-mart class="emoji-mart" (emojiSelect)="mAndC.addEmoji($event, 'thread')"
                             title="Choose your emoji"></emoji-mart>
                     </div>
                     }
                     <!-- Erwähnungen -->
-                    @if (mAndC.showMention) {
+                    @if (mAndC.showMentionThread) {
                     <div class="mention-div">
                         @for (users of mAndC.allUsers; track $index) {
-                        <div class="mention-list-element" (click)="mAndC.addMention(users.name)">{{users.name}}</div>
+                        <div class="mention-list-element" (click)="mAndC.addMention(users.name, 'thread')">{{users.name}}</div>
                         }
                     </div>
                     }
         
                     <!-- Dropdown für Kanäle und Mitglieder -->
-                    @if (mAndC.showDropdown) {
+                    @if (mAndC.showDropdownThread) {
                     <div class="dropdown-menu">
                         @if (mAndC.filteredItems.length === 0) {
                         <span>Kein passendes Ergebnis</span>
                         }@else {
                         @for (item of mAndC.filteredItems; track $index) {
-                        <div class="dropdown-item" (click)="mAndC.selectItem(item, myTextarea.nativeElement)">
+                        <div class="dropdown-item" (click)="mAndC.selectItem(item, myTextarea.nativeElement, 'thread')">
                             {{ item.name }}
                         </div>
                         }
@@ -365,7 +365,7 @@
                     @if(!fileUploadError && !fileUpload.fileUploading) {
         
                         <!--??? Nachrichtenbenennung an Person bzw an Channelthread in diesem Fall?-->  
-                        <textarea (input)="mAndC.onInput($event)" #myTextarea [(ngModel)]="content" class="message-input"
+                        <textarea (input)="mAndC.onInput($event, 'thread')" #myTextarea [(ngModel)]="content" class="message-input"
                                 placeholder="Nachricht an {{currentChannelThread.createdBy}}">
                         </textarea>
 
@@ -393,9 +393,9 @@
                                         alt=""></button>
                                 <input #fileInput type="file" style="display: none;" (change)="fileUpload.onFileSelected($event)">
                                 <div class="line"></div>
-                                <button (click)="mAndC.toggleEmoticons()" class="action-button"><img
+                                <button (click)="mAndC.toggleEmoticons('thread')" class="action-button"><img
                                         src="../../assets/img/emoticon_icon.png" alt=""></button>
-                                <button (click)="mAndC.toggleMention()" class="action-button"><img
+                                <button (click)="mAndC.toggleMention('thread')" class="action-button"><img
                                         src="../../assets/img/mention_icon.png" alt=""></button>
                             </div>
             
@@ -707,29 +707,29 @@
             <div class="message-container-orientation">
                 <div class="message-container">
                     <!-- Emojis -->
-                    @if (mAndC.showEmoticons) {
+                    @if (mAndC.showEmoticonsThread) {
                     <div class="emoticon-div">
-                        <emoji-mart class="emoji-mart" (emojiSelect)="mAndC.addEmoji($event)"
+                        <emoji-mart class="emoji-mart" (emojiSelect)="mAndC.addEmoji($event, 'thread')"
                             title="Choose your emoji"></emoji-mart>
                     </div>
                     }
                     <!-- Erwähnungen -->
-                    @if (mAndC.showMention) {
+                    @if (mAndC.showMentionThread) {
                     <div class="mention-div">
                         @for (users of mAndC.allUsers; track $index) {
-                        <div class="mention-list-element" (click)="mAndC.addMention(users.name)">{{users.name}}</div>
+                        <div class="mention-list-element" (click)="mAndC.addMention(users.name, 'thread')">{{users.name}}</div>
                         }
                     </div>
                     }
         
                     <!-- Dropdown für Kanäle und Mitglieder -->
-                    @if (mAndC.showDropdown) {
+                    @if (mAndC.showDropdownThread) {
                     <div class="dropdown-menu">
                         @if (mAndC.filteredItems.length === 0) {
                         <span>Kein passendes Ergebnis</span>
                         }@else {
                         @for (item of mAndC.filteredItems; track $index) {
-                        <div class="dropdown-item" (click)="mAndC.selectItem(item, myTextarea.nativeElement)">
+                        <div class="dropdown-item" (click)="mAndC.selectItem(item, myTextarea.nativeElement, 'thread')">
                             {{ item.name }}
                         </div>
                         }
@@ -768,12 +768,12 @@
                     @if(!fileUploadError && !fileUpload.fileUploading) {
         
                     @if(user.userId == sendingUser.userId){
-                    <textarea (input)="mAndC.onInput($event)" #myTextarea [(ngModel)]="content" class="message-input"
+                    <textarea (input)="mAndC.onInput($event, 'thread')" #myTextarea [(ngModel)]="content" class="message-input"
                         placeholder="Nachricht an {{passiveUser.name}}">
                             </textarea>
                     }
                     @else {
-                    <textarea (input)="mAndC.onInput($event)" #myTextarea [(ngModel)]="content" class="message-input"
+                    <textarea (input)="mAndC.onInput($event, 'thread')" #myTextarea [(ngModel)]="content" class="message-input"
                         placeholder="Nachricht an {{sendingUser.name}}">
                             </textarea>
                     }
@@ -801,9 +801,9 @@
                                     alt=""></button>
                             <input #fileInput type="file" style="display: none;" (change)="fileUpload.onFileSelected($event)">
                             <div class="line"></div>
-                            <button (click)="mAndC.toggleEmoticons()" class="action-button"><img
+                            <button (click)="mAndC.toggleEmoticons('thread')" class="action-button"><img
                                     src="../../assets/img/emoticon_icon.png" alt=""></button>
-                            <button (click)="mAndC.toggleMention()" class="action-button"><img
+                            <button (click)="mAndC.toggleMention('thread')" class="action-button"><img
                                     src="../../assets/img/mention_icon.png" alt=""></button>
                         </div>
         

@@ -132,7 +132,12 @@
 
                     @if(message.threadMessageCount > 0){
                     <div class="own-answer-bar">
-                        <span class="answer-count"> {{message.threadMessageCount}} Antworten</span>
+                        @if (message.threadMessageCount == 1) {
+                            <span class="answer-count"> {{message.threadMessageCount}} Antwort</span>
+                        } @else {
+                            <span class="answer-count"> {{message.threadMessageCount}} Antworten</span>
+                        }
+                        
                         @if (message.lastThreadMessage) {
                         <span class="last-answer"> Letzte Antwort
                             {{time.formatTime(time.formatTimestamp(message.lastThreadMessage))}}
@@ -216,9 +221,12 @@
                     </div>
 
                     @if(message.threadMessageCount > 0){
-
                     <div class="answer-bar">
-                        <span class="answer-count"> {{message.threadMessageCount}} Antworten</span>
+                        @if (message.threadMessageCount == 1) {
+                            <span class="answer-count"> {{message.threadMessageCount}} Antwort</span>
+                        } @else {
+                            <span class="answer-count"> {{message.threadMessageCount}} Antworten</span>
+                        }
                         @if (message.lastThreadMessage) {
                         <span class="last-answer"> Letzte Antwort
                             {{time.formatTime(time.formatTimestamp(message.lastThreadMessage))}}

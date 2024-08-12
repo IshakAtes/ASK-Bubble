@@ -988,6 +988,8 @@ export class DatabaseService {
           channelMessageObject.fileUrl = messageData['fileUrl'];
           channelMessageObject.threadId = messageData['threadId'];
           channelMessageObject.messageId = messageData['messageId'];
+          channelMessageObject.threadMessageCount = messageData['threadMessageCount'];
+          channelMessageObject.lastThreadMessage = messageData['lastThreadMessage'];
           messageList.push(channelMessageObject);
         })
         resolve(messageList);

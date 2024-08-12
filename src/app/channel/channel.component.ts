@@ -5,7 +5,7 @@ import { User } from '../../models/user.class';
 import { DatabaseService } from '../database.service';
 import { ChannelMessage } from '../../models/channelMessage.class';
 import { FormsModule } from '@angular/forms';
-import { MatDialog} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { DialogAddAdditionalMemberComponent } from '../dialog-add-additional-member/dialog-add-additional-member.component';
 import { DialogShowMemberListComponent } from '../dialog-show-member-list/dialog-show-member-list.component';
 import { DialogShowChannelSettingsComponent } from '../dialog-show-channel-settings/dialog-show-channel-settings.component';
@@ -32,7 +32,7 @@ import { ChannelThread } from '../../models/channelThread.class';
   templateUrl: './channel.component.html',
   styleUrls: ['./channel.component.scss', './channelResp.component.scss']
 })
-export class ChannelComponent implements OnInit {  
+export class ChannelComponent implements OnInit {
 
   @Input() channel: Channel
   @Input() channelBig: boolean;
@@ -59,40 +59,42 @@ export class ChannelComponent implements OnInit {
 
   isdataLoaded: boolean = false;
   fileUploadError: string | null = null;
- 
-  @ViewChild('main') main: ElementRef 
+
+  @ViewChild('main') main: ElementRef
   @ViewChild('lastDiv') lastDiv: ElementRef<HTMLDivElement>;
   @ViewChild('myTextarea') myTextarea!: ElementRef<HTMLTextAreaElement>;
   // Trigger click on fileupload input field
   @ViewChild('fileInput') fileInput!: ElementRef;
 
-  constructor(public dialog: MatDialog, private database: DatabaseService, 
+  constructor(public dialog: MatDialog, private database: DatabaseService,
     public us: UserService,
     public editService: EditMessageService,
     public fileService: FileUploadService,
     public chatService: GeneralChatService,
     public twoEmoji: LastTwoEmojisService,
     public mAndC: MentionAndChannelDropdownService,
-    public time: TimeFormatingService){
-      
-      this.allChannels = mAndC.allChannels;
-      this.allUsers = mAndC.allUsers;
-      this.reactions = chatService.reactions;
-      this.chatService.groupedReactions$.subscribe(groupedReactions => {this.groupedReactions = groupedReactions;});
-      this.mAndC.content.subscribe(newContent => {this.content = newContent;});
-      this.handleFileUploadError();
-      this.mAndC.getFocusTrigger().subscribe(() => {
-        if (this.myTextarea) {
-          this.myTextarea.nativeElement.focus();
-        }
-      });
+    public time: TimeFormatingService) {
+
+    this.allChannels = mAndC.allChannels;
+    this.allUsers = mAndC.allUsers;
+    this.reactions = chatService.reactions;
+    this.chatService.groupedReactions$.subscribe(groupedReactions => { this.groupedReactions = groupedReactions; });
+    const newContent = '';
+    this.mAndC.content.next(newContent);
+    this.mAndC.content.subscribe(newContent => { this.content = newContent; });
+    this.handleFileUploadError();
+    this.mAndC.getFocusTrigger().subscribe(() => {
+      if (this.myTextarea) {
+        this.myTextarea.nativeElement.focus();
+      }
+    });
   }
 
 
   /**
    * handles the fileupload error
    */
-  handleFileUploadError(){
+  handleFileUploadError() {
     this.fileService.fileUploadError$.subscribe(error => {
       this.fileUploadError = error;
       setTimeout(() => {
@@ -105,7 +107,7 @@ export class ChannelComponent implements OnInit {
   /**
    * loads all needed data after DOM is loaded
    */
-  ngOnInit(){
+  ngOnInit() {
     this.memberList = [];
     this.messageList = [];
     setTimeout(() => {
@@ -127,13 +129,13 @@ export class ChannelComponent implements OnInit {
    * loads all message reactions and groups them after DOM
    * is loaded
    */
-  initializeChannel(){
+  initializeChannel() {
     setTimeout(() => {
       this.loadAllMessageReactions()
     }, 700);
     setTimeout(() => {
       this.chatService.groupReactions(this.messageList)
-      this.isdataLoaded = true;  
+      this.isdataLoaded = true;
     }, 1000);
   }
 
@@ -141,8 +143,8 @@ export class ChannelComponent implements OnInit {
   /**
    * reloads the data after a change happend in the channel
    */
-  ngOnChanges(){
-    if(this.reload){
+  ngOnChanges() {
+    if (this.reload) {
       this.memberList = [];
       this.messageList = [];
       this.isdataLoaded = false;
@@ -153,7 +155,7 @@ export class ChannelComponent implements OnInit {
           this.loadChannelCreator(),
         ]).then(() => {
           this.initializeChannelAfterChange()
-        }).catch(error => {console.log('this ', error)});
+        }).catch(error => { console.log('this ', error) });
       }, 1000);
     }
   }
@@ -163,14 +165,14 @@ export class ChannelComponent implements OnInit {
    * loads all message reactions and groups them after something changed
    * in the channel
    */
-  initializeChannelAfterChange(){
+  initializeChannelAfterChange() {
     setTimeout(() => {
       this.loadAllMessageReactions()
     }, 1500);
     setTimeout(() => {
       this.chatService.groupReactions(this.messageList)
       this.changeReload(); //Important to be able to load another channel
-      this.isdataLoaded = true;  
+      this.isdataLoaded = true;
     }, 2000);
   }
 
@@ -190,7 +192,7 @@ export class ChannelComponent implements OnInit {
   /**
    * sends the info to reload the channel to main component
    */
-  changeReload(){
+  changeReload() {
     this.changeReloadStatus.emit()
   }
 
@@ -198,7 +200,7 @@ export class ChannelComponent implements OnInit {
   /**
    * sends the info to reload the workspace to main component
    */
-  reloadWorkspace(){
+  reloadWorkspace() {
     this.reloadWorkspaceStatus.emit(true);
   }
 
@@ -207,14 +209,14 @@ export class ChannelComponent implements OnInit {
    * loads the memberlist of the channel
    * @returns  promise 
    */
-  loadMemberList(): Promise<void>{
+  loadMemberList(): Promise<void> {
     const memberPromises = this.channel.membersId.map(member => {
       this.database.loadUser(member)
         .then(user => {
           this.memberList.push(user);
         })
     });
-    return Promise.all(memberPromises).then(() => {});
+    return Promise.all(memberPromises).then(() => { });
   }
 
 
@@ -222,11 +224,11 @@ export class ChannelComponent implements OnInit {
    * loads the creator of the channel
    * @returns promise
    */
-  loadChannelCreator(): Promise<void>{
-   return this.database.loadUser(this.channel.createdBy)
-      .then(user =>{
+  loadChannelCreator(): Promise<void> {
+    return this.database.loadUser(this.channel.createdBy)
+      .then(user => {
         this.channelCreator = user;
-    })
+      })
   }
 
 
@@ -234,11 +236,11 @@ export class ChannelComponent implements OnInit {
    * loads all channel messages of the channel
    * @returns promise
    */
-  loadChannelMessages(): Promise<void>{
+  loadChannelMessages(): Promise<void> {
     return this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId)
-    .then(messages => {
-      this.messageList = messages;
-    })
+      .then(messages => {
+        this.messageList = messages;
+      })
   }
 
 
@@ -249,11 +251,11 @@ export class ChannelComponent implements OnInit {
     for (let i = 0; i < this.messageList.length; i++) {
       const list = this.messageList[i];
       this.database.loadChannelMessagesReactions(this.activeUser.userId, this.channel.channelId, list.messageId)
-      .then(reaction => {
-        reaction.forEach(reaction => {
-          this.reactions.push(reaction)
-        });
-      })
+        .then(reaction => {
+          reaction.forEach(reaction => {
+            this.reactions.push(reaction)
+          });
+        })
     }
   }
 
@@ -266,6 +268,8 @@ export class ChannelComponent implements OnInit {
     let newMessage: ChannelMessage = this.database.createChannelMessage(this.channel, this.content, this.activeUser.userId, this.fileService.downloadURL)
     this.database.addChannelMessage(this.channel, newMessage)
     this.content = '';
+    const newContent = '';
+    this.mAndC.content.next(newContent);
     this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId).then(messageList => {
       this.messageList = messageList;
       this.messageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
@@ -287,16 +291,16 @@ export class ChannelComponent implements OnInit {
    */
   async saveNewMessageReaction(event: any, message: ChannelMessage, userId: string, reactionbar?: string) {
     let emoji: string
-    if (reactionbar) {emoji = reactionbar} else {emoji = event.emoji.native}
+    if (reactionbar) { emoji = reactionbar } else { emoji = event.emoji.native }
     const userAlreadyReacted = this.reactions.some(reaction => reaction.messageId === message.messageId && reaction.emoji === emoji && reaction.userId === userId);
-    if (userAlreadyReacted) {console.log('User has already reacted with this emoji');return;}
+    if (userAlreadyReacted) { console.log('User has already reacted with this emoji'); return; }
     this.reactions = [];
     let reaction = this.database.createChannelMessageReaction(emoji, userId, this.activeUser.name, message);
     await this.database.addChannelMessageReaction(this.channel, message, reaction)
     await this.loadAllMessageReactions();
     this.chatService.reactions = this.reactions;
-    setTimeout(() => {this.chatService.groupReactions(this.messageList)}, 500);
-    this.chatService.checkIfEmojiIsAlreadyInUsedLastEmojis(this.activeUser ,emoji, userId);
+    setTimeout(() => { this.chatService.groupReactions(this.messageList) }, 500);
+    this.chatService.checkIfEmojiIsAlreadyInUsedLastEmojis(this.activeUser, emoji, userId);
     this.mAndC.loadUsersOfUser();
     this.mAndC.loadChannlesofUser()
     this.mAndC.selectedMessageId = null;
@@ -316,7 +320,7 @@ export class ChannelComponent implements OnInit {
     this.loadChannelMessages();
   }
 
-  
+
   /**
    * focuses the inputfield of the textarea after
    * initialization
@@ -327,15 +331,15 @@ export class ChannelComponent implements OnInit {
     }, 10);
   }
 
-  
+
   /**
    * scrolls to the newest message of the channel
    */
   scrollToBottom(): void {
     try {
-      if(this.messageList.length > 0){
+      if (this.messageList.length > 0) {
         this.lastDiv.nativeElement.scrollIntoView();
-      } 
+      }
     } catch (err) {
       console.error('Scroll to bottom failed', err);
     }
@@ -353,13 +357,13 @@ export class ChannelComponent implements OnInit {
   /**
    * opens a dialog where new members can be added to the channel
    */
-  showAddMember(){
+  showAddMember() {
     const channelInfo = this.dialog.open(DialogAddAdditionalMemberComponent);
     channelInfo.componentInstance.currentChannel = this.channel;
     channelInfo.afterClosed().subscribe(() => {
       this.isdataLoaded = false;
       this.memberList = [];
-      this.loadMemberList().then(()=>{
+      this.loadMemberList().then(() => {
         this.isdataLoaded = true;
       })
     })
@@ -369,11 +373,11 @@ export class ChannelComponent implements OnInit {
   /**
    * opens the dialog with a list of all channel members
    */
-  showMemberList(){
+  showMemberList() {
     const channelInfo = this.dialog.open(DialogShowMemberListComponent);
     channelInfo.componentInstance.currentChannel = this.channel;
     channelInfo.afterClosed().subscribe((conversation) => {
-      if(conversation){
+      if (conversation) {
         this.openConversation.emit(conversation)
       }
     })
@@ -383,14 +387,14 @@ export class ChannelComponent implements OnInit {
   /**
    * opens the dialog with the channel settings
    */
-  showChannelSettings(){
-    const channelInfo = this.dialog.open(DialogShowChannelSettingsComponent,{
+  showChannelSettings() {
+    const channelInfo = this.dialog.open(DialogShowChannelSettingsComponent, {
       panelClass: 'customDialog'
     })
     channelInfo.componentInstance.currentChannel = this.channel;
     channelInfo.componentInstance.channelCreator = this.channelCreator;
     channelInfo.afterClosed().subscribe(result => {
-      if(result){
+      if (result) {
         this.userLeftChannel.emit(true);
       }
     })
@@ -400,7 +404,7 @@ export class ChannelComponent implements OnInit {
   createOrOpenThread(message: ChannelMessage) {
     console.log('open thread')
     console.log(message)
-    
+
     if (message.threadId !== '') {
       console.log('Thread already exists');
       this.database.loadSpecificChannelThread(message, this.channel)
@@ -416,11 +420,11 @@ export class ChannelComponent implements OnInit {
       //this.database.updateMessageChannelThreadId(thread, this.channel)
       this.openThread(thread);
     }
-   
+
   }
 
 
-  openThread(thread: ChannelThread){
+  openThread(thread: ChannelThread) {
     this.emitThread.emit(thread)
   }
 
