@@ -29,6 +29,7 @@
                      (emitThread)="openThread($event)"
                      [specific]="currentConversation"
                      [user]="userservice.activeUserObject"
+                     [reload]="reloadChat"
                      
                      ></app-chat>
                  }
@@ -54,6 +55,8 @@
                     [currentChannel]="currentChannel"
                     
                     (emitCloseThread)="closeThread()"
+                    (emitReloadChannel)="setChannelReloadToTrue($event)"
+                    (emitReloadChat)="setChatReloadToTrue($event)"
                     > 
 
                     </app-thread>
@@ -105,6 +108,7 @@
                     (emitThread)="openThread($event)"
                     [specific]="currentConversation"
                     [user]="userservice.activeUserObject"
+                    [reload]="reloadChat"
                     ></app-chat>
                 }
                 @else if(channel) {
@@ -128,6 +132,8 @@
                         [specific]="currentConversation"
                         [currentChannel]="currentChannel"
                         (emitCloseThread)="closeThread()"
+                        (emitReloadChannel)="setChannelReloadToTrue($event)"
+                        (emitReloadChat)="setChatReloadToTrue($event)"
                     >
                        
                     </app-thread>
@@ -176,6 +182,7 @@
                 (emitThread)="openThread($event)"
                 [specific]="currentConversation"
                 [user]="userservice.activeUserObject"
+                [reload]="reloadChat"
                 ></app-chat>
             }
             @else if(channel) {
@@ -209,6 +216,8 @@
                 [specific]="currentConversation"
                 [currentChannel]="currentChannel"
                 (emitCloseThread)="closeThread()"
+                (emitReloadChannel)="setChannelReloadToTrue($event)"
+                (emitReloadChat)="setChatReloadToTrue($event)"
                 >
 
                 </app-thread>

@@ -45,11 +45,12 @@ export class ThreadComponent{
   @Input() currentChannelThread: ChannelThread;
   @Input() channelThread: boolean;
   @Input() currentChannel: Channel
-
+  @Output() emitReloadChannel = new EventEmitter<boolean>()
+  @Output() emitReloadChat = new EventEmitter<boolean>()
 
   mainChannelMessage : ChannelMessage;
   channelThreadMessageList: Array<ChannelThreadMessage> = [];
-  channelMemberList: Array<User>
+  channelMemberList: Array<User> = [];
   //TEST ENDE
 
 
@@ -168,11 +169,15 @@ export class ThreadComponent{
 
     
 
-
     setTimeout(() => {
       this.isChatDataLoaded = true
       console.log('loaded members: ', this.channelMemberList)
+      if(this.channelThread){
+        this.loadMemberList();
+      }
+
     }, 3000);
+
 
   }
 
@@ -192,9 +197,7 @@ export class ThreadComponent{
             console.error('Error loading message:', error);
           });
       }, 1000);
-      setTimeout(() => {
-        this.loadMemberList()
-      }, 2000);
+
 
     }
     else{
@@ -338,6 +341,7 @@ async saveNewMessage() {
     this.scrollToBottom();
   }, 10);
   this.fileUpload.downloadURL = '';
+  this.emitReloadChat.emit(true);
 }
 
 
@@ -439,17 +443,22 @@ async saveNewChannelThreadMessage() {
   const timestamp: Timestamp = newMessage.createdAt;
   this.databaseService.addChannelThreadMessage(this.currentChannelThread, newMessage, this.currentChannel)
   this.content = '';
+  const newContent = '';
+  this.mAndC.contentThread.next(newContent);
   await this.databaseService.loadChannelThreadMessages(this.currentChannelThread).then(messageList => {
     this.channelThreadMessageList = messageList;
     this.channelThreadMessageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
   })
-  const count: number = this.list.length;
+  const count: number = this.channelThreadMessageList.length;
   this.databaseService.updateMessageChannelThreadCountAndThreadTime(newMessage, this.currentChannel, count, timestamp)
   setTimeout(() => {
     this.scrollToBottom();
   }, 10);
   this.fileUpload.downloadURL = '';
+  this.emitReloadChannel.emit(true)
 }
+
+
 
 
 

@@ -130,12 +130,12 @@ export class ChannelComponent implements OnInit {
    * is loaded
    */
   initializeChannel() {
+    this.loadAllMessageReactions()
     setTimeout(() => {
-      this.loadAllMessageReactions()
-    }, 700);
-    setTimeout(() => {
-      this.chatService.groupReactions(this.messageList)
+    this.chatService.groupReactions(this.messageList).then(() => {
       this.isdataLoaded = true;
+    })
+
     }, 1000);
   }
 
@@ -144,10 +144,11 @@ export class ChannelComponent implements OnInit {
    * reloads the data after a change happend in the channel
    */
   ngOnChanges() {
+    //debugger;
     if (this.reload) {
       this.memberList = [];
       this.messageList = [];
-      this.isdataLoaded = false;
+      //this.isdataLoaded = false;
       setTimeout(() => {
         Promise.all([
           this.loadMemberList(),
@@ -166,14 +167,15 @@ export class ChannelComponent implements OnInit {
    * in the channel
    */
   initializeChannelAfterChange() {
-    setTimeout(() => {
-      this.loadAllMessageReactions()
-    }, 1500);
+
+    this.loadAllMessageReactions()
     setTimeout(() => {
       this.chatService.groupReactions(this.messageList)
-      this.changeReload(); //Important to be able to load another channel
-      this.isdataLoaded = true;
-    }, 2000);
+      .then(() => {
+        this.changeReload(); //Important to be able to load another channel
+        this.isdataLoaded = true;
+      })
+    }, 1000);
   }
 
 
@@ -251,8 +253,8 @@ export class ChannelComponent implements OnInit {
     for (let i = 0; i < this.messageList.length; i++) {
       const list = this.messageList[i];
       this.database.loadChannelMessagesReactions(this.activeUser.userId, this.channel.channelId, list.messageId)
-        .then(reaction => {
-          reaction.forEach(reaction => {
+        .then(reactions => {
+          reactions.forEach(reaction => {
             this.reactions.push(reaction)
           });
         })
@@ -414,10 +416,11 @@ export class ChannelComponent implements OnInit {
         })
         .catch(error => console.error('Error loading thread:', error));
     } else {
+      console.log('create new Thread');
       const thread: ChannelThread = this.database.createChannelThread(message, this.channel);
       console.log(thread);
       this.database.addChannelThread(thread, this.channel)
-      //this.database.updateMessageChannelThreadId(thread, this.channel)
+      this.database.updateMessageChannelThreadId(thread, this.channel)
       this.openThread(thread);
     }
 

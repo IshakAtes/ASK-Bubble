@@ -30,7 +30,8 @@ export class ChatComponent implements AfterViewInit, OnInit {
 
   //input Data from main component
   @Input() specific: Conversation;
-  @Input() user: User
+  @Input() user: User;
+  @Input() reload: Boolean;
 
   @Output() changeReloadStatus = new EventEmitter<boolean>();
 
@@ -110,7 +111,8 @@ export class ChatComponent implements AfterViewInit, OnInit {
   }
 
   ngOnChanges() {
-    this.isChatDataLoaded = false;
+    //debugger;
+    //this.isChatDataLoaded = false;
     this.sendingUser = new User()
     this.passiveUser = new User()
 

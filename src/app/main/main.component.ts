@@ -28,6 +28,7 @@ export class MainComponent{
   isWSVisible: boolean = true;
   channelBig: boolean = false;
   reloadChannel: boolean = false;
+  reloadChat: boolean = false;
   thread: boolean = false;
   channelThread: boolean = false;
   
@@ -199,6 +200,14 @@ export class MainComponent{
   */
   setReloadToFalse(reload: boolean){
     this.reloadChannel = false;
+  }
+
+  setChannelReloadToTrue(reload: boolean){
+    this.reloadChannel = reload
+  }
+
+  setChatReloadToTrue(reload: boolean){
+    this.reloadChat = reload
   }
 
 

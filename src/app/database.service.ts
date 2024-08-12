@@ -90,7 +90,9 @@ export class DatabaseService {
     channelMessage.createdBy = createdBy;
     channelMessage.fileUrl = fileUrl ? fileUrl : '';
     channelMessage.threadId = threadId ? threadId : '';
-    channelMessage.messageId = 'CHA-MSG-' + randomNumber
+    channelMessage.messageId = 'CHA-MSG-' + randomNumber;
+    channelMessage.threadMessageCount = 0;
+    channelMessage.lastThreadMessage = null;
     return channelMessage
   }
 
@@ -248,6 +250,7 @@ export class DatabaseService {
     //add Message to recipient
     setDoc(doc(this.firestore, 'users/' + thread.recipientId + '/conversations', thread.conversationId + '/conversationmessages/' + thread.messageId + '/threads/', thread.threadId + '/threadmessages', threadMessage.threadMessageId), threadMessage);
   }
+
 
 
   /**
@@ -408,10 +411,11 @@ export class DatabaseService {
     updateMessageChannelThreadId(thread: ChannelThread, channel: Channel) {
       let channelThreadObject = new ChannelThread(thread);
       channel.membersId.forEach(user => {
-        debugger;
-        updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/' + thread.channelId + '/channelmessages/' + thread.messageId + '/threads/'), thread.threadId), channelThreadObject.toJSON());
+        updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/' + thread.channelId + '/channelmessages'), thread.messageId), channelThreadObject.toJSON())
+        .catch(error => console.log('this error:', error));
       })
     }
+
 
 
 
@@ -497,7 +501,7 @@ export class DatabaseService {
    */
     addChannelThreadMessage(thread: ChannelThread, threadMessage: ChannelThreadMessage, channel: Channel) {
       channel.membersId.forEach(userid => {
-        setDoc(doc(this.firestore, 'users/' + userid + '/channels/' + thread.channelId + '/channelmessages/' + thread.messageId + '/threads/', thread.threadId + '/threadmessages', threadMessage.threadMessageId), threadMessage);
+        setDoc(doc(this.firestore, 'users/' + userid + '/channels/', thread.channelId + '/channelmessages/' + thread.messageId + '/threads/', thread.threadId + '/threadmessages', threadMessage.threadMessageId), threadMessage);
       });
     }
 
@@ -527,7 +531,8 @@ export class DatabaseService {
       
         channel.membersId.forEach(userid => {
           let docRef = doc(this.firestore, 'users/' + userid + '/channels/' + threadMessage.channelId + '/channelmessages/' + threadMessage.messageId);
-          updateDoc(docRef, {threadMessageCount: count, lastThreadMessage: timestamp });
+          updateDoc(docRef, {threadMessageCount: count, lastThreadMessage: timestamp })
+          .catch(error => console.log('this update thread count and time: ', error));
         });
         
         

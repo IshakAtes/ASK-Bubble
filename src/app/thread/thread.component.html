@@ -6,7 +6,12 @@
             <div class="main-thread-header">
                 <div>
                     <span class="header">Thread</span>
-                    <span class="channel"> {{currentChannelThread.threadNameCreator}}</span>
+                    @for (member of channelMemberList; track $index) {
+                        @if(currentChannelThread.threadNameCreator == member.userId){
+                            <span class="channel"> {{member.name}}</span>
+                        }
+                    }
+
                 </div>
                 <img (click)="closeThread()" src="../../assets/img/close.png" alt="">
             </div>
@@ -365,9 +370,14 @@
                     @if(!fileUploadError && !fileUpload.fileUploading) {
         
                         <!--??? Nachrichtenbenennung an Person bzw an Channelthread in diesem Fall?-->  
-                        <textarea (input)="mAndC.onInput($event, 'thread')" #myTextarea [(ngModel)]="content" class="message-input"
-                                placeholder="Nachricht an {{currentChannelThread.createdBy}}">
-                        </textarea>
+                        @for (member of channelMemberList; track $index) {
+                            @if(currentChannelThread.threadNameCreator == member.userId){
+                                <textarea (input)="mAndC.onInput($event, 'thread')" #myTextarea [(ngModel)]="content" class="message-input"
+                                placeholder="Nachricht an {{member.name}}">
+                                </textarea>
+                            }
+                        }
+
 
         
                         @if (fileUpload.downloadURL) {

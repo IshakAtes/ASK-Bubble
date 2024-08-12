@@ -14,7 +14,7 @@ export class ChannelThread {
         this.threadNameCreator = obj ? obj.threadNameCreator : '';
         this.threadNameRecipients = obj ? obj.threadNameRecipients : '';
         this.createdBy = obj ? obj.createdBy : '';
-        this.recipientIds = obj ? obj.recipientId : '';
+        this.recipientIds = obj ? obj.recipientIds : '';
     }
 
     public toJSON(){
