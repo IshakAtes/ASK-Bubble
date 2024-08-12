@@ -334,7 +334,7 @@
                     </div>
                     }
         
-                    @if (fileUpload.fileUploading) {
+                    @if (fileUpload.fileUploadingThread) {
                     <div class="file-upload-error-div">
                         <div>
                             <div class="lds-grid">
@@ -354,7 +354,7 @@
                     }
         
                     @if (fileUploadError) {
-                    <div class="file-upload-error-div">
+                    <div class="file-upload-error-thread-div">
                         <p>{{ fileUploadError }}</p>
                     </div>
         
@@ -362,7 +362,7 @@
         
         
         
-                    @if(!fileUploadError && !fileUpload.fileUploading) {
+                    @if(!fileUploadError && !fileUpload.fileUploadingThread) {
         
                         <!--??? Nachrichtenbenennung an Person bzw an Channelthread in diesem Fall?-->  
                         <textarea (input)="mAndC.onInput($event, 'thread')" #myTextarea [(ngModel)]="content" class="message-input"
@@ -370,15 +370,15 @@
                         </textarea>
 
         
-                        @if (fileUpload.downloadURL) {
+                        @if (fileUpload.downloadURLThread) {
                         <div class="upload-preview-div">
-                            @if (fileUpload.isImage(fileUpload.downloadURL)) {
-                            <img class="upload-preview" src="{{fileUpload.downloadURL}}" alt="">
+                            @if (fileUpload.isImage(fileUpload.downloadURLThread)) {
+                            <img class="upload-preview" src="{{fileUpload.downloadURLThread}}" alt="">
                             } @else {
                             <img class="upload-preview" src="../../assets/img/PDF_icon.svg.png" alt="">
                             }
             
-                            <button class="upload-preview-BTN" (click)="fileUpload.deletePreview()">Delete</button>
+                            <button class="upload-preview-BTN" (click)="fileUpload.deletePreview('thread')">Delete</button>
                         </div>
                         }
         
@@ -391,7 +391,7 @@
                             <div class="action-left">
                                 <button class="action-button" (click)="triggerFileInput()"> <img src="../../assets/img/add_icon.png"
                                         alt=""></button>
-                                <input #fileInput type="file" style="display: none;" (change)="fileUpload.onFileSelected($event)">
+                                <input #fileInput type="file" style="display: none;" (change)="fileUpload.onFileSelected($event, 'thread')">
                                 <div class="line"></div>
                                 <button (click)="mAndC.toggleEmoticons('thread')" class="action-button"><img
                                         src="../../assets/img/emoticon_icon.png" alt=""></button>
@@ -737,8 +737,8 @@
                     </div>
                     }
         
-                    @if (fileUpload.fileUploading) {
-                    <div class="file-upload-error-div">
+                    @if (fileUpload.fileUploadingThread) {
+                    <div class="file-upload-error-thread-div">
                         <div>
                             <div class="lds-grid">
                                 <div></div>
@@ -757,7 +757,7 @@
                     }
         
                     @if (fileUploadError) {
-                    <div class="file-upload-error-div">
+                    <div class="file-upload-error-thread-div">
                         <p>{{ fileUploadError }}</p>
                     </div>
         
@@ -765,7 +765,7 @@
         
         
         
-                    @if(!fileUploadError && !fileUpload.fileUploading) {
+                    @if(!fileUploadError && !fileUpload.fileUploadingThread) {
         
                     @if(user.userId == sendingUser.userId){
                     <textarea (input)="mAndC.onInput($event, 'thread')" #myTextarea [(ngModel)]="content" class="message-input"
@@ -778,15 +778,15 @@
                             </textarea>
                     }
         
-                    @if (fileUpload.downloadURL) {
+                    @if (fileUpload.downloadURLThread) {
                     <div class="upload-preview-div">
-                        @if (fileUpload.isImage(fileUpload.downloadURL)) {
-                        <img class="upload-preview" src="{{fileUpload.downloadURL}}" alt="">
+                        @if (fileUpload.isImage(fileUpload.downloadURLThread)) {
+                        <img class="upload-preview" src="{{fileUpload.downloadURLThread}}" alt="">
                         } @else {
                         <img class="upload-preview" src="../../assets/img/PDF_icon.svg.png" alt="">
                         }
         
-                        <button class="upload-preview-BTN" (click)="fileUpload.deletePreview()">Delete</button>
+                        <button class="upload-preview-BTN" (click)="fileUpload.deletePreview('thread')">Delete</button>
                     </div>
                     }
         
@@ -799,7 +799,7 @@
                         <div class="action-left">
                             <button class="action-button" (click)="triggerFileInput()"> <img src="../../assets/img/add_icon.png"
                                     alt=""></button>
-                            <input #fileInput type="file" style="display: none;" (change)="fileUpload.onFileSelected($event)">
+                            <input #fileInput type="file" style="display: none;" (change)="fileUpload.onFileSelected($event, 'thread')">
                             <div class="line"></div>
                             <button (click)="mAndC.toggleEmoticons('thread')" class="action-button"><img
                                     src="../../assets/img/emoticon_icon.png" alt=""></button>

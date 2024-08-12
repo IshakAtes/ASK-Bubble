@@ -123,7 +123,7 @@ export class ThreadComponent{
       this.content = newContent;
     });
 
-    this.fileUpload.fileUploadError$.subscribe(error => {
+    this.fileUpload.fileUploadErrorThread$.subscribe(error => {
       this.fileUploadError = error;
       console.log(this.fileUploadError);
 
@@ -322,7 +322,7 @@ updateMessage(message: ThreadMessage) {
 
 async saveNewMessage() {
   this.list = [];
-  let newMessage: ThreadMessage = this.databaseService.createThreadMessage(this.specific, this.content, this.user.userId, this.currentThread, this.fileUpload.downloadURL)
+  let newMessage: ThreadMessage = this.databaseService.createThreadMessage(this.specific, this.content, this.user.userId, this.currentThread, this.fileUpload.downloadURLThread)
   const timestamp: Timestamp = newMessage.createdAt;
   this.databaseService.addThreadMessage(this.currentThread, newMessage)
   this.content = '';
@@ -337,7 +337,7 @@ async saveNewMessage() {
   setTimeout(() => {
     this.scrollToBottom();
   }, 10);
-  this.fileUpload.downloadURL = '';
+  this.fileUpload.downloadURLThread = '';
 }
 
 
@@ -435,7 +435,7 @@ ngOnChanges() {
 
 async saveNewChannelThreadMessage() {
   this.channelThreadMessageList = [];
-  let newMessage: ChannelThreadMessage = this.databaseService.createChannelThreadMessage(this.currentChannel, this.content, this.user.userId, this.currentChannelThread, this.fileUpload.downloadURL)
+  let newMessage: ChannelThreadMessage = this.databaseService.createChannelThreadMessage(this.currentChannel, this.content, this.user.userId, this.currentChannelThread, this.fileUpload.downloadURLThread)
   const timestamp: Timestamp = newMessage.createdAt;
   this.databaseService.addChannelThreadMessage(this.currentChannelThread, newMessage, this.currentChannel)
   this.content = '';
@@ -448,7 +448,7 @@ async saveNewChannelThreadMessage() {
   setTimeout(() => {
     this.scrollToBottom();
   }, 10);
-  this.fileUpload.downloadURL = '';
+  this.fileUpload.downloadURLThread = '';
 }
 
 
