@@ -150,12 +150,15 @@
                                     title="Choose your emoji"></emoji-mart>
                             </div>
                             }
-                            <img src="../../assets/img/reactionbar_edit.png" (click)="edit.editMessage(message)" alt="">
+                            <img src="../../assets/img/reactionbar_edit.png" (click)="edit.editMessage(message, 'thread')" alt="">
                         </div>
         
+                        @if (edit.isEditingThread && edit.selectedMessageIdEdit === message.threadMessageId) {
+                        } @else{
                         <div>
                             <img class="avatar" src="{{user.avatarUrl}}" alt="User Avatar">
                         </div>
+                        }
                         <div class="message-content-div">
                             <div class="own-message-header">
                                 <span class="message-header-userName">{{user.name}}</span>
@@ -165,12 +168,12 @@
                             </div>
         
                             <div class="own-massage-content-bubble">
-                                @if (edit.isEditing && edit.selectedMessageIdEdit === message.messageId) {
+                                @if (edit.isEditingThread && edit.selectedMessageIdEdit === message.threadMessageId) {
                                 <div class="edit-message-content-bubble">
                                     <textarea type="text" [(ngModel)]="edit.editContent"></textarea>
                                     <div class="edit-message-content-bubble-BTN-div">
                                         <button (click)="updateChannelThreadMessage(message)">Speichern</button>
-                                        <button (click)="edit.cancelEditMessage()">Abbrechen</button>
+                                        <button (click)="edit.cancelEditMessage('thread')">Abbrechen</button>
                                     </div>
                                 </div>
                                 }@else {
@@ -565,12 +568,15 @@
                                     title="Choose your emoji"></emoji-mart>
                             </div>
                             }
-                            <img src="../../assets/img/reactionbar_edit.png" (click)="edit.editMessage(message)" alt="">
+                            <img src="../../assets/img/reactionbar_edit.png" (click)="edit.editMessage(message, 'thread')" alt="">
                         </div>
         
+                        @if (edit.isEditingThread && edit.selectedMessageIdEdit === message.threadMessageId) {
+                        } @else{
                         <div>
                             <img class="avatar" src="{{user.avatarUrl}}" alt="User Avatar">
                         </div>
+                        }
                         <div class="message-content-div">
                             <div class="own-message-header">
                                 <span class="message-header-userName">{{user.name}}</span>
@@ -580,12 +586,12 @@
                             </div>
         
                             <div class="own-massage-content-bubble">
-                                @if (edit.isEditing && edit.selectedMessageIdEdit === message.messageId) {
+                                @if (edit.isEditingThread && edit.selectedMessageIdEdit === message.threadMessageId) {
                                 <div class="edit-message-content-bubble">
                                     <textarea type="text" [(ngModel)]="edit.editContent"></textarea>
                                     <div class="edit-message-content-bubble-BTN-div">
                                         <button (click)="updateMessage(message)">Speichern</button>
-                                        <button (click)="edit.cancelEditMessage()">Abbrechen</button>
+                                        <button (click)="edit.cancelEditMessage('thread')">Abbrechen</button>
                                     </div>
                                 </div>
                                 }@else {

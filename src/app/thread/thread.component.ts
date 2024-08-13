@@ -469,7 +469,7 @@ async saveNewChannelThreadMessage() {
 
 updateChannelThreadMessage(message: ChannelThreadMessage){
   const updatedContent = this.edit.editContent;
-  this.edit.isEditing = false;
+  this.edit.isEditingThread = false;
   this.edit.selectedMessageIdEdit = null;
   message.content = updatedContent;
   this.databaseService.updateChannelThreadMessage(message, this.currentChannel)
