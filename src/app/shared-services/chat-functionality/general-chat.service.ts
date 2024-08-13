@@ -7,18 +7,15 @@ import { User } from '../../../models/user.class';
 import { DatabaseService } from '../../database.service';
 import { ThreadMessage } from '../../../models/threadMessage';
 import { ChannelThreadMessage } from '../../../models/channelThreadMessage';
+import { UserService } from '../../user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GeneralChatService {
 
-  userId = 'Adxrm7CExizb76lVrknu';
-  userName = 'Simon Weirauch';
-  conversationId = 'CONV-HTMknmA28FP56EIqrtZo-0.4380479343879251';
 
- 
-  constructor(public databaseService: DatabaseService) { }
+  constructor(public databaseService: DatabaseService, public userService: UserService) { }
 
   private groupedReactions: BehaviorSubject<Map<string, Array<{ emoji: string, count: number, users: string[] }>>> = new BehaviorSubject(new Map());
   groupedReactions$ = this.groupedReactions.asObservable();
@@ -77,7 +74,7 @@ export class GeneralChatService {
   }
 
   getReactionUser(users: string[]): string {
-    const userName = this.userName;
+    const userName = this.userService.activeUserObject.name;
     const userText = users.map(user => user === userName ? 'du' : user);
     const formattedUserText = userText.map(user => `${user}`);
 
@@ -91,7 +88,7 @@ export class GeneralChatService {
   }
 
   getReactionText(users: string[]): string {
-    const userName = this.userName;
+    const userName = this.userService.activeUserObject.name;
     const userText = users.map(user => user === userName ? 'du' : user);
 
     if (userText.length === 1) {

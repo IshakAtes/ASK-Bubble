@@ -514,7 +514,7 @@ export class DatabaseService {
    */
    addChannelThreadMessageReaction(channel: Channel, threadMessage: ChannelThreadMessage, reaction: Reaction) {
     channel.membersId.forEach(userid => {
-      setDoc(doc(this.firestore, 'users/' + userid + '/channels/' + threadMessage.channelId + '/channelmessages/' + threadMessage.messageId + '/threads/', threadMessage.threadId + '/threadmessages/' + threadMessage.threadMessageId + '/reactions'), reaction);
+      setDoc(doc(this.firestore, 'users/' + userid + '/channels/' + threadMessage.channelId + '/channelmessages/' + threadMessage.messageId + '/threads/', threadMessage.threadId + '/threadmessages/' + threadMessage.threadMessageId + '/reactions', reaction.reactionId ), reaction);
     });
   }
 
@@ -590,16 +590,7 @@ export class DatabaseService {
       }
 
 
-/* TODO Channel Thread Functions */
 
-
-
-
-
-
-
-
-  /*END CHANNEL THREAD FUNCTIONS */
 
 
 
@@ -1068,6 +1059,42 @@ export class DatabaseService {
       });
     });
   }
+
+
+
+    /**
+   * loads all reactions of a message in a channel
+   * @param userId user id
+   * @param channelId channel id
+   * @param channelMessageId message id
+   * @returns list of reactions of a single message in the channel
+   */
+    loadChannelThreadMessageReactions(userId: string, channelId: string, channelMessageId: string, threadMessage: ChannelThreadMessage): Promise<Array<Reaction>> {
+      return new Promise<Array<Reaction>>((resolve, reject) => {
+        const reactionList = [] as Array<Reaction>;
+  
+
+        const path = `users/${userId}/channels/${channelId}/channelmessages/${channelMessageId}/threads/${threadMessage.threadId}/threadmessages/${threadMessage.threadMessageId}/reactions`;
+        const reactionsCollection = collection(this.firestore, path);
+  
+        onSnapshot(reactionsCollection, (snapshot) => {
+          snapshot.forEach((doc) => {
+            const reactionData = doc.data();
+            const reactionObject = {
+              emoji: reactionData['emoji'],
+              messageId: reactionData['messageId'],
+              reactionId: reactionData['reactionId'],
+              userId: reactionData['userId'],
+              userName: reactionData['userName'],
+            } as Reaction;
+            reactionList.push(reactionObject);
+          });
+          resolve(reactionList);
+        }, (error) => {
+          reject(error);
+        });
+      });
+    }
 
 
   /* CONVERSATION FUNCTIONS*/

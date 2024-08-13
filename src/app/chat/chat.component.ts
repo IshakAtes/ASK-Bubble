@@ -373,6 +373,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef;
 
   triggerFileInput(): void {
+    //debugger;
     this.fileInput.nativeElement.click();
   }
 

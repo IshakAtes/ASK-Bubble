@@ -25,6 +25,7 @@ export class FileUploadService {
   fileUploadingThread: boolean = false;
 
   onFileSelected(event: any, thread?: string) {
+    //debugger;
     const selectedFile: File = event.target.files[0];
     if (thread) {
       this.uploadFile(selectedFile, thread);
@@ -36,6 +37,7 @@ export class FileUploadService {
   }
 
   async uploadFile(file: File, thread?: string) {
+    //debugger;
     const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif'];
     const maxSize = 500 * 1024; // 500 KB
 
@@ -96,6 +98,7 @@ export class FileUploadService {
   }
 
   async deletePreview(thread?: string) {
+    //debugger;
     if (this.downloadURL || this.downloadURLThread) {
       try {
 

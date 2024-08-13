@@ -214,9 +214,10 @@
                 [user]="userservice.activeUserObject"
                 [currentThread]="currentThread"
                 [currentChannelThread]="currentChannelThread"
+                [currentChannel]="currentChannel"
                 [channelThread]="channelThread"
                 [specific]="currentConversation"
-                [currentChannel]="currentChannel"
+                
                 (emitCloseThread)="closeThread()"
                 (emitReloadChannel)="setChannelReloadToTrue()"
                 (emitReloadChat)="setChatReloadToTrue($event)"

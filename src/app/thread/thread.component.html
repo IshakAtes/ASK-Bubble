@@ -442,10 +442,10 @@
         
         
             <div class="chat-area">
-                @if (list.length>0) {
+                @if (conversationThreadMessagelist.length>0) {
                 <div class="time-separator">
                     <div class="date">
-                        <span>{{time.formatDate(time.formatTimestamp(list[0].createdAt))}}</span>
+                        <span>{{time.formatDate(time.formatTimestamp(conversationThreadMessagelist[0].createdAt))}}</span>
                     </div>
                     <div class="line"></div>
                 </div>
@@ -514,31 +514,31 @@
                 }
                 }
         
-                @if (list.length > 0) {
+                @if (conversationThreadMessagelist.length > 0) {
                 <div class="thread-message-separator">
-                    <span> {{list.length}} Antworten</span>
+                    <span> {{conversationThreadMessagelist.length}} Antworten</span>
                     <div class="thread-message-separator-line"></div>
                 </div>
                 }
         
-                @if (list.length>0) {
+                @if (conversationThreadMessagelist.length>0) {
         
         
                     <div class="time-separator">
                         <div class="date">
-                            <span>{{time.formatDate(time.formatTimestamp(list[0].createdAt))}}</span>
+                            <span>{{time.formatDate(time.formatTimestamp(conversationThreadMessagelist[0].createdAt))}}</span>
                         </div>
                         <div class="line"></div>
                     </div>
         
-                    @for (message of list; track $index) {
+                    @for (message of conversationThreadMessagelist; track $index) {
                     @if ($index > 0) {
-                    @if (time.formatDate(time.formatTimestamp(list[$index].createdAt)) !=
-                    time.formatDate(time.formatTimestamp(list[$index-1].createdAt)))
+                    @if (time.formatDate(time.formatTimestamp(conversationThreadMessagelist[$index].createdAt)) !=
+                    time.formatDate(time.formatTimestamp(conversationThreadMessagelist[$index-1].createdAt)))
                     {
                     <div class="time-separator">
                         <div class="date">
-                            <span>{{time.formatDate(time.formatTimestamp(list[$index].createdAt))}}</span>
+                            <span>{{time.formatDate(time.formatTimestamp(conversationThreadMessagelist[$index].createdAt))}}</span>
                         </div>
                         <div class="line"></div>
                     </div>

@@ -160,7 +160,6 @@ export class MainComponent{
     }
   }
 
-  /*TODO main component html config input variables channelThread and normal Thread */
   openChannelThread(thread: ChannelThread){
     this.currentChannelThread = thread;
     this.reloadChannel = false;
