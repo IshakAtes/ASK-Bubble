@@ -32,57 +32,41 @@ import { ChannelThreadMessage } from '../../models/channelThreadMessage';
 })
 export class ThreadComponent {
 
-
-
-  //input Data from main component
   @Input() currentThread: Thread;
-
   @Input() specific: Conversation;
   @Input() user: User
-
-
-  // TEST für Channel implementation
   @Input() currentChannelThread: ChannelThread;
   @Input() channelThread: boolean;
   @Input() currentChannel: Channel
   @Output() emitReloadChannel = new EventEmitter<Channel>()
   @Output() emitReloadChat = new EventEmitter<boolean>()
   @Output() emitReloadToFalse = new EventEmitter<boolean>()
+  @Output() emitCloseThread = new EventEmitter<string>();
 
-  mainChannelMessage: ChannelMessage;
   channelThreadMessageList: Array<ChannelThreadMessage> = [];
+  conversationThreadMessagelist: Array<ThreadMessage> = [];
+  allUsers = [] as Array<User>;
+  allChannels: Array<Channel> = [];
+  reactions: Array<Reaction> = [];
   channelMemberList: Array<User> = [];
-  //TEST ENDE
-
 
   sendingUser: User;
   passiveUser: User;
 
-  @Output() emitCloseThread = new EventEmitter<string>();
+  content = '';
 
-  allUsers = [] as Array<User>;
-  conversationThreadMessagelist: Array<ThreadMessage> = [];
-  allChannels: Array<Channel> = [];
-  reactions: Array<Reaction> = [];
-
+  mainChannelMessage: ChannelMessage;
   mainMessage: ConversationMessage;
 
   isChatDataLoaded: boolean = false;
-  userEmojis$: Observable<Array<string>>;
+
   fileUploadError: string | null = null;
   groupedReactions: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
-
-  content = '';
-
+  userEmojis$: Observable<Array<string>>;
 
   @ViewChild('myTextarea') myTextarea!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('lastDiv') lastDiv: ElementRef<HTMLDivElement>;
-
   @ViewChild('fileInput') fileInput!: ElementRef;
-
-  triggerFileInput(): void {
-    this.fileInput.nativeElement.click();
-  }
 
   constructor(
     public databaseService: DatabaseService,
@@ -94,8 +78,6 @@ export class ThreadComponent {
     public edit: EditMessageService,
     public chat: GeneralChatService,
   ) {
-
-
     this.allChannels = mAndC.allChannels;
     this.allUsers = mAndC.allUsers;
     this.reactions = chat.reactions;
@@ -110,137 +92,137 @@ export class ThreadComponent {
       }
     });
 
-
-
+    this.loadMainMessage();
     setTimeout(() => {
-      this.loadMainMessage();
-      setTimeout(() => {
-        this.loadAllMessages();
-        console.log('list');
-        console.log(this.conversationThreadMessagelist);
-      }, 1000);
+      this.loadAllMessages();
     }, 1000);
 
-
-
-    setTimeout(() => {
-      this.isChatDataLoaded = true
-      if (this.channelThread) {
-        this.loadMemberList();
-      }
-    }, 3000);
-
-
+    this.loadMemberListForChannelThreadHTML()
   }
 
 
-    /**
-   * handles the fileupload error
+  /**
+   * loads member list for html if thread is opened by channel
    */
-    handleFileUploadError() {
+  loadMemberListForChannelThreadHTML(){
+    if (this.channelThread) {
+      this.loadMemberList().then(() => {
+        this.isChatDataLoaded = true
+      });
+    }
+    else{
+      setTimeout(() => {
+        this.isChatDataLoaded = true
+      }, 1500);
+    }
+  }
+
+
+  /**
+   * opens the dialog to upload a file
+   */
+  triggerFileInput(): void {
+    this.fileInput.nativeElement.click();
+  }
+
+
+  /**
+   * handles the fileupload error
+  */
+  handleFileUploadError() {
       this.fileUpload.fileUploadError$.subscribe(error => {
         this.fileUploadError = error;
         setTimeout(() => {
           this.fileUploadError = null;
         }, 2500);
       });
-    }
+  }
 
 
+  /**
+   * loads the mainmessage either from the channel or the conversation
+   */
   loadMainMessage() {
     if (this.channelThread) {
-      //Logik, falls Thread durch Channel geöffnet wird
-      setTimeout(() => {
-        this.databaseService.loadSpecificChannelMessage(this.user.userId, this.currentChannelThread.channelId, this.currentChannelThread.messageId)
-          .then(message => {
-            this.mainChannelMessage = message;
-            console.log('mainchannelMessage', this.mainChannelMessage); // Log nach dem Laden der Nachricht
-          })
-          .catch(error => {
-            console.error('Error loading message:', error);
-          });
-      }, 1000);
+      this.threadOpenedByChannel();
     }
     else {
-      //Logik, falls Thread durch Conversation geöffnet wird
-      setTimeout(() => {
-        this.databaseService.loadSpecificConversationMessage(this.user.userId, this.currentThread.conversationId, this.currentThread.messageId)
-          .then(message => {
-            this.mainMessage = message;
-            console.log(this.mainMessage); // Log nach dem Laden der Nachricht
-          })
-          .catch(error => {
-            console.error('Error loading message:', error);
-          });
-      }, 1000);
+      this.threadOpenedByConversation()
     }
-
   }
 
 
+  /**
+   * loads the main channelmessage
+   */
+  threadOpenedByChannel(){
+    setTimeout(() => {
+      this.databaseService.loadSpecificChannelMessage(this.user.userId, this.currentChannelThread.channelId, this.currentChannelThread.messageId)
+        .then(message => {
+          this.mainChannelMessage = message;
+        })
+        .catch(error => {
+          console.error('Error loading message:', error);
+        });
+    }, 1000);
+  }
+
+
+  /**
+   * loads the main conversationmessage
+   */
+  threadOpenedByConversation(){
+    setTimeout(() => {
+      this.databaseService.loadSpecificConversationMessage(this.user.userId, this.currentThread.conversationId, this.currentThread.messageId)
+        .then(message => {
+          this.mainMessage = message;
+        })
+        .catch(error => {
+          console.error('Error loading message:', error);
+        });
+    }, 1000);
+  }
+
+
+  /**
+   * loads all threadmessages from the conversation or channel mainmessage
+   */
   loadAllMessages() {
     if (this.channelThread) {
-      //Logik, falls Thread durch Channel geöffnet wird
-      this.databaseService.loadChannelThreadMessages(this.currentChannelThread).then(messageList => {
-        this.channelThreadMessageList = messageList;
-        this.channelThreadMessageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-        console.log('channelThreadMessageList');
-        console.log(this.channelThreadMessageList);
-      });
+      this.loadChannelThreadMessages()
     }
     else {
-      //Logik, falls Thread durch Conversation geöffnet wird
-      this.databaseService.loadThreadMessages(this.currentThread).then(messageList => {
-        this.conversationThreadMessagelist = messageList;
-        this.conversationThreadMessagelist.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-
-        console.log('list');
-        console.log(this.conversationThreadMessagelist);
-      });
+      this.loadConversationThreadMessages()
     }
   }
 
 
-
-  async saveNewMessageReaction(event: any, convo: ThreadMessage, userId: string, reactionbar?: string) {
-    let emoji: string
-    if (reactionbar) {
-      emoji = reactionbar
-    } else {
-      emoji = event.emoji.native
-    }
-
-    const userAlreadyReacted = this.reactions.some(reaction =>
-      reaction.messageId === convo.messageId && reaction.emoji === emoji && reaction.userId === userId
-    );
-    if (userAlreadyReacted) {
-      console.log('User has already reacted with this emoji');
-      return;
-    }
-
-    this.reactions = [];
-    let reaction = this.databaseService.createThreadMessageReaction(emoji, userId, this.user.name, convo);
-    await this.databaseService.addThreadMessageReaction(this.specific, convo, reaction)
-    await this.loadAllMessageReactions();
-
-
-
-    this.chat.reactions = this.reactions
-
-    setTimeout(() => {
-      this.chat.groupReactions(this.conversationThreadMessagelist)
-    }, 500);
-
-
-    this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
-    this.mAndC.loadUsersOfUser();
-    this.mAndC.loadChannlesofUser()
-
-    this.mAndC.selectedMessageId = null;
+  /**
+   * loads all threadmessages from the main channelmessage
+   */
+  loadChannelThreadMessages(){
+    this.databaseService.loadChannelThreadMessages(this.currentChannelThread).then(messageList => {
+      this.channelThreadMessageList = messageList;
+      this.channelThreadMessageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+    });
   }
 
 
+  /**
+   * loads all threadmessages from the main conversationmessage
+   */
+  loadConversationThreadMessages(){
+    this.databaseService.loadThreadMessages(this.currentThread).then(messageList => {
+      this.conversationThreadMessagelist = messageList;
+      this.conversationThreadMessagelist.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+    });
+  }
 
+
+  /**
+   * loads threadmessage reactions depending on channelthreadmessage
+   * or conversationthreadmessage
+   */
   loadAllMessageReactions() {
     if (this.channelThread) {
       //Logik, falls Thread durch Channel geöffnet wird
@@ -269,24 +251,27 @@ export class ThreadComponent {
   }
 
 
-
+  /**
+   * updates a threadmessage from a conversation
+   * @param message threadmessage object
+   */
   updateMessage(message: ThreadMessage) {
     const updatedContent = this.edit.editContent;
     this.edit.isEditing = false;
     this.edit.selectedMessageIdEdit = null;
     message.content = updatedContent;
-
     this.databaseService.updateThreadMessage(message, this.specific).then(() => {
       console.log('Message updated successfully');
     }).catch(error => {
       console.error('Error updating message: ', error);
     });
-
     this.loadAllMessages();
-  }
+}
 
 
-
+/**
+ * saves new thread message created by a conversation thread
+ */
   async saveNewMessage() {
     if (this.content == '' && this.fileUpload.downloadURLThread == '') {
       this.displayEmptyContentError();
@@ -310,99 +295,166 @@ export class ThreadComponent {
       this.fileUpload.downloadURLThread = '';
       this.emitReloadChat.emit(true);
     }
+}
+
+
+/**
+ * avoids sending empty messages
+ */
+displayEmptyContentError() {
+  this.fileUploadError = 'Das abschicken von leeren Nachrichten ist nicht möglich';
+  setTimeout(() => {
+    this.fileUploadError = null;
+    console.log(this.fileUploadError);
+  }, 2500);
+};
+
+
+/**
+ * Scroll to the bottom of the chatarea 
+ */
+scrollToBottom(): void {
+  try {
+    if(this.conversationThreadMessagelist.length > 0) {
+  this.lastDiv.nativeElement.scrollIntoView();
   }
 
-  /**
-   * avoids sending empty messages
-   */
-  displayEmptyContentError() {
-    this.fileUploadError = 'Das abschicken von leeren Nachrichten ist nicht möglich';
+      } catch (err) {
+    console.error('Scroll to bottom failed', err);
+  }
+}
+
+
+/**
+ * loads the memberlist of the channel need for the HTML
+ * @returns  promise 
+ */
+async loadMemberList(): Promise < void> {
+  const memberPromises = this.currentChannel.membersId.map(member => {
+    this.databaseService.loadUser(member)
+      .then(user => {
+        this.channelMemberList.push(user);
+      })
+  });
+  return Promise.all(memberPromises).then(() => {
+  });
+}
+
+
+/**
+ * saves new thread message created by a channel thread
+ */
+async saveNewChannelThreadMessage() {
+  if (this.content == '' && this.fileUpload.downloadURLThread == '') {
+      this.displayEmptyContentError();
+    } else {
+    this.channelThreadMessageList = [];
+    let newMessage: ChannelThreadMessage = this.databaseService.createChannelThreadMessage(this.currentChannel, this.content, this.user.userId, this.currentChannelThread, this.fileUpload.downloadURLThread)
+    const timestamp: Timestamp = newMessage.createdAt;
+    this.databaseService.addChannelThreadMessage(this.currentChannelThread, newMessage, this.currentChannel)
+    this.content = '';
+    const newContent = '';
+    this.mAndC.contentThread.next(newContent);
+    await this.databaseService.loadChannelThreadMessages(this.currentChannelThread).then(messageList => {
+      this.channelThreadMessageList = messageList;
+      this.channelThreadMessageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+    })
+    const count: number = this.channelThreadMessageList.length;
+    this.databaseService.updateMessageChannelThreadCountAndThreadTime(newMessage, this.currentChannel, count, timestamp)
     setTimeout(() => {
-      this.fileUploadError = null;
-      console.log(this.fileUploadError);
-    }, 2500);
-  };
+      this.scrollToBottom();
+    }, 10);
+    this.fileUpload.downloadURLThread = '';
+    this.emitReloadChannel.emit()
+  }
+}
 
 
+/**
+ * updates a threadmessage from a channel
+ * @param message channelthreadmessage object
+ */
+updateChannelThreadMessage(message: ChannelThreadMessage){
+  const updatedContent = this.edit.editContent;
+  this.edit.isEditingThread = false;
+  this.edit.selectedMessageIdEdit = null;
+  message.content = updatedContent;
+  this.databaseService.updateChannelThreadMessage(message, this.currentChannel)
+  this.loadAllMessages();
+}
 
+
+/**
+ * reloads channel and chat threadmessages and loads html information
+ *  after a change
+ */
 ngOnChanges() {
+  this.loadMainMessage();
+  setTimeout(() => {
+    this.loadAllMessages();
+  }, 1000);
   
-
-
   if (!this.channelThread) {
+    this.loadingPassiveUserConversationWithSelf()
+    this.loadingPassiveUserFromCreatorUser();
+    this.loadingPassiveUserFromRecipientUser();
+    console.log('active', this.sendingUser);
+    console.log('passiv', this.passiveUser);
+  }
+}
 
-    //     // this.sendingUser = new User()
-    //     // this.passiveUser = new User()
 
-    //defining passiveUser if specific = ConversationWithSelf
+/**
+ * defining passiveUser if specific = ConversationWithSelf
+ */
+loadingPassiveUserConversationWithSelf(){
     if (this.specific.createdBy == this.specific.recipientId) {
       this.databaseService.loadUser(this.specific.createdBy)
         .then(creatorUser => {
           if (creatorUser.userId == this.user.userId) {
             this.passiveUser = creatorUser;
           }
-
         })
     }
+}
 
-    this.databaseService.loadUser(this.specific.createdBy)
-      .then(creatorUser => {
-        if (creatorUser.userId == this.user.userId) {
-          this.sendingUser = creatorUser;
-          console.log('this is the creatorUser', this.sendingUser)
-        }
-        else {
-          this.passiveUser = creatorUser;
-        }
-      })
 
-    this.databaseService.loadUser(this.specific.recipientId)
-      .then(recipientUser => {
-        if (recipientUser.userId == this.user.userId) {
-          this.sendingUser = recipientUser;
-          console.log('this is the recipientUser', this.passiveUser)
-        }
-        else {
-          this.passiveUser = recipientUser;
-        }
-      })
+/**
+ * defining passiveUser if user is creator
+ */
+loadingPassiveUserFromCreatorUser(){
+  this.databaseService.loadUser(this.specific.createdBy)
+  .then(creatorUser => {
+    if (creatorUser.userId == this.user.userId) {
+      this.sendingUser = creatorUser;
+    }
+    else {
+      this.passiveUser = creatorUser;
+    }
+  })
+}
 
-    console.log('active', this.sendingUser);
 
-    console.log('passiv', this.passiveUser);
-
-    this.loadMainMessage();
-    setTimeout(() => {
-      this.loadAllMessages();
-      console.log('list');
-      console.log(this.conversationThreadMessagelist);
-    }, 1000);
-  }
-  else {
-    this.loadMainMessage();
-    setTimeout(() => {
-      this.loadAllMessages();
-      console.log('list');
-      console.log(this.conversationThreadMessagelist);
-    }, 1000);
-  }
+/**
+ * defining passiveUser if user is recipient
+ */
+loadingPassiveUserFromRecipientUser(){
+  this.databaseService.loadUser(this.specific.recipientId)
+  .then(recipientUser => {
+    if (recipientUser.userId == this.user.userId) {
+      this.sendingUser = recipientUser;
+    }
+    else {
+      this.passiveUser = recipientUser;
+    }
+  })
 }
 
 
 
-
-// Scroll to the bottom of the chatarea 
-scrollToBottom(): void {
-  try {
-    if(this.conversationThreadMessagelist.length > 0) {
-  this.lastDiv.nativeElement.scrollIntoView();
-}
-
-    } catch (err) {
-  console.error('Scroll to bottom failed', err);
-}
-  }
-
+/**
+ * closes the currently opened thread
+ */
 closeThread(){
   //debugger
   this.emitCloseThread.emit()
@@ -424,62 +476,51 @@ closeThread(){
 
 
 
-//NEW
 
 
-/**
- * loads the memberlist of the channel
- * @returns  promise 
- */
-loadMemberList(): Promise < void> {
-  const memberPromises = this.currentChannel.membersId.map(member => {
-    this.databaseService.loadUser(member)
-      .then(user => {
-        this.channelMemberList.push(user);
-      })
-  });
-  return Promise.all(memberPromises).then(() => {
-  });
-}
 
 
-async saveNewChannelThreadMessage() {
-  if (this.content == '' && this.fileUpload.downloadURLThread == '') {
-    this.displayEmptyContentError();
+async saveNewMessageReaction(event: any, convo: ThreadMessage, userId: string, reactionbar?: string) {
+  let emoji: string
+  if (reactionbar) {
+    emoji = reactionbar
   } else {
-  this.channelThreadMessageList = [];
-  let newMessage: ChannelThreadMessage = this.databaseService.createChannelThreadMessage(this.currentChannel, this.content, this.user.userId, this.currentChannelThread, this.fileUpload.downloadURLThread)
-  const timestamp: Timestamp = newMessage.createdAt;
-  this.databaseService.addChannelThreadMessage(this.currentChannelThread, newMessage, this.currentChannel)
-  this.content = '';
-  const newContent = '';
-  this.mAndC.contentThread.next(newContent);
-  await this.databaseService.loadChannelThreadMessages(this.currentChannelThread).then(messageList => {
-    this.channelThreadMessageList = messageList;
-    this.channelThreadMessageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-  })
-  const count: number = this.channelThreadMessageList.length;
-  this.databaseService.updateMessageChannelThreadCountAndThreadTime(newMessage, this.currentChannel, count, timestamp)
+    emoji = event.emoji.native
+  }
+
+  const userAlreadyReacted = this.reactions.some(reaction =>
+    reaction.messageId === convo.messageId && reaction.emoji === emoji && reaction.userId === userId
+  );
+  if (userAlreadyReacted) {
+    console.log('User has already reacted with this emoji');
+    return;
+  }
+
+  this.reactions = [];
+  let reaction = this.databaseService.createThreadMessageReaction(emoji, userId, this.user.name, convo);
+  await this.databaseService.addThreadMessageReaction(this.specific, convo, reaction)
+  await this.loadAllMessageReactions();
+
+
+
+  this.chat.reactions = this.reactions
+
   setTimeout(() => {
-    this.scrollToBottom();
-  }, 10);
-  this.fileUpload.downloadURLThread = '';
-  this.emitReloadChannel.emit()
+    this.chat.groupReactions(this.conversationThreadMessagelist)
+  }, 500);
+
+
+  this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
+  this.mAndC.loadUsersOfUser();
+  this.mAndC.loadChannlesofUser()
+
+  this.mAndC.selectedMessageId = null;
 }
-}
 
 
 
 
 
-updateChannelThreadMessage(message: ChannelThreadMessage){
-  const updatedContent = this.edit.editContent;
-  this.edit.isEditingThread = false;
-  this.edit.selectedMessageIdEdit = null;
-  message.content = updatedContent;
-  this.databaseService.updateChannelThreadMessage(message, this.currentChannel)
-  this.loadAllMessages();
-}
 
 
 async saveNewChannelMessageReaction(event: any, convo: ChannelThreadMessage, userId: string, reactionbar ?: string) {
