@@ -258,6 +258,9 @@ export class ChannelComponent implements OnInit {
    * saves the new message into the database and displays it in the chat area
    */
   saveNewMessage() {
+    if (this.content == '' && this.fileService.downloadURL == '') {
+      this.displayEmptyContentError();
+    } else {
     this.messageList = [];
     let newMessage: ChannelMessage = this.database.createChannelMessage(this.channel, this.content, this.activeUser.userId, this.fileService.downloadURL)
     this.database.addChannelMessage(this.channel, newMessage)
@@ -273,6 +276,18 @@ export class ChannelComponent implements OnInit {
     }, 10);
     this.fileService.downloadURL = '';
   }
+}
+
+  /**
+   * avoids sending empty messages
+   */
+  displayEmptyContentError() {
+    this.fileUploadError = 'Das abschicken von leeren Nachrichten ist nicht möglich';
+    setTimeout(() => {
+      this.fileUploadError = null;
+      console.log(this.fileUploadError);
+    }, 2500);
+  };
 
 
   /**

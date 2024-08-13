@@ -69,10 +69,10 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.allChannels = mAndC.allChannels;
     this.allUsers = mAndC.allUsers;
     this.reactions = chat.reactions;
-    this.chat.groupedReactions$.subscribe(groupedReactions => {this.groupedReactions = groupedReactions;});
+    this.chat.groupedReactions$.subscribe(groupedReactions => { this.groupedReactions = groupedReactions; });
     const newContent = '';
     this.mAndC.content.next(newContent);
-    this.mAndC.content.subscribe(newContent => {this.content = newContent;});
+    this.mAndC.content.subscribe(newContent => { this.content = newContent; });
     this.handleFileUploadError();
     this.mAndC.getFocusTrigger().subscribe(() => {
       if (this.myTextarea) {
@@ -97,13 +97,13 @@ export class ChatComponent implements AfterViewInit, OnInit {
 
   ngOnInit() {
     this.isChatDataLoaded = false;
-    
+
     /*
     this.loadAllMessages().then(() => {
       this.initializeChat()
     });
     */
-    
+
 
     this.databaseService.loadUser(this.specific.createdBy)
       .then(creatorUser => {
@@ -134,15 +134,15 @@ export class ChatComponent implements AfterViewInit, OnInit {
 
 
   /*wird ggf nicht gebraucht */
-  initializeChat(){
+  initializeChat() {
 
     this.loadAllMessageReactions()
     setTimeout(() => {
       this.chat.groupReactions(this.list).then(() => {
         this.isChatDataLoaded = true;
       })
-  
-      }, 1000);
+
+    }, 1000);
   }
 
 
@@ -199,15 +199,15 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.user.userId);
 
 
-    this.loadAllMessages().then(()=> {
+    this.loadAllMessages().then(() => {
       this.initializeChatAfterChange();
     })
 
-    
+
   }
 
 
-  initializeChatAfterChange(){
+  initializeChatAfterChange() {
     this.loadAllMessageReactions();
     setTimeout(() => {
       this.chat.groupReactions(this.list)
@@ -243,26 +243,38 @@ export class ChatComponent implements AfterViewInit, OnInit {
 
   //kopieren
   saveNewMessage() {
-    this.list = [];
-    let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specific, this.content, this.user.userId, this.fileUpload.downloadURL)
+    if (this.content == '' && this.fileUpload.downloadURL == '') {
+      this.displayEmptyContentError();
+    } else {
+      this.list = [];
+      let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specific, this.content, this.user.userId, this.fileUpload.downloadURL)
 
-    this.databaseService.addConversationMessage(this.specific, newMessage)
+      this.databaseService.addConversationMessage(this.specific, newMessage)
 
-    this.content = '';
-    const newContent = '';
-    this.mAndC.content.next(newContent);
+      this.content = '';
+      const newContent = '';
+      this.mAndC.content.next(newContent);
 
-    this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId).then(messageList => {
-      this.list = messageList;
-      this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-    })
+      this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId).then(messageList => {
+        this.list = messageList;
+        this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+      })
 
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 10);
+      setTimeout(() => {
+        this.scrollToBottom();
+      }, 10);
 
-    this.fileUpload.downloadURL = '';
+      this.fileUpload.downloadURL = '';
+    }
   }
+
+  displayEmptyContentError() {
+    this.fileUploadError = 'Das abschicken von leeren Nachrichten ist nicht möglich';
+    setTimeout(() => {
+      this.fileUploadError = null;
+      console.log(this.fileUploadError);
+    }, 2500);
+  };
 
 
   //kopieren
