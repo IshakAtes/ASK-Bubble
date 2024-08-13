@@ -152,6 +152,7 @@ export class ChannelComponent implements OnInit {
           this.loadChannelMessages(),
           this.loadChannelCreator(),
         ]).then(() => {
+          this.reload = false;
           this.initializeChannelAfterChange()
         }).catch(error => { console.log('this ', error) });
       }, 1000);
@@ -168,7 +169,7 @@ export class ChannelComponent implements OnInit {
     setTimeout(() => {
       this.chatService.groupReactions(this.messageList)
       .then(() => {
-        //this.changeReload(); //Important to be able to load another channel
+        this.changeReload(); //Important to be able to load another channel
         this.isdataLoaded = true;
       })
     }, 1000);
@@ -275,6 +276,7 @@ export class ChannelComponent implements OnInit {
       this.scrollToBottom();
     }, 10);
     this.fileService.downloadURL = '';
+
   }
 }
 
@@ -425,7 +427,8 @@ export class ChannelComponent implements OnInit {
       console.log(thread);
       this.database.addChannelThread(thread, this.channel)
       this.database.updateMessageChannelThreadId(thread, this.channel)
-      this.changeReload();
+      this.reload = true;
+      this.ngOnChanges();
       this.openThread(thread);
       
     }

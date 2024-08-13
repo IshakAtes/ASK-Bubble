@@ -163,6 +163,7 @@ export class MainComponent{
   /*TODO main component html config input variables channelThread and normal Thread */
   openChannelThread(thread: ChannelThread){
     this.currentChannelThread = thread;
+    this.reloadChannel = false;
     if(this.userservice.deviceWidth < 1200){
       this.thread = true;
       this.channelThread = true;
@@ -203,11 +204,13 @@ export class MainComponent{
   * @param reload boolean
   */
   setReloadToFalse(reload: boolean){
+ 
     this.reloadChannel = false;
+    this.reloadChat = false;
   }
 
-  setChannelReloadToTrue(reload: boolean){
-    this.reloadChannel = reload
+  setChannelReloadToTrue(){
+    this.reloadChannel = true;
   }
 
   /**
@@ -215,7 +218,7 @@ export class MainComponent{
    * @param reload 
    */
   setChatReloadToTrue(reload: boolean){
-    this.reloadChat = reload
+    this.reloadChat = true
   }
 
 

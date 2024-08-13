@@ -55,8 +55,9 @@
                     [currentChannel]="currentChannel"
                     
                     (emitCloseThread)="closeThread()"
-                    (emitReloadChannel)="setChannelReloadToTrue($event)"
+                    (emitReloadChannel)="setChannelReloadToTrue()"
                     (emitReloadChat)="setChatReloadToTrue($event)"
+                    (emitReloadToFalse)="setReloadToFalse($event)"
                     > 
 
                     </app-thread>
@@ -132,8 +133,9 @@
                         [specific]="currentConversation"
                         [currentChannel]="currentChannel"
                         (emitCloseThread)="closeThread()"
-                        (emitReloadChannel)="setChannelReloadToTrue($event)"
+                        (emitReloadChannel)="setChannelReloadToTrue()"
                         (emitReloadChat)="setChatReloadToTrue($event)"
+                        (emitReloadToFalse)="setReloadToFalse($event)"
                     >
                        
                     </app-thread>
@@ -216,8 +218,9 @@
                 [specific]="currentConversation"
                 [currentChannel]="currentChannel"
                 (emitCloseThread)="closeThread()"
-                (emitReloadChannel)="setChannelReloadToTrue($event)"
+                (emitReloadChannel)="setChannelReloadToTrue()"
                 (emitReloadChat)="setChatReloadToTrue($event)"
+                (emitReloadToFalse)="setReloadToFalse($event)"
                 >
 
                 </app-thread>

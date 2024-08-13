@@ -134,16 +134,16 @@ export class ChatComponent implements AfterViewInit, OnInit {
 
 
   /*wird ggf nicht gebraucht */
-  initializeChat() {
+  // initializeChat() {
 
-    this.loadAllMessageReactions()
-    setTimeout(() => {
-      this.chat.groupReactions(this.list).then(() => {
-        this.isChatDataLoaded = true;
-      })
+  //   this.loadAllMessageReactions()
+  //   setTimeout(() => {
+  //     this.chat.groupReactions(this.list).then(() => {
+  //       this.isChatDataLoaded = true;
+  //     })
 
-    }, 1000);
-  }
+  //   }, 1000);
+  // }
 
 
   changeReload() {
@@ -202,9 +202,8 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.loadAllMessages().then(() => {
       this.initializeChatAfterChange();
     })
-
-
   }
+
 
 
   initializeChatAfterChange() {
@@ -212,6 +211,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     setTimeout(() => {
       this.chat.groupReactions(this.list)
         .then(() => {
+          this.changeReload();
           this.isChatDataLoaded = true;
         });
     }, 1000);
@@ -402,6 +402,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
       console.log(thread);
       this.databaseService.addThread(thread)
       this.databaseService.updateMessageThreadId(thread)
+      this.ngOnChanges();
       this.openThread(thread);
     }
   }

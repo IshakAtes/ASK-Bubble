@@ -45,8 +45,9 @@ export class ThreadComponent {
   @Input() currentChannelThread: ChannelThread;
   @Input() channelThread: boolean;
   @Input() currentChannel: Channel
-  @Output() emitReloadChannel = new EventEmitter<boolean>()
+  @Output() emitReloadChannel = new EventEmitter<Channel>()
   @Output() emitReloadChat = new EventEmitter<boolean>()
+  @Output() emitReloadToFalse = new EventEmitter<boolean>()
 
   mainChannelMessage: ChannelMessage;
   channelThreadMessageList: Array<ChannelThreadMessage> = [];
@@ -136,27 +137,6 @@ export class ThreadComponent {
         console.log('list');
         console.log(this.list);
       }, 1000);
-
-      /*
-      if(this.channelThread){   
-        //Logik, falls Thread durch Channel geöffnet wird
-        this.loadMainMessage();
-        setTimeout(() => {
-          this.loadAllMessages();
-          console.log('list');
-          console.log(this.list);
-        }, 1000);  
-      }
-      else{
-        //Logik, falls Thread durch Conversation geöffnet wird
-        this.loadMainMessage();
-        setTimeout(() => {
-          this.loadAllMessages();
-          console.log('list');
-          console.log(this.list);
-        }, 1000);
-      }
-        */
     }, 1000);
 
 
@@ -429,11 +409,6 @@ scrollToBottom(): void {
 
 closeThread(){
   this.emitCloseThread.emit()
-  // console.log(this.currentThread)
-  // console.log(this.specific)
-  // console.log(this.user)
-  // console.log(this.fileUploadError);
-  // console.log(this.fileUpload.fileUploading);
 }
 
 
@@ -479,7 +454,7 @@ async saveNewChannelThreadMessage() {
     this.scrollToBottom();
   }, 10);
   this.fileUpload.downloadURLThread = '';
-  this.emitReloadChannel.emit(true)
+  this.emitReloadChannel.emit()
 }
 }
 
