@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateEmail, updatePassword, user, updateProfile, sendEmailVerification } from '@angular/fire/auth';
 import { from, Observable } from 'rxjs';
 import { EmailAuthProvider, getAuth, onAuthStateChanged, UserCredential, reauthenticateWithCredential } from "firebase/auth";
@@ -16,6 +16,8 @@ export class AuthService {
   us = inject(UserService);
   errorMessage: string | null = null;
   provider = new GoogleAuthProvider();
+  activeUser? = user(this.firebaseAuth);
+  currentUserSignal = signal<User | null | undefined>(undefined);
   
 
   constructor() {}
@@ -29,7 +31,7 @@ export class AuthService {
         if (fbUser) {
           console.log('currentUser', fbUser);
           // Update email
-          if (newEmail !== fbUser.email) {
+          if (newEmail !== fbUser.email && currentPassword) {
             // Reauthenticate the user with the current email and password
             const credential = EmailAuthProvider.credential(email, currentPassword ?? '');
             await reauthenticateWithCredential(fbUser, credential);

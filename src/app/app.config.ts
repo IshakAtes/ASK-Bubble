@@ -27,11 +27,7 @@ export const appConfig: ApplicationConfig = {
         "messagingSenderId":firebaseConfig.messagingSenderId
       })),
       provideAuth(() => getAuth()),
-      provideFirestore(() => getFirestore()), provideAnimationsAsync(), provideAnimationsAsync(), 
-      provideAnimationsAsync(), provideAnimationsAsync(), 
-      provideAnimationsAsync(), provideAnimationsAsync(), 
-      provideAnimationsAsync(), provideAnimationsAsync(), 
-      provideAnimationsAsync(), provideAnimationsAsync(), 
+      provideFirestore(() => getFirestore()), provideAnimationsAsync(),
 
       provideStorage(() => getStorage()),
   ]
