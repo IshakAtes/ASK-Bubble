@@ -5,7 +5,7 @@ export class User {
     avatarUrl: string | undefined | null;
     userId: string;
     logIn: string;
-    usedLastTwoEmojis: Array<string>;
+    usedLastTwoEmojis: Array<string> | string[];
     uid: string | null;
 
     constructor(obj?: any){

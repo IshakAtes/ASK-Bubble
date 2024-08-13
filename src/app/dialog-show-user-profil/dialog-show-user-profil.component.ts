@@ -52,6 +52,24 @@ export class DialogShowUserProfilComponent implements OnInit {
       email: [this.userData.email, [Validators.email]],
       password: ['', [Validators.minLength(6)]]
     });
+    this.authService.activeUser?.subscribe((user) => {
+      if (user) {
+        const customUser = new User({
+          email: user.email!,
+          name: user.displayName!,
+          status: 'online',
+          avatarUrl: user.photoURL,
+          userId: this.authService.us.loggedUser.userId,
+          logIn: this.authService.us.loggedUser.logIn,
+          usedLastTwoEmojis: this.authService.us.loggedUser.usedLastTwoEmojis,
+          uid: user.uid
+        });
+        this.authService.currentUserSignal.set(customUser);
+      } else {
+        this.authService.currentUserSignal.set(null);
+      }
+      console.log(this.authService.currentUserSignal());
+    })
   }
 
   onEmailChange(): void {
@@ -66,14 +84,27 @@ export class DialogShowUserProfilComponent implements OnInit {
     // Erfasse das aktuelle Passwort nur, wenn die E-Mail geändert wurde
     const currentPassword: string | null = this.showPasswordInput ? this.userPassword : null;
   
-    await this.authService.changeUserData(
-      this.myForm.value.email,
-      this.userData.email,
-      currentPassword,
-      this.userData.name,
-      this.userData.avatarUrl
-    );
-    this.editMode = false;
+    if (currentPassword === '') {
+      alert('Falsches Passwort');
+      this.userData.email = this.myForm.value.email;
+    } else {
+      await this.authService.changeUserData(
+        this.myForm.value.email,
+        this.userData.email,
+        currentPassword,
+        this.userData.name,
+        this.userData.avatarUrl
+      );
+      // ES KANN SEIN DAS ICH DIESEN ABSCHNITT MIT SETTIMEOUT RAUSNEHMEN MUSS; DA ICH
+      // PROBLEMMELDUNGEN IN FIREBASE BEKOMME
+      setTimeout(() => {
+        console.log(this.authService.activeUser);
+        this.myForm.value.email = this.userData.email;
+      }, 500)
+      this.userPassword = '';
+      
+      this.editMode = false;
+    }
   }
   
 
@@ -108,8 +139,9 @@ export class DialogShowUserProfilComponent implements OnInit {
 
   openEditTemplate() {
     this.editMode = true;
+    this.showPasswordInput = false;
     this.newData = this.userData;
-    this.selectedAvatar = this.userData.avatarUrl ?? '../../assets/img/unUsedDefault.png';
+    this.selectedAvatar = this.userData.avatarUrl ?? '/assets/img/unUsedDefault.png';
   }
 
 
@@ -134,6 +166,11 @@ export class DialogShowUserProfilComponent implements OnInit {
   //   console.log('click');
   //   this.changeToConversation.emit(this.us.activeUserOwnConversation);
   // }
+
+  closeEdit() {
+    this.editMode = false;
+  }
+
 
   onClose(): void {
     this.editMode = false;

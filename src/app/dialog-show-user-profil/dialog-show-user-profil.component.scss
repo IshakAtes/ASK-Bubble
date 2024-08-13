@@ -244,6 +244,28 @@ section {
                 color: #1381FF;
             }
     }
+
+
+    .passwordField {
+        height: 55px;
+        padding: 15px 20px 15px 20px;
+        gap: 10px;
+        border-radius: 30px;
+        border: 1px solid #ADB0D9;
+        font-family: Nunito;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24.55px;
+        text-align: left;
+        color: #686868;
+        &:hover {
+            border: 1px solid #797EF3
+        }
+        &:focus {
+            border: 1px solid #444DF2;
+            outline: none;
+        }
+    }
   
 
     .sendMessage{
