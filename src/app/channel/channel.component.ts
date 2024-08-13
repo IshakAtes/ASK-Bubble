@@ -143,6 +143,12 @@ export class ChannelComponent implements OnInit {
    */
   ngOnChanges() {
     if (this.reload) {
+      /*reset reactions and set reactions to observable */
+      this.chatService.reactions = [];
+      this.reactions = this.chatService.reactions;
+      this.chatService.groupedReactions$.subscribe(groupedReactions => { this.groupedReactions = groupedReactions; });
+  
+
       this.memberList = [];
       this.messageList = [];
       this.isdataLoaded = false;

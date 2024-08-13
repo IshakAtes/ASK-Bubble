@@ -159,6 +159,11 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.isChatDataLoaded = false;
     this.sendingUser = new User()
     this.passiveUser = new User()
+    
+    /*reset reactions and set reactions to observable to avoid double loading reactions*/
+    this.chat.reactions = [];
+    this.reactions = this.chat.reactions;
+    this.chat.groupedReactions$.subscribe(groupedReactions => { this.groupedReactions = groupedReactions; });
 
 
     //defining passiveUser if specific = ConversationWithSelf
