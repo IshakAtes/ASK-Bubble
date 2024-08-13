@@ -68,6 +68,14 @@
     }
 }
 
+.reactionbar {
+    width: unset !important;
+}
+
+.own-reactionbar {
+    width: unset !important;
+}
+
 
 @media (max-width: 1650px) {
     .main-thread {
