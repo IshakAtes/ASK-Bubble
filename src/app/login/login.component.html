@@ -1,10 +1,13 @@
 <section>
+    <!-- Overlay Section -->
     <div [ngClass]="{'introOverlay': intro, 'overlay': !intro}">
-        <div>
+        <div class="introLogoCt">
             <img [ngClass]="{'toLeft': switchlogo}" src="../../assets/img/Logoo.png" alt="">
             <span [ngClass]="{'visible': textVisible}">DABubble</span>
         </div>
     </div>
+
+    <!-- Navigation -->
     <nav>
         <div class="logoContainer">
             <img src="../../assets/img/Logo.png" alt="logo">
@@ -15,11 +18,14 @@
             <a [routerLink]="['/signUp']">Konto erstellen</a>
         </div>
     </nav>
+
+    <!-- Main Container -->
     <div class="mainContainer">
         <form (ngSubmit)="onSubmit()" [formGroup]="myForm" class="card" data-aos="fade-right">
             <h1>Anmeldung</h1>
             <span>Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</span>
             <div class="loginCt">
+                <!-- Email Input -->
                 <input
                 type="email"
                 formControlName="mail"
@@ -34,6 +40,7 @@
                     *Diese E-Mail-Adresse is leider ungültig.
                 </p>
             </div>
+            <!-- Password Input -->
             <div class="loginCt">
                 <input
                 type="password"
@@ -49,16 +56,23 @@
                     Falsches Passwort. Bitte noch einmal versuchen.
                 </p>
             </div>
+            <!-- General Error Message -->
             <p
             *ngIf="this.us.wrongLogin"
             class="errorStyle2">
                 Falsche E-Mail-Adresse oder Passwort. Bitte versuchen Sie es erneut.
             </p>
+
+            <!-- Forgot Password Link -->
             <a [routerLink]="['/forgotPassword']">Passwort vergessen?</a>
+            
+            <!-- Separator -->
             <div class="separaterCt">
                 <div></div>
                 <span>ODER</span>
             </div>
+
+            <!-- Google Authentication Button -->
             <button (click)="googleAuthentification()" (mousedown)="onMouseDown()" (mouseup)="onMouseUp()"
                 [class.pressed]="isPressed"
                 class="googleBtn"
@@ -68,6 +82,8 @@
                     Anmelden mit Google
                 </span>
             </button>
+
+            <!-- Login and Guest Login Buttons -->
             <div class="btnCt">
                 <button
                 type="submit">
@@ -78,6 +94,8 @@
                 </button>
             </div>
         </form>
+
+        <!-- Footer Links -->
         <div class="footerCt">
             <span [routerLink]="['/imprint']">Impressum</span>
             <span [routerLink]="['/privacyPolicy']">Datenschutz</span>

@@ -53,9 +53,9 @@ export class LoginComponent implements OnInit {
         this.textVisible = true;
         setTimeout(() => {
           this.intro = false;
-        }, 1000);
+        }, 2000);
       }, 1000);
-    }, 512);
+    }, 125);
   }
 
   
