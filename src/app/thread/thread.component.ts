@@ -87,17 +87,9 @@ export class ThreadComponent {
     this.mAndC.contentThread.subscribe(newContent => {this.content = newContent;});
     this.handleFileUploadError();
     this.mAndC.getFocusTrigger().subscribe(() => {
-      if (this.myTextarea) {
-        this.myTextarea.nativeElement.focus();
-      }
+      if (this.myTextarea) {this.myTextarea.nativeElement.focus();}
     });
-
-    this.loadMainMessage();
-    setTimeout(() => {
-      this.loadAllMessages();
-    }, 1000);
-
-    this.loadMemberListForChannelThreadHTML()
+    setTimeout(() => {this.loadAllMessages();}, 1000);
   }
 
 
@@ -106,14 +98,7 @@ export class ThreadComponent {
    */
   loadMemberListForChannelThreadHTML(){
     if (this.channelThread) {
-      this.loadMemberList().then(() => {
-        this.isChatDataLoaded = true
-      });
-    }
-    else{
-      setTimeout(() => {
-        this.isChatDataLoaded = true
-      }, 1500);
+      this.loadMemberList();
     }
   }
 
@@ -160,6 +145,7 @@ export class ThreadComponent {
       this.databaseService.loadSpecificChannelMessage(this.user.userId, this.currentChannelThread.channelId, this.currentChannelThread.messageId)
         .then(message => {
           this.mainChannelMessage = message;
+          this.isChatDataLoaded = true;
         })
         .catch(error => {
           console.error('Error loading message:', error);
@@ -176,6 +162,7 @@ export class ThreadComponent {
       this.databaseService.loadSpecificConversationMessage(this.user.userId, this.currentThread.conversationId, this.currentThread.messageId)
         .then(message => {
           this.mainMessage = message;
+          this.isChatDataLoaded = true;
         })
         .catch(error => {
           console.error('Error loading message:', error);
@@ -225,19 +212,34 @@ export class ThreadComponent {
    */
   loadAllMessageReactions() {
     if (this.channelThread) {
-      //Logik, falls Thread durch Channel geöffnet wird
-      for (let i = 0; i < this.channelThreadMessageList.length; i++) {
-        const list = this.channelThreadMessageList[i];
-        //TODO - neue Datenbankabfrage loadchannelThreadMessageReactions DONE!
-        this.databaseService.loadChannelThreadMessageReactions(this.user.userId, this.currentChannel.channelId, list.messageId, list).then(reaction => {
-          reaction.forEach(reaction => {
-            this.reactions.push(reaction)
-          });
-        })
-      }
+      this.loadChannelThreadMessageReactions();
     }
     else {
-      //Logik, falls Thread durch Conversation geöffnet wird
+      this.loadConversationThreadMessageReactions();
+    }
+  }
+
+
+  /**
+   * load threadmessage reactions from channelthreadmessage
+   */
+  loadChannelThreadMessageReactions(){
+    for (let i = 0; i < this.channelThreadMessageList.length; i++) {
+      const list = this.channelThreadMessageList[i];
+      //TODO - neue Datenbankabfrage loadchannelThreadMessageReactions DONE!
+      this.databaseService.loadChannelThreadMessageReactions(this.user.userId, this.currentChannel.channelId, list.messageId, list).then(reaction => {
+        reaction.forEach(reaction => {
+          this.reactions.push(reaction)
+        });
+      })
+    }
+  }
+
+
+  /**
+   * load threadmessage reactions from conversationthreadmessage
+   */
+  loadConversationThreadMessageReactions(){
       for (let i = 0; i < this.conversationThreadMessagelist.length; i++) {
         const list = this.conversationThreadMessagelist[i];
         //TODO - neue Datenbankabfrage loadConversationThreadMessageReactions
@@ -247,7 +249,6 @@ export class ThreadComponent {
           });
         })
       }
-    }
   }
 
 
@@ -280,21 +281,67 @@ export class ThreadComponent {
       let newMessage: ThreadMessage = this.databaseService.createThreadMessage(this.specific, this.content, this.user.userId, this.currentThread, this.fileUpload.downloadURLThread)
       const timestamp: Timestamp = newMessage.createdAt;
       this.databaseService.addThreadMessage(this.currentThread, newMessage)
-      this.content = '';
-      const newContent = '';
-      this.mAndC.contentThread.next(newContent);
+      this.resetContent();
       await this.databaseService.loadThreadMessages(this.currentThread).then(messageList => {
         this.conversationThreadMessagelist = messageList;
         this.conversationThreadMessagelist.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
       })
-      const count: number = this.conversationThreadMessagelist.length;
-      this.databaseService.updateMessageThreadCountAndThreadTime(newMessage, this.specific, count, timestamp)
-      setTimeout(() => {
-        this.scrollToBottom();
-      }, 10);
-      this.fileUpload.downloadURLThread = '';
-      this.emitReloadChat.emit(true);
+      this.saveThreadCountAndtime(new ThreadMessage(newMessage), timestamp)
     }
+}
+
+
+/**
+ * saves new thread message created by a channel thread
+ */
+async saveNewChannelThreadMessage() {
+  if (this.content == '' && this.fileUpload.downloadURLThread == '') {
+      this.displayEmptyContentError();
+    } else {
+      this.channelThreadMessageList = [];
+      let newMessage: ChannelThreadMessage = this.databaseService.createChannelThreadMessage(this.currentChannel, this.content, this.user.userId, this.currentChannelThread, this.fileUpload.downloadURLThread)
+      const timestamp: Timestamp = newMessage.createdAt;
+      this.databaseService.addChannelThreadMessage(this.currentChannelThread, newMessage, this.currentChannel)
+      this.resetContent();
+      await this.databaseService.loadChannelThreadMessages(this.currentChannelThread).then(messageList => {
+        this.channelThreadMessageList = messageList;
+        this.channelThreadMessageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+      })
+      this.saveThreadCountAndtime(new ChannelThreadMessage(newMessage), timestamp)
+    }
+}
+
+
+/**
+ * resets content of new message
+ */
+resetContent(){
+  this.content = '';
+  const newContent = '';
+  this.mAndC.contentThread.next(newContent);
+}
+
+
+/**
+ * updates the thread with the new messages and displays it
+ * @param newMessage threadmessage from channel or conversation
+ * @param timestamp timestamp
+ */
+saveThreadCountAndtime(newMessage: ChannelThreadMessage | ThreadMessage, timestamp: Timestamp){
+  if(newMessage instanceof ThreadMessage){
+    const count: number = this.conversationThreadMessagelist.length;
+    this.databaseService.updateMessageThreadCountAndThreadTime(newMessage, this.specific, count, timestamp)
+    setTimeout(() => {this.scrollToBottom();}, 10);
+    this.fileUpload.downloadURLThread = '';
+    this.emitReloadChat.emit();
+  }
+  else{
+    const count: number = this.channelThreadMessageList.length;
+    this.databaseService.updateMessageChannelThreadCountAndThreadTime(newMessage, this.currentChannel, count, timestamp)
+    setTimeout(() => {this.scrollToBottom();}, 10);
+    this.fileUpload.downloadURLThread = '';
+    this.emitReloadChannel.emit()
+  }
 }
 
 
@@ -316,10 +363,9 @@ displayEmptyContentError() {
 scrollToBottom(): void {
   try {
     if(this.conversationThreadMessagelist.length > 0) {
-  this.lastDiv.nativeElement.scrollIntoView();
-  }
-
-      } catch (err) {
+      this.lastDiv.nativeElement.scrollIntoView();
+    }
+  } catch (err) {
     console.error('Scroll to bottom failed', err);
   }
 }
@@ -338,35 +384,6 @@ async loadMemberList(): Promise < void> {
   });
   return Promise.all(memberPromises).then(() => {
   });
-}
-
-
-/**
- * saves new thread message created by a channel thread
- */
-async saveNewChannelThreadMessage() {
-  if (this.content == '' && this.fileUpload.downloadURLThread == '') {
-      this.displayEmptyContentError();
-    } else {
-    this.channelThreadMessageList = [];
-    let newMessage: ChannelThreadMessage = this.databaseService.createChannelThreadMessage(this.currentChannel, this.content, this.user.userId, this.currentChannelThread, this.fileUpload.downloadURLThread)
-    const timestamp: Timestamp = newMessage.createdAt;
-    this.databaseService.addChannelThreadMessage(this.currentChannelThread, newMessage, this.currentChannel)
-    this.content = '';
-    const newContent = '';
-    this.mAndC.contentThread.next(newContent);
-    await this.databaseService.loadChannelThreadMessages(this.currentChannelThread).then(messageList => {
-      this.channelThreadMessageList = messageList;
-      this.channelThreadMessageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-    })
-    const count: number = this.channelThreadMessageList.length;
-    this.databaseService.updateMessageChannelThreadCountAndThreadTime(newMessage, this.currentChannel, count, timestamp)
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 10);
-    this.fileUpload.downloadURLThread = '';
-    this.emitReloadChannel.emit()
-  }
 }
 
 
@@ -393,13 +410,13 @@ ngOnChanges() {
   setTimeout(() => {
     this.loadAllMessages();
   }, 1000);
-  
   if (!this.channelThread) {
     this.loadingPassiveUserConversationWithSelf()
     this.loadingPassiveUserFromCreatorUser();
     this.loadingPassiveUserFromRecipientUser();
-    console.log('active', this.sendingUser);
-    console.log('passiv', this.passiveUser);
+  }
+  else{
+    this.loadMemberListForChannelThreadHTML();
   }
 }
 
@@ -451,7 +468,6 @@ loadingPassiveUserFromRecipientUser(){
 }
 
 
-
 /**
  * closes the currently opened thread
  */
@@ -474,77 +490,62 @@ closeThread(){
 }
 
 
-
-
-
-
-
-
+/**
+ * ADDS REACTION TO THREADMESSAGES OF A CONVERSATION MESSAGE
+ * @param event selection of the emoji through emoji picker
+ * @param convo conversationthreadmessageobject
+ * @param userId id of user
+ * @param reactionbar has a value if emoji is selected from reactionbar
+ * @returns 
+ */
 async saveNewMessageReaction(event: any, convo: ThreadMessage, userId: string, reactionbar?: string) {
-  let emoji: string
-  if (reactionbar) {
-    emoji = reactionbar
-  } else {
-    emoji = event.emoji.native
-  }
-
-  const userAlreadyReacted = this.reactions.some(reaction =>
-    reaction.messageId === convo.messageId && reaction.emoji === emoji && reaction.userId === userId
-  );
-  if (userAlreadyReacted) {
-    console.log('User has already reacted with this emoji');
+  let emoji: string =  this.selectEmoji(reactionbar, event)
+  if (this.checkUserAlreadyReacted(convo, emoji, userId)) {console.log('User has already reacted with this emoji'); 
     return;
   }
 
+  //specific to conversation thread message
   this.reactions = [];
   let reaction = this.databaseService.createThreadMessageReaction(emoji, userId, this.user.name, convo);
   await this.databaseService.addThreadMessageReaction(this.specific, convo, reaction)
   await this.loadAllMessageReactions();
-
-
-
   this.chat.reactions = this.reactions
-
-  setTimeout(() => {
-    this.chat.groupReactions(this.conversationThreadMessagelist)
-  }, 500);
-
+  setTimeout(() => {this.chat.groupReactions(this.conversationThreadMessagelist)}, 500);
+  //END specific of conversation thread message
 
   this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
   this.mAndC.loadUsersOfUser();
   this.mAndC.loadChannlesofUser()
-
   this.mAndC.selectedMessageId = null;
 }
 
 
-
-
-
-
-
+/**
+ * ADDS REACTION TO THREADMESSAGES OF A CHANNEL MESSAGE
+ * @param event selection of the emoji through emoji picker
+ * @param convo channelthreadmessageobject
+ * @param userId id of user
+ * @param reactionbar has a value if emoji is selected from reactionbar
+ * @returns 
+ */
 async saveNewChannelMessageReaction(event: any, convo: ChannelThreadMessage, userId: string, reactionbar ?: string) {
-  debugger;
-  let emoji: string
-  if (reactionbar) {
-    emoji = reactionbar
-  } else {
-    emoji = event.emoji.native
-  }
-
-  const userAlreadyReacted = this.reactions.some(reaction =>
-    reaction.messageId === convo.messageId && reaction.emoji === emoji && reaction.userId === userId
-  );
-  if (userAlreadyReacted) {
-    console.log('User has already reacted with this emoji');
+  let emoji: string =  this.selectEmoji(reactionbar, event)
+  if (this.checkUserAlreadyReacted(convo, emoji, userId)) {console.log('User has already reacted with this emoji');
     return;
   }
 
+
+  //specific to conversation thread message
   this.reactions = [];
   let reaction = this.databaseService.createChannelThreadMessageReaction(emoji, userId, this.user.name, convo);
   await this.databaseService.addChannelThreadMessageReaction(this.currentChannel, convo, reaction)
   await this.loadAllMessageReactions();
 
+
+  //TODO - Versuchsbereich um das Thread Emoji Problem zu lösen mit chatservice
+  // reactions der ThreadNachricht werden korrekt geladen. Es werden grundsätzlich keine Emojis
+  // im Thread angezeigt, da Sie durch das auskommentieren von Zeile 102 ausgeschaltet wurden
+  // um die doppelte Anzeige der Emojis zu verhindern
 
   // for (let i = 0; i < this.channelThreadMessageList.length; i++) {
   //   const list = this.channelThreadMessageList[i];
@@ -559,27 +560,51 @@ async saveNewChannelMessageReaction(event: any, convo: ChannelThreadMessage, use
   //   this.chat.reactions = this.reactions //überschreib die gefundene reactions wieder auf 0
 
   // }
-
-
-  //TODO - Versuchsbereich um das Thread Emoji Problem zu lösen mit chatservice
-  // reactions der ThreadNachricht werden korrekt geladen. Es werden grundsätzlich keine Emojis
-  // im Thread angezeigt, da Sie durch das auskommentieren von Zeile 102 ausgeschaltet wurden
-  // um die doppelte Anzeige der Emojis zu verhindern
-
   debugger;
-
-
-
   setTimeout(() => {
     //this.chat.groupReactions(this.channelThreadMessageList) //Wird auf die ChannelNachricht angewandt und nicht auf die ThreadNachricht
   }, 1000);
-
+  //END specific of conversation thread message
 
   this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
   this.mAndC.loadUsersOfUser();
   this.mAndC.loadChannlesofUser()
   this.mAndC.selectedMessageId = null;
 }
+
+
+/**
+ * gives the variable the value of the selected emoji
+ * @param reactionbar has a value if emoji is selected from reactionbar
+ * @param event selection of the emoji through emoji picker
+ * @returns 
+ */
+selectEmoji(reactionbar: string | undefined, event: any): string{
+  let emoji: string
+  if (reactionbar) {
+    emoji = reactionbar
+    return emoji;
+  } else {
+    emoji = event.emoji.native
+    return emoji;
+  }
+}
+
+
+/**
+ * checks if the user already reacted with the emoji to the thread or channelmessage
+ * @param convo Threadmessageobject or Channelthreadmessageobject
+ * @param emoji selected emoji
+ * @param userId is of user
+ * @returns boolean
+ */
+checkUserAlreadyReacted(convo: ThreadMessage | ChannelThreadMessage, emoji: string, userId: string): boolean {
+  return this.reactions.some(reaction =>
+    reaction.messageId === convo.messageId && reaction.emoji === emoji && reaction.userId === userId
+  );
+}
+
+
 
 
 }
