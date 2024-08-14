@@ -23,11 +23,27 @@ export class GeneralChatService {
   
 
  async groupReactions(messageList: Array<ConversationMessage> | Array<ChannelMessage> | Array<ThreadMessage> | Array<ChannelThreadMessage>) {
-    const groupedReactions = new Map<string, Array<{ emoji: string, count: number, users: string[] }>>();
+  console.log('messageList: ', messageList);
+  console.log('reactions:', this.reactions);
+  debugger;
+  const groupedReactions = new Map<string, Array<{ emoji: string, count: number, users: string[] }>>();
 
+    //TODO - Gedanken zur Lösung zum Emoji Thread Message Problem
+    //Abfrage welche Art von message das ist von den 4 möglichen?
+    //properties von "message" beim Typ Conversation/Chat Message 
+    //sind unterschiedlich zu properties zu Thread channel/chat message
+    //Muss ggf nicht abgefragt werden wenn reaction die neue property
+    //"threadId" siehe Kommentar ab Z 39
     messageList.forEach(message => {
       const reactionMap = new Map<string, { count: number, users: string[] }>();
-
+      //Bei Filter müsste was anderes oder etwas zusätzlich abgefragt werden 
+      //wenn es sich um eine thread reaction handelt, sodass die Message von der ?
+      //reaction ID von channel/chatmessage-reaction sieht so aus: CHA-MSG-REACT-Nr
+      //reaction ID von channel/chatTHREADmessage-reaction sieht so aus: THR-MSG-REACT-Nr
+      //reactions benötigt zusätzliche property namens "threadId", sodass beim Filtern
+      //reaction.threadId auf message.threadId gefiltert werden kann
+      //Steh noch offen, ob dieser Filter zusätzlich oder ersatzweise für 
+      //channel/chat-Thread messages angewandt werden kann
       this.reactions
         .filter(reaction => reaction.messageId === message.messageId)
         .forEach(reaction => {

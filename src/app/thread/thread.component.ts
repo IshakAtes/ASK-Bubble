@@ -539,7 +539,7 @@ async saveNewChannelMessageReaction(event: any, convo: ChannelThreadMessage, use
   this.reactions = [];
   let reaction = this.databaseService.createChannelThreadMessageReaction(emoji, userId, this.user.name, convo);
   await this.databaseService.addChannelThreadMessageReaction(this.currentChannel, convo, reaction)
-  await this.loadAllMessageReactions();
+  //await this.loadAllMessageReactions();
 
 
   //TODO - Versuchsbereich um das Thread Emoji Problem zu lösen mit chatservice
@@ -547,29 +547,33 @@ async saveNewChannelMessageReaction(event: any, convo: ChannelThreadMessage, use
   // im Thread angezeigt, da Sie durch das auskommentieren von Zeile 102 ausgeschaltet wurden
   // um die doppelte Anzeige der Emojis zu verhindern
 
-  // for (let i = 0; i < this.channelThreadMessageList.length; i++) {
-  //   const list = this.channelThreadMessageList[i];
-  //   this.databaseService.loadChannelThreadMessageReactions(this.user.userId, this.currentChannel.channelId, list.messageId, list).then(reaction => {
-  //     debugger;
-  //     reaction.forEach(reaction => {
-  //       this.reactions.push(reaction)
-  //     });
+  for (let i = 0; i < this.channelThreadMessageList.length; i++) {
+    const list = this.channelThreadMessageList[i];
+    this.databaseService.loadChannelThreadMessageReactions(this.user.userId, this.currentChannel.channelId, list.messageId, list).then(reaction => {
 
-  //   })
-  //   debugger;
-  //   this.chat.reactions = this.reactions //überschreib die gefundene reactions wieder auf 0
+      reaction.forEach(reaction => {
+        this.reactions.push(reaction)
+           console.log(`reactions nach Durchlauf ${i}:`, this.reactions)
+      });
 
-  // }
-  debugger;
-  setTimeout(() => {
-    //this.chat.groupReactions(this.channelThreadMessageList) //Wird auf die ChannelNachricht angewandt und nicht auf die ThreadNachricht
-  }, 1000);
+    }).then(()=> {
+      debugger;
+      this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
+      this.mAndC.loadUsersOfUser();
+      this.mAndC.loadChannlesofUser()
+      this.mAndC.selectedMessageId = null;
+      this.chat.reactions = this.reactions //überschreib die gefundene reactions wieder auf 0
+      console.log(this.channelThreadMessageList)
+      setTimeout(() => {
+        this.chat.groupReactions(this.channelThreadMessageList) //Wird auf die ChannelNachricht angewandt und nicht auf die ThreadNachricht
+      }, 1000);
+        
+    })
+  }
+
   //END specific of conversation thread message
 
-  this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
-  this.mAndC.loadUsersOfUser();
-  this.mAndC.loadChannlesofUser()
-  this.mAndC.selectedMessageId = null;
+
 }
 
 
