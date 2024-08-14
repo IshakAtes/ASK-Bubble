@@ -79,6 +79,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
         this.myTextarea.nativeElement.focus();
       }
     });
+    this.fileUpload.downloadURL = '';
   }
 
 

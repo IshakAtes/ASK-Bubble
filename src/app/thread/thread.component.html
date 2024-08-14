@@ -404,7 +404,7 @@
                             <div class="action-left">
                                 <button class="action-button" (click)="triggerFileInput()"> <img src="../../assets/img/add_icon.png"
                                         alt=""></button>
-                                <input #fileInput type="file" style="display: none;" (change)="fileUpload.onFileSelected($event, 'thread')">
+                                <input #fileInput type="file" style="display: none;" (change)="fileUpload.onFileSelected($event, sendingUser, currentChannelThread, 'thread')">
                                 <div class="line"></div>
                                 <button (click)="mAndC.toggleEmoticons('thread')" class="action-button"><img
                                         src="../../assets/img/emoticon_icon.png" alt=""></button>
@@ -815,7 +815,7 @@
                         <div class="action-left">
                             <button class="action-button" (click)="triggerFileInput()"> <img src="../../assets/img/add_icon.png"
                                     alt=""></button>
-                            <input #fileInput type="file" style="display: none;" (change)="fileUpload.onFileSelected($event, 'thread')">
+                            <input #fileInput type="file" style="display: none;" (change)="fileUpload.onFileSelected($event, sendingUser, currentThread, 'thread')">
                             <div class="line"></div>
                             <button (click)="mAndC.toggleEmoticons('thread')" class="action-button"><img
                                     src="../../assets/img/emoticon_icon.png" alt=""></button>

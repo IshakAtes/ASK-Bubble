@@ -2,6 +2,11 @@ import { inject, Injectable } from '@angular/core';
 import { Storage } from '@angular/fire/storage';
 import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { Observable, Subject } from 'rxjs';
+import { User } from '../../../models/user.class';
+import { Conversation } from '../../../models/conversation.class';
+import { Channel } from '../../../models/channel.class';
+import { Thread } from '../../../models/thread.class';
+import { ChannelThread } from '../../../models/channelThread.class';
 
 @Injectable({
   providedIn: 'root'
@@ -24,20 +29,20 @@ export class FileUploadService {
   fileUploading: boolean = false;
   fileUploadingThread: boolean = false;
 
-  onFileSelected(event: any, thread?: string) {
-    //debugger;
+  onFileSelected(event: any, user: User, chat: Conversation | Channel | Thread | ChannelThread, thread?: string) {
+    // debugger;
     const selectedFile: File = event.target.files[0];
     if (thread) {
-      this.uploadFile(selectedFile, thread);
+      this.uploadFile(selectedFile, user, chat, thread);
     } else {
-      this.uploadFile(selectedFile);
+      this.uploadFile(selectedFile, user, chat);
     }
 
     console.log(selectedFile);
   }
 
-  async uploadFile(file: File, thread?: string) {
-    //debugger;
+  async uploadFile(file: File, user: User, chat: Conversation | Channel | Thread | ChannelThread, thread?: string) {
+    debugger;
     const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif'];
     const maxSize = 500 * 1024; // 500 KB
 
@@ -59,7 +64,8 @@ export class FileUploadService {
       return;
     }
 
-    const filePath = `messageFiles/${file.name}`;
+    // const filePath = `messageFiles/${file.name}`;
+    const filePath = this.defineUploadPath(file, user, chat);
     const fileRef = ref(this.storage, filePath);
     const uploadFile = uploadBytesResumable(fileRef, file);
 
@@ -95,6 +101,19 @@ export class FileUploadService {
         }
       }
     );
+  }
+
+  defineUploadPath(file: File, user: User, chat: Conversation | Channel | Thread | ChannelThread) {
+    const randomNumber = Math.random();
+    let filePath: string ='';
+    if ('threadId' in chat) {
+      filePath = `messageFiles/${user.userId}/${chat.threadId}/${randomNumber}/${file.name}`;
+    } else if ('channelId' in chat) {
+      filePath = `messageFiles/${user.userId}/${chat.channelId}/${randomNumber}/${file.name}`;
+    } else if ('conversationId' in chat) {
+      filePath = `messageFiles/${user.userId}/${chat.conversationId}/${randomNumber}/${file.name}`;
+    }
+    return filePath
   }
 
   async deletePreview(thread?: string) {

@@ -360,7 +360,7 @@
                     <div class="action-left">
                         <button class="action-button" (click)="triggerFileInput()"> <img src="../../assets/img/add_icon.png"
                                 alt=""></button>
-                        <input #fileInput type="file" style="display: none;" (change)="fileService.onFileSelected($event)">
+                        <input #fileInput type="file" style="display: none;" (change)="fileService.onFileSelected($event, activeUser, channel)">
                         <div class="line"></div>
                         <button (click)="mAndC.toggleEmoticons()" class="action-button"><img
                                 src="../../assets/img/emoticon_icon.png" alt=""></button>
@@ -711,7 +711,7 @@
                     <div class="action-left">
                         <button class="action-button" (click)="triggerFileInput()"> <img src="../../assets/img/add_icon.png"
                                 alt=""></button>
-                        <input #fileInput type="file" style="display: none;" (change)="fileService.onFileSelected($event)">
+                        <input #fileInput type="file" style="display: none;" (change)="fileService.onFileSelected($event, activeUser, channel)">
                         <div class="line"></div>
                         <button (click)="mAndC.toggleEmoticons()" class="action-button"><img
                                 src="../../assets/img/emoticon_icon.png" alt=""></button>

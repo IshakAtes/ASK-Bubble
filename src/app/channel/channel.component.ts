@@ -85,6 +85,7 @@ export class ChannelComponent implements OnInit {
         this.myTextarea.nativeElement.focus();
       }
     });
+    this.fileService.downloadURL = '';
   }
 
 

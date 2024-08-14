@@ -90,6 +90,7 @@ export class ThreadComponent {
       if (this.myTextarea) {this.myTextarea.nativeElement.focus();}
     });
     setTimeout(() => {this.loadAllMessages();}, 1000);
+    this.fileUpload.downloadURLThread = '';
   }
 
 
