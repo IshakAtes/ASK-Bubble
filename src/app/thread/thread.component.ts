@@ -376,6 +376,7 @@ scrollToBottom(): void {
  * @returns  promise 
  */
 async loadMemberList(): Promise < void> {
+  this.channelMemberList = [];
   const memberPromises = this.currentChannel.membersId.map(member => {
     this.databaseService.loadUser(member)
       .then(user => {

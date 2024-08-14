@@ -15,6 +15,8 @@ import { Thread } from '../models/thread.class';
 import { ThreadMessage } from '../models/threadMessage';
 import { ChannelThread } from '../models/channelThread.class';
 import { ChannelThreadMessage } from '../models/channelThreadMessage';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { CollectionReference } from 'firebase/firestore/lite';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +24,7 @@ import { ChannelThreadMessage } from '../models/channelThreadMessage';
 export class DatabaseService {
   firestore: Firestore = inject(Firestore)
   workspace: WorkspaceComponent;
+  http = inject(HttpClient);
 
   constructor() {
 
@@ -528,32 +531,31 @@ export class DatabaseService {
    * @returns error or confirmation message
    */
       updateMessageChannelThreadCountAndThreadTime(threadMessage: ChannelThreadMessage, channel: Channel, count: number, timestamp: Timestamp, ) {
-      
         channel.membersId.forEach(userid => {
           let docRef = doc(this.firestore, 'users/' + userid + '/channels/' + threadMessage.channelId + '/channelmessages/' + threadMessage.messageId);
+
+          console.log('user: ', userid);
+          console.log('converter: ', docRef.converter);
+          console.log('firestore: ', docRef.firestore);
+          console.log('docID: ', docRef.id);
+          console.log('parent: ', docRef.parent);
+          console.log('path: ', docRef.path);
+          console.log('type: ', docRef.type);
+         
+
           updateDoc(docRef, {threadMessageCount: count, lastThreadMessage: timestamp })
-          .catch(error => console.log('this update thread count and time: ', error));
+            .then(() => {
+              console.log('Message updated successfully for users: ', userid);
+          })
+          .catch((error) => { //HttpErrorResponse
+             if(error.code === 'not-found'){
+              console.log(error.code)
+              console.log('Message not updated successfully for users: ', userid);
+            }
+          })
+
+
         });
-        
-        
-        // const creatorMessageRef = doc(
-        //   this.firestore, 'users/' + conversation.createdBy + '/conversations/' + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId );
-  
-        // const recipientMessageRef = doc(
-        //   this.firestore, 'users/' + conversation.recipientId + '/conversations/'
-        // + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId 
-        // );
-        // return Promise.all([
-        //   updateDoc(creatorMessageRef, { threadMessageCount: count }),
-        //   updateDoc(recipientMessageRef, { threadMessageCount: count }),
-    
-        //   updateDoc(creatorMessageRef, { lastThreadMessage: timestamp }),
-        //   updateDoc(recipientMessageRef, { lastThreadMessage: timestamp }),
-        // ]).then(() => {
-        //   console.log('Message updated successfully for both users');
-        // }).catch(error => {
-        //   console.error('Error updating message: ', error);
-        // });
       }
 
       

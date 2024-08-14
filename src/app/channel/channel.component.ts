@@ -19,8 +19,6 @@ import { MentionAndChannelDropdownService } from '../shared-services/chat-functi
 import { Reaction } from '../../models/reactions.class';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { Conversation } from '../../models/conversation.class';
-import { ConversationMessage } from '../../models/conversationMessage.class';
-import { Thread } from '../../models/thread.class';
 import { ChannelThread } from '../../models/channelThread.class';
 
 
