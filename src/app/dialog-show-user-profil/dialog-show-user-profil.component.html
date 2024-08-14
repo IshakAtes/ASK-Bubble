@@ -1,4 +1,5 @@
-<section [ngStyle]="showPasswordInput ? {'height': '700px'} : {'height': '625px'}">
+<section
+[ngStyle]="showPasswordInput ? {'height': '700px', 'gap': '38px'} : {'height': '625px', 'gap': '45px'}">
     
   <div class="headline">
       <ng-container *ngIf="editMode; then thenTemplate; else elseTemplate"></ng-container>
@@ -8,7 +9,7 @@
       <ng-template #elseTemplate>
           <span>Profil</span>
       </ng-template>
-      <div class="closeSvgBg" >
+      <div class="closeSvgBg">
           <!--close svg-->
           <svg (click)="dialogRef.close()" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
               <mask id="mask0_54572_9033" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="8" y="8" width="24" height="24">
@@ -82,7 +83,9 @@
       </div>
       <input [(ngModel)]="userData.email" type="text" (input)="onEmailChange()">
     </div>
-    <input class="passwordField" *ngIf="showPasswordInput" type="password" [(ngModel)]="userPassword" placeholder="Bitte Passwort eingeben">
+    <input class="passwordField"
+    *ngIf="showPasswordInput" type="password" [(ngModel)]="userPassword"
+    placeholder="Bitte Passwort eingeben">
   </ng-template>
   <ng-template #elseTemplate2>
     <div class="userMailContainer"> 

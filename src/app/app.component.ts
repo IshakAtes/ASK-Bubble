@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { AuthService } from './shared-services/auth.service';
-import { user } from '@angular/fire/auth';
 import { User } from '../models/user.class';
 
 

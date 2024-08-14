@@ -1,4 +1,4 @@
-import { CommonModule, NgStyle } from '@angular/common';
+import { CommonModule, NgClass, NgStyle } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -9,11 +9,14 @@ import { AuthService } from '../shared-services/auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [NgStyle, FormsModule, ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [NgStyle, NgClass, FormsModule, ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit {
+  intro = true;
+  switchlogo = false;
+  textVisible = false;
   authService = inject(AuthService);
   errorMessage: string | null = null;
   authMessage: boolean | null = false;
@@ -44,9 +47,15 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.authService.getToken();
-    // console.log('get Token finished');
-    
+    setTimeout(() => {
+      this.switchlogo = true;
+      setTimeout(() => {
+        this.textVisible = true;
+        setTimeout(() => {
+          this.intro = false;
+        }, 1000);
+      }, 1000);
+    }, 512);
   }
 
   
