@@ -33,13 +33,20 @@ export class AuthService {
           console.log('currentUser', fbUser);
           // Update email
           if (newEmail !== fbUser.email && currentPassword) {
-            // Reauthenticate the user with the current email and password
-            const credential = EmailAuthProvider.credential(email, currentPassword ?? '');
-            await reauthenticateWithCredential(fbUser, credential);
-            await updateEmail(fbUser, newEmail);
-            await sendEmailVerification(fbUser);
-            await this.us.changeEmail(email, newEmail, name, avatar)
-            console.log('Verification email sent to', newEmail);
+            try {
+              // Reauthenticate the user with the current email and password
+              const credential = EmailAuthProvider.credential(email, currentPassword ?? '');
+              console.log(credential);
+              await reauthenticateWithCredential(fbUser, credential);
+              await updateEmail(fbUser, newEmail);
+              await sendEmailVerification(fbUser);
+              await this.us.changeEmail(email, newEmail, name, avatar)
+              console.log('Verification email sent to', newEmail);
+            } catch (error) {
+              this.wrongEmail = true;
+              console.error('Error during reauthentication:', error);
+            }
+            
           }
     
           if (name !== fbUser.displayName) {
@@ -60,7 +67,6 @@ export class AuthService {
         console.error('Current user or password is null');
       }
       } catch (error: any) {
-        this.wrongEmail = true;
         console.error('Error updating user:', error);
         this.errorMessage = error.message;
       }

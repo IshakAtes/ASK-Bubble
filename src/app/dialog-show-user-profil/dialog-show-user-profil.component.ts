@@ -87,12 +87,13 @@ export class DialogShowUserProfilComponent implements OnInit {
       alert('Falsches Passwort');
       this.userData.email = this.myForm.value.email;
     } else {
+      this.userData.avatarUrl = this.selectedAvatar;
       await this.authService.changeUserData(
         this.myForm.value.email,
         this.userData.email,
         currentPassword,
         this.userData.name,
-        this.userData.avatarUrl
+        this.selectedAvatar
       );
       // ES KANN SEIN DAS ICH DIESEN ABSCHNITT MIT SETTIMEOUT RAUSNEHMEN MUSS; DA ICH
       // PROBLEMMELDUNGEN IN FIREBASE BEKOMME
@@ -104,7 +105,7 @@ export class DialogShowUserProfilComponent implements OnInit {
         } else {
           this.myForm.value.email = this.userData.email;
         }
-      }, 500)
+      }, 512)
       this.userPassword = '';
       
       this.editMode = false;

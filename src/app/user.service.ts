@@ -107,13 +107,13 @@ export class UserService {
       const usersCollection = collection(this.firestore, 'users');
 
       onSnapshot(usersCollection, (users) => {
-        users.forEach(async user => {
+        users.forEach(user => {
           const userData = user.data();
   
           if (userData['uid'] === token) {
             const userDocRef = doc(this.firestore, "users", userData['userId']);
-            await updateDoc(userDocRef, {
-              avatarUrl: avatar,
+            updateDoc(userDocRef, {
+              avatarUrl: avatar
             });
             resolve(avatar);
           } else {
