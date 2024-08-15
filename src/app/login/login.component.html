@@ -9,8 +9,10 @@
 
     <!-- Navigation -->
     <nav>
-        <div class="logoContainer">
-            <img src="../../assets/img/Logo.png" alt="logo">
+        <div class="logoMainContainer">
+            <img class="logoContainer"
+            [ngClass]="{'logoIntroAnimation': navLogoAnimation, 'logoContainer': !navLogoAnimation}"
+            src="../../assets/img/Logo.png" alt="logo">
             <!-- <span>DABubble</span> -->
         </div>
         <div class="signUpLink">

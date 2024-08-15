@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
   intro = true;
   switchlogo = false;
   textVisible = false;
+  navLogoAnimation = false;
   authService = inject(AuthService);
   errorMessage: string | null = null;
   authMessage: boolean | null = false;
@@ -53,7 +54,8 @@ export class LoginComponent implements OnInit {
         this.textVisible = true;
         setTimeout(() => {
           this.intro = false;
-        }, 2000);
+          this.navLogoAnimation = true;
+        }, 1000);
       }, 1000);
     }, 125);
   }

@@ -198,7 +198,7 @@
         
         
                             <div class="reaction-bar">
-                                @for (reaction of groupedReactions.get(message.messageId); track $index) {
+                                @for (reaction of groupedReactionsThread.get(message.messageId); track $index) {
                                 <div class="emoji-div" (mouseenter)="chat.showTooltip(reaction)"
                                     (mouseleave)="chat.hideTooltip()">
                                     {{ reaction.emoji }} {{ reaction.count }}
@@ -272,7 +272,7 @@
                                         </div>
                     
                                         <div class="reaction-bar">
-                                            @for (reaction of groupedReactions.get(message.messageId); track $index) {
+                                            @for (reaction of groupedReactionsThread.get(message.messageId); track $index) {
                                             <div class="emoji-div" (mouseenter)="chat.showTooltip(reaction)"
                                                 (mouseleave)="chat.hideTooltip()">
                                                 {{ reaction.emoji }} {{ reaction.count }}
@@ -620,7 +620,7 @@
         
         
                             <div class="reaction-bar">
-                                @for (reaction of groupedReactions.get(message.messageId); track $index) {
+                                @for (reaction of groupedReactionsThread.get(message.messageId); track $index) {
                                 <div class="emoji-div" (mouseenter)="chat.showTooltip(reaction)"
                                     (mouseleave)="chat.hideTooltip()">
                                     {{ reaction.emoji }} {{ reaction.count }}
@@ -693,7 +693,7 @@
                             </div>
         
                             <div class="reaction-bar">
-                                @for (reaction of groupedReactions.get(message.messageId); track $index) {
+                                @for (reaction of groupedReactionsThread.get(message.threadMessageId); track $index) {
                                 <div class="emoji-div" (mouseenter)="chat.showTooltip(reaction)"
                                     (mouseleave)="chat.hideTooltip()">
                                     {{ reaction.emoji }} {{ reaction.count }}
