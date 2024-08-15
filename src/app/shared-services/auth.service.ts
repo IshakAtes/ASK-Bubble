@@ -18,6 +18,7 @@ export class AuthService {
   provider = new GoogleAuthProvider();
   activeUser? = user(this.firebaseAuth);
   currentUserSignal = signal<User | null | undefined>(undefined);
+  wrongEmail = false;
   
 
   constructor() {}
@@ -59,28 +60,12 @@ export class AuthService {
         console.error('Current user or password is null');
       }
       } catch (error: any) {
+        this.wrongEmail = true;
         console.error('Error updating user:', error);
         this.errorMessage = error.message;
       }
   }
 
-
-  // async sendVerificationEmail(newEmail: string) {
-  //   const auth = this.firebaseAuth;
-  //   const currentUser = auth.currentUser;
-
-  //   if (currentUser) {
-  //     try {
-  //       await updateEmail(currentUser, newEmail);
-  //       await sendEmailVerification(currentUser);
-  //       console.log('Verification email sent to', newEmail);
-  //     } catch (error: any) {
-  //       console.error('Error sending verification email:', error);
-  //       this.errorMessage = error.message;
-  //     }
-  //   }
-  // }
-  
 
   async googleAuth() {
     console.log('google Provider', this.provider);
@@ -118,7 +103,7 @@ export class AuthService {
         // ...
       });
   }
-   
+
 
   register(email: string, username: string, password: string): Observable <void> {
     const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, password
@@ -169,7 +154,6 @@ export class AuthService {
       if (user) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/auth.user
-        const uid = user.uid;
         this.us.getUser(user.email ?? '', user.uid).then((activeUser) => {
           console.log('activeUser:', activeUser);
           this.us.loggedUser = activeUser;
@@ -186,7 +170,6 @@ export class AuthService {
       }
     });
   }
-  
 
 
 }

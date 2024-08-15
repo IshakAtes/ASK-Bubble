@@ -80,7 +80,6 @@ export class DialogShowUserProfilComponent implements OnInit {
 
   async editUser() {
     console.log('editForm', this.myForm.value, 'userData after edit', this.userData);
-  
     // Erfasse das aktuelle Passwort nur, wenn die E-Mail geändert wurde
     const currentPassword: string | null = this.showPasswordInput ? this.userPassword : null;
   
@@ -98,8 +97,13 @@ export class DialogShowUserProfilComponent implements OnInit {
       // ES KANN SEIN DAS ICH DIESEN ABSCHNITT MIT SETTIMEOUT RAUSNEHMEN MUSS; DA ICH
       // PROBLEMMELDUNGEN IN FIREBASE BEKOMME
       setTimeout(() => {
-        console.log(this.authService.activeUser);
-        this.myForm.value.email = this.userData.email;
+        if (this.authService.wrongEmail) {
+          this.authService.wrongEmail = false;
+          this.us.loggedUser.email = this.myForm.value.email;
+          alert('Falsches Passwort');
+        } else {
+          this.myForm.value.email = this.userData.email;
+        }
       }, 500)
       this.userPassword = '';
       
