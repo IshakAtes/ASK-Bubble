@@ -25,7 +25,7 @@ export class GeneralChatService {
  async groupReactions(messageList: Array<ConversationMessage> | Array<ChannelMessage> | Array<ThreadMessage> | Array<ChannelThreadMessage>) {
   console.log('messageList: ', messageList);
   console.log('reactions:', this.reactions);
-  debugger;
+  //debugger;
   const groupedReactions = new Map<string, Array<{ emoji: string, count: number, users: string[] }>>();
 
     //TODO - Gedanken zur Lösung zum Emoji Thread Message Problem

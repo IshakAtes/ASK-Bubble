@@ -106,7 +106,7 @@
 .message {
     display: flex;
     gap: 30px;
-    padding: 25px 45px 25px 45px;
+    padding: 25px 9px 25px 9px;
     position: relative;
 
     &:hover {
@@ -253,7 +253,7 @@
 .own-message {
     display: flex;
     gap: 30px;
-    padding: 25px 45px 25px 45px;
+    padding: 25px 9px 25px 9px;
     flex-direction: row-reverse;
     position: relative;
 
@@ -278,7 +278,7 @@
     background: #FFFFFF;
     left: 0px;
     top: 0px;
-
+    z-index: 3;
     img {
         border-radius: 50%;
 
@@ -548,21 +548,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
-
-    // position: absolute;
-    // top: 100%;
-    // left: 50%;
-    // transform: translateX(-50%);
-    // background: #333;
-    // color: #fff;
-    // padding: 10px;
-    // border-radius: 5px;
-    // white-space: nowrap;
-    // z-index: 10;
-    // display: block;
-    // margin-top: 5px;
-    // box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 4;
 }
 
 .emojo-info-emoji-div {

@@ -157,8 +157,33 @@ section {
         cursor: pointer;
     }
 
+    @media (max-width: 1650px) {
+        section {
+            right: 36.5vw;
+    
+          }
+    }
 
-    @media (max-width: 1160px) {
+    @media (max-width: 1300px) {
+        section {
+            left: 400px;
+    
+        }
+    
+    }
+
+
+    @media (max-width: 1200px) {
+    section {
+        right: 7.5vw;
+        left: unset;
+
+      }
+    }
+
+
+
+    @media (max-width: 900px) {
         section {
             left: 400px;
     

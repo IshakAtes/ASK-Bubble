@@ -1,3 +1,32 @@
+
+@media (max-width: 1650px) {
+    section {
+        width: 30vw;
+    }
+}
+
+
+@media (max-width: 1350px) {
+    section {
+        left: 380px;
+    }
+}
+
+
+@media (max-width: 1200px) {
+    section {
+        width: clamp(350px, 45vw, 872px);
+    }
+}
+
+
+@media (max-width: 1000px) {
+    section {
+        width: clamp(350px, 40vw, 872px);
+    }
+}
+
+
 @media (max-width: 850px) {
 
     section {

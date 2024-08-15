@@ -146,7 +146,7 @@
         display: flex;
         padding: 20px 16px 20px 16px;
         justify-content: center;
-        gap: 10px;
+        gap: 0px;
     }
     
     .avatar {
@@ -174,7 +174,7 @@
         display: flex;
         align-items: center;
         gap: 5px;
-        padding: 0px 10px 0px 0px;
+        padding: 0px 30px 0px 0px;
     }
 
     .massage-content-bubble {
@@ -198,10 +198,10 @@
     }
 
     .own-message {
-        width: calc(100% - 60px);
+        width: calc(100% - 80px);
         display: flex;
         justify-content: center;
-        gap: 10px;
+        gap: 0px;
         padding: 20px 16px 20px 16px;
         flex-direction: row-reverse;
     }
@@ -209,7 +209,7 @@
 
     .own-message-header {
         gap: 5px;
-        padding: 0px 10px 0px 0px;
+        padding: 0px 30px 0px 0px;
     }
 
     .own-answer-bar {
@@ -237,8 +237,8 @@
 
     .message-container {
         height: 103px;
-        padding: 20px;
-        margin: 0px;
+        //padding: 20px;
+        //margin: 0px;
     }
 
 
@@ -248,6 +248,20 @@
         left: 5px;
     }
 
+}
+
+@media (max-width: 600px){
+    .message-header {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 0px 15px 0px 0px;
+    }
+
+    .own-message-header {
+        gap: 5px;
+        padding: 0px 15px 0px 0px;
+    }
 }
 
 @media (max-width: 430px){
@@ -270,6 +284,22 @@
         justify-content: start;
         position: relative;
         right: 8vw;
+        display: flex;
+        position: relative;
+        right: 40px;
+    }
+
+    .emoji-info {
+        position: absolute;
+        left: -50px;
+        bottom: 50px;
+        padding: 0px;
+    }
+
+    .own-answer-bar {
+        display: flex;
+        position: relative;
+        right: 40px;
     }
 
     .time-separator {
@@ -277,13 +307,36 @@
         right: 8%;
     }
 
+
+    .own-message-header {
+        gap: 5px;
+        padding: 0px 0px 0px 0px;
+        width: 220px;
+        position: relative;
+        right: 11%;
+    }
+
+    .message-header {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 0px 0px 0px 0px;
+        width: 220px;
+        position: relative;
+        right: 11%;
+    }
+
     .own-message {
-        width: calc(100% - 110px);
+        width: calc(100% - 80px);
+        padding: 20px 0px 20px 0px;
         display: flex;
         justify-content: center;
-        gap: 10px;
-        padding: 20px 16px 20px 16px;
         flex-direction: row-reverse;
+    }
+
+    .message{
+        width: calc(100% - 80px);
+        padding: 20px 0px 20px 0px;
     }
 
     .edit-message-content-bubble-BTN-div{
@@ -313,6 +366,35 @@
     .time-separator {
         position: relative;
         right: 12%;
+    }
+
+    .own-message {
+        width: calc(100% - 110px);
+        padding: 20px 0px 20px 0px;
+    }
+
+    .message{
+        width: calc(100% - 110px);
+        padding: 20px 0px 20px 0px;
+    }
+
+
+    .own-message-header {
+        gap: 5px;
+        padding: 0px 0px 0px 0px;
+        width: 220px;
+        position: relative;
+        right: 20%;
+    }
+
+    .message-header {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 0px 0px 0px 0px;
+        width: 220px;
+        position: relative;
+        right: 20%;
     }
 }
 

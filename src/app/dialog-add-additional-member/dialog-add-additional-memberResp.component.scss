@@ -1,10 +1,34 @@
-@media (max-width: 1305px) {
+@media (max-width: 1650px) {
+    section {
+       right: 35.5vw;
+    }
+}
+
+
+@media (max-width: 1450px) {
     section {
         left: 400px;
-
+        right: unset;
     }
-
 }
+
+
+@media (max-width: 1350px) {
+    section {
+        width: clamp(200px, 28vw, 434px);
+    }
+}
+
+
+@media (max-width: 1200px) {
+    section {
+        left: unset;
+        right: 7vw;
+        width: clamp(200px, 31vw, 434px);
+    }
+}
+
+
 
 
 @media (max-width: 500px) {

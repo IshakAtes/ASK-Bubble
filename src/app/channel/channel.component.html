@@ -184,7 +184,7 @@
                                             Uhr</span>
                                         }
                                     </div>
-                                    }
+                                }
                             </div>
                         </div>
                     }
@@ -255,11 +255,26 @@
                                         </div>
 
 
+                                        @if(message.threadMessageCount > 0){
+                                            <div class="own-answer-bar">
+                                                @if (message.threadMessageCount == 1) {
+                                                    <span class="answer-count"> {{message.threadMessageCount}} Antwort</span>
+                                                } @else {
+                                                    <span class="answer-count"> {{message.threadMessageCount}} Antworten</span>
+                                                }
+                                                
+                                                @if (message.lastThreadMessage) {
+                                                <span class="last-answer"> Letzte Antwort
+                                                    {{time.formatTime(time.formatTimestamp(message.lastThreadMessage))}}
+                                                    Uhr</span>
+                                                }
+                                            </div>
+                                        }
                         
-                                        <div class="answer-bar">
+                                        <!-- <div class="answer-bar">
                                             <span class="answer-count">2 Antworten</span>
                                             <span class="last-answer">Letzte Antwort 14:56</span>
-                                        </div>
+                                        </div> -->
                                     </div>
                                     
                                 </div>
@@ -512,13 +527,27 @@
                                     }
                                 </div>
 
-
+                                @if(message.threadMessageCount > 0){
+                                    <div class="own-answer-bar">
+                                        @if (message.threadMessageCount == 1) {
+                                            <span class="answer-count"> {{message.threadMessageCount}} Antwort</span>
+                                        } @else {
+                                            <span class="answer-count"> {{message.threadMessageCount}} Antworten</span>
+                                        }
+                                        
+                                        @if (message.lastThreadMessage) {
+                                        <span class="last-answer"> Letzte Antwort
+                                            {{time.formatTime(time.formatTimestamp(message.lastThreadMessage))}}
+                                            Uhr</span>
+                                        }
+                                    </div>
+                                }
                 
-                                <div class="own-answer-bar">
+                                <!-- <div class="own-answer-bar">
                                     <span class="answer-count">2 Antworten</span>
                                     <span class="last-answer">Letzte Antwort 14:56</span>
                 
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     }

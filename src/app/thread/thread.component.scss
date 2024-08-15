@@ -2,7 +2,7 @@
 
 .main-thread {
     height: 940px;
-    width: 22.5vw;          //485px;
+    width: 22.5vw;         
     min-width: 260px;
     max-width: 485px;
     background-color: white;
@@ -11,8 +11,8 @@
 }
 
 .main-thread-header {
-    height:  96px; //104px;
-    padding: 32px 40px 32px 40px;
+    height:  96px; 
+    padding: 25px 40px 25px 40px;
     display: flex;
     gap: 0px;
     justify-content: space-between;
@@ -51,7 +51,7 @@
 
 
 .thread-message-separator-line {
-    width: 296px;
+    width: 200px;
     border: 1px solid #ADB0D9;
 }
 
@@ -93,6 +93,11 @@
         min-width: 260px;
         max-width: 989px;
     }
+
+    .thread-message-separator-line {
+        width: 65%;
+
+    }
 }
 
 @media (max-width: 1100px) {
@@ -113,9 +118,336 @@
     }
 }
 
+@media (max-width: 850px) {
+    
+    ::ng-deep .customDialog {
+        width: 100vw;
+        .mdc-dialog {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .mdc-dialog__container {
+            height: auto;
+        }
+
+    } 
+
+    ::ng-deep .emoji-mart {
+        width: calc(100% - 20px) !important;
+    }
+
+    ::ng-deep .emoji-mart-dark {
+        width: calc(100%) !important;
+    }
+
+    .emoticon-div {
+        position: absolute;
+        bottom: 145px;
+        left: 0px;
+    }
+
+    
+    .main-thread {
+        height: calc(100vh - 80px);
+        width: 100vw;
+        background-color: white;
+        border-radius: 0px;
+        position: relative;
+    }
+
+
+
+    .main-thread-header {
+        height: 40px;
+        padding: 10px 16px 10px 16px;
+        gap: 0px;
+        display: flex;
+        justify-content: space-between;
+        box-shadow: 0px 2px 10px 0px #00000014;
+        width: calc(100vw - 32px);
+    }
+
+    .file-upload-error-div {
+        font-size: 18px;
+    
+        p {
+            margin: 0;
+        }
+    }
+
+
+    .edit-message-content-bubble {
+        textarea {
+            min-width: 100px;
+            max-width: 700px;
+            width: 100%;
+        }
+    }
+    
+    .edit-message-content-bubble-BTN-div{
+        button {
+            width: 100px !important;
+            width: fit-content;
+
+        }
+    }
+
+
+
+    .channelname {
+        display: flex;
+        align-items: center;
+        padding: 2px 0px 2px 0px;
+        gap: 5px;
+        span {
+            font-family: Nunito;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 32.74px;
+        }
+    }
+
+    .add-member {
+        height: 40px;
+    }
+
+
+    //CHAT AREA!
+
+
+    .chat-area {
+        height: 66vh;
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+
+    .message {
+        display: flex;
+        padding: 20px 16px 20px 16px;
+        justify-content: center;
+        gap: 0px;
+    }
+    
+    .avatar {
+       display: flex;
+        width: 50px;
+        height: 50px;
+        gap: 10px;
+        border-radius: 40px;
+    }
+
+
+    .message-content-div {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 58vw;
+    }
+    
+    .message-header {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 0px 30px 0px 0px;
+    }
+
+    .massage-content-bubble {
+        padding: 15px;
+        border-radius: 0px 30px 30px 30px;
+        background: #ECEEFE;
+        width: 55vw;
+    }
+    
+    .massage-content {
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24.55px;
+    }
+
+
+    .mention-div {
+        bottom: 145px;
+        left: 0px;
+    }
+
+
+    //OWN ANSWER
+    .own-massage-content-bubble {
+        width: 49vw;
+    }
+
+    .own-message {
+        width: calc(100% - 80px);
+        display: flex;
+        justify-content: center;
+        gap: 0px;
+        padding: 20px 16px 20px 16px;
+        flex-direction: row-reverse;
+    }
+
+
+    .own-message-header {
+        gap: 5px;
+        padding: 0px 30px 0px 0px;
+    }
+
+    .own-answer-bar {
+        justify-content: flex-start;
+        width: 100vw;
+    }
+
+
+    .answer-bar {
+        width: 100vw;
+        justify-content: center;
+        position: relative;
+        right: 21vw;
+    }
+
+    //BOTTOM
+    .message-container-orientation{
+        display: flex;
+        position: absolute;
+        margin-top: 0px;
+        bottom: 20px;
+        left: 5%;
+        width: 85%;
+    
+    }
+
+    .message-container {
+            height: 103px;
+    }
+
+
+    .dropdown-menu {
+        position: absolute;
+        bottom: 145px;
+        left: 5px;
+    }
+
+}
+
+@media (max-width: 600px){
+    .message-header {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 0px 15px 0px 0px;
+    }
+
+    .own-message-header {
+        gap: 5px;
+        padding: 0px 15px 0px 0px;
+    }
+}
+
+
+
+@media (max-width: 390px){
+    .answer-bar {
+        width: 100vw;
+        justify-content: start;
+        position: relative;
+        right: 8vw;
+        display: flex;
+        position: relative;
+        right: 40px;
+    }
+
+    .thread-message-separator-line {
+        width: 200px;
+        border: 1px solid #ADB0D9;
+        position: relative;
+        right: 3%;
+    }
+
+    .own-answer-bar {
+        display: flex;
+        position: relative;
+        right: 40px;
+    }
+
+    .own-message-header {
+        gap: 5px;
+        padding: 0px 0px 0px 0px;
+        width: 220px;
+        position: relative;
+        right: 11%;
+    }
+
+    .message-header {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 0px 0px 0px 0px;
+        width: 220px;
+        position: relative;
+        right: 11%;
+    }
+
+    .own-message {
+        width: calc(100%);
+    }
+
+    .message{
+        width: calc(100%);
+    }
+
+    .edit-message-content-bubble-BTN-div{
+        button {
+            width: 80px !important;
+
+        }
+    }
+
+}
+
+
+@media (max-width: 340px){
+    .answer-bar {
+        width: 100vw;
+        justify-content: start;
+        position: relative;
+        right: 14vw;
+    }
+
+    .thread-message-separator-line {
+        width: 170px;
+
+    }
+
+    .own-message-header {
+        gap: 5px;
+        padding: 0px 0px 0px 0px;
+        width: 220px;
+        position: relative;
+        right: 20%;
+    }
+
+    .message-header {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 0px 0px 0px 0px;
+        width: 220px;
+        position: relative;
+        right: 20%;
+    }
+}
+
+
+@media (max-height: 741px) {
+    .chat-area {
+        height: 65vh;
+    }
+}
+
 
 @media (max-height: 670px) {
     .chat-area {
-        height: 63vh;
+        height: 56vh;
     }
 }

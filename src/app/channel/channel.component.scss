@@ -11,7 +11,7 @@
 }
 
 .main-chat-header {
-    //height: 96px;
+    height: 96px;
     padding: 25px 45px 25px 45px;
     gap: 0px;
     display: flex;
@@ -113,7 +113,6 @@
 .message-container-orientation{
     display: flex;
     justify-content: center;
-    margin-top: 20px;
 
 }
 
@@ -153,7 +152,7 @@
 .message {
     display: flex;
     gap: 30px;
-    padding: 25px 45px 25px 45px;
+    padding: 25px 25px 25px 25px;
 }
 
 .avatar {
@@ -238,12 +237,11 @@
 .own-message {
     display: flex;
     gap: 30px;
-    padding: 25px 45px 25px 45px;
+    padding: 25px 25px 25px 25px;
     flex-direction: row-reverse;
     position: relative;
     &:hover {
         background: #ECEEFE;
-
         .own-reactionbar {
             display: flex;
         }
@@ -263,6 +261,7 @@
     background: #FFFFFF;
     left: 0px;
     top: 0px;
+    z-index: 3;
 
     img {
         border-radius: 50%;
@@ -513,6 +512,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    z-index: 4;
 }
 
 .emojo-info-emoji-div {
