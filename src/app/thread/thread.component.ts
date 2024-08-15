@@ -61,7 +61,7 @@ export class ThreadComponent {
   isChatDataLoaded: boolean = false;
 
   fileUploadError: string | null = null;
-  groupedReactions: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
+  groupedReactionsThread: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
   userEmojis$: Observable<Array<string>>;
 
   @ViewChild('myTextarea') myTextarea!: ElementRef<HTMLTextAreaElement>;
@@ -80,8 +80,8 @@ export class ThreadComponent {
   ) {
     this.allChannels = mAndC.allChannels;
     this.allUsers = mAndC.allUsers;
-    this.reactions = chat.reactions;
-    //this.chat.groupedReactions$.subscribe(groupedReactions => {this.groupedReactions = groupedReactions;});
+    this.reactions = chat.reactionsThread;
+    // this.chat.groupedReactionsThread$.subscribe(groupedReactionsThread => {this.groupedReactionsThread = groupedReactionsThread;});
     const newContent = '';
     this.mAndC.contentThread.next(newContent);
     this.mAndC.contentThread.subscribe(newContent => {this.content = newContent;});
@@ -225,6 +225,7 @@ export class ThreadComponent {
    * load threadmessage reactions from channelthreadmessage
    */
   loadChannelThreadMessageReactions(){
+    this.reactions = [];
     for (let i = 0; i < this.channelThreadMessageList.length; i++) {
       const list = this.channelThreadMessageList[i];
       //TODO - neue Datenbankabfrage loadchannelThreadMessageReactions DONE!
@@ -241,10 +242,11 @@ export class ThreadComponent {
    * load threadmessage reactions from conversationthreadmessage
    */
   loadConversationThreadMessageReactions(){
+    // debugger
       for (let i = 0; i < this.conversationThreadMessagelist.length; i++) {
         const list = this.conversationThreadMessagelist[i];
         //TODO - neue Datenbankabfrage loadConversationThreadMessageReactions
-        this.databaseService.loadConversationMessagesReactions(this.user.userId, this.specific.conversationId, list.messageId).then(reaction => {
+        this.databaseService.loadConversationThreadMessageReactions(this.user.userId, this.specific.conversationId, list.messageId, list).then(reaction => {
           reaction.forEach(reaction => {
             this.reactions.push(reaction)
           });
@@ -412,6 +414,12 @@ ngOnChanges() {
   setTimeout(() => {
     this.loadAllMessages();
   }, 1000);
+  setTimeout(async () => {
+    await this.loadAllMessageReactions();
+    this.chat.groupReactionsThread(this.conversationThreadMessagelist);
+  }, 2000);
+  this.chat.groupedReactionsThread$.subscribe(groupedReactionsThread => {this.groupedReactionsThread = groupedReactionsThread;});
+
   if (!this.channelThread) {
     this.loadingPassiveUserConversationWithSelf()
     this.loadingPassiveUserFromCreatorUser();
@@ -501,6 +509,7 @@ closeThread(){
  * @returns 
  */
 async saveNewMessageReaction(event: any, convo: ThreadMessage, userId: string, reactionbar?: string) {
+  // debugger
   let emoji: string =  this.selectEmoji(reactionbar, event)
   if (this.checkUserAlreadyReacted(convo, emoji, userId)) {console.log('User has already reacted with this emoji'); 
     return;
@@ -511,8 +520,8 @@ async saveNewMessageReaction(event: any, convo: ThreadMessage, userId: string, r
   let reaction = this.databaseService.createThreadMessageReaction(emoji, userId, this.user.name, convo);
   await this.databaseService.addThreadMessageReaction(this.specific, convo, reaction)
   await this.loadAllMessageReactions();
-  this.chat.reactions = this.reactions
-  setTimeout(() => {this.chat.groupReactions(this.conversationThreadMessagelist)}, 500);
+  this.chat.reactionsThread = this.reactions
+  setTimeout(() => {this.chat.groupReactionsThread(this.conversationThreadMessagelist)}, 500);
   //END specific of conversation thread message
 
   this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
@@ -531,6 +540,9 @@ async saveNewMessageReaction(event: any, convo: ThreadMessage, userId: string, r
  * @returns 
  */
 async saveNewChannelMessageReaction(event: any, convo: ChannelThreadMessage, userId: string, reactionbar ?: string) {
+  // debugger
+  console.log(this.reactions);
+  
   let emoji: string =  this.selectEmoji(reactionbar, event)
   if (this.checkUserAlreadyReacted(convo, emoji, userId)) {console.log('User has already reacted with this emoji');
     return;
@@ -541,7 +553,7 @@ async saveNewChannelMessageReaction(event: any, convo: ChannelThreadMessage, use
   this.reactions = [];
   let reaction = this.databaseService.createChannelThreadMessageReaction(emoji, userId, this.user.name, convo);
   await this.databaseService.addChannelThreadMessageReaction(this.currentChannel, convo, reaction)
-  //await this.loadAllMessageReactions();
+  await this.loadAllMessageReactions();
 
 
   //TODO - Versuchsbereich um das Thread Emoji Problem zu lösen mit chatservice
@@ -549,29 +561,29 @@ async saveNewChannelMessageReaction(event: any, convo: ChannelThreadMessage, use
   // im Thread angezeigt, da Sie durch das auskommentieren von Zeile 102 ausgeschaltet wurden
   // um die doppelte Anzeige der Emojis zu verhindern
 
-  for (let i = 0; i < this.channelThreadMessageList.length; i++) {
-    const list = this.channelThreadMessageList[i];
-    this.databaseService.loadChannelThreadMessageReactions(this.user.userId, this.currentChannel.channelId, list.messageId, list).then(reaction => {
+  // for (let i = 0; i < this.channelThreadMessageList.length; i++) {
+  //   const list = this.channelThreadMessageList[i];
+  //   this.databaseService.loadChannelThreadMessageReactions(this.user.userId, this.currentChannel.channelId, list.messageId, list).then(reaction => {
 
-      reaction.forEach(reaction => {
-        this.reactions.push(reaction)
-           console.log(`reactions nach Durchlauf ${i}:`, this.reactions)
-      });
+  //     reaction.forEach(reaction => {
+  //       this.reactions.push(reaction)
+  //          console.log(`reactions nach Durchlauf ${i}:`, this.reactions)
+  //     });
 
-    }).then(()=> {
-      debugger;
-      this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
-      this.mAndC.loadUsersOfUser();
-      this.mAndC.loadChannlesofUser()
-      this.mAndC.selectedMessageId = null;
-      this.chat.reactions = this.reactions //überschreib die gefundene reactions wieder auf 0
-      console.log(this.channelThreadMessageList)
-      setTimeout(() => {
-        this.chat.groupReactions(this.channelThreadMessageList) //Wird auf die ChannelNachricht angewandt und nicht auf die ThreadNachricht
-      }, 1000);
+  //   }).then(()=> {
+  //     debugger;
+  //     this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
+  //     this.mAndC.loadUsersOfUser();
+  //     this.mAndC.loadChannlesofUser()
+  //     this.mAndC.selectedMessageId = null;
+  //     this.chat.reactions = this.reactions //überschreib die gefundene reactions wieder auf 0
+  //     console.log(this.channelThreadMessageList)
+  //     setTimeout(() => {
+  //       this.chat.groupReactions(this.channelThreadMessageList) //Wird auf die ChannelNachricht angewandt und nicht auf die ThreadNachricht
+  //     }, 1000);
         
-    })
-  }
+  //   })
+  // }
 
   //END specific of conversation thread message
 

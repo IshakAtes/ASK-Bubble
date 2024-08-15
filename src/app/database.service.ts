@@ -303,7 +303,7 @@ export class DatabaseService {
     reaction.emoji = emoji;
     reaction.userId = userId;
     reaction.userName = userName;
-    reaction.messageId = threadMessage.messageId;
+    reaction.messageId = threadMessage.threadMessageId;
     reaction.reactionId = 'THR-MSG-REACT-' + randomNumber;
     return reaction
   }
@@ -491,7 +491,7 @@ export class DatabaseService {
       reaction.emoji = emoji;
       reaction.userId = userId;
       reaction.userName = userName;
-      reaction.messageId = threadMessage.messageId;
+      reaction.messageId = threadMessage.threadMessageId;
       reaction.reactionId = 'THR-MSG-REACT-' + randomNumber;
       return reaction
     }
@@ -1065,7 +1065,7 @@ export class DatabaseService {
 
 
     /**
-   * loads all reactions of a message in a channel
+   * loads all reactions of a message in a channelthread
    * @param userId user id
    * @param channelId channel id
    * @param channelMessageId message id
@@ -1077,6 +1077,41 @@ export class DatabaseService {
   
 
         const path = `users/${userId}/channels/${channelId}/channelmessages/${channelMessageId}/threads/${threadMessage.threadId}/threadmessages/${threadMessage.threadMessageId}/reactions`;
+        const reactionsCollection = collection(this.firestore, path);
+  
+        onSnapshot(reactionsCollection, (snapshot) => {
+          snapshot.forEach((doc) => {
+            const reactionData = doc.data();
+            const reactionObject = {
+              emoji: reactionData['emoji'],
+              messageId: reactionData['messageId'],
+              reactionId: reactionData['reactionId'],
+              userId: reactionData['userId'],
+              userName: reactionData['userName'],
+            } as Reaction;
+            reactionList.push(reactionObject);
+          });
+          resolve(reactionList);
+        }, (error) => {
+          reject(error);
+        });
+      });
+    }
+
+
+     /**
+   * loads all reactions of a message in a conversationthread
+   * @param userId user id
+   * @param channelId channel id
+   * @param channelMessageId message id
+   * @returns list of reactions of a single message in the channel
+   */
+     loadConversationThreadMessageReactions(userId: string, conversationId: string, conversationMessageId: string, threadMessage: ThreadMessage): Promise<Array<Reaction>> {
+      return new Promise<Array<Reaction>>((resolve, reject) => {
+        const reactionList = [] as Array<Reaction>;
+  
+        // /users/Adxrm7CExizb76lVrknu/conversations/CONV-Adxrm7CExizb76lVrknu-0.9989840950446485/conversationmessages/CONV-MSG-0.40775953339191817/threads/THR-Adxrm7CExizb76lVrknu-0.5432444949979081/threadmessages/THR-MSG-0.6462466209007238/reactions/THR-MSG-REACT-0.703860335842865
+        const path = `users/${userId}/conversations/${conversationId}/conversationmessages/${conversationMessageId}/threads/${threadMessage.threadId}/threadmessages/${threadMessage.threadMessageId}/reactions`;
         const reactionsCollection = collection(this.firestore, path);
   
         onSnapshot(reactionsCollection, (snapshot) => {
