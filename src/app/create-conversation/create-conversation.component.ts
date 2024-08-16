@@ -26,7 +26,7 @@ export class CreateConversationComponent {
   
   hideUserContainer: boolean = true;
   inputFocused: boolean =  false;
-  isdataLoaded: boolean = true;
+  isdataLoaded: boolean = false;
 
   inputUser: string = '';
 
@@ -78,6 +78,7 @@ export class CreateConversationComponent {
       this.conversationList = [];
       this.database.loadAllUserConversations(this.us.activeUserObject.userId).then(allConversations => {
         this.conversationList = allConversations;
+        this.isdataLoaded = true;
       })
     }, 1500);
   }

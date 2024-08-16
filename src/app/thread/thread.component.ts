@@ -58,7 +58,7 @@ export class ThreadComponent {
   mainChannelMessage: ChannelMessage;
   mainMessage: ConversationMessage;
 
-  isChatDataLoaded: boolean = false;
+  isThreadDataLoaded: boolean = false;
 
   fileUploadError: string | null = null;
   groupedReactionsThread: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
@@ -146,7 +146,7 @@ export class ThreadComponent {
       this.databaseService.loadSpecificChannelMessage(this.user.userId, this.currentChannelThread.channelId, this.currentChannelThread.messageId)
         .then(message => {
           this.mainChannelMessage = message;
-          this.isChatDataLoaded = true;
+          this.isThreadDataLoaded = true;
         })
         .catch(error => {
           console.error('Error loading message:', error);
@@ -163,7 +163,7 @@ export class ThreadComponent {
       this.databaseService.loadSpecificConversationMessage(this.user.userId, this.currentThread.conversationId, this.currentThread.messageId)
         .then(message => {
           this.mainMessage = message;
-          this.isChatDataLoaded = true;
+          this.isThreadDataLoaded = true;
         })
         .catch(error => {
           console.error('Error loading message:', error);
@@ -410,6 +410,7 @@ updateChannelThreadMessage(message: ChannelThreadMessage){
  *  after a change
  */
 ngOnChanges() {
+  this.isThreadDataLoaded = false;
   this.loadMainMessage();
   setTimeout(() => {
     this.loadAllMessages();
