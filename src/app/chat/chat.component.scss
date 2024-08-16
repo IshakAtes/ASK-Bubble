@@ -38,6 +38,7 @@
     gap: 10px;
 
     span {
+        font-family: Nunito;
         font-size: 24px;
         font-weight: 700;
         line-height: 32.74px;
@@ -54,6 +55,7 @@
     min-width: 12px;
 
     span {
+        font-family: Nunito;
         font-size: 20px;
         font-weight: 600;
         line-height: 27.28px;
@@ -96,6 +98,15 @@
     align-items: center;
 
     position: absolute;
+
+    span {
+        font-family: Nunito;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24.55px;
+        text-align: left;
+
+    }
 }
 
 .line {
@@ -106,7 +117,7 @@
 .message {
     display: flex;
     gap: 30px;
-    padding: 25px 9px 25px 9px;
+    padding: 25px 4px 25px 4px;
     position: relative;
 
     &:hover {
@@ -191,6 +202,7 @@
 }
 
 .message-header-userName {
+    font-family: Nunito;
     font-size: 18px;
     font-weight: 700;
     line-height: 24.55px;
@@ -199,6 +211,7 @@
 
 .message-header-timestamp {
     color: #686868;
+    font-family: Nunito;
     font-size: 14px;
     font-weight: 400;
     line-height: 19.1px;
@@ -212,6 +225,7 @@
 }
 
 .massage-content {
+    font-family: Nunito;
     font-size: 18px;
     font-weight: 400;
     line-height: 24.55px;
@@ -238,6 +252,7 @@
 
 .answer-count {
     color: #535AF1;
+    font-family: Nunito;
     font-size: 18px;
     font-weight: 400;
     line-height: 24.55px;
@@ -245,6 +260,7 @@
 
 .last-answer {
     color: #686868;
+    font-family: Nunito;
     font-size: 14px;
     font-weight: 400;
     line-height: 19.1px;
@@ -253,7 +269,7 @@
 .own-message {
     display: flex;
     gap: 30px;
-    padding: 25px 9px 25px 9px;
+    padding: 25px 4px 25px 4px;
     flex-direction: row-reverse;
     position: relative;
 
@@ -292,6 +308,7 @@
 .reactionbar-emoji-div {
     width: 47px;
     height: 46px;
+    font-family: Nunito;
     font-size: 23px;
     align-items: center;
     display: flex;
@@ -505,6 +522,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: Nunito;
     font-size: 32px;
 
     p {
@@ -552,16 +570,19 @@
 }
 
 .emojo-info-emoji-div {
+    font-family: Nunito;
     font-size: 28px;
 }
 
 .emojo-info-user-div {
+    font-family: Nunito;
     font-size: 18px;
     font-weight: 700;
     line-height: 24.55px;
 }
 
 .emojo-info-text-div {
+    font-family: Nunito;
     font-size: 16px;
     font-weight: 400;
     line-height: 21.82px;

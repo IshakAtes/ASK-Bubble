@@ -25,12 +25,14 @@
 }
 
 .header {
+    font-family: Nunito;
     font-size: 24px;
     font-weight: 700;
     line-height: 32.74px;
 }
 
 .channel {
+    font-family: Nunito;
     font-size: 14px;
     font-weight: 400;
     line-height: 19.1px;
@@ -43,9 +45,10 @@
     justify-content: center;
     height: 35px;
     padding: 20px 0 20px 0;
-    gap: 20px;
+    gap: 19px;
 
     span {
+        font-family: Nunito;
         font-size: 18px;
         font-weight: 400;
         line-height: 24.55px;
@@ -65,6 +68,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: Nunito;
     font-size: 24px;
 
     p {
@@ -174,6 +178,7 @@
     }
 
     .file-upload-error-div {
+        font-family: Nunito;
         font-size: 18px;
     
         p {
@@ -265,6 +270,7 @@
     }
     
     .massage-content {
+        font-family: Nunito;
         font-size: 18px;
         font-weight: 400;
         line-height: 24.55px;
