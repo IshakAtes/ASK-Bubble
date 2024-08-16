@@ -131,8 +131,8 @@ export class ChannelComponent implements OnInit {
     this.loadAllMessageReactions()
     setTimeout(() => {
       this.chatService.groupReactions(this.messageList).then(() => {
-      this.isdataLoaded = true;
-    })
+        this.isdataLoaded = true;
+      })
     }, 1000);
   }
 
@@ -146,7 +146,7 @@ export class ChannelComponent implements OnInit {
       this.chatService.reactions = [];
       this.reactions = this.chatService.reactions;
       this.chatService.groupedReactions$.subscribe(groupedReactions => { this.groupedReactions = groupedReactions; });
-  
+
 
       this.memberList = [];
       this.messageList = [];
@@ -173,10 +173,10 @@ export class ChannelComponent implements OnInit {
     this.loadAllMessageReactions()
     setTimeout(() => {
       this.chatService.groupReactions(this.messageList)
-      .then(() => {
-        this.changeReload(); //Important to be able to load another channel
-        this.isdataLoaded = true;
-      })
+        .then(() => {
+          this.changeReload(); //Important to be able to load another channel
+          this.isdataLoaded = true;
+        })
     }, 1000);
   }
 
@@ -267,23 +267,23 @@ export class ChannelComponent implements OnInit {
     if (this.content == '' && this.fileService.downloadURL == '') {
       this.displayEmptyContentError();
     } else {
-    this.messageList = [];
-    let newMessage: ChannelMessage = this.database.createChannelMessage(this.channel, this.content, this.activeUser.userId, this.fileService.downloadURL)
-    this.database.addChannelMessage(this.channel, newMessage)
-    this.content = '';
-    const newContent = '';
-    this.mAndC.content.next(newContent);
-    this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId).then(messageList => {
-      this.messageList = messageList;
-      this.messageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-    })
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 10);
-    this.fileService.downloadURL = '';
+      this.messageList = [];
+      let newMessage: ChannelMessage = this.database.createChannelMessage(this.channel, this.content, this.activeUser.userId, this.fileService.downloadURL)
+      this.database.addChannelMessage(this.channel, newMessage)
+      this.content = '';
+      const newContent = '';
+      this.mAndC.content.next(newContent);
+      this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId).then(messageList => {
+        this.messageList = messageList;
+        this.messageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+      })
+      setTimeout(() => {
+        this.scrollToBottom();
+      }, 10);
+      this.fileService.downloadURL = '';
 
+    }
   }
-}
 
   /**
    * avoids sending empty messages
@@ -310,16 +310,27 @@ export class ChannelComponent implements OnInit {
     if (reactionbar) { emoji = reactionbar } else { emoji = event.emoji.native }
     const userAlreadyReacted = this.reactions.some(reaction => reaction.messageId === message.messageId && reaction.emoji === emoji && reaction.userId === userId);
     if (userAlreadyReacted) { console.log('User has already reacted with this emoji'); return; }
-    this.reactions = [];
-    let reaction = this.database.createChannelMessageReaction(emoji, userId, this.activeUser.name, message);
-    await this.database.addChannelMessageReaction(this.channel, message, reaction)
-    await this.loadAllMessageReactions();
-    this.chatService.reactions = this.reactions;
+    await this.createAndSaveChannelReaction(message, emoji, userId);
     setTimeout(() => { this.chatService.groupReactions(this.messageList) }, 500);
     this.chatService.checkIfEmojiIsAlreadyInUsedLastEmojis(this.activeUser, emoji, userId);
     this.mAndC.loadUsersOfUser();
     this.mAndC.loadChannlesofUser()
     this.mAndC.selectedMessageId = null;
+  }
+
+
+  /**
+     * Creates and saves the reaction in the database
+     * @param message channelnmessage object
+     * @param emoji emoji
+     * @param userId userId
+     */
+  private async createAndSaveChannelReaction(message: ChannelMessage, emoji: string, userId: string): Promise<void> {
+    this.reactions = [];
+    let reaction = this.database.createChannelMessageReaction(emoji, userId, this.activeUser.name, message);
+    await this.database.addChannelMessageReaction(this.channel, message, reaction);
+    await this.loadAllMessageReactions();
+    this.chatService.reactions = this.reactions;
   }
 
 
@@ -417,8 +428,12 @@ export class ChannelComponent implements OnInit {
   }
 
 
+  /**
+   * creates a new or opens an already existing thred 
+   * @param message channel message object
+   */
   createOrOpenThread(message: ChannelMessage) {
-    if(message.threadId !== '') {
+    if (message.threadId !== '') {
       console.log('Thread already exists');
       this.database.loadSpecificChannelThread(message, this.channel)
         .then(oldThread => {
@@ -435,15 +450,15 @@ export class ChannelComponent implements OnInit {
       this.reload = true;
       this.ngOnChanges();
       this.openThread(thread);
-      
     }
-  
-
   }
 
 
+  /**
+   * Opens a thread
+   * @param thread thr thread that should be opened
+   */
   openThread(thread: ChannelThread) {
     this.emitThread.emit(thread)
   }
-
 }

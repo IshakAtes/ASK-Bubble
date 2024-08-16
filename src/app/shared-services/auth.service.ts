@@ -18,6 +18,7 @@ export class AuthService {
   provider = new GoogleAuthProvider();
   activeUser? = user(this.firebaseAuth);
   currentUserSignal = signal<User | null | undefined>(undefined);
+  wrongEmail = false;
   
 
   constructor() {}
@@ -32,13 +33,20 @@ export class AuthService {
           console.log('currentUser', fbUser);
           // Update email
           if (newEmail !== fbUser.email && currentPassword) {
-            // Reauthenticate the user with the current email and password
-            const credential = EmailAuthProvider.credential(email, currentPassword ?? '');
-            await reauthenticateWithCredential(fbUser, credential);
-            await updateEmail(fbUser, newEmail);
-            await sendEmailVerification(fbUser);
-            await this.us.changeEmail(email, newEmail, name, avatar)
-            console.log('Verification email sent to', newEmail);
+            try {
+              // Reauthenticate the user with the current email and password
+              const credential = EmailAuthProvider.credential(email, currentPassword ?? '');
+              console.log(credential);
+              await reauthenticateWithCredential(fbUser, credential);
+              await updateEmail(fbUser, newEmail);
+              await sendEmailVerification(fbUser);
+              await this.us.changeEmail(email, newEmail, name, avatar)
+              console.log('Verification email sent to', newEmail);
+            } catch (error) {
+              this.wrongEmail = true;
+              console.error('Error during reauthentication:', error);
+            }
+            
           }
     
           if (name !== fbUser.displayName) {
@@ -64,23 +72,6 @@ export class AuthService {
       }
   }
 
-
-  // async sendVerificationEmail(newEmail: string) {
-  //   const auth = this.firebaseAuth;
-  //   const currentUser = auth.currentUser;
-
-  //   if (currentUser) {
-  //     try {
-  //       await updateEmail(currentUser, newEmail);
-  //       await sendEmailVerification(currentUser);
-  //       console.log('Verification email sent to', newEmail);
-  //     } catch (error: any) {
-  //       console.error('Error sending verification email:', error);
-  //       this.errorMessage = error.message;
-  //     }
-  //   }
-  // }
-  
 
   async googleAuth() {
     console.log('google Provider', this.provider);
@@ -118,7 +109,7 @@ export class AuthService {
         // ...
       });
   }
-   
+
 
   register(email: string, username: string, password: string): Observable <void> {
     const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, password
@@ -169,7 +160,6 @@ export class AuthService {
       if (user) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/auth.user
-        const uid = user.uid;
         this.us.getUser(user.email ?? '', user.uid).then((activeUser) => {
           console.log('activeUser:', activeUser);
           this.us.loggedUser = activeUser;
@@ -186,7 +176,6 @@ export class AuthService {
       }
     });
   }
-  
 
 
 }

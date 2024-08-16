@@ -43,6 +43,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
   list: Array<ConversationMessage> = [];
   allChannels: Array<Channel> = [];
   reactions: Array<Reaction> = [];
+  filteredList: Array<ConversationMessage> = [];
 
   isChatDataLoaded: boolean = true;
   userEmojis$: Observable<Array<string>>;
@@ -52,6 +53,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
   content = '';
   @ViewChild('myTextarea') myTextarea!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('lastDiv') lastDiv: ElementRef<HTMLDivElement>;
+  @ViewChild('fileInput') fileInput!: ElementRef;
 
   @Output() emitThread = new EventEmitter<Thread>();
 
@@ -96,6 +98,9 @@ export class ChatComponent implements AfterViewInit, OnInit {
   }
 
 
+  /**
+     * loads all needed data after DOM is loaded
+     */
   ngOnInit() {
     this.isChatDataLoaded = false;
 
@@ -104,7 +109,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
       this.initializeChat()
     });
     */
-
 
     this.databaseService.loadUser(this.specific.createdBy)
       .then(creatorUser => {
@@ -151,16 +155,22 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.changeReloadStatus.emit()
   }
 
-
+  /**
+   * Opens a thread
+   * @param thread thr thread that should be opened
+   */
   openThread(thread: Thread) {
     this.emitThread.emit(thread)
   }
 
+  /**
+   * reloads the data after a change happend in the channel
+   */
   ngOnChanges() {
     this.isChatDataLoaded = false;
     this.sendingUser = new User()
     this.passiveUser = new User()
-    
+
     /*reset reactions and set reactions to observable to avoid double loading reactions*/
     this.chat.reactions = [];
     this.reactions = this.chat.reactions;
@@ -204,14 +214,16 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.mAndC.loadChannlesofUser();
     this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.user.userId);
 
-
     this.loadAllMessages().then(() => {
       this.initializeChatAfterChange();
     })
   }
 
 
-
+  /**
+     * loads all message reactions and groups them after something changed
+     * in the conversation
+     */
   initializeChatAfterChange() {
     this.loadAllMessageReactions();
     setTimeout(() => {
@@ -224,17 +236,21 @@ export class ChatComponent implements AfterViewInit, OnInit {
   }
 
 
-  //load functions
+  /**
+   * Loads all messages of the conversation
+   * @returns an array with all messages of the conversation
+   */
   loadAllMessages(): Promise<void> {
     return this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId).then(messageList => {
       this.list = messageList;
       this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-      console.log('list');
-      console.log(this.list);
     });
   }
 
-  //kopieren
+
+  /**
+   * loads all message reactions and groups them after DOM is loaded
+   */
   loadAllMessageReactions() {
     for (let i = 0; i < this.list.length; i++) {
       const list = this.list[i];
@@ -247,7 +263,9 @@ export class ChatComponent implements AfterViewInit, OnInit {
   }
 
 
-  //kopieren
+  /**
+   * saves the new message into the database and displays it in the chat area
+   */
   saveNewMessage() {
     if (this.content == '' && this.fileUpload.downloadURL == '') {
       this.displayEmptyContentError();
@@ -260,11 +278,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
       this.content = '';
       const newContent = '';
       this.mAndC.content.next(newContent);
-
-      this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId).then(messageList => {
-        this.list = messageList;
-        this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-      })
+      this.loadAllMessages()
 
       setTimeout(() => {
         this.scrollToBottom();
@@ -274,6 +288,10 @@ export class ChatComponent implements AfterViewInit, OnInit {
     }
   }
 
+
+  /**
+  * avoids sending empty messages
+  */
   displayEmptyContentError() {
     this.fileUploadError = 'Das abschicken von leeren Nachrichten ist nicht möglich';
     setTimeout(() => {
@@ -283,8 +301,14 @@ export class ChatComponent implements AfterViewInit, OnInit {
   };
 
 
-  //kopieren
-  // save message reaction
+  /**
+   * saves the message reaction to the database
+   * @param event 
+   * @param convo conversationmessage object
+   * @param userId userid
+   * @param reactionbar infos about the last two used emoji
+   * @returns returns nothing if the user already used the selected emoji
+   */
   async saveNewMessageReaction(event: any, convo: ConversationMessage, userId: string, reactionbar?: string) {
     let emoji: string
     if (reactionbar) {
@@ -293,35 +317,61 @@ export class ChatComponent implements AfterViewInit, OnInit {
       emoji = event.emoji.native
     }
 
-    const userAlreadyReacted = this.reactions.some(reaction =>
-      reaction.messageId === convo.messageId && reaction.emoji === emoji && reaction.userId === userId
-    );
+    const userAlreadyReacted = await this.userHasAlreadyReacted(convo, emoji, userId);
     if (userAlreadyReacted) {
-      console.log('User has already reacted with this emoji');
       return;
     }
 
-    this.reactions = [];
-    let reaction = this.databaseService.createConversationMessageReaction(emoji, userId, this.user.name, convo);
-    await this.databaseService.addConversationMessageReaction(this.specific, convo, reaction)
-    await this.loadAllMessageReactions();
-
-
-    this.chat.reactions = this.reactions
+    await this.createAndSaveReaction(convo, emoji, userId);
 
     setTimeout(() => {
       this.chat.groupReactions(this.list)
     }, 500);
 
-
     this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
     this.mAndC.loadUsersOfUser();
     this.mAndC.loadChannlesofUser()
-
     this.mAndC.selectedMessageId = null;
   }
 
 
+  /**
+   * checks if the user has already reacted with the emoji
+   * @param convo conversationmessage object
+   * @param emoji emoji
+   * @param userId userId
+   * @returns boolean depending if the user has already reacted with the emoji
+   */
+  private async userHasAlreadyReacted(convo: ConversationMessage, emoji: string, userId: string): Promise<boolean> {
+    const userAlreadyReacted = this.reactions.some(reaction =>
+      reaction.messageId === convo.messageId && reaction.emoji === emoji && reaction.userId === userId
+    );
+    if (userAlreadyReacted) {
+      console.log('User has already reacted with this emoji');
+      return true;
+    }
+    return false;
+  }
+
+
+  /**
+   * Creates and saves the reaction in the database
+   * @param convo conversationmessage object
+   * @param emoji emoji
+   * @param userId userId
+   */
+  private async createAndSaveReaction(convo: ConversationMessage, emoji: string, userId: string): Promise<void> {
+    this.reactions = [];
+    let reaction = this.databaseService.createConversationMessageReaction(emoji, userId, this.user.name, convo);
+    await this.databaseService.addConversationMessageReaction(this.specific, convo, reaction);
+    await this.loadAllMessageReactions();
+    this.chat.reactions = this.reactions
+  }
+
+
+  /**
+     * sets focus to message input field and scrolls to newest message in the channel
+     */
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.setFocus();
@@ -330,10 +380,11 @@ export class ChatComponent implements AfterViewInit, OnInit {
   }
 
 
-  // später anschauen 
-  // search messages
-  filteredList: Array<ConversationMessage> = [];
 
+  /**
+   * searches for already sent messages
+   * @param query the content of the searchbar
+   */
   onSearch(query: string): void {
     if (query) {
       this.filteredList = this.list.filter(message =>
@@ -348,38 +399,44 @@ export class ChatComponent implements AfterViewInit, OnInit {
     }
   }
 
-  //kopieren
-  // Focusing tesxtarea after component is initilized 
+
+  /**
+   * Focusing textarea after component is initilized 
+   */
   setFocus(): void {
     setTimeout(() => {
       this.myTextarea.nativeElement.focus();
     }, 10);
   }
 
-  //kopieren
-  // Scroll to the bottom of the chatarea 
+
+  /**
+   * Scroll to the bottom of the chatarea 
+   */
   scrollToBottom(): void {
     try {
       if (this.list.length > 0) {
         this.lastDiv.nativeElement.scrollIntoView();
       }
-
     } catch (err) {
       console.error('Scroll to bottom failed', err);
     }
   }
 
-  //kopieren
-  // Trigger click on fileupload input field
-  @ViewChild('fileInput') fileInput!: ElementRef;
 
+  /**
+   * Trigger click on fileupload input field
+   */
   triggerFileInput(): void {
     //debugger;
     this.fileInput.nativeElement.click();
   }
 
-  //kopieren
-  // Edit Message
+
+  /**
+   * edits the messages and updates the database
+   * @param message conversation message object
+   */
   updateMessage(message: ConversationMessage) {
     const updatedContent = this.edit.editContent;
     this.edit.isEditing = false;
@@ -395,6 +452,10 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.loadAllMessages();
   }
 
+  /**
+   * creates a new or opens an already existing thred 
+   * @param message conversation message object
+   */
   createOrOpenThread(message: ConversationMessage) {
     if (message.threadId !== '') {
       console.log('Thread already exists');
@@ -413,7 +474,5 @@ export class ChatComponent implements AfterViewInit, OnInit {
       this.openThread(thread);
     }
   }
-
-
 }
 
