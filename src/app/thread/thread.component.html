@@ -1,4 +1,5 @@
-@if (isChatDataLoaded) {
+
+<div *ngIf="isThreadDataLoaded; else loadingTemplate" #main>
 
     @if(channelThread){
         <!--SHOW TEMPLATE WHEN TRHEAD IS OPENED BY CHANNEL-->
@@ -842,12 +843,19 @@
         
         </div>
     }
-}
-@else{
+</div>
+
 <!--SHOW LOADING TEMPLATE-->
 <ng-template #loadingTemplate>
-    <div class="loading">
-        <p>Laden...</p>
+    <div class="lds-grid">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
     </div>
 </ng-template>
-}
