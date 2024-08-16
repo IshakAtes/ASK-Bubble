@@ -81,7 +81,13 @@ export class ThreadComponent {
     this.allChannels = mAndC.allChannels;
     this.allUsers = mAndC.allUsers;
     this.reactions = chat.reactionsThread;
-    // this.chat.groupedReactionsThread$.subscribe(groupedReactionsThread => {this.groupedReactionsThread = groupedReactionsThread;});
+    // this.chat.groupedReactionsThread$.subscribe(groupedReactionsThread => { this.groupedReactionsThread = groupedReactionsThread; });
+    this.chat.groupedReactionsThread$.subscribe(groupedReactionsThread => { 
+      this.groupedReactionsThread = groupedReactionsThread; 
+      console.log('Subscribed groupedReactionsThread:', this.groupedReactionsThread);
+    });
+    
+    
     const newContent = '';
     this.mAndC.contentThread.next(newContent);
     this.mAndC.contentThread.subscribe(newContent => {this.content = newContent;});
@@ -176,6 +182,7 @@ export class ThreadComponent {
    * loads all threadmessages from the conversation or channel mainmessage
    */
   loadAllMessages() {
+    // debugger
     if (this.channelThread) {
       this.loadChannelThreadMessages()
     }
@@ -243,16 +250,31 @@ export class ThreadComponent {
    */
   loadConversationThreadMessageReactions(){
     // debugger
-      for (let i = 0; i < this.conversationThreadMessagelist.length; i++) {
-        const list = this.conversationThreadMessagelist[i];
-        //TODO - neue Datenbankabfrage loadConversationThreadMessageReactions
-        this.databaseService.loadConversationThreadMessageReactions(this.user.userId, this.specific.conversationId, list.messageId, list).then(reaction => {
-          reaction.forEach(reaction => {
-            this.reactions.push(reaction)
-          });
-        })
-      }
+    for (let i = 0; i < this.conversationThreadMessagelist.length; i++) {
+      const list = this.conversationThreadMessagelist[i];
+      //TODO - neue Datenbankabfrage loadConversationThreadMessageReactions
+      this.databaseService.loadConversationThreadMessageReactions(this.user.userId, this.specific.conversationId, list.messageId, list).then(reaction => {
+        reaction.forEach(reaction => {
+          this.reactions.push(reaction)
+        });
+      })
+    }
   }
+
+//   async loadConversationThreadMessageReactions() {
+//     const promises = this.conversationThreadMessagelist.map(list => 
+//         this.databaseService.loadConversationThreadMessageReactions(this.user.userId, this.specific.conversationId, list.messageId, list)
+//     );
+    
+//     const allReactions = await Promise.all(promises);
+    
+//     allReactions.forEach(reactionArray => {
+//         this.reactions.push(...reactionArray);
+//     });
+    
+//     this.chat.reactionsThread = [...this.reactions];  // Reactions an den Service übergeben
+// }
+
 
 
   /**
