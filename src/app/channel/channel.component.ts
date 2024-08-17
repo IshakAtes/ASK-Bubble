@@ -64,7 +64,6 @@ export class ChannelComponent implements OnInit {
   @ViewChild('main') main: ElementRef
   @ViewChild('lastDiv') lastDiv: ElementRef<HTMLDivElement>;
   @ViewChild('myTextarea') myTextarea!: ElementRef<HTMLTextAreaElement>;
-  // Trigger click on fileupload input field
   @ViewChild('fileInput') fileInput!: ElementRef;
 
   constructor(public dialog: MatDialog, private database: DatabaseService,
@@ -90,14 +89,6 @@ export class ChannelComponent implements OnInit {
       }
     });
     this.fileService.downloadURL = '';
-
-    setTimeout(() => {
-      console.log('size inputs from channel:')
-      console.log('channelSizeSmaller' ,this.channelSizeSmaller);
-      console.log('channelSizeSmall' ,this.channelSizeSmall);
-      console.log('channelSizeBig' ,this.channelSizeBig);
-      console.log('channelSizeBigger' ,this.channelSizeBigger);
-    }, 1000);
   }
 
 
@@ -158,8 +149,6 @@ export class ChannelComponent implements OnInit {
       this.chatService.reactions = [];
       this.reactions = this.chatService.reactions;
       this.chatService.groupedReactions$.subscribe(groupedReactions => { this.groupedReactions = groupedReactions; });
-
-
       this.memberList = [];
       this.messageList = [];
       this.isdataLoaded = false;
@@ -211,8 +200,6 @@ export class ChannelComponent implements OnInit {
   changeReload() {
     this.changeReloadStatus.emit()
   }
-
-
 
 
   /**
@@ -293,10 +280,10 @@ export class ChannelComponent implements OnInit {
         this.scrollToBottom();
       }, 10);
       this.fileService.downloadURL = '';
-
     }
   }
 
+  
   /**
    * avoids sending empty messages
    */

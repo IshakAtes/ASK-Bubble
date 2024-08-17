@@ -245,7 +245,6 @@ export class ThreadComponent {
   loadChannelThreadMessageReactions(){
     for (let i = 0; i < this.channelThreadMessageList.length; i++) {
       const list = this.channelThreadMessageList[i];
-      //TODO - neue Datenbankabfrage loadchannelThreadMessageReactions DONE!
       this.databaseService.loadChannelThreadMessageReactions(this.user.userId, this.currentChannel.channelId, list.messageId, list).then(reaction => {
         reaction.forEach(reaction => {
           this.reactions.push(reaction)
@@ -259,10 +258,8 @@ export class ThreadComponent {
    * load threadmessage reactions from conversationthreadmessage
    */
   loadConversationThreadMessageReactions(){
-    // debugger
     for (let i = 0; i < this.conversationThreadMessagelist.length; i++) {
       const list = this.conversationThreadMessagelist[i];
-      //TODO - neue Datenbankabfrage loadConversationThreadMessageReactions
       this.databaseService.loadConversationThreadMessageReactions(this.user.userId, this.specific.conversationId, list.messageId, list).then(reaction => {
         reaction.forEach(reaction => {
           this.reactions.push(reaction)
@@ -520,21 +517,7 @@ loadingPassiveUserFromRecipientUser(){
  * closes the currently opened thread
  */
 closeThread(){
-  //debugger
   this.emitCloseThread.emit()
-  
-  //TEST for DATABASE QUERY
-  // this.reactions = []
-  // for (let i = 0; i < this.channelThreadMessageList.length; i++) {
-  //   const list = this.channelThreadMessageList[i];
-  //   this.databaseService.loadChannelThreadMessageReactions(this.user.userId, this.currentChannel.channelId, list.messageId, list).then(reaction => {
-  //     reaction.forEach(reaction => {
-  //       this.reactions.push(reaction)
-  //       console.log(`reactions nach Durchlauf ${i}:`, this.reactions)
-  //     });
-  //   })
-  // }
-
 }
 
 

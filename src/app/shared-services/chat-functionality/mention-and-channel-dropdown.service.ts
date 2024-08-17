@@ -3,6 +3,7 @@ import { User } from '../../../models/user.class';
 import { Channel } from '../../../models/channel.class';
 import { DatabaseService } from '../../database.service';
 import { BehaviorSubject } from 'rxjs';
+import { UserService } from '../../user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,6 @@ export class MentionAndChannelDropdownService {
   allChannels: Array<Channel> = [];
   allUsers = [] as Array<User>;
 
-  userId = 'Adxrm7CExizb76lVrknu';
-
   focusTrigger = new BehaviorSubject<void>(undefined);
   selectedMessageId: string | null = null;
   showEmoticons: boolean = false;
@@ -24,7 +23,7 @@ export class MentionAndChannelDropdownService {
   showMentionThread: boolean = false;
 
 
-  constructor(private data: DatabaseService) {
+  constructor(private data: DatabaseService, public userService: UserService) {
     this.loadUsersOfUser();
     this.loadChannlesofUser()
   }
@@ -41,7 +40,7 @@ export class MentionAndChannelDropdownService {
 
 
   loadChannlesofUser() {
-    this.data.loadAllUserChannels(this.userId).then(channel => {
+    this.data.loadAllUserChannels(this.userService.activeUserObject.userId).then(channel => {
       this.allChannels = channel;
       console.log('channels:');
       console.log(this.allChannels);

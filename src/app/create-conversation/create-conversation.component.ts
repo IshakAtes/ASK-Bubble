@@ -44,10 +44,6 @@ export class CreateConversationComponent {
     this.loadUserList();
     this.loadUserChannel();
     this.loadUserConversation();
-
-
-
-
   }
 
 

@@ -49,8 +49,10 @@ export class UserService {
 
 
   constructor(private http: HttpClient, private router: Router, public database: DatabaseService) { 
-    this.loadActiveUserChannels();    //muss nach dem login aufgerufen werden
-    this.loadActiveUserConversations(); //muss nach dem login aufgerufen werden
+    
+    this.loadActiveUserChannels();    //Umstellung: muss nach dem login aufgerufen werden und nicht hier sonst Fehlermeldung
+    this.loadActiveUserConversations(); //Umstellung: muss nach dem login aufgerufen werden und nicht hier sonst Fehlermeldung
+ 
   }
 
 
@@ -288,6 +290,7 @@ export class UserService {
    * loads all channels for the active user
    */
   loadActiveUserChannels(){
+
     this.activeUserChannels = [];
     this.isWorkspaceDataLoaded = false;
     this.database.getUser(this.activeUserMail).then(user =>{
@@ -300,6 +303,7 @@ export class UserService {
 
 
   loadActiveUserConversations() {
+
     this.isWorkspaceDataLoaded = false;
     this.activeUserConversationList = [];
     this.usersFromActiveUserConversationList = [];

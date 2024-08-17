@@ -49,13 +49,6 @@ export class MainComponent{
   constructor(public userservice: UserService, public database: DatabaseService){
     userservice.getDeviceWidth();
     console.log(this.authService.checkUserStatus());
-
-    console.log('size inputs from main:')
-    console.log('channelSizeSmaller' ,this.channelSizeSmaller);
-    console.log('channelSizeSmall' ,this.channelSizeSmall);
-    console.log('channelSizeBig' ,this.channelSizeBig);
-    console.log('channelSizeBigger' ,this.channelSizeBigger);
-
   }
 
 
@@ -328,11 +321,6 @@ export class MainComponent{
         this.channelSizeBigger =  false;
       }
     }
-    console.log('size inputs after WS change:')
-    console.log('channelSizeSmaller' ,this.channelSizeSmaller);
-    console.log('channelSizeSmall' ,this.channelSizeSmall);
-    console.log('channelSizeBig' ,this.channelSizeBig);
-    console.log('channelSizeBigger' ,this.channelSizeBigger);
   }
 
    /**

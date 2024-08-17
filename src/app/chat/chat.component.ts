@@ -86,14 +86,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
       }
     });
     this.fileUpload.downloadURL = '';
-
-    setTimeout(() => {
-      console.log('size inputs from channel:')
-      console.log('channelSizeSmaller' ,this.channelSizeSmaller);
-      console.log('channelSizeSmall' ,this.channelSizeSmall);
-      console.log('channelSizeBig' ,this.channelSizeBig);
-      console.log('channelSizeBigger' ,this.channelSizeBigger);
-    }, 1000);
   }
 
 
