@@ -5,6 +5,7 @@ import { EmailAuthProvider, getAuth, onAuthStateChanged, UserCredential, reauthe
 import { UserService } from '../user.service';
 import { User } from '../../models/user.class';
 import { signInWithRedirect, getRedirectResult, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { Router } from '@angular/router';
 
 
 
@@ -21,7 +22,7 @@ export class AuthService {
   wrongEmail = false;
   
 
-  constructor() {}
+  constructor(private router: Router) {}
 
 
   async changeUserData(email: string, newEmail: string, currentPassword: string | null, name: string, avatar: string | undefined | null) {
@@ -113,7 +114,7 @@ export class AuthService {
 
   register(email: string, username: string, password: string): Observable <void> {
     const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, password
-    ).then(response => updateProfile(response.user, {displayName: username}).then(() => {
+    ).then(response => updateProfile(response.user, {displayName: username, photoURL: this.us.userCache.avatarUrl}).then(() => {
         // this.us.userCache['uid'] = response.user.uid;
         this.us.userToken = response.user.uid;
         if (this.us.guest) {
@@ -172,7 +173,7 @@ export class AuthService {
       } else {
         // User is signed out
         console.log('authState logged out', this.us.loggedUser, 'user variable', user);
-        // ...
+        this.router.navigateByUrl('');
       }
     });
   }

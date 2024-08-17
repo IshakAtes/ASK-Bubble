@@ -60,6 +60,7 @@ section {
                 gap: 20px;
                 border-radius: 500px;
                 opacity: 0px;
+                object-fit: cover;
             }
     }
 
@@ -136,7 +137,7 @@ section {
         span {
             display: flex;
             position: relative;
-            width: 181px;
+            width: auto;
             height: 44px;
             gap: 0px;
             opacity: 0px;
