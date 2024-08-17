@@ -151,6 +151,15 @@ header {
         }
     }
 
+    .dropdown {
+        position: absolute;
+        top: 100%;
+        left: unset;
+        right: 15%;
+    }
+
+
+
     .searchBar {
         input {
             right: 0px;
@@ -160,6 +169,12 @@ header {
 
     header {
         justify-content: unset;
+    }
+}
+
+@media (max-width: 1250px) {
+    .dropdown {
+        right: 15%;
     }
 }
 
@@ -193,6 +208,10 @@ header {
 @media (max-width: 900px) {
     .loggedUserBar {
         right: 20px;
+    }
+
+    .dropdown {
+        right: 30%;
     }
 }
 
