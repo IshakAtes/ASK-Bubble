@@ -117,8 +117,6 @@ export class UserService {
               avatarUrl: avatar
             });
             resolve(avatar);
-          } else {
-            console.log('Dein Profilbild konnte nicht geändert werden');
           }
         });
       }, (error) => {

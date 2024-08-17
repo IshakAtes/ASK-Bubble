@@ -87,7 +87,10 @@ export class ThreadComponent {
     this.allChannels = mAndC.allChannels;
     this.allUsers = mAndC.allUsers;
     this.reactions = chat.reactionsThread;
-    // this.chat.groupedReactionsThread$.subscribe(groupedReactionsThread => {this.groupedReactionsThread = groupedReactionsThread;});
+    this.chat.groupedReactionsThread$.subscribe(groupedReactionsThread => { this.groupedReactionsThread = groupedReactionsThread; });
+   
+    
+    
     const newContent = '';
     this.mAndC.contentThread.next(newContent);
     this.mAndC.contentThread.subscribe(newContent => {this.content = newContent;});
@@ -190,6 +193,7 @@ export class ThreadComponent {
    * loads all threadmessages from the conversation or channel mainmessage
    */
   loadAllMessages() {
+    // debugger
     if (this.channelThread) {
       this.loadChannelThreadMessages()
     }
@@ -239,7 +243,6 @@ export class ThreadComponent {
    * load threadmessage reactions from channelthreadmessage
    */
   loadChannelThreadMessageReactions(){
-    this.reactions = [];
     for (let i = 0; i < this.channelThreadMessageList.length; i++) {
       const list = this.channelThreadMessageList[i];
       //TODO - neue Datenbankabfrage loadchannelThreadMessageReactions DONE!
@@ -257,16 +260,31 @@ export class ThreadComponent {
    */
   loadConversationThreadMessageReactions(){
     // debugger
-      for (let i = 0; i < this.conversationThreadMessagelist.length; i++) {
-        const list = this.conversationThreadMessagelist[i];
-        //TODO - neue Datenbankabfrage loadConversationThreadMessageReactions
-        this.databaseService.loadConversationThreadMessageReactions(this.user.userId, this.specific.conversationId, list.messageId, list).then(reaction => {
-          reaction.forEach(reaction => {
-            this.reactions.push(reaction)
-          });
-        })
-      }
+    for (let i = 0; i < this.conversationThreadMessagelist.length; i++) {
+      const list = this.conversationThreadMessagelist[i];
+      //TODO - neue Datenbankabfrage loadConversationThreadMessageReactions
+      this.databaseService.loadConversationThreadMessageReactions(this.user.userId, this.specific.conversationId, list.messageId, list).then(reaction => {
+        reaction.forEach(reaction => {
+          this.reactions.push(reaction)
+        });
+      })
+    }
   }
+
+//   async loadConversationThreadMessageReactions() {
+//     const promises = this.conversationThreadMessagelist.map(list => 
+//         this.databaseService.loadConversationThreadMessageReactions(this.user.userId, this.specific.conversationId, list.messageId, list)
+//     );
+    
+//     const allReactions = await Promise.all(promises);
+    
+//     allReactions.forEach(reactionArray => {
+//         this.reactions.push(...reactionArray);
+//     });
+    
+//     this.chat.reactionsThread = [...this.reactions];  // Reactions an den Service übergeben
+// }
+
 
 
   /**
@@ -431,10 +449,15 @@ ngOnChanges() {
   }, 1000);
   setTimeout(async () => {
     await this.loadAllMessageReactions();
-    this.chat.groupReactionsThread(this.conversationThreadMessagelist);
   }, 2000);
-  this.chat.groupedReactionsThread$.subscribe(groupedReactionsThread => {this.groupedReactionsThread = groupedReactionsThread;});
-
+  setTimeout(() => {
+    if (this.channelThread) {
+      this.chat.groupReactionsThread(this.channelThreadMessageList);
+    } else {
+      this.chat.groupReactionsThread(this.conversationThreadMessagelist);
+    }
+  }, 3000);
+ 
   if (!this.channelThread) {
     this.loadingPassiveUserConversationWithSelf()
     this.loadingPassiveUserFromCreatorUser();
@@ -524,7 +547,6 @@ closeThread(){
  * @returns 
  */
 async saveNewMessageReaction(event: any, convo: ThreadMessage, userId: string, reactionbar?: string) {
-  // debugger
   let emoji: string =  this.selectEmoji(reactionbar, event)
   if (this.checkUserAlreadyReacted(convo, emoji, userId)) {console.log('User has already reacted with this emoji'); 
     return;
@@ -544,8 +566,6 @@ async saveNewMessageReaction(event: any, convo: ThreadMessage, userId: string, r
   this.mAndC.loadChannlesofUser()
   this.mAndC.selectedMessageId = null;
 }
-
-
 /**
  * ADDS REACTION TO THREADMESSAGES OF A CHANNEL MESSAGE
  * @param event selection of the emoji through emoji picker
@@ -555,7 +575,7 @@ async saveNewMessageReaction(event: any, convo: ThreadMessage, userId: string, r
  * @returns 
  */
 async saveNewChannelMessageReaction(event: any, convo: ChannelThreadMessage, userId: string, reactionbar ?: string) {
-  // debugger
+  
   console.log(this.reactions);
   
   let emoji: string =  this.selectEmoji(reactionbar, event)
@@ -568,8 +588,16 @@ async saveNewChannelMessageReaction(event: any, convo: ChannelThreadMessage, use
   this.reactions = [];
   let reaction = this.databaseService.createChannelThreadMessageReaction(emoji, userId, this.user.name, convo);
   await this.databaseService.addChannelThreadMessageReaction(this.currentChannel, convo, reaction)
+  debugger
   await this.loadAllMessageReactions();
+  
+  this.chat.reactionsThread = this.reactions
+  setTimeout(() => {this.chat.groupReactionsThread(this.conversationThreadMessagelist)}, 500);
 
+  this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
+  this.mAndC.loadUsersOfUser();
+  this.mAndC.loadChannlesofUser()
+  this.mAndC.selectedMessageId = null;
 
   //TODO - Versuchsbereich um das Thread Emoji Problem zu lösen mit chatservice
   // reactions der ThreadNachricht werden korrekt geladen. Es werden grundsätzlich keine Emojis
@@ -633,11 +661,16 @@ selectEmoji(reactionbar: string | undefined, event: any): string{
  */
 checkUserAlreadyReacted(convo: ThreadMessage | ChannelThreadMessage, emoji: string, userId: string): boolean {
   return this.reactions.some(reaction =>
-    reaction.messageId === convo.messageId && reaction.emoji === emoji && reaction.userId === userId
+    reaction.messageId === convo.threadMessageId && reaction.emoji === emoji && reaction.userId === userId
   );
 }
 
 
 
+logReactions(){
+  console.log(this.reactions);
+  console.log(this.groupedReactionsThread);
+  
+}
 
 }
