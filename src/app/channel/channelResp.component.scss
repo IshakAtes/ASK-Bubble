@@ -2,7 +2,25 @@
     .main-chat {
         width: 41.5vw;
         min-width: 460px;
-        max-width: 989px;
+        //max-width: 989px;
+    }
+
+    .channelSmaller {
+        width: 49vw !important;
+    }
+}
+
+@media (max-width: 1450px) {
+    .membercount {
+        display: none;
+    }
+
+    .memberdiscs-div {
+        display: none;
+    }
+
+    .channelSmaller {
+        width: 47vw !important;
     }
 }
 
@@ -10,46 +28,59 @@
     .main-chat {
         width: 38.5vw;
         min-width: 460px;
-        max-width: 989px;
+       // max-width: 989px;
+    }
+
+    .channelSmaller {
+        width: 45vw !important;
+    }
+
+    .channelBig {
+        width: 68vw !important;
     }
 }
 
-
-@media (max-width: 1450px) {
-    .membercount {
-        display: none;
-
-    }
-
-    .memberdiscs-div {
-        display: none;
-       
-    }
-}
 
 
 @media (max-width: 1200px) {
     .main-chat {
-        width: 65vw;
+        width: 65vw !important;
+    }
+
+    .channelBigger {
+        width: 95vw !important;
     }
 }
 
 
 @media (max-width: 1100px) {
     .main-chat {
-        width: 61vw;
+        width: 61vw !important;
+    }
+
+    .channelBigger {
+        width: 95vw !important;
     }
 }
 
 @media (max-width: 1000px) {
     .main-chat {
-        width: 57vw;
+        width: 57vw !important;
     }
+
+    .channelBigger {
+        width: 95vw !important;
+    }
+
 }
 
 @media (max-width: 900px) {
     .main-chat {
-        width: 53vw;
+        width: 53vw !important;
+    }
+
+    .channelBigger {
+        width: 95vw !important;
     }
 }
 

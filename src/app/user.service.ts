@@ -41,7 +41,8 @@ export class UserService {
 
 
 
-  //TODO - hiernach suchen wenns live geht und umgestellt werden soll
+  //TODO - hiernach suchen wenns live geht und umgestellt werden soll. 
+  //Logged user mail nehmen als activeUserMail nehmen.
   activeUserMail: string = 'simon@dummy.de' //'ishakfeuer@gmail.com'  //'simon.w@gmx.net' //'simon@dummy.de' 
 
 

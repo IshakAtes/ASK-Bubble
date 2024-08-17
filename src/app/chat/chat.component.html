@@ -1,10 +1,17 @@
-<div *ngIf="isChatDataLoaded; else loadingTemplate" #main class="main-chat">
+<div *ngIf="isChatDataLoaded; else loadingTemplate" #main class="main-chat"
+[ngClass]="{'channelSmaller': channelSizeSmaller, 
+            'channelSmal': channelSizeSmall,
+            'channelBig': channelSizeBig,
+            'channelBigger': channelSizeBigger,}">
 
 
 
     <!--<app-header (search)="onSearch($event)"></app-header>-->
 
-    <div class="main-chat">
+    <div class="main-chat"[ngClass]="{'channelSmaller': channelSizeSmaller, 
+    'channelSmal': channelSizeSmall,
+    'channelBig': channelSizeBig,
+    'channelBigger': channelSizeBigger,}">
         <div class="main-chat-header">
             <div class="channelname">
                 <div class="main-chat-header-avatar-div">

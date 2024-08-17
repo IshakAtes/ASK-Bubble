@@ -38,6 +38,12 @@ export class ThreadComponent {
   @Input() currentChannelThread: ChannelThread;
   @Input() channelThread: boolean;
   @Input() currentChannel: Channel
+
+  @Input() channelSizeSmaller: boolean;
+  @Input() channelSizeSmall: boolean;
+  @Input() channelSizeBig: boolean;
+  @Input() channelSizeBigger: boolean;
+
   @Output() emitReloadChannel = new EventEmitter<Channel>()
   @Output() emitReloadChat = new EventEmitter<boolean>()
   @Output() emitReloadToFalse = new EventEmitter<boolean>()
@@ -91,6 +97,14 @@ export class ThreadComponent {
     });
     setTimeout(() => {this.loadAllMessages();}, 1000);
     this.fileUpload.downloadURLThread = '';
+
+    setTimeout(() => {
+      console.log('size inputs from thread:')
+      console.log('channelSizeSmaller' ,this.channelSizeSmaller);
+      console.log('channelSizeSmall' ,this.channelSizeSmall);
+      console.log('channelSizeBig' ,this.channelSizeBig);
+      console.log('channelSizeBigger' ,this.channelSizeBigger);
+    }, 1000);
   }
 
 

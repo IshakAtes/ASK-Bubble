@@ -40,7 +40,6 @@
                          (emitThread)="openChannelThread($event)"
                          
                          [activeUser]="userservice.activeUserObject"
-                         [channelBig]="channelBig"
                          [channel]="currentChannel"
                          [reload]="reloadChannel"
                      ></app-channel>
@@ -64,7 +63,6 @@
                  }
                  @else {
                      <app-create-conversation
-                         [channelBig]="channelBig"
                          (changeToChannel)="changeChannel($event)"
                          (changeToConversation)="changeConversation($event)"
                      ></app-create-conversation>
@@ -91,8 +89,8 @@
             
                 <app-header></app-header>
          
-                 
-                <app-workspace
+                @if(isWSVisible){
+                    <app-workspace
                     (changeToChannel)="changeChannel($event)"
                     (changeToConversation)="changeConversation($event)"
                     (changeToNewConversation)="changeNewConversation()"
@@ -101,6 +99,8 @@
                     [usersFromActiveUserConversationList]="userservice.usersFromActiveUserConversationList"
                     [activeUserConversationList]="userservice.activeUserConversationList"
                 ></app-workspace>
+                }
+
                  
                  
                 @if(conversation){
@@ -110,6 +110,11 @@
                     [specific]="currentConversation"
                     [user]="userservice.activeUserObject"
                     [reload]="reloadChat"
+
+                    [channelSizeSmaller]="channelSizeSmaller"
+                    [channelSizeSmall]="channelSizeSmall"
+                    [channelSizeBig]="channelSizeBig"
+                    [channelSizeBigger]="channelSizeBigger"
                     ></app-chat>
                 }
                 @else if(channel) {
@@ -119,9 +124,13 @@
                         (emitThread)="openChannelThread($event)"
                         
                         [activeUser]="userservice.activeUserObject"
-                        [channelBig]="channelBig"
                         [channel]="currentChannel"
                         [reload]="reloadChannel"
+
+                        [channelSizeSmaller]="channelSizeSmaller"
+                        [channelSizeSmall]="channelSizeSmall"
+                        [channelSizeBig]="channelSizeBig"
+                        [channelSizeBigger]="channelSizeBigger"
                     ></app-channel>
                 }
                 @else if(thread) {
@@ -132,6 +141,12 @@
                         [channelThread]="channelThread"
                         [specific]="currentConversation"
                         [currentChannel]="currentChannel"
+
+                        [channelSizeSmaller]="channelSizeSmaller"
+                        [channelSizeSmall]="channelSizeSmall"
+                        [channelSizeBig]="channelSizeBig"
+                        [channelSizeBigger]="channelSizeBigger"
+
                         (emitCloseThread)="closeThread()"
                         (emitReloadChannel)="setChannelReloadToTrue()"
                         (emitReloadChat)="setChatReloadToTrue($event)"
@@ -142,7 +157,10 @@
                 }
                 @else {
                     <app-create-conversation
-                        [channelBig]="channelBig"
+                        [channelSizeSmaller]="channelSizeSmaller"
+                        [channelSizeSmall]="channelSizeSmall"
+                        [channelSizeBig]="channelSizeBig"
+                        [channelSizeBigger]="channelSizeBigger"
                         (changeToChannel)="changeChannel($event)"
                         (changeToConversation)="changeConversation($event)"
                     ></app-create-conversation>
@@ -185,6 +203,11 @@
                 [specific]="currentConversation"
                 [user]="userservice.activeUserObject"
                 [reload]="reloadChat"
+
+                [channelSizeSmaller]="channelSizeSmaller"
+                [channelSizeSmall]="channelSizeSmall"
+                [channelSizeBig]="channelSizeBig"
+                [channelSizeBigger]="channelSizeBigger"
                 ></app-chat>
             }
             @else if(channel) {
@@ -196,14 +219,21 @@
                     
                     
                     [activeUser]="userservice.activeUserObject"
-                    [channelBig]="channelBig"
                     [channel]="currentChannel"
                     [reload]="reloadChannel"
+
+                    [channelSizeSmaller]="channelSizeSmaller"
+                    [channelSizeSmall]="channelSizeSmall"
+                    [channelSizeBig]="channelSizeBig"
+                    [channelSizeBigger]="channelSizeBigger"
                 ></app-channel>
             }
             @else {
                 <app-create-conversation
-                [channelBig]="channelBig"
+                [channelSizeSmaller]="channelSizeSmaller"
+                [channelSizeSmall]="channelSizeSmall"
+                [channelSizeBig]="channelSizeBig"
+                [channelSizeBigger]="channelSizeBigger"
                 (changeToChannel)="changeChannel($event)"
                 (changeToConversation)="changeConversation($event)"
                 ></app-create-conversation>
@@ -217,6 +247,11 @@
                 [currentChannel]="currentChannel"
                 [channelThread]="channelThread"
                 [specific]="currentConversation"
+
+                [channelSizeSmaller]="channelSizeSmaller"
+                [channelSizeSmall]="channelSizeSmall"
+                [channelSizeBig]="channelSizeBig"
+                [channelSizeBigger]="channelSizeBigger"
                 
                 (emitCloseThread)="closeThread()"
                 (emitReloadChannel)="setChannelReloadToTrue()"

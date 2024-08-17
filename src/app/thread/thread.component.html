@@ -1,9 +1,16 @@
 
-<div *ngIf="isThreadDataLoaded; else loadingTemplate" #main>
+<div *ngIf="isThreadDataLoaded; else loadingTemplate" #main
+[ngClass]="{'channelSmaller': channelSizeSmaller, 
+            'channelSmall': channelSizeSmall,
+            'channelBig': channelSizeBig,
+            'channelBigger': channelSizeBigger,}">
 
     @if(channelThread){
         <!--SHOW TEMPLATE WHEN TRHEAD IS OPENED BY CHANNEL-->
-        <div class="main-thread">
+        <div class="main-thread" [ngClass]="{'channelSmaller': channelSizeSmaller, 
+        'channelSmall': channelSizeSmall,
+        'channelBig': channelSizeBig,
+        'channelBigger': channelSizeBigger,}">
             <div class="main-thread-header">
                 <div>
                     <span class="header">Thread</span>
@@ -433,7 +440,10 @@
     @else{
         <!--WECHSEL DER LOGIK !!!!!!!!-->
         <!--SHOW TEMPLATE WHEN TRHEAD IS OPENED BY CONVERSATION-->
-        <div class="main-thread">
+        <div class="main-thread" [ngClass]="{'channelSmaller': channelSizeSmaller, 
+        'channelSmall': channelSizeSmall,
+        'channelBig': channelSizeBig,
+        'channelBigger': channelSizeBigger,}">
             <div class="main-thread-header">
                 <div>
                     <span class="header">Thread</span>

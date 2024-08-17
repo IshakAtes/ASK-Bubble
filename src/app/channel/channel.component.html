@@ -1,5 +1,9 @@
 
-<div *ngIf="isdataLoaded; else loadingTemplate" #main class="main-chat" [ngClass]="{'channelBig': channelBig}">
+<div *ngIf="isdataLoaded; else loadingTemplate" #main class="main-chat" 
+[ngClass]="{'channelSmaller': channelSizeSmaller, 
+            'channelSmall': channelSizeSmall,
+            'channelBig': channelSizeBig,
+            'channelBigger': channelSizeBigger,}">
     
     @if(us.deviceWidth > 850){
         <div class="main-chat-header">

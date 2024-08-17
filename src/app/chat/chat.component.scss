@@ -7,7 +7,7 @@
     height: 940px;
     width: 51vw; //989px
     min-width: 460px;
-    max-width: 989px;
+    max-width: 95vw; //989px;
     background-color: white;
     border-radius: 30px;
     position: relative;
@@ -20,6 +20,24 @@
     display: flex;
     justify-content: space-between;
     box-shadow: 0px 2px 10px 0px #00000014;
+}
+
+
+.channelSmaller {
+    width: 51vw !important;
+}
+
+.channelSmal {
+    width: 66vw !important;
+}
+
+.channelBig {
+    width: 71vw !important;
+}
+
+
+.channelBigger {
+    width: 95vw !important;
 }
 
 .main-chat-header-avatar-div {

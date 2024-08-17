@@ -53,7 +53,7 @@ export class GeneralChatService {
   }
 
   async groupReactionsThread(messageList: Array<ThreadMessage> | Array<ChannelThreadMessage>) {
-    debugger
+    //debugger
     console.log('messageList: ', messageList);
     console.log('reactionsThread:', this.reactionsThread);
     console.log('reactions:', this.reactions);

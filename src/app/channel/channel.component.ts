@@ -33,9 +33,13 @@ import { ChannelThread } from '../../models/channelThread.class';
 export class ChannelComponent implements OnInit {
 
   @Input() channel: Channel
-  @Input() channelBig: boolean;
   @Input() reload: boolean;
   @Input() activeUser: User;
+
+  @Input() channelSizeSmaller: boolean;
+  @Input() channelSizeSmall: boolean;
+  @Input() channelSizeBig: boolean;
+  @Input() channelSizeBigger: boolean;
 
   @Output() changeReloadStatus = new EventEmitter<boolean>();
   @Output() userLeftChannel = new EventEmitter<boolean>();
@@ -86,6 +90,14 @@ export class ChannelComponent implements OnInit {
       }
     });
     this.fileService.downloadURL = '';
+
+    setTimeout(() => {
+      console.log('size inputs from channel:')
+      console.log('channelSizeSmaller' ,this.channelSizeSmaller);
+      console.log('channelSizeSmall' ,this.channelSizeSmall);
+      console.log('channelSizeBig' ,this.channelSizeBig);
+      console.log('channelSizeBigger' ,this.channelSizeBigger);
+    }, 1000);
   }
 
 

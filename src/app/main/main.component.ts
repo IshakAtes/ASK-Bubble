@@ -26,11 +26,17 @@ export class MainComponent{
   conversation: boolean = false;
   channel: boolean = false;
   isWSVisible: boolean = true;
-  channelBig: boolean = false;
   reloadChannel: boolean = false;
   reloadChat: boolean = false;
   thread: boolean = false;
   channelThread: boolean = false;
+
+  channelBig: boolean = false;
+
+  channelSizeSmaller: boolean = false;
+  channelSizeSmall: boolean = false;
+  channelSizeBig: boolean = true;
+  channelSizeBigger: boolean = false;
   
   
   currentConversation: Conversation;
@@ -43,6 +49,13 @@ export class MainComponent{
   constructor(public userservice: UserService, public database: DatabaseService){
     userservice.getDeviceWidth();
     console.log(this.authService.checkUserStatus());
+
+    console.log('size inputs from main:')
+    console.log('channelSizeSmaller' ,this.channelSizeSmaller);
+    console.log('channelSizeSmall' ,this.channelSizeSmall);
+    console.log('channelSizeBig' ,this.channelSizeBig);
+    console.log('channelSizeBigger' ,this.channelSizeBigger);
+
   }
 
 
@@ -72,12 +85,22 @@ export class MainComponent{
       this.conversation = false;
       this.channel = true;
       this.thread = false;
+
+      this.channelSizeSmaller = false;
+      this.channelSizeSmall = false;
+      this.channelSizeBig = true;
+      this.channelSizeBigger = false;
     }
     else{
       this.currentChannel = channel;
       this.conversation = false;
       this.channel = true;
       this.thread = false;
+
+      this.channelSizeSmaller = false;
+      this.channelSizeSmall = false;
+      this.channelSizeBig = true;
+      this.channelSizeBigger = false;
     }
   }
 
@@ -104,7 +127,7 @@ export class MainComponent{
   }
 
 
-  /**
+  /** 
    * changes the view to the an existing conversation
    */
   changeConversation(conversation: Conversation){
@@ -113,6 +136,11 @@ export class MainComponent{
       this.conversation = true;
       this.channel = false;
       this.thread = false;
+
+      this.channelSizeSmaller = false;
+      this.channelSizeSmall = false;
+      this.channelSizeBig = true;
+      this.channelSizeBigger = false;
     }
     else{
       this.currentConversation = conversation;
@@ -124,24 +152,6 @@ export class MainComponent{
   }
 
 
-  /**
-   * changes the view to the new conversation
-   */
-  changeNewConversation(){
-    if(this.userservice.deviceWidth > 850){
-      this.reloadChannel = false;
-      this.conversation = false;
-      this.channel = false;
-      this.thread = false;
-    }
-    else{
-      this.reloadChannel = false;
-      this.conversation = false;
-      this.channel = false;
-      this.isWSVisible = false;
-      this.thread = false;
-    }
-  }
 
 
   openThread(thread: Thread){
@@ -157,9 +167,23 @@ export class MainComponent{
       this.thread = true;
       this.channelThread = false;
       this.reloadChat = true;
+      if(this.isWSVisible){
+        this.channelSizeSmaller = true;
+        this.channelSizeSmall = false;
+        this.channelSizeBig = false;
+        this.channelSizeBigger =  false;
+      }
+      else{
+        this.channelSizeSmaller = false;
+        this.channelSizeSmall = true;
+        this.channelSizeBig = false;
+        this.channelSizeBigger =  false;
+      }
     }
   }
 
+
+  
   openChannelThread(thread: ChannelThread){
     this.currentChannelThread = thread;
     this.reloadChannel = false;
@@ -174,7 +198,21 @@ export class MainComponent{
       this.thread = true;
       this.channelThread = true;
       this.reloadChannel = true;
+      if(this.isWSVisible){
+        this.channelSizeSmaller = true;
+        this.channelSizeSmall = false;
+        this.channelSizeBig = false;
+        this.channelSizeBigger =  false;
+      }
+      else{
+        this.channelSizeSmaller = false;
+        this.channelSizeSmall = true;
+        this.channelSizeBig = false;
+        this.channelSizeBigger =  false;
+      }
     }
+
+
   }
 
   
@@ -183,6 +221,20 @@ export class MainComponent{
    * previous channel or conversation
    */
   closeThread(){
+    if(this.isWSVisible){
+      this.channelSizeSmaller = false;
+      this.channelSizeSmall = false;
+      this.channelSizeBig = true;
+      this.channelSizeBigger =  false;
+    }
+    else{
+      this.channelSizeSmaller = false;
+      this.channelSizeSmall = false;
+      this.channelSizeBig = false;
+      this.channelSizeBigger = true;
+    }
+
+    
     if(this.channelThread){
       this.thread = false;
       this.channelThread = false;
@@ -195,6 +247,7 @@ export class MainComponent{
       this.channel = false;
       this.conversation = true;
     }
+ 
   }
 
   
@@ -203,7 +256,6 @@ export class MainComponent{
   * @param reload boolean
   */
   setReloadToFalse(reload: boolean){
- 
     this.reloadChannel = false;
     this.reloadChat = false;
   }
@@ -245,12 +297,60 @@ export class MainComponent{
    */
   changeWSVisibility(){
     if(this.isWSVisible){
-      this.isWSVisible = false;
-      this.channelBig = true;
+      if(this.thread){
+        this.isWSVisible = false;
+        this.channelSizeSmaller = false;
+        this.channelSizeSmall = true;
+        this.channelSizeBig = false;
+        this.channelSizeBigger =  false;
+      }
+      else{
+        this.isWSVisible = false;
+        this.channelSizeSmaller = false;
+        this.channelSizeSmall = false;
+        this.channelSizeBig = false;
+        this.channelSizeBigger =  true;
+      }
     }
     else{
-      this.isWSVisible = true;
-      this.channelBig = false;
+      if(this.thread){
+        this.isWSVisible = true;
+        this.channelSizeSmaller = true;
+        this.channelSizeSmall = false;
+        this.channelSizeBig = false;
+        this.channelSizeBigger =  false;
+      }
+      else{
+        this.isWSVisible = true;
+        this.channelSizeSmaller = false;
+        this.channelSizeSmall = false;
+        this.channelSizeBig = true;
+        this.channelSizeBigger =  false;
+      }
+    }
+    console.log('size inputs after WS change:')
+    console.log('channelSizeSmaller' ,this.channelSizeSmaller);
+    console.log('channelSizeSmall' ,this.channelSizeSmall);
+    console.log('channelSizeBig' ,this.channelSizeBig);
+    console.log('channelSizeBigger' ,this.channelSizeBigger);
+  }
+
+   /**
+   * changes the view to the create new conversation
+   */
+   changeNewConversation(){
+    if(this.userservice.deviceWidth > 850){
+      this.reloadChannel = false;
+      this.conversation = false;
+      this.channel = false;
+      this.thread = false;
+    }
+    else{
+      this.reloadChannel = false;
+      this.conversation = false;
+      this.channel = false;
+      this.isWSVisible = false;
+      this.thread = false;
     }
   }
 }

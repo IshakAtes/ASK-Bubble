@@ -18,7 +18,10 @@ import { UserService } from '../user.service';
 })
 export class CreateConversationComponent {
 
-  @Input() channelBig: boolean;
+  @Input() channelSizeSmaller: boolean;
+  @Input() channelSizeSmall: boolean;
+  @Input() channelSizeBig: boolean;
+  @Input() channelSizeBigger: boolean;
 
   @Output() changeReloadStatus = new EventEmitter<boolean>();
   @Output() changeToChannel = new EventEmitter<Channel>()
@@ -41,6 +44,10 @@ export class CreateConversationComponent {
     this.loadUserList();
     this.loadUserChannel();
     this.loadUserConversation();
+
+
+
+
   }
 
 

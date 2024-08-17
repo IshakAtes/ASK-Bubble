@@ -4,7 +4,7 @@
     height: 940px;
     width: 51vw;
     min-width: 430px;
-    max-width: 989px;
+    max-width: 95vw; //989px;
     background-color: white;
     border-radius: 30px;
     position: relative;
@@ -123,8 +123,22 @@
 }
 
 
-.channelBig{
-    width: 100vw !important;
+
+.channelSmaller {
+    width: 51vw !important;
+}
+
+.channelSmal {
+    width: 66vw !important;
+}
+
+.channelBig {
+    width: 72vw !important;
+}
+
+
+.channelBigger {
+    width: 95vw !important;
 }
 
 
@@ -243,7 +257,7 @@
         .main-chat {
             width: 41.5vw;
             min-width: 430px;
-            max-width: 989px;
+            //max-width: 72vw; //989px;
         }
    }
 
@@ -251,31 +265,55 @@
         .main-chat {
             width: 38.5vw;
             min-width: 460px;
-            max-width: 989px;
+        }
+
+        .channelBig {
+            width: 68vw !important;
         }
     }
 
     @media (max-width: 1200px) {
         .main-chat {
-            width: 65vw;
+            width: 65vw !important;
         }
+
+        .channelBig {
+            width: unset;
+        }
+
+        .channelBigger {
+            width: 95vw !important;
+        }
+        
     }
     
     @media (max-width: 1100px) {
         .main-chat {
-            width: 61vw;
+            width: 61vw !important;
+        }
+
+        .channelBigger {
+            width: 95vw !important;
         }
     }
     
     @media (max-width: 1000px) {
         .main-chat {
-            width: 57vw;
+            width: 57vw !important;
+        }
+
+        .channelBigger {
+            width: 95vw !important;
         }
     }
     
     @media (max-width: 900px) {
         .main-chat {
-            width: 53vw;
+            width: 53vw !important;
+        }
+
+        .channelBigger {
+            width: 95vw !important;
         }
     }
 
