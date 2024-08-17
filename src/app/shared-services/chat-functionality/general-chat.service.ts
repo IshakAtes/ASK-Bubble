@@ -22,7 +22,7 @@ export class GeneralChatService {
   reactions: Array<Reaction> = [];
 
   private groupedReactionsThread: BehaviorSubject<Map<string, Array<{ emoji: string, count: number, users: string[] }>>> = new BehaviorSubject(new Map());
-  groupedReactionsThread$ = this.groupedReactions.asObservable();
+  groupedReactionsThread$ = this.groupedReactionsThread.asObservable();
   reactionsThread: Array<Reaction> = [];
 
 
@@ -53,13 +53,12 @@ export class GeneralChatService {
   }
 
   async groupReactionsThread(messageList: Array<ThreadMessage> | Array<ChannelThreadMessage>) {
-    // debugger
     console.log('messageList: ', messageList);
     console.log('reactionsThread:', this.reactionsThread);
     console.log('reactions:', this.reactions);
     const groupedReactionsThread = new Map<string, Array<{ emoji: string, count: number, users: string[] }>>();
     messageList.forEach(message => {
-      debugger
+      // debugger
       const reactionMap = new Map<string, { count: number, users: string[] }>();
       this.reactionsThread
         .filter(reaction => reaction.messageId === message.threadMessageId)
