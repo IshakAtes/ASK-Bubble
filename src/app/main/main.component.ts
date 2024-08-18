@@ -341,4 +341,10 @@ export class MainComponent{
       this.thread = false;
     }
   }
+
+  searchQuery: string = '';
+
+  onSearch(query: string) {
+    this.searchQuery = query;
+  }
 }

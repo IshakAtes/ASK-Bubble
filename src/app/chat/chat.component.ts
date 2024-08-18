@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, OnInit, Input, Output, EventEmitter, SimpleChanges, SimpleChange } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { UserService } from '../user.service';
 import { Conversation } from '../../models/conversation.class';
@@ -36,6 +36,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
   @Input() channelSizeSmall: boolean;
   @Input() channelSizeBig: boolean;
   @Input() channelSizeBigger: boolean;
+  @Input() filterQuery: string = '';
 
   @Output() changeReloadStatus = new EventEmitter<boolean>();
 
@@ -157,7 +158,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
   /**
    * reloads the data after a change happend in the channel
    */
-  ngOnChanges() {
+  ngOnChanges(changes?: SimpleChanges) {
     this.isChatDataLoaded = false;
     this.sendingUser = new User()
     this.passiveUser = new User()
@@ -208,7 +209,34 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.loadAllMessages().then(() => {
       this.initializeChatAfterChange();
     })
+
+    if (changes!['filterQuery']) {
+      this.filterMessages(this.filterQuery);
+    }
   }
+
+/**
+   * searches for already sent messages
+   * @param query the content of the searchbar
+   */
+  filterMessages(query: string): void {
+    setTimeout(() => {
+      if (query) {
+        this.filteredList = this.list.filter(message =>
+          message.content.toLowerCase().includes(query.toLowerCase())
+        );
+        console.log('filtered list:', this.filteredList);
+  
+        this.list = this.filteredList;
+        console.log('list as filtered list:', this.list);
+      } else {
+        this.loadAllMessages();
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 10);
+      }
+    }, 1300);   
+}
 
 
   /**
@@ -368,26 +396,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
       this.setFocus();
       this.scrollToBottom();
     }, 2000);
-  }
-
-
-
-  /**
-   * searches for already sent messages
-   * @param query the content of the searchbar
-   */
-  onSearch(query: string): void {
-    if (query) {
-      this.filteredList = this.list.filter(message =>
-        message.content.toLowerCase().includes(query.toLowerCase())
-      );
-      this.list = this.filteredList;
-    } else {
-      this.loadAllMessages();
-      setTimeout(() => {
-        this.scrollToBottom();
-      }, 10);
-    }
   }
 
 

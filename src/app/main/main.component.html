@@ -6,6 +6,7 @@
             <app-header
              (showWorkspace)="viewWorkspace()"
              [isWSVisible]="isWSVisible"
+             (search)="onSearch($event)"
              
             >
              
@@ -30,6 +31,7 @@
                      [specific]="currentConversation"
                      [user]="userservice.activeUserObject"
                      [reload]="reloadChat"
+                     [filterQuery]="searchQuery"
                      
                      ></app-chat>
                  }
@@ -42,6 +44,7 @@
                          [activeUser]="userservice.activeUserObject"
                          [channel]="currentChannel"
                          [reload]="reloadChannel"
+                         [filterQuery]="searchQuery"
                      ></app-channel>
                  }
                  @else if(thread){
@@ -87,7 +90,7 @@
                     <span>Workspace-Menü-schließen</span>
                 </div>
             
-                <app-header></app-header>
+                <app-header (search)="onSearch($event)"></app-header>
          
                 @if(isWSVisible){
                     <app-workspace
@@ -110,6 +113,7 @@
                     [specific]="currentConversation"
                     [user]="userservice.activeUserObject"
                     [reload]="reloadChat"
+                    [filterQuery]="searchQuery"
 
                     [channelSizeSmaller]="channelSizeSmaller"
                     [channelSizeSmall]="channelSizeSmall"
@@ -126,6 +130,7 @@
                         [activeUser]="userservice.activeUserObject"
                         [channel]="currentChannel"
                         [reload]="reloadChannel"
+                        [filterQuery]="searchQuery"
 
                         [channelSizeSmaller]="channelSizeSmaller"
                         [channelSizeSmall]="channelSizeSmall"
@@ -181,7 +186,7 @@
                 <span>Workspace-Menü-schließen</span>
             </div>
         
-            <app-header></app-header>
+            <app-header (search)="onSearch($event)"></app-header>
         
             @if(isWSVisible){
                 <app-workspace
@@ -203,6 +208,7 @@
                 [specific]="currentConversation"
                 [user]="userservice.activeUserObject"
                 [reload]="reloadChat"
+                [filterQuery]="searchQuery"
 
                 [channelSizeSmaller]="channelSizeSmaller"
                 [channelSizeSmall]="channelSizeSmall"
@@ -221,6 +227,7 @@
                     [activeUser]="userservice.activeUserObject"
                     [channel]="currentChannel"
                     [reload]="reloadChannel"
+                    [filterQuery]="searchQuery"
 
                     [channelSizeSmaller]="channelSizeSmaller"
                     [channelSizeSmall]="channelSizeSmall"

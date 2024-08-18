@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, OnInit, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Channel } from '../../models/channel.class';
 import { User } from '../../models/user.class';
@@ -40,6 +40,7 @@ export class ChannelComponent implements OnInit {
   @Input() channelSizeSmall: boolean;
   @Input() channelSizeBig: boolean;
   @Input() channelSizeBigger: boolean;
+  @Input() filterQuery: string = '';
 
   @Output() changeReloadStatus = new EventEmitter<boolean>();
   @Output() userLeftChannel = new EventEmitter<boolean>();
@@ -49,6 +50,7 @@ export class ChannelComponent implements OnInit {
 
   memberList: Array<User> = [];
   messageList: Array<ChannelMessage>
+  filteredMessageList: Array<ChannelMessage>
   reactions: Array<Reaction> = []; //Behaviour Subject wird noch hinzugefügt
   groupedReactions: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
   allChannels: Array<Channel> = [];
@@ -143,7 +145,7 @@ export class ChannelComponent implements OnInit {
   /**
    * reloads the data after a change happend in the channel
    */
-  ngOnChanges() {
+  ngOnChanges(changes?: SimpleChanges) {
     if (this.reload) {
       /*reset reactions and set reactions to observable */
       this.chatService.reactions = [];
@@ -163,7 +165,34 @@ export class ChannelComponent implements OnInit {
         }).catch(error => { console.log('this ', error) });
       }, 1000);
     }
+
+    if (changes!['filterQuery']) {
+      this.filterMessages(this.filterQuery);
+    }
   }
+
+  /**
+   * searches for already sent messages
+   * @param query the content of the searchbar
+   */
+  filterMessages(query: string): void {
+    setTimeout(() => {
+      if (query) {
+        this.filteredMessageList = this.messageList.filter(message =>
+          message.content.toLowerCase().includes(query.toLowerCase())
+        );
+        console.log('filtered list:', this.filteredMessageList);
+  
+        this.messageList = this.filteredMessageList;
+        console.log('list as filtered list:', this.messageList);
+      } else {
+        this.loadChannelMessages();
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 10);
+      }
+    }, 1300);   
+}
 
 
   /**
