@@ -268,22 +268,7 @@ export class ThreadComponent {
     }
   }
 
-//   async loadConversationThreadMessageReactions() {
-//     const promises = this.conversationThreadMessagelist.map(list => 
-//         this.databaseService.loadConversationThreadMessageReactions(this.user.userId, this.specific.conversationId, list.messageId, list)
-//     );
-    
-//     const allReactions = await Promise.all(promises);
-    
-//     allReactions.forEach(reactionArray => {
-//         this.reactions.push(...reactionArray);
-//     });
-    
-//     this.chat.reactionsThread = [...this.reactions];  // Reactions an den Service übergeben
-// }
-
-
-
+  
   /**
    * updates a threadmessage from a conversation
    * @param message threadmessage object
@@ -535,20 +520,21 @@ async saveNewMessageReaction(event: any, convo: ThreadMessage, userId: string, r
     return;
   }
 
-  //specific to conversation thread message
   this.reactions = [];
   let reaction = this.databaseService.createThreadMessageReaction(emoji, userId, this.user.name, convo);
   await this.databaseService.addThreadMessageReaction(this.specific, convo, reaction)
   await this.loadAllMessageReactions();
   this.chat.reactionsThread = this.reactions
   setTimeout(() => {this.chat.groupReactionsThread(this.conversationThreadMessagelist)}, 500);
-  //END specific of conversation thread message
+
 
   this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
   this.mAndC.loadUsersOfUser();
   this.mAndC.loadChannlesofUser()
   this.mAndC.selectedMessageId = null;
 }
+
+
 /**
  * ADDS REACTION TO THREADMESSAGES OF A CHANNEL MESSAGE
  * @param event selection of the emoji through emoji picker
@@ -557,63 +543,24 @@ async saveNewMessageReaction(event: any, convo: ThreadMessage, userId: string, r
  * @param reactionbar has a value if emoji is selected from reactionbar
  * @returns 
  */
-async saveNewChannelMessageReaction(event: any, convo: ChannelThreadMessage, userId: string, reactionbar ?: string) {
-  
-  console.log(this.reactions);
-  
+async saveNewChannelMessageReaction(event: any, convo: ChannelThreadMessage, userId: string, reactionbar ?: string) {    
   let emoji: string =  this.selectEmoji(reactionbar, event)
   if (this.checkUserAlreadyReacted(convo, emoji, userId)) {console.log('User has already reacted with this emoji');
     return;
   }
 
-
-  //specific to conversation thread message
   this.reactions = [];
   let reaction = this.databaseService.createChannelThreadMessageReaction(emoji, userId, this.user.name, convo);
   await this.databaseService.addChannelThreadMessageReaction(this.currentChannel, convo, reaction)
-  debugger
   await this.loadAllMessageReactions();
   
   this.chat.reactionsThread = this.reactions
-  setTimeout(() => {this.chat.groupReactionsThread(this.conversationThreadMessagelist)}, 500);
+  setTimeout(() => {this.chat.groupReactionsThread(this.channelThreadMessageList)}, 500);
 
   this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
   this.mAndC.loadUsersOfUser();
   this.mAndC.loadChannlesofUser()
   this.mAndC.selectedMessageId = null;
-
-  //TODO - Versuchsbereich um das Thread Emoji Problem zu lösen mit chatservice
-  // reactions der ThreadNachricht werden korrekt geladen. Es werden grundsätzlich keine Emojis
-  // im Thread angezeigt, da Sie durch das auskommentieren von Zeile 102 ausgeschaltet wurden
-  // um die doppelte Anzeige der Emojis zu verhindern
-
-  // for (let i = 0; i < this.channelThreadMessageList.length; i++) {
-  //   const list = this.channelThreadMessageList[i];
-  //   this.databaseService.loadChannelThreadMessageReactions(this.user.userId, this.currentChannel.channelId, list.messageId, list).then(reaction => {
-
-  //     reaction.forEach(reaction => {
-  //       this.reactions.push(reaction)
-  //          console.log(`reactions nach Durchlauf ${i}:`, this.reactions)
-  //     });
-
-  //   }).then(()=> {
-  //     debugger;
-  //     this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
-  //     this.mAndC.loadUsersOfUser();
-  //     this.mAndC.loadChannlesofUser()
-  //     this.mAndC.selectedMessageId = null;
-  //     this.chat.reactions = this.reactions //überschreib die gefundene reactions wieder auf 0
-  //     console.log(this.channelThreadMessageList)
-  //     setTimeout(() => {
-  //       this.chat.groupReactions(this.channelThreadMessageList) //Wird auf die ChannelNachricht angewandt und nicht auf die ThreadNachricht
-  //     }, 1000);
-        
-  //   })
-  // }
-
-  //END specific of conversation thread message
-
-
 }
 
 
@@ -647,13 +594,4 @@ checkUserAlreadyReacted(convo: ThreadMessage | ChannelThreadMessage, emoji: stri
     reaction.messageId === convo.threadMessageId && reaction.emoji === emoji && reaction.userId === userId
   );
 }
-
-
-
-logReactions(){
-  console.log(this.reactions);
-  console.log(this.groupedReactionsThread);
-  
-}
-
 }

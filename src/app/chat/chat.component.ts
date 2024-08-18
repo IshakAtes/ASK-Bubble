@@ -141,20 +141,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.user.userId);
   }
 
-
-  /*wird ggf nicht gebraucht */
-  // initializeChat() {
-
-  //   this.loadAllMessageReactions()
-  //   setTimeout(() => {
-  //     this.chat.groupReactions(this.list).then(() => {
-  //       this.isChatDataLoaded = true;
-  //     })
-
-  //   }, 1000);
-  // }
-
-
+  
   changeReload() {
     this.changeReloadStatus.emit()
   }

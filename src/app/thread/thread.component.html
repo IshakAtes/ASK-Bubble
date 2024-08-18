@@ -206,7 +206,6 @@
         
         
                             <div class="reaction-bar">
-                                <button (click)="logReactions()">reactions</button>
                                 @for (reaction of groupedReactionsThread.get(message.threadMessageId); track $index) {
                                 <div class="emoji-div" (mouseenter)="chat.showTooltip(reaction)"
                                     (mouseleave)="chat.hideTooltip()">
@@ -235,10 +234,8 @@
                                 <div class="message">
                                     <div class="reactionbar">
                                         @if (member.usedLastTwoEmojis) {
-                                        <!-- Änderung nach FR -->
                                         <div (click)="saveNewChannelMessageReaction($event, message, user.userId, user.usedLastTwoEmojis[0])"
                                             class="reactionbar-emoji-div">{{member.usedLastTwoEmojis[0]}}</div>
-                                        <!-- Änderung nach FR -->
                                         <div (click)="saveNewChannelMessageReaction($event, message, user.userId, user.usedLastTwoEmojis[1])"
                                             class="reactionbar-emoji-div">{{member.usedLastTwoEmojis[1]}}</div>
                                         }
@@ -250,7 +247,6 @@
                                             (click)="mAndC.toggleEmoticonsReactionbar(message.messageId)" alt="">
                                         @if (mAndC.selectedMessageId === message.messageId) {
                                         <div class="emoticon-reaction-div">
-                                            <!-- Änderung nach FR -->
                                             <emoji-mart class="emoji-mart"
                                                 (emojiSelect)="saveNewChannelMessageReaction($event, message, user.userId)"
                                                 title="Choose your emoji"></emoji-mart>
@@ -659,10 +655,8 @@
                     <div class="message">
                         <div class="reactionbar">
                             @if (passiveUser.usedLastTwoEmojis) {
-                            <!-- Änderung nach FR -->
                             <div (click)="saveNewMessageReaction($event, message, user.userId, user.usedLastTwoEmojis[0])"
                                 class="reactionbar-emoji-div">{{passiveUser.usedLastTwoEmojis[0]}}</div>
-                            <!-- Änderung nach FR -->
                             <div (click)="saveNewMessageReaction($event, message, user.userId, user.usedLastTwoEmojis[1])"
                                 class="reactionbar-emoji-div">{{passiveUser.usedLastTwoEmojis[1]}}</div>
                             }
@@ -674,7 +668,6 @@
                                 (click)="mAndC.toggleEmoticonsReactionbar(message.messageId)" alt="">
                             @if (mAndC.selectedMessageId === message.messageId) {
                             <div class="emoticon-reaction-div">
-                                <!-- Änderung nach FR -->
                                 <emoji-mart class="emoji-mart"
                                     (emojiSelect)="saveNewMessageReaction($event, message, user.userId)"
                                     title="Choose your emoji"></emoji-mart>

@@ -10,13 +10,11 @@ import { ConversationMessage } from '../models/conversationMessage.class';
 import { Timestamp, deleteDoc, setDoc } from 'firebase/firestore';
 import { updateDoc, doc } from 'firebase/firestore'; // Korrigiert den Importpfad
 import { WorkspaceComponent } from './workspace/workspace.component';
-import { timestamp } from 'rxjs';
 import { Thread } from '../models/thread.class';
 import { ThreadMessage } from '../models/threadMessage';
 import { ChannelThread } from '../models/channelThread.class';
 import { ChannelThreadMessage } from '../models/channelThreadMessage';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { CollectionReference } from 'firebase/firestore/lite';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
