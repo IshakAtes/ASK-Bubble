@@ -132,7 +132,6 @@
 .message-container-orientation{
     display: flex;
     justify-content: center;
-
 }
 
 .chat-area {
@@ -512,11 +511,10 @@
 .reaction-bar {
     display: flex;
     gap: 10px;
+    overflow-x: scroll;
 }
 
 .emoji-div {
-    // width: 70px;
-    // height: 34px;
     position: relative;
     padding: 5px 10px 5px 10px;
     display: flex;
@@ -524,7 +522,7 @@
     align-items: center;
     border-radius: 20px;
     border: 1px solid #ADB0D9;
-    //z-index: 9;
+    white-space: nowrap;
 }
 
 .emoji-info {
@@ -585,33 +583,4 @@
 .upload-preview {
     width: 50px;
     height: 50px;
-}
-
-
-// Scrollbar
-::-webkit-scrollbar {
-    width: 12px;
-    background-color: transparent;
-    /* Hintergrund der Scrollbar */
-}
-
-:hover::-webkit-scrollbar {
-    background-color: rgba(0, 0, 0, 0.1);
-    /* Leicht sichtbarer Hintergrund beim Hover */
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: rgba(105, 105, 105, 0.6);
-    /* Dunkelgraue Scrollbar mit Transparenz */
-    border-radius: 10px;
-    /* Abgerundete Enden */
-    border: 3px solid transparent;
-    /* Abstand zum Rand */
-    background-clip: padding-box;
-    /* Vermeidung von Überlappung */
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(105, 105, 105, 1);
-    /* Vollständig sichtbar beim Hover */
 }

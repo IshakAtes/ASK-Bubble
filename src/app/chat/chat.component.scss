@@ -1,8 +1,5 @@
 @import url(../app.component.scss);
 
-
-
-
 .main-chat {
     height: 940px;
     width: 51vw; //989px
@@ -83,13 +80,10 @@
 .message-container-orientation{
     display: flex;
     justify-content: center;
-    //margin-top: -40px;
-
 }
 
 .chat-area {
     height: 600px;
-    //max-height: 40vh;
     overflow-y: scroll;
 }
 
@@ -397,19 +391,6 @@
     gap: 20px;
 }
 
-// .input-div {
-//     padding: 25px 45px 25px 45px;
-// }
-
-// .input {
-//     width: calc(100% - 45px);
-//     height: 145px;
-//     padding: 20px;
-//     border-radius: 20px;
-//     border: 1px solid #ADB0D9
-// }
-
-
 .message-container {
     width: 85%;
     max-width: 100%;
@@ -420,7 +401,6 @@
     height: 145px;
 
     padding: 20px;
-    //margin: 25px 45px;
     border-radius: 20px;
     border: 1px solid #ADB0D9;
 }
@@ -551,11 +531,10 @@
 .reaction-bar {
     display: flex;
     gap: 10px;
+    overflow-x: scroll;
 }
 
 .emoji-div {
-    // width: 70px;
-    // height: 34px;
     position: relative;
     padding: 5px 10px 5px 10px;
     display: flex;
@@ -563,7 +542,7 @@
     align-items: center;
     border-radius: 20px;
     border: 1px solid #ADB0D9;
-    //z-index: 9;
+    white-space: nowrap;
 }
 
 .emoji-info {
@@ -624,124 +603,4 @@
 .upload-preview {
     width: 50px;
     height: 50px;
-}
-
-// //Loading Spinner
-
-// .lds-grid,
-// .lds-grid div {
-//     box-sizing: border-box;
-// }
-
-// .lds-grid {
-//     display: inline-block;
-//     position: relative;
-//     width: 80px;
-//     height: 80px;
-// }
-
-// .lds-grid div {
-//     position: absolute;
-//     width: 16px;
-//     height: 16px;
-//     border-radius: 50%;
-//     background: #444DF2;
-//     animation: lds-grid 1.2s linear infinite;
-// }
-
-// .lds-grid div:nth-child(1) {
-//     top: 8px;
-//     left: 8px;
-//     animation-delay: 0s;
-// }
-
-// .lds-grid div:nth-child(2) {
-//     top: 8px;
-//     left: 32px;
-//     animation-delay: -0.4s;
-// }
-
-// .lds-grid div:nth-child(3) {
-//     top: 8px;
-//     left: 56px;
-//     animation-delay: -0.8s;
-// }
-
-// .lds-grid div:nth-child(4) {
-//     top: 32px;
-//     left: 8px;
-//     animation-delay: -0.4s;
-// }
-
-// .lds-grid div:nth-child(5) {
-//     top: 32px;
-//     left: 32px;
-//     animation-delay: -0.8s;
-// }
-
-// .lds-grid div:nth-child(6) {
-//     top: 32px;
-//     left: 56px;
-//     animation-delay: -1.2s;
-// }
-
-// .lds-grid div:nth-child(7) {
-//     top: 56px;
-//     left: 8px;
-//     animation-delay: -0.8s;
-// }
-
-// .lds-grid div:nth-child(8) {
-//     top: 56px;
-//     left: 32px;
-//     animation-delay: -1.2s;
-// }
-
-// .lds-grid div:nth-child(9) {
-//     top: 56px;
-//     left: 56px;
-//     animation-delay: -1.6s;
-// }
-
-// @keyframes lds-grid {
-
-//     0%,
-//     100% {
-//         opacity: 1;
-//     }
-
-//     50% {
-//         opacity: 0.5;
-//     }
-// }
-
-
-
-
-// Scrollbar
-::-webkit-scrollbar {
-    width: 12px;
-    background-color: transparent;
-    /* Hintergrund der Scrollbar */
-}
-
-:hover::-webkit-scrollbar {
-    background-color: rgba(0, 0, 0, 0.1);
-    /* Leicht sichtbarer Hintergrund beim Hover */
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: rgba(105, 105, 105, 0.6);
-    /* Dunkelgraue Scrollbar mit Transparenz */
-    border-radius: 10px;
-    /* Abgerundete Enden */
-    border: 3px solid transparent;
-    /* Abstand zum Rand */
-    background-clip: padding-box;
-    /* Vermeidung von Überlappung */
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(105, 105, 105, 1);
-    /* Vollständig sichtbar beim Hover */
 }
