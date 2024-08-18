@@ -28,7 +28,7 @@ export class AuthService {
   async changeUserData(email: string, newEmail: string, currentPassword: string | null, name: string, avatar: string | undefined | null) {
     const auth = this.firebaseAuth;
     const fbUser = auth.currentUser;
-  
+//Ist currentUser ein vordefinierter Wert?
       try {
         if (fbUser) {
           console.log('currentUser', fbUser);
