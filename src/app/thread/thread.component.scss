@@ -125,7 +125,7 @@
      }
 
     .channelSmaller {
-        width: 22.5vw !important;
+        width: 26.5vw !important;
     }
 
 
@@ -138,6 +138,13 @@
     }
 
 }
+
+@media (max-width: 1680px) {
+    .channelSmaller {
+        width: 23.5vw !important;
+    }
+}
+
 
 
 @media (max-width: 1200px) {
@@ -159,11 +166,19 @@
     .main-thread {
         width: 61vw;
     }
+
+    .channelBig {
+        width: 63vw !important;
+    }
 }
 
 @media (max-width: 1000px) {
     .main-thread {
         width: 57vw;
+    }
+
+    .channelBig {
+        width: 61vw !important;
     }
 }
 
@@ -171,6 +186,8 @@
     .main-thread {
         width: 53vw;
     }
+
+
 }
 
 @media (max-width: 850px) {
@@ -504,4 +521,18 @@
     .chat-area {
         height: 52vh;
     }
+}
+
+
+
+@media (min-width: 1920px) {   
+    .channelSmall {
+        max-width: 570px !important;
+    }
+
+    .channelSmaller {
+        max-width: 560px !important;
+        width: 26.5vw !important;
+    }
+    
 }

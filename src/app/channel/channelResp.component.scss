@@ -1,3 +1,23 @@
+@media (min-width: 1920px) {   
+    .channelBigger {
+        max-width: 1920px !important;
+    }
+   
+    .channelBig {
+        max-width: 1500px  !important;
+    }
+
+    .channelSmall {
+        max-width: 1270px !important;
+    }
+
+    .channelSmaller {
+        max-width: 940px !important;
+    }
+    
+}
+
+
 @media (max-width: 1920px) {
     .main-chat {
         width: 41.5vw;
@@ -6,6 +26,24 @@
 
     .channelSmaller {
         width: 49vw !important;
+    }
+
+    .channelBig {
+        width: 77vw !important;
+    }
+}
+
+
+@media (max-width: 1750px) {
+    .channelBig {
+        width: 74vw !important;
+    }
+}
+
+@media (max-width: 1550px) {
+
+    .channelBig {
+        width: 72vw !important;
     }
 }
 

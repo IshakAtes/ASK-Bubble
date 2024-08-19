@@ -85,3 +85,17 @@
         opacity: 0.5;
     }
 }
+
+
+@media (min-width: 1920px) {
+    
+    ::ng-deep app-main {
+        display: flex;
+        justify-content: center;
+        position: relative;
+        left: -70px;
+    } 
+
+
+  
+}
