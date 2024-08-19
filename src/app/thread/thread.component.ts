@@ -441,6 +441,10 @@ ngOnChanges() {
   else{
     this.loadMemberListForChannelThreadHTML();
   }
+
+  setTimeout(() => {
+    this.setFocus();
+  }, 4000);
   
 }
 
@@ -583,12 +587,12 @@ checkUserAlreadyReacted(convo: ThreadMessage | ChannelThreadMessage, emoji: stri
   );
 }
 
-resetThreadReactions() {
-  this.reactions = []
-  if (this.channelThread) {
-    this.chat.groupReactionsThread(this.channelThreadMessageList);
-  } else {
-    this.chat.groupReactionsThread(this.conversationThreadMessagelist);
-  }
+/**
+   * Focusing textarea after component is initilized 
+   */
+setFocus(): void {
+  setTimeout(() => {
+    this.myTextarea.nativeElement.focus();
+  }, 10);
 }
 }

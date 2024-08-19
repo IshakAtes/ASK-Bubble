@@ -250,6 +250,10 @@ export class ChatComponent implements AfterViewInit, OnInit {
         .then(() => {
           this.changeReload();
           this.isChatDataLoaded = true;
+          setTimeout(() => {
+            this.scrollToBottom();
+            this.setFocus();
+          }, 1000);
         });
     }, 1000);
   }
@@ -395,7 +399,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
     setTimeout(() => {
       this.setFocus();
       this.scrollToBottom();
-    }, 2000);
+    }, 2500);
   }
 
 
@@ -427,7 +431,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
    * Trigger click on fileupload input field
    */
   triggerFileInput(): void {
-    //debugger;
     this.fileInput.nativeElement.click();
   }
 
