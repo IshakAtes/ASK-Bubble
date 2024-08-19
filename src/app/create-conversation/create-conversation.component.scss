@@ -4,7 +4,7 @@
     height: 940px;
     width: 51vw;
     min-width: 430px;
-    max-width: 95vw; //989px;
+    max-width: 95vw;
     background-color: white;
     border-radius: 30px;
     position: relative;
@@ -257,7 +257,6 @@
         .main-chat {
             width: 41.5vw;
             min-width: 430px;
-            //max-width: 72vw; //989px;
         }
    }
 
@@ -321,7 +320,7 @@
 
 
 
-    @media (max-width: 850px) { //500
+    @media (max-width: 850px) {
         .main-chat {
             height: calc(100vh - 80px);
             width: 100vw;

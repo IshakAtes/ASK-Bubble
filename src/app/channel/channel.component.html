@@ -169,11 +169,6 @@
                                     }
                                 </div>
 
-
-                                <!-- <div class="own-answer-bar">
-                                            <span class="answer-count">2 Antworten</span>
-                                            <span class="last-answer">Letzte Antwort 14:56</span>
-                                        </div> -->
                                 @if(message.threadMessageCount > 0){
                                     <div class="own-answer-bar">
                                         @if (message.threadMessageCount == 1) {
@@ -193,7 +188,6 @@
                         </div>
                     }
                     @else{
-                        <!--For-Schleife?-->
                         @for (user of memberList; track $index) {
                             @if(message.createdBy == user.userId){
 
@@ -274,11 +268,6 @@
                                                 }
                                             </div>
                                         }
-                        
-                                        <!-- <div class="answer-bar">
-                                            <span class="answer-count">2 Antworten</span>
-                                            <span class="last-answer">Letzte Antwort 14:56</span>
-                                        </div> -->
                                     </div>
                                     
                                 </div>
@@ -290,8 +279,6 @@
                 @if(messageList.length > 0){
                     <div #lastDiv></div>
                 }
-                
-
             </div>
         }
 
@@ -501,7 +488,7 @@
                                 </div>
 
                                 @if (message.fileUrl) {
-                                    <div class="own-file-div"> <!--CSS in Chat checken-->
+                                    <div class="own-file-div">
                                         @if (fileService.isImage(message.fileUrl)) {
                                         <a href="{{message.fileUrl}}" target="_blank">
                                             <img src="{{message.fileUrl}}" alt="">
@@ -546,21 +533,12 @@
                                         }
                                     </div>
                                 }
-                
-                                <!-- <div class="own-answer-bar">
-                                    <span class="answer-count">2 Antworten</span>
-                                    <span class="last-answer">Letzte Antwort 14:56</span>
-                
-                                </div> -->
                             </div>
                         </div>
                     }
                     @else{
-                        <!--For-Schleife?-->
                         @for (user of memberList; track $index) {
                             @if(message.createdBy == user.userId){
-
-                    
                                 <div class="message">
                                     <div class="reactionbar">
                                         @if (user.usedLastTwoEmojis) {
@@ -620,13 +598,6 @@
                                             </div>
                                             }
                                         </div>
-
-
-                        
-                                        <!-- <div class="answer-bar">
-                                            <span class="answer-count">2 Antworten</span>
-                                            <span class="last-answer">Letzte Antwort 14:56</span>
-                                        </div> -->
                                         @if(message.threadMessageCount > 0){
                                             <div class="answer-bar">
                                                 @if (message.threadMessageCount == 1) {
@@ -764,12 +735,10 @@
         </div>
 
     }
-</div> <!--IF dataisloaded template ends-->
+</div>
     
    
   
-
-
 <ng-template #loadingTemplate>
     <div class="lds-grid">
         <div></div>

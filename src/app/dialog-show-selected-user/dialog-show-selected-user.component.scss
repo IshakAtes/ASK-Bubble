@@ -159,8 +159,6 @@ section {
     .userlistContainer{
         width: 100%;
         height: fit-content;
-       
-        
         display: flex;
         flex-direction: column;
         z-index: 99;
@@ -221,9 +219,6 @@ section {
                         top: unset !important;
                         right: unset !important;
                     }
-            
-
-                
             }
         
             .userList:hover {

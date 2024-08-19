@@ -83,7 +83,7 @@ export class WorkspaceComponent {
       this.database.loadAllUserChannels(this.activeUser.userId).then(allChannel => {
         this.channelList = allChannel;
       })
-    }, 600);
+    }, 1000);
   }
 
 
@@ -96,7 +96,7 @@ export class WorkspaceComponent {
       this.database.loadAllUserConversations(this.activeUser.userId).then(allConversations => {
         this.conversationList = allConversations;
       })
-    }, 700);
+    }, 1000);
   }
 
 
@@ -237,14 +237,10 @@ export class WorkspaceComponent {
   selectUser(user: User){
     for(let conversation of this.conversationList){
       if(conversation.createdBy == this.us.activeUserObject.userId){
-        if(this.checkSelectedUser(conversation, user)){
-          break;
-        };
+        if(this.checkSelectedUser(conversation, user)){break;};
       }
       else if(conversation.createdBy == user.userId){
-        if(this.checkActiveUser(conversation, user)){
-          break;
-        };
+        if(this.checkActiveUser(conversation, user)){break;};
       }
       else{
         this.createNewConversationFromSearch(conversation, user);

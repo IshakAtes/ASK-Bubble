@@ -51,7 +51,7 @@ export class ChannelComponent implements OnInit {
   memberList: Array<User> = [];
   messageList: Array<ChannelMessage>
   filteredMessageList: Array<ChannelMessage>
-  reactions: Array<Reaction> = []; //Behaviour Subject wird noch hinzugefügt
+  reactions: Array<Reaction> = [];
   groupedReactions: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
   allChannels: Array<Channel> = [];
   allUsers = [] as Array<User>;
@@ -171,6 +171,7 @@ export class ChannelComponent implements OnInit {
     }
   }
 
+
   /**
    * searches for already sent messages
    * @param query the content of the searchbar
@@ -189,7 +190,7 @@ export class ChannelComponent implements OnInit {
         this.loadChannelMessages();
         setTimeout(() => {
           this.scrollToBottom();
-        }, 10);
+        }, 1000);
       }
     }, 1300);   
 }
@@ -206,20 +207,12 @@ export class ChannelComponent implements OnInit {
         .then(() => {
           this.changeReload(); //Important to be able to load another channel
           this.isdataLoaded = true;
+          setTimeout(() => {
+            this.scrollToBottom();
+            this.setFocus();
+          }, 1000);
         })
     }, 1000);
-  }
-
-
-  /**
-   * sets focus to message input field and scrolls to
-   * newest message in the channel
-   */
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.setFocus();
-      this.scrollToBottom();
-    }, 2000);
   }
 
 
@@ -305,9 +298,7 @@ export class ChannelComponent implements OnInit {
         this.messageList = messageList;
         this.messageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
       })
-      setTimeout(() => {
-        this.scrollToBottom();
-      }, 10);
+      setTimeout(() => {this.scrollToBottom();}, 1000);
       this.fileService.downloadURL = '';
     }
   }
@@ -462,17 +453,13 @@ export class ChannelComponent implements OnInit {
    */
   createOrOpenThread(message: ChannelMessage) {
     if (message.threadId !== '') {
-      console.log('Thread already exists');
       this.database.loadSpecificChannelThread(message, this.channel)
         .then(oldThread => {
-          console.log(oldThread);
           this.openThread(oldThread);
         })
         .catch(error => console.error('Error loading thread:', error));
     } else {
-      console.log('create new Thread');
       const thread: ChannelThread = this.database.createChannelThread(message, this.channel);
-      console.log(thread);
       this.database.addChannelThread(thread, this.channel)
       this.database.updateMessageChannelThreadId(thread, this.channel)
       this.reload = true;

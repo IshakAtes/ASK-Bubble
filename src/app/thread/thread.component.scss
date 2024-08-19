@@ -4,10 +4,16 @@
     height: 940px;
     width: 22.5vw;         
     min-width: 260px;
-    //max-width: 485px;
     background-color: white;
     border-radius: 30px;
     position: relative;
+}
+
+.reaction-bar-thread {
+    display: flex;
+    gap: 10px;
+    overflow-x: scroll;
+    width: 150px;
 }
 
 .own-file-div {
@@ -138,7 +144,6 @@
     .main-thread {
         width: 65vw;
         min-width: 260px;
-        //max-width: 989px;
     }
 
     .thread-message-separator-line {
@@ -260,10 +265,6 @@
         height: 40px;
     }
 
-
-    //CHAT AREA!
-
-
     .chat-area {
         height: 66vh;
         overflow-y: scroll;
@@ -320,8 +321,6 @@
         left: 0px;
     }
 
-
-    //OWN ANSWER
     .own-massage-content-bubble {
         width: 49vw;
     }
@@ -354,7 +353,6 @@
         right: 21vw;
     }
 
-    //BOTTOM
     .message-container-orientation{
         display: flex;
         position: absolute;

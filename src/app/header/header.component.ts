@@ -54,9 +54,8 @@ export class HeaderComponent  {
     event.stopPropagation();
     this.toggleDropdown();
     
-    // Öffne den Dialog mit den Benutzerdaten
     const dialogRef = this.dialog.open(DialogShowUserProfilComponent, {
-      data: { user: this.us.loggedUser } // Daten, die an den Dialog übergeben werden
+      data: { user: this.us.loggedUser }
     });
 
   }

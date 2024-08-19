@@ -25,10 +25,10 @@
 
 
         <div class="userInput">
-            <div class="inputWrapper"> <!-- this should look like an input-->
+            <div class="inputWrapper">
                 
                 @if(selectedUserList.length > 1){
-                    <div  #selectedList class="selectedList"> <!--this should be the list of selected users-->
+                    <div  #selectedList class="selectedList"> 
                         <div *ngFor="let item of [].constructor(1); let i = index" class="selectedUser">
                             <img  src="{{selectedUserList[i].avatarUrl}}">
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -54,7 +54,7 @@
                     </div>
                 }
                 @else{
-                    <div #selectedList class="selectedList"> <!--this should be the list of selected users-->
+                    <div #selectedList class="selectedList"> 
                         <div *ngFor="let user of selectedUserList" class="selectedUser">
                             <img  src="{{user.avatarUrl}}">
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -74,8 +74,6 @@
                         </div>
                     </div>
                 }
-
-                <!--This is the real input field-->
                 <input (focus)="detectInputFocus(); changeUserContainerVisibility()" (input)="showFilteredUser()" placeholder="Name eingeben" [(ngModel)]="searchUser" >
             </div>
         </div>
@@ -83,7 +81,6 @@
         <label  class="errorMessage" #errorMsg ></label>
 
 
-    <!--div with found user-->
     @if(searchUser == '' && inputFocused){
         <div class="userlistContainer" [ngClass]="{'d-none': hideUserContainer}">
             <div *ngFor="let user of userlist" class="userList">
@@ -137,10 +134,10 @@
         </div>
 
         <div class="userInput">
-            <div class="inputWrapper"> <!-- this should look like an input-->
+            <div class="inputWrapper">
                 
                @if(selectedUserList.length > 1){ 
-                    <div  #selectedList class="selectedList"> <!--this should be the list of selected users-->
+                    <div  #selectedList class="selectedList"> 
                         <div *ngFor="let item of [].constructor(1); let i = index" class="selectedUser">
                             <img  src="{{selectedUserList[i].avatarUrl}}">
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">

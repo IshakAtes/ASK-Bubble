@@ -36,10 +36,10 @@
         </div>
         
         <div class="userInput" [ngClass]="{'d-none': hideUserInput}">
-            <div class="inputWrapper"> <!-- this should look like an input-->
+            <div class="inputWrapper"> 
                 
                 @if(selectedUserList.length > 1){
-                    <div class="selectedList"> <!--this should be the list of selected users-->
+                    <div class="selectedList">
                         <div *ngFor="let item of [].constructor(1); let i = index" class="selectedUser">
                             <img src="{{selectedUserList[i].avatarUrl}}">
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -65,7 +65,7 @@
                     </div>
                 }
                 @else {
-                    <div class="selectedList"> <!--this should be the list of selected users-->
+                    <div class="selectedList"> 
                         <div *ngFor="let user of selectedUserList" class="selectedUser">
                             <img src="{{user.avatarUrl}}">
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -178,10 +178,10 @@
         </div>
         
         <div class="userInput" [ngClass]="{'d-none': hideUserInput}">
-            <div class="inputWrapper"> <!-- this should look like an input-->
+            <div class="inputWrapper"> 
                 
                 @if(selectedUserList.length > 1){
-                    <div class="selectedList"> <!--this should be the list of selected users-->
+                    <div class="selectedList"> 
                         <div *ngFor="let item of [].constructor(1); let i = index" class="selectedUser">
                             <img src="{{selectedUserList[i].avatarUrl}}">
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -207,7 +207,7 @@
                     </div>
                 }
                 @else {
-                    <div class="selectedList"> <!--this should be the list of selected users-->
+                    <div class="selectedList"> 
                         <div *ngFor="let user of selectedUserList" class="selectedUser">
                             <img src="{{user.avatarUrl}}">
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">

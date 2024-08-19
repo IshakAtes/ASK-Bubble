@@ -88,9 +88,6 @@ export class ThreadComponent {
     this.allUsers = mAndC.allUsers;
     this.reactions = chat.reactionsThread;
     this.chat.groupedReactionsThread$.subscribe(groupedReactionsThread => { this.groupedReactionsThread = groupedReactionsThread; });
-   
-    
-    
     const newContent = '';
     this.mAndC.contentThread.next(newContent);
     this.mAndC.contentThread.subscribe(newContent => {this.content = newContent;});
@@ -100,14 +97,6 @@ export class ThreadComponent {
     });
     setTimeout(() => {this.loadAllMessages();}, 1000);
     this.fileUpload.downloadURLThread = '';
-
-    setTimeout(() => {
-      console.log('size inputs from thread:')
-      console.log('channelSizeSmaller' ,this.channelSizeSmaller);
-      console.log('channelSizeSmall' ,this.channelSizeSmall);
-      console.log('channelSizeBig' ,this.channelSizeBig);
-      console.log('channelSizeBigger' ,this.channelSizeBigger);
-    }, 1000);
   }
 
 
@@ -426,12 +415,8 @@ updateChannelThreadMessage(message: ChannelThreadMessage){
 ngOnChanges() {
   this.isThreadDataLoaded = false;
   this.loadMainMessage();
-  setTimeout(() => {
-    this.loadAllMessages();
-  }, 1000);
-  setTimeout(async () => {
-    await this.loadAllMessageReactions();
-  }, 2000);
+  setTimeout(() => {this.loadAllMessages();}, 1000);
+  setTimeout(async () => {await this.loadAllMessageReactions();}, 2000);
   setTimeout(() => {
     if (this.channelThread) {
       this.chat.groupReactionsThread(this.channelThreadMessageList);
@@ -519,15 +504,12 @@ async saveNewMessageReaction(event: any, convo: ThreadMessage, userId: string, r
   if (this.checkUserAlreadyReacted(convo, emoji, userId)) {console.log('User has already reacted with this emoji'); 
     return;
   }
-
   this.reactions = [];
   let reaction = this.databaseService.createThreadMessageReaction(emoji, userId, this.user.name, convo);
   await this.databaseService.addThreadMessageReaction(this.specific, convo, reaction)
   await this.loadAllMessageReactions();
   this.chat.reactionsThread = this.reactions
   setTimeout(() => {this.chat.groupReactionsThread(this.conversationThreadMessagelist)}, 500);
-
-
   this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
   this.mAndC.loadUsersOfUser();
   this.mAndC.loadChannlesofUser()
@@ -548,15 +530,12 @@ async saveNewChannelMessageReaction(event: any, convo: ChannelThreadMessage, use
   if (this.checkUserAlreadyReacted(convo, emoji, userId)) {console.log('User has already reacted with this emoji');
     return;
   }
-
   this.reactions = [];
   let reaction = this.databaseService.createChannelThreadMessageReaction(emoji, userId, this.user.name, convo);
   await this.databaseService.addChannelThreadMessageReaction(this.currentChannel, convo, reaction)
   await this.loadAllMessageReactions();
-  
   this.chat.reactionsThread = this.reactions
   setTimeout(() => {this.chat.groupReactionsThread(this.channelThreadMessageList)}, 500);
-
   this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
   this.mAndC.loadUsersOfUser();
   this.mAndC.loadChannlesofUser()

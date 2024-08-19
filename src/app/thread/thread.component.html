@@ -19,13 +19,9 @@
                             <span class="channel"> {{member.name}}</span>
                         }
                     }
-
                 </div>
                 <img (click)="closeThread()" src="../../assets/img/close.png" alt="">
             </div>
-        
-        
-        
         
             <div class="chat-area">
                 @if (channelThreadMessageList.length>0) {
@@ -36,7 +32,6 @@
                     <div class="line"></div>
                 </div>
                 }
-                        
                         @if (mainChannelMessage.createdBy == user.userId) {
                         <div class="own-message">
                             <div>
@@ -69,10 +64,8 @@
                                 }
                             </div>
                         </div>
-                
                         }
                         @else {
-                                <!--FORSCHLEIFE MIT CHANNEL MEMBERS!! ???-->
                                 @for (member of channelMemberList; track $index) {
                                     @if (mainChannelMessage.createdBy == member.userId) { 
                                         <div class="message">
@@ -112,15 +105,12 @@
                 }
         
                 @if (channelThreadMessageList.length>0) {
-        
-        
                     <div class="time-separator">
                         <div class="date">
                             <span>{{time.formatDate(time.formatTimestamp(channelThreadMessageList[0].createdAt))}}</span>
                         </div>
                         <div class="line"></div>
                     </div>
-        
                     @for (message of channelThreadMessageList; track $index) {
                     @if ($index > 0) {
                     @if (time.formatDate(time.formatTimestamp(channelThreadMessageList[$index].createdAt)) !=
@@ -205,7 +195,7 @@
                             }
         
         
-                            <div class="reaction-bar">
+                            <div class="reaction-bar-thread">
                                 @for (reaction of groupedReactionsThread.get(message.threadMessageId); track $index) {
                                 <div class="emoji-div" (mouseenter)="chat.showTooltip(reaction)"
                                     (mouseleave)="chat.hideTooltip()">
@@ -228,8 +218,6 @@
         
                     }
                     @else {
-         
-                        <!--FORSCHLEIFE MIT CHANNEL MEMBERS!! ???-->
                         @for (member of channelMemberList; track $index) {
                             @if (mainChannelMessage.createdBy == member.userId) { 
                                 <div class="message">
@@ -277,7 +265,7 @@
                                             <span class="massage-content">{{message.content}}</span>
                                         </div>
                     
-                                        <div class="reaction-bar">
+                                        <div class="reaction-bar-thread">
                                             @for (reaction of groupedReactionsThread.get(message.threadMessageId); track $index) {
                                             <div class="emoji-div" (mouseenter)="chat.showTooltip(reaction)"
                                                 (mouseleave)="chat.hideTooltip()">
@@ -298,19 +286,10 @@
                                 </div>
                             }
                         }        
-                        
-                        
-                        
-
-                           
-        
                     }
                     }
-        
                     <!-- Empty div function as anchor to scroll down to  -->
                     <div #lastDiv></div>
-        
-        
                 }
             </div>
         
@@ -374,11 +353,7 @@
         
                     }
         
-        
-        
                     @if(!fileUploadError && !fileUpload.fileUploadingThread) {
-        
-                        <!--??? Nachrichtenbenennung an Person bzw an Channelthread in diesem Fall?-->  
                         @for (member of channelMemberList; track $index) {
                             @if(currentChannelThread.threadNameCreator == member.userId){
                                 <textarea (input)="mAndC.onInput($event, 'thread')" #myTextarea [(ngModel)]="content" class="message-input"
@@ -387,8 +362,6 @@
                             }
                         }
 
-
-        
                         @if (fileUpload.downloadURLThread) {
                         <div class="upload-preview-div">
                             @if (fileUpload.isImage(fileUpload.downloadURLThread)) {
@@ -401,12 +374,7 @@
                         </div>
                         }
         
-        
-        
-        
-        
                         <div class="message-actions">
-            
                             <div class="action-left">
                                 <button class="action-button" (click)="triggerFileInput()"> <img src="../../assets/img/add_icon.png"
                                         alt=""></button>
@@ -427,17 +395,12 @@
                                         alt=""></button>
                             </div>
                         </div>
-        
-        
                     }
-        
                 </div>
             </div>
         </div>
     }
-
     @else{
-        <!--WECHSEL DER LOGIK !!!!!!!!-->
         <!--SHOW TEMPLATE WHEN TRHEAD IS OPENED BY CONVERSATION-->
         <div class="main-thread" [ngClass]="{'channelSmaller': channelSizeSmaller, 
         'channelSmall': channelSizeSmall,
@@ -450,9 +413,6 @@
                 </div>
                 <img (click)="closeThread()" src="../../assets/img/close.png" alt="">
             </div>
-        
-        
-        
         
             <div class="chat-area">
                 @if (conversationThreadMessagelist.length>0) {
@@ -496,7 +456,6 @@
                         }
                     </div>
                 </div>
-        
                 }
                 @else {
                 @if (mainMessage.createdBy == passiveUser.userId) {
@@ -535,8 +494,6 @@
                 }
         
                 @if (conversationThreadMessagelist.length>0) {
-        
-        
                     <div class="time-separator">
                         <div class="date">
                             <span>{{time.formatDate(time.formatTimestamp(conversationThreadMessagelist[0].createdAt))}}</span>
@@ -629,7 +586,7 @@
                             }
         
         
-                            <div class="reaction-bar">
+                            <div class="reaction-bar-thread">
                                 @for (reaction of groupedReactionsThread.get(message.threadMessageId); track $index) {
                                 <div class="emoji-div" (mouseenter)="chat.showTooltip(reaction)"
                                     (mouseleave)="chat.hideTooltip()">
@@ -648,8 +605,6 @@
                             </div>
                         </div>
                     </div>
-        
-        
                     }
                     @else {
         
@@ -700,13 +655,11 @@
                                 <span class="massage-content">{{message.content}}</span>
                             </div>
         
-                            <div class="reaction-bar">
+                            <div class="reaction-bar-thread">
                                 @for (reaction of groupedReactionsThread.get(message.threadMessageId); track $index) {
                                 <div class="emoji-div" (mouseenter)="chat.showTooltip(reaction)"
                                     (mouseleave)="chat.hideTooltip()">
                                     {{ reaction.emoji }} {{ reaction.count }}
-        
-
                                 </div>
                                 @if (chat.emojiInfoVisible && chat.hoveredReaction === reaction) {
                                     <div class="emoji-info">
@@ -726,8 +679,6 @@
         
                     <!-- Empty div function as anchor to scroll down to  -->
                     <div #lastDiv></div>
-        
-        
                 }
             </div>
         
@@ -791,8 +742,6 @@
         
                     }
         
-        
-        
                     @if(!fileUploadError && !fileUpload.fileUploadingThread) {
         
                     @if(user.userId == sendingUser.userId){
@@ -818,12 +767,7 @@
                     </div>
                     }
         
-        
-        
-        
-        
                     <div class="message-actions">
-        
                         <div class="action-left">
                             <button class="action-button" (click)="triggerFileInput()"> <img src="../../assets/img/add_icon.png"
                                     alt=""></button>
@@ -847,7 +791,6 @@
                 </div>
             </div>
             <!-- </div> -->
-        
         
         </div>
     }

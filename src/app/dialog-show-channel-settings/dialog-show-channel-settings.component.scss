@@ -5,7 +5,6 @@ section {
       background: #FFFFFF;
       display: flex;
       flex-direction: column;
-
       position: fixed;
       top: 220px;
       left: 440px;
@@ -63,7 +62,6 @@ section {
     .channelNameWrapper {
         display: flex;
         flex-direction: column;
-        //width: 792px;
         height: fit-content;
         padding: 20px;
         gap: 20px;
@@ -73,7 +71,6 @@ section {
         .channelNameEdit{
             display: flex;
             justify-content: space-between;
-            //width: 752px;
             height: 25px;
             opacity: 0px;
     
@@ -120,14 +117,12 @@ section {
     .channelNameInputWrapper {
         display: flex;
         flex-direction: column;
-        //width: 792px;
         gap: 20px;
         border-radius: 20px;
         opacity: 0px;
         .channelNameEdit{
             display: flex;
             justify-content: space-between;
-            //width: 815px;
             height: 25px;
             opacity: 0px;
             >span{
@@ -155,7 +150,6 @@ section {
     .channelInfo {
         display: flex;
         flex-direction: column;
-        //width: 792px;
         height: fit-content;
         padding: 20px;
         gap: 30px;
@@ -165,14 +159,12 @@ section {
         .channelDescriptionWrapper{
             display: flex;
             flex-direction: column;
-           //width: 752px;
             height: fit-content;
             gap: 20px;
             opacity: 0px;
             
             .channelDescriptionEdit {
                 display: flex;
-                //width: 752px;
                 height: fit-content;
                 gap: 0px;
                 justify-content: space-between;
@@ -222,7 +214,6 @@ section {
         .createdByWrapper{
             display: flex;
             flex-direction: column;
-           // width: 752px;
             height: 78px;
             gap: 20px;
             opacity: 0px;
@@ -250,7 +241,6 @@ section {
     .channelInputInfo{
         display: flex;
         flex-direction: column;
-        //width: 792px;
         height: 235px;
         padding: 20px 0px 0px 0px;
         gap: 30px;
@@ -259,14 +249,12 @@ section {
         .channelDescriptionInputWrapper{
             display: flex;
             flex-direction: column;
-            //width: 815px;
             height: 95px;
             gap: 20px;
             opacity: 0px;
             
             .channelDescriptionEdit {
                 display: flex;
-               // width: 815px;
                 height: 25px;
                 gap: 0px;
                 justify-content: space-between;
@@ -294,7 +282,6 @@ section {
             }
 
             .channelDescription {
-                //width: 815px;
                 height: 50px;
                 gap: 0px;
                 opacity: 0px;
@@ -317,7 +304,6 @@ section {
         .createdByWrapper{
             display: flex;
             flex-direction: column;
-            //width: 752px;
             height: 78px;
             gap: 20px;
             opacity: 0px;
@@ -344,7 +330,6 @@ section {
     .btnContainer{
         display: flex;
         justify-content: flex-end;
-        //width: 834px;
         button {
             cursor: pointer;
             display: flex;
@@ -373,7 +358,6 @@ section {
     .userInput {
      display: flex;
      flex-direction: column;
-    // width: 790px;
      height: 65px;
      padding: 0px 20px 0px 20px;
      gap: 30px;

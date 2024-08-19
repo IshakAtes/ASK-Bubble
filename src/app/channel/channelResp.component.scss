@@ -2,7 +2,6 @@
     .main-chat {
         width: 41.5vw;
         min-width: 460px;
-        //max-width: 989px;
     }
 
     .channelSmaller {
@@ -28,7 +27,6 @@
     .main-chat {
         width: 38.5vw;
         min-width: 460px;
-       // max-width: 989px;
     }
 
     .channelSmaller {
@@ -85,7 +83,7 @@
 }
 
 
-@media (max-width: 850px) { //500
+@media (max-width: 850px) {
     
     ::ng-deep .customDialog {
         width: 100vw;
@@ -125,7 +123,6 @@
     }
 
 
-
     .main-chat-header {
         height: 40px;
         padding: 10px 16px 10px 16px;
@@ -163,7 +160,6 @@
     }
 
 
-
     .channelname {
         display: flex;
         align-items: center;
@@ -180,10 +176,6 @@
     .add-member {
         height: 40px;
     }
-
-
-    //CHAT AREA!
-
 
     .chat-area {
         height: 66vh;
@@ -242,7 +234,6 @@
     }
 
 
-    //OWN ANSWER
     .own-massage-content-bubble {
         width: 49vw;
     }
@@ -275,7 +266,7 @@
         right: 21vw;
     }
 
-    //BOTTOM
+
     .message-container-orientation{
         display: flex;
         position: absolute;
@@ -395,9 +386,6 @@
         width: 60%;
     }
 }
-
-
-
 
 
 @media (max-width: 340px){
