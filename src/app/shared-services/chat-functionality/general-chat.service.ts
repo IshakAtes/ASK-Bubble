@@ -58,7 +58,6 @@ export class GeneralChatService {
     console.log('reactions:', this.reactions);
     const groupedReactionsThread = new Map<string, Array<{ emoji: string, count: number, users: string[] }>>();
     messageList.forEach(message => {
-      // debugger
       const reactionMap = new Map<string, { count: number, users: string[] }>();
       this.reactionsThread
         .filter(reaction => reaction.messageId === message.threadMessageId)

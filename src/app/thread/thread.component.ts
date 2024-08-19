@@ -232,6 +232,7 @@ export class ThreadComponent {
    * load threadmessage reactions from channelthreadmessage
    */
   loadChannelThreadMessageReactions(){
+    this.reactions = []
     for (let i = 0; i < this.channelThreadMessageList.length; i++) {
       const list = this.channelThreadMessageList[i];
       this.databaseService.loadChannelThreadMessageReactions(this.user.userId, this.currentChannel.channelId, list.messageId, list).then(reaction => {
@@ -240,6 +241,9 @@ export class ThreadComponent {
         });
       })
     }
+    setTimeout(() => {
+      this.chat.reactionsThread = this.reactions
+    }, 300);
   }
 
 
@@ -247,14 +251,18 @@ export class ThreadComponent {
    * load threadmessage reactions from conversationthreadmessage
    */
   loadConversationThreadMessageReactions(){
-    for (let i = 0; i < this.conversationThreadMessagelist.length; i++) {
-      const list = this.conversationThreadMessagelist[i];
-      this.databaseService.loadConversationThreadMessageReactions(this.user.userId, this.specific.conversationId, list.messageId, list).then(reaction => {
-        reaction.forEach(reaction => {
-          this.reactions.push(reaction)
-        });
-      })
-    }
+    this.reactions = []
+      for (let i = 0; i < this.conversationThreadMessagelist.length; i++) {
+        const list = this.conversationThreadMessagelist[i];
+        this.databaseService.loadConversationThreadMessageReactions(this.user.userId, this.specific.conversationId, list.messageId, list).then(reaction => {
+          reaction.forEach(reaction => {
+            this.reactions.push(reaction)
+          });
+        })
+      }
+    setTimeout(() => {
+      this.chat.reactionsThread = this.reactions
+    }, 300);
   }
 
   
@@ -433,6 +441,7 @@ ngOnChanges() {
   else{
     this.loadMemberListForChannelThreadHTML();
   }
+  
 }
 
 
@@ -572,5 +581,14 @@ checkUserAlreadyReacted(convo: ThreadMessage | ChannelThreadMessage, emoji: stri
   return this.reactions.some(reaction =>
     reaction.messageId === convo.threadMessageId && reaction.emoji === emoji && reaction.userId === userId
   );
+}
+
+resetThreadReactions() {
+  this.reactions = []
+  if (this.channelThread) {
+    this.chat.groupReactionsThread(this.channelThreadMessageList);
+  } else {
+    this.chat.groupReactionsThread(this.conversationThreadMessagelist);
+  }
 }
 }
