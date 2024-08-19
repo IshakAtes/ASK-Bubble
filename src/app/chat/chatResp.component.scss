@@ -1,5 +1,5 @@
 
-@media (max-width: 1650px) {
+@media (max-width: 1920px) {
     .main-chat {
         width: 41.5vw;
         min-width: 460px;
@@ -72,6 +72,23 @@
 
 @media (max-width: 850px) { //500
     
+    .channelBig {
+        width: unset;
+    }
+
+    .channelBigger {
+        width: unset;
+    }
+
+    .channelSmaller{
+        width: unset;
+    }
+
+    .channelSmall {
+        width: unset;
+    }
+
+
     ::ng-deep .customDialog {
         width: 100vw;
         .mdc-dialog {
@@ -102,7 +119,8 @@
     
     .main-chat {
         height: calc(100vh - 80px);
-        width: 100vw;
+        width: 100vw !important;
+        max-width: 100vw;
         background-color: white;
         border-radius: 0px;
         position: relative;
@@ -168,7 +186,7 @@
 
 
     .chat-area {
-        height: 63vh;
+        height: 62vh;
         overflow-y: scroll;
         overflow-x: hidden;
     }
@@ -431,11 +449,6 @@
 }
 
 
-@media (max-height: 844px) {
-    .chat-area {
-        height: 61vh;
-    }
-}
 
 
 @media (max-height: 741px) {
@@ -447,6 +460,6 @@
 
 @media (max-height: 670px) {
     .chat-area {
-        height: 51vh;
+        height: 52vh;
     }
 }

@@ -147,13 +147,7 @@ export class ChannelComponent implements OnInit {
    */
   ngOnChanges(changes?: SimpleChanges) {
     if (this.reload) {
-      /*reset reactions and set reactions to observable */
-      this.chatService.reactions = [];
-      this.reactions = this.chatService.reactions;
-      this.chatService.groupedReactions$.subscribe(groupedReactions => { this.groupedReactions = groupedReactions; });
-      this.memberList = [];
-      this.messageList = [];
-      this.isdataLoaded = false;
+      this.setDefaultForNgOnChange();
       setTimeout(() => {
         Promise.all([
           this.loadMemberList(),
@@ -165,12 +159,23 @@ export class ChannelComponent implements OnInit {
         }).catch(error => { console.log('this ', error) });
       }, 1000);
     }
-
     if (changes!['filterQuery']) {
       this.filterMessages(this.filterQuery);
     }
   }
 
+
+  /**
+   * reset all neccessary variables to default before loading
+   */
+  setDefaultForNgOnChange(){
+    this.chatService.reactions = [];
+    this.reactions = this.chatService.reactions;
+    this.chatService.groupedReactions$.subscribe(groupedReactions => { this.groupedReactions = groupedReactions; });
+    this.memberList = [];
+    this.messageList = [];
+    this.isdataLoaded = false;
+  }
 
   /**
    * searches for already sent messages
@@ -260,7 +265,6 @@ export class ChannelComponent implements OnInit {
       .then(messages => {
         this.messageList = messages;
         this.messageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-
       })
   }
 

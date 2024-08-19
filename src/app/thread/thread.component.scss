@@ -119,7 +119,7 @@
 }
 
 
-@media (max-width: 1650px) {
+@media (max-width: 1920px) {
      .main-thread {
          width: 22.5vw;
      }
@@ -144,6 +144,10 @@
     .main-thread {
         width: 65vw;
         min-width: 260px;
+    }
+
+    .channelBig {
+        width: 65vw !important;
     }
 
     .thread-message-separator-line {
@@ -202,7 +206,8 @@
     
     .main-thread {
         height: calc(100vh - 80px);
-        width: 100vw;
+        width: 100vw !important;
+        max-width: 100vw;
         background-color: white;
         border-radius: 0px;
         position: relative;
@@ -266,7 +271,7 @@
     }
 
     .chat-area {
-        height: 66vh;
+        height: 62vh;
         overflow-y: scroll;
         overflow-x: hidden;
     }
@@ -373,6 +378,9 @@
         bottom: 145px;
         left: 5px;
     }
+
+
+
 
 }
 
@@ -487,13 +495,13 @@
 
 @media (max-height: 741px) {
     .chat-area {
-        height: 65vh;
+        height: 56vh;
     }
 }
 
 
 @media (max-height: 670px) {
     .chat-area {
-        height: 56vh;
+        height: 52vh;
     }
 }
