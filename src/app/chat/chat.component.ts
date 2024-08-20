@@ -142,7 +142,7 @@ export class ChatComponent implements OnInit {
     this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.user.userId);
   }
 
-  
+
   changeReload() {
     this.changeReloadStatus.emit()
   }
@@ -206,19 +206,21 @@ export class ChatComponent implements OnInit {
     this.mAndC.loadChannlesofUser();
     this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.user.userId);
 
+    //schauen ob das Doppelladen Problem dadruch behoben wird 
+    this.list = [];
     this.loadAllMessages().then(() => {
       this.initializeChatAfterChange();
     })
 
-    if (changes!= undefined && changes!['filterQuery']) {
+    if (changes != undefined && changes!['filterQuery']) {
       this.filterMessages(this.filterQuery);
     }
   }
 
-/**
-   * searches for already sent messages
-   * @param query the content of the searchbar
-   */
+  /**
+     * searches for already sent messages
+     * @param query the content of the searchbar
+     */
   filterMessages(query: string): void {
     setTimeout(() => {
       if (query) {
@@ -226,7 +228,7 @@ export class ChatComponent implements OnInit {
           message.content.toLowerCase().includes(query.toLowerCase())
         );
         console.log('filtered list:', this.filteredList);
-  
+
         this.list = this.filteredList;
         console.log('list as filtered list:', this.list);
       } else {
@@ -235,8 +237,8 @@ export class ChatComponent implements OnInit {
           this.scrollToBottom();
         }, 10);
       }
-    }, 1300);   
-}
+    }, 1300);
+  }
 
 
   /**
