@@ -236,6 +236,21 @@
                                             <span class="massage-content">{{message.content}}</span>
                                         </div>
 
+                                        @if (message.fileUrl) {
+                                            <div class="own-file-div">
+                                                @if (fileService.isImage(message.fileUrl)) {
+                                                <a href="{{message.fileUrl}}" target="_blank">
+                                                    <img src="{{message.fileUrl}}" alt="">
+                                                </a>
+                                                } @else {
+                                                <a href="{{message.fileUrl}}" target="_blank">
+                                                    <img src="../../assets/img/PDF_icon.svg.png" alt="">
+                                                    <p>PDF öffnen</p>
+                                                </a>
+                                                }
+                                            </div>
+                                            }
+
                                         <div class="reaction-bar">
                                             @for (reaction of groupedReactions.get(message.messageId); track $index) {
                                             <div class="emoji-div" (mouseenter)="chatService.showTooltip(reaction)" (mouseleave)="chatService.hideTooltip()">
@@ -582,6 +597,21 @@
                                         <div class="massage-content-bubble">
                                             <span class="massage-content">{{message.content}}</span>
                                         </div>
+
+                                        @if (message.fileUrl) {
+                                            <div class="own-file-div">
+                                                @if (fileService.isImage(message.fileUrl)) {
+                                                <a href="{{message.fileUrl}}" target="_blank">
+                                                    <img src="{{message.fileUrl}}" alt="">
+                                                </a>
+                                                } @else {
+                                                <a href="{{message.fileUrl}}" target="_blank">
+                                                    <img src="../../assets/img/PDF_icon.svg.png" alt="">
+                                                    <p>PDF öffnen</p>
+                                                </a>
+                                                }
+                                            </div>
+                                            }
 
                                         <div class="reaction-bar">
                                             @for (reaction of groupedReactions.get(message.messageId); track $index) {
