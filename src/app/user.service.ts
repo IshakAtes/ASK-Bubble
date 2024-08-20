@@ -42,6 +42,14 @@ export class UserService {
 
 
   constructor(private http: HttpClient, private router: Router, public database: DatabaseService) { 
+    debugger;
+    setTimeout(() => {
+      console.log(this.loggedUser)  
+      if(this.loggedUser){
+          this.loadActiveUserChannels();
+          this.loadActiveUserConversations();
+        }
+    }, 1000);
 
  
   }
