@@ -137,6 +137,8 @@ export class LoginComponent implements OnInit {
     if (this.myForm.valid && acceptedUser || this.authMessage) {
       try {
         this.us.loggedUser = acceptedUser;
+        this.us.loadActiveUserChannels();
+        this.us.loadActiveUserConversations();
         this.us.userOnline(this.us.loggedUser.userId);
         this.router.navigate(['/main']);
         this.us.guest = false;

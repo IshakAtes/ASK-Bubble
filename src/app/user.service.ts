@@ -34,24 +34,15 @@ export class UserService {
   usersFromActiveUserConversationList: Array<User> = [];
   activeUserOwnConversation: Conversation;
  
-  
   activeUserObject: User;
   isWorkspaceDataLoaded: boolean = true;
   deviceWidth: number
 
-
-
-  //TODO - hiernach suchen wenns live geht und umgestellt werden soll. 
-  //Logged user mail nehmen als activeUserMail nehmen.
-  activeUserMail: string = 'simon@dummy.de' //'ishakfeuer@gmail.com'  //'simon.w@gmx.net' //'simon@dummy.de' 
-
-
+  //activeUserMail: string = 'simon@dummy.de' //'ishakfeuer@gmail.com'  //'simon.w@gmx.net' //'simon@dummy.de' 
 
 
   constructor(private http: HttpClient, private router: Router, public database: DatabaseService) { 
-    
-    this.loadActiveUserChannels();    //Umstellung: muss nach dem login aufgerufen werden und nicht hier sonst Fehlermeldung
-    this.loadActiveUserConversations(); //Umstellung: muss nach dem login aufgerufen werden und nicht hier sonst Fehlermeldung
+
  
   }
 
@@ -293,7 +284,7 @@ export class UserService {
 
     this.activeUserChannels = [];
     this.isWorkspaceDataLoaded = false;
-    this.database.getUser(this.activeUserMail).then(user =>{
+    this.database.getUser(this.loggedUser.email).then(user =>{
       this.activeUserObject = user;
       this.database.loadAllUserChannels(user.userId).then(userChannels => {
         this.activeUserChannels = userChannels
@@ -307,7 +298,7 @@ export class UserService {
     this.isWorkspaceDataLoaded = false;
     this.activeUserConversationList = [];
     this.usersFromActiveUserConversationList = [];
-    this.database.getUser(this.activeUserMail).then(user => {
+    this.database.getUser(this.loggedUser.email).then(user => {
       this.database.loadAllUserConversations(user.userId)
         .then(userConversations => {
           

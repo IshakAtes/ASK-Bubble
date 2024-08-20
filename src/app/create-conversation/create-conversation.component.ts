@@ -160,16 +160,25 @@ export class CreateConversationComponent {
    * @param user userobject
    */
   selectUser(user: User){
+    debugger;
     for(let conversation of this.conversationList){
       if(conversation.createdBy == this.us.activeUserObject.userId){
         if(this.checkSelectedUser(conversation, user)){
           break;
-        };
+        }
+        else{
+          this.createNewConversation(conversation, user);
+        }
+       
       }
       else if(conversation.createdBy == user.userId){
         if(this.checkActiveUser(conversation, user)){
           break;
-        };
+        }
+        else{
+          this.createNewConversation(conversation, user);
+        }
+        
       }
       else{
         this.createNewConversation(conversation, user);

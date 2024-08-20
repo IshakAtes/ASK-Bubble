@@ -26,7 +26,7 @@ import { Thread } from '../../models/thread.class';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss', './chatResp.component.scss']
 })
-export class ChatComponent implements AfterViewInit, OnInit {
+export class ChatComponent implements OnInit {
 
   //input Data from main component
   @Input() specific: Conversation;
@@ -210,7 +210,7 @@ export class ChatComponent implements AfterViewInit, OnInit {
       this.initializeChatAfterChange();
     })
 
-    if (changes!['filterQuery']) {
+    if (changes!= undefined && changes!['filterQuery']) {
       this.filterMessages(this.filterQuery);
     }
   }
@@ -389,17 +389,6 @@ export class ChatComponent implements AfterViewInit, OnInit {
     await this.databaseService.addConversationMessageReaction(this.specific, convo, reaction);
     await this.loadAllMessageReactions();
     this.chat.reactions = this.reactions
-  }
-
-
-  /**
-     * sets focus to message input field and scrolls to newest message in the channel
-     */
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.setFocus();
-      this.scrollToBottom();
-    }, 2500);
   }
 
 

@@ -159,7 +159,7 @@ export class ChannelComponent implements OnInit {
         }).catch(error => { console.log('this ', error) });
       }, 1000);
     }
-    if (changes!['filterQuery']) {
+    if (changes!= undefined && changes!['filterQuery']) {
       this.filterMessages(this.filterQuery);
     }
   }
