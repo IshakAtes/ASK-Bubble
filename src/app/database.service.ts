@@ -65,7 +65,13 @@ export class DatabaseService {
     const randomNumber = Math.random();
     channel.createdAt = new Date();
     channel.createdBy = createdBy;
-    channel.description = description;
+    debugger;
+    if(channel.description == undefined){
+      channel.description = ' ';
+    }
+    else{
+      channel.description = description;
+    }
     channel.membersId = membersId;
     channel.name = channelName;
     channel.channelId = 'CHA-' + createdBy + '-' + randomNumber;
@@ -647,9 +653,12 @@ export class DatabaseService {
    */
   addChannel(channel: Channel) {
     let channelObject = new Channel(channel)
+    debugger;
     channel.membersId.forEach(userId => {
       setDoc(doc(this.firestore, 'users/' + userId + '/channels', channel.channelId), channelObject.toJSON());
     });
+
+
   }
 
 

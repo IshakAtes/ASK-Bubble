@@ -38,18 +38,15 @@ export class UserService {
   isWorkspaceDataLoaded: boolean = true;
   deviceWidth: number
 
-  //activeUserMail: string = 'simon@dummy.de' //'ishakfeuer@gmail.com'  //'simon.w@gmx.net' //'simon@dummy.de' 
-
 
   constructor(private http: HttpClient, private router: Router, public database: DatabaseService) { 
-    debugger;
     setTimeout(() => {
-      console.log(this.loggedUser)  
       if(this.loggedUser){
+          this.isWorkspaceDataLoaded = false,
           this.loadActiveUserChannels();
           this.loadActiveUserConversations();
         }
-    }, 1000);
+    }, 1500);
 
  
   }

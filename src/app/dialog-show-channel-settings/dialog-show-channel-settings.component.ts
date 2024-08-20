@@ -81,6 +81,7 @@ export class DialogShowChannelSettingsComponent {
     this.database.updateChannelMembers(new Channel(this.newChannel));
     this.database.deleteChannel(new Channel(this.newChannel), this.activeUser.userId)
     this.us.loadActiveUserChannels();
+    this.us.loadActiveUserConversations();
     this.dialogRef.close(true);
   }
 

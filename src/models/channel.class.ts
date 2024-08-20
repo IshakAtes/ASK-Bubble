@@ -10,7 +10,7 @@ export class Channel {
     constructor(obj?: any){
         this.createdAt = obj ? obj.createdAt : '';
         this.createdBy = obj ? obj.createdBy : '';
-        this.description = obj ? obj.description : '';
+        this.description = obj ? obj.description : 'test';
         this.membersId = obj ? obj.membersId : [];
         this.name = obj ? obj.name : '';
         this.channelId = obj ? obj.channelId : '';

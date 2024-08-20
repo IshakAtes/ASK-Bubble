@@ -1,11 +1,6 @@
 
 
 @media (max-width: 1920px) {
-    // .main-chat {
-    //     width: 41.5vw;
-    //     min-width: 460px;
-    // }
-
     .channelSmaller {
         width: 49vw !important;
     }
@@ -29,7 +24,6 @@
     .main-chat {
         width: 38.5vw;
         min-width: 460px;
-        //max-width: 989px;
     }
 
     .channelSmaller {
@@ -82,7 +76,7 @@
 }
 
 
-@media (max-width: 850px) { //500
+@media (max-width: 850px) { 
     
     .channelBig {
         width: unset;
@@ -138,6 +132,11 @@
         position: relative;
     }
 
+    .main-chat-header-avatar-div {
+        .online-indicator {
+            bottom: 0px;
+        }
+    }
 
 
     .main-chat-header {
@@ -194,20 +193,23 @@
     }
 
 
-    //CHAT AREA!
-
-
     .chat-area {
         height: 62vh;
         overflow-y: scroll;
         overflow-x: hidden;
     }
 
+    //TEST
     .message {
         display: flex;
         padding: 20px 16px 20px 16px;
         justify-content: center;
-        gap: 0px;
+        right: 50px;
+        gap: 0;
+    }
+
+    .online-indicator {
+        bottom: 15px;
     }
     
     .avatar {
@@ -235,7 +237,7 @@
         display: flex;
         align-items: center;
         gap: 5px;
-        padding: 0px 30px 0px 0px;
+        padding: 0px 0px 0px 30px;
     }
 
     .massage-content-bubble {
@@ -243,6 +245,7 @@
         border-radius: 0px 30px 30px 30px;
         background: #ECEEFE;
         width: 55vw;
+        margin-left: 30px;
     }
     
     .massage-content {
@@ -252,9 +255,6 @@
         line-height: 24.55px;
     }
 
-
-
-    //OWN ANSWER
     .own-massage-content-bubble {
         width: 49vw;
     }
@@ -287,7 +287,7 @@
         right: 21vw;
     }
 
-    //BOTTOM
+
     .message-container-orientation{
         display: flex;
         position: absolute;
@@ -299,8 +299,6 @@
 
     .message-container {
         height: 103px;
-        //padding: 20px;
-        //margin: 0px;
     }
 
 
@@ -317,7 +315,6 @@
         display: flex;
         align-items: center;
         gap: 5px;
-        padding: 0px 15px 0px 0px;
     }
 
     .own-message-header {
@@ -325,6 +322,25 @@
         padding: 0px 15px 0px 0px;
     }
 }
+
+@media (max-width: 420px){
+    .message {
+        display: flex;
+        padding: 20px 16px 20px 16px;
+        justify-content: center;
+        right: 50px;
+        gap: 0;
+    }
+
+    .message-header {
+        padding: 0px 0px 0px 15px;
+    }
+
+    .massage-content-bubble {
+        margin-left: 15px;
+    }
+}
+
 
 @media (max-width: 430px){
 
@@ -378,16 +394,6 @@
         right: 11%;
     }
 
-    .message-header {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        padding: 0px 0px 0px 0px;
-        width: 220px;
-        position: relative;
-        right: 11%;
-    }
-
     .own-message {
         width: calc(100% - 80px);
         padding: 20px 0px 20px 0px;
@@ -396,15 +402,17 @@
         flex-direction: row-reverse;
     }
 
+    .message-header {
+        width: 220px;
+    }
+
     .message{
         width: calc(100% - 80px);
-        padding: 20px 0px 20px 0px;
     }
 
     .edit-message-content-bubble-BTN-div{
         button {
             width: 80px !important;
-
         }
     }
 }
@@ -435,12 +443,6 @@
         padding: 20px 0px 20px 0px;
     }
 
-    .message{
-        width: calc(100% - 110px);
-        padding: 20px 0px 20px 0px;
-    }
-
-
     .own-message-header {
         gap: 5px;
         padding: 0px 0px 0px 0px;
@@ -449,14 +451,8 @@
         right: 20%;
     }
 
-    .message-header {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        padding: 0px 0px 0px 0px;
-        width: 220px;
-        position: relative;
-        right: 20%;
+    .message{
+        width: calc(100% - 110px);
     }
 }
 
