@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateEmail, updatePassword, user, updateProfile, sendEmailVerification } from '@angular/fire/auth';
 import { from, Observable } from 'rxjs';
-import { EmailAuthProvider, getAuth, onAuthStateChanged, UserCredential, reauthenticateWithCredential } from "firebase/auth";
+import { EmailAuthProvider, getAuth, onAuthStateChanged, UserCredential, reauthenticateWithCredential, AuthProvider, getAdditionalUserInfo } from "firebase/auth";
 import { UserService } from '../user.service';
 import { User } from '../../models/user.class';
 import { signInWithRedirect, getRedirectResult, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
@@ -16,13 +16,16 @@ export class AuthService {
   firebaseAuth = inject(Auth);
   us = inject(UserService);
   errorMessage: string | null = null;
-  provider = new GoogleAuthProvider();
   activeUser? = user(this.firebaseAuth);
   currentUserSignal = signal<User | null | undefined>(undefined);
   wrongEmail = false;
+  infos: any ;
   
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    console.log(this.infos);
+    
+  }
 
 
   async changeUserData(email: string, newEmail: string, currentPassword: string | null, name: string, avatar: string | undefined | null) {
@@ -75,36 +78,34 @@ export class AuthService {
 
 
   async googleAuth() {
-    console.log('google Provider', this.provider);
-    this.provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+    const provider = new GoogleAuthProvider();
+    console.log('google Provider', provider);
+    provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
     // const auth = getAuth();
-    await signInWithRedirect(this.firebaseAuth, this.provider);
-    await this.getToken();
+    await signInWithRedirect(this.firebaseAuth, provider);
+    await this.getToken(provider);
   }
 
-  getToken() {
-    // const auth = getAuth();
-    getRedirectResult(this.firebaseAuth)
-      .then((result: any) => {
-        // This gives you a Google Access Token. You can use it to access Google APIs.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
-        console.log('getToken', token);
-        
+  getToken(provider: AuthProvider) {
+    const auth = getAuth();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential: any = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-        console.log('get GoogleUser', user);
-        
+        this.infos = result;
         // IdP data available using getAdditionalUserInfo(result)
-        // ...
+        console.log(user, token, getAdditionalUserInfo(result));
+        
       }).catch((error) => {
+        console.log(error);
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
         // The email of the user's account used.
-        const email = error.customData.email; 
-        console.log('erorr Detect', errorCode, errorMessage, email);
-        
+        const email = error.customData.email;
         // The AuthCredential type that was used.
         const credential = GoogleAuthProvider.credentialFromError(error);
         // ...

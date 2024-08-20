@@ -44,7 +44,6 @@ export class LoginComponent implements OnInit {
       pw: ['', [Validators.required, Validators.minLength(5)]],
       mail: ['', [Validators.required, Validators.email]],
     });
-    this.authService.getToken();
   }
 
   ngOnInit(): void {
