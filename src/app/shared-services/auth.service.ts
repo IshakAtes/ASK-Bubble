@@ -23,8 +23,7 @@ export class AuthService {
   
 
   constructor(private router: Router) {
-    console.log(this.infos);
-    
+    console.log('googleInfos', this.infos);
   }
 
 
@@ -82,11 +81,11 @@ export class AuthService {
     console.log('google Provider', provider);
     provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
     // const auth = getAuth();
-    await signInWithRedirect(this.firebaseAuth, provider);
+    // await signInWithRedirect(this.firebaseAuth, provider);
     await this.getToken(provider);
   }
 
-  getToken(provider: AuthProvider) {
+  getToken(provider: any) {
     const auth = getAuth();
     signInWithPopup(auth, provider)
       .then((result) => {
