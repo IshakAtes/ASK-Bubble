@@ -210,7 +210,7 @@ export class ChannelComponent implements OnInit {
     setTimeout(() => {
       this.chatService.groupReactions(this.messageList)
         .then(() => {
-          this.changeReload(); //Important to be able to load another channel
+          this.changeReload();
           this.isdataLoaded = true;
           setTimeout(() => {
             this.scrollToBottom();

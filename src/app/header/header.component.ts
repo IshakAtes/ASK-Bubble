@@ -7,6 +7,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogShowUserProfilComponent } from '../dialog-show-user-profil/dialog-show-user-profil.component';
 import { AuthService } from '../shared-services/auth.service';
 import { Router } from '@angular/router';
+import { Conversation } from '../../models/conversation.class';
 
 @Component({
   selector: 'app-header',
@@ -23,7 +24,7 @@ export class HeaderComponent  {
   
   @Output() search: EventEmitter<string> = new EventEmitter<string>();
   
-  
+  @Output() openOwnConversation = new EventEmitter<Conversation>();
   @Output() showWorkspace = new EventEmitter<boolean>();
   @Input() isWSVisible: boolean;
 
@@ -57,7 +58,15 @@ export class HeaderComponent  {
     const dialogRef = this.dialog.open(DialogShowUserProfilComponent, {
       data: { user: this.us.loggedUser }
     });
+    dialogRef.afterClosed().subscribe((conversation) => {
+      if(conversation){
+        console.log('Header: active user own conversation:')
+        console.log(this.us.activeUserOwnConversation)
+        this.openOwnConversation.emit(conversation)
 
+      }
+
+    })
   }
 
 }

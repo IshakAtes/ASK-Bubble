@@ -149,28 +149,9 @@ export class DialogShowUserProfilComponent implements OnInit {
     this.selectedAvatar = this.userData.avatarUrl ?? '/assets/img/unUsedDefault.png';
   }
 
-
-  // openNewConversation(){
-  //   let newConversation = this.database.createConversation(this.userData.userId, this.userData.userId);
-  //   this.database.addConversation(newConversation);
-  //   this.us.loadActiveUserConversations();
-    
-  //   setTimeout(() => {
-  //     this.dialogRef.close(newConversation);
-  //   }, 400);
-  // }
-
-
   openConversation(conversation: Conversation){
-    console.log('click');
-    this.changeToConversation.emit(conversation);
+    this.dialogRef.close(conversation)
   }
-
-
-  // openConversation(){
-  //   console.log('click');
-  //   this.changeToConversation.emit(this.us.activeUserOwnConversation);
-  // }
 
   closeEdit() {
     this.editMode = false;

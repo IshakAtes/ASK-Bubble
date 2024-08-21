@@ -40,13 +40,13 @@ export class UserService {
 
 
   constructor(private http: HttpClient, private router: Router, public database: DatabaseService) { 
+    this.isWorkspaceDataLoaded = false,
     setTimeout(() => {
       if(this.loggedUser){
-          this.isWorkspaceDataLoaded = false,
           this.loadActiveUserChannels();
           this.loadActiveUserConversations();
         }
-    }, 1500);
+    }, 1000);
 
  
   }

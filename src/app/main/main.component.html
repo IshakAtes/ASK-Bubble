@@ -5,8 +5,9 @@
 
             <app-header
              (showWorkspace)="viewWorkspace()"
-             [isWSVisible]="isWSVisible"
              (search)="onSearch($event)"
+             (openOwnConversation)="changeConversation($event)"
+             [isWSVisible]="isWSVisible"
             >
             </app-header>
      
@@ -37,6 +38,7 @@
                          (changeReloadStatus)="setReloadToFalse($event)"
                          (userLeftChannel)="userLeftChannel()"
                          (emitThread)="openChannelThread($event)"
+                         (openConversation)="changeConversation($event)"
                          [activeUser]="userservice.activeUserObject"
                          [channel]="currentChannel"
                          [reload]="reloadChannel"
@@ -83,7 +85,10 @@
                     <span>Workspace-Menü-schließen</span>
                 </div>
             
-                <app-header (search)="onSearch($event)"></app-header>
+                <app-header 
+                    (search)="onSearch($event)"
+                    (openOwnConversation)="changeConversation($event)"
+                ></app-header>
          
                 @if(isWSVisible){
                     <app-workspace
@@ -118,6 +123,7 @@
                         (changeReloadStatus)="setReloadToFalse($event)"
                         (userLeftChannel)="userLeftChannel()"
                         (emitThread)="openChannelThread($event)"
+                        (openConversation)="changeConversation($event)"
                         [activeUser]="userservice.activeUserObject"
                         [channel]="currentChannel"
                         [reload]="reloadChannel"
@@ -171,7 +177,10 @@
                 <span>Workspace-Menü-schließen</span>
             </div>
         
-            <app-header (search)="onSearch($event)"></app-header>
+            <app-header 
+                (search)="onSearch($event)"
+                (openOwnConversation)="changeConversation($event)"
+            ></app-header>
         
             @if(isWSVisible){
                 <app-workspace

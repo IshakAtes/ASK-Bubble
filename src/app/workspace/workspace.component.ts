@@ -55,9 +55,12 @@ export class WorkspaceComponent {
 
 
   constructor(public dialog: MatDialog, public us: UserService){  
-    this.loadUserList();
-    this.loadUserChannel();
-    this.loadUserConversation();
+    setTimeout(() => {
+      this.loadUserList();
+      this.loadUserChannel();
+      this.loadUserConversation();
+    }, 1000);
+
   }
 
 

@@ -20,22 +20,25 @@ export class AppComponent implements OnInit{
   title = 'DA-Bubble';
 
   ngOnInit(): void {
-    this.authService.activeUser?.subscribe((user) => {
-      if (user) {
-        const customUser = new User({
-          email: user.email!,
-          name: user.displayName!,
-          status: 'online',
-          avatarUrl: user.photoURL,
-          userId: this.authService.us.loggedUser.userId,
-          logIn: this.authService.us.loggedUser.logIn,
-          usedLastTwoEmojis: this.authService.us.loggedUser.usedLastTwoEmojis,
-          uid: user.uid
-        });
-        this.authService.currentUserSignal.set(customUser);
-      } else {
-        this.authService.currentUserSignal.set(null);
-      }
-    })
+    setTimeout(() => {
+      this.authService.activeUser?.subscribe((user) => {
+        if (user) {
+          const customUser = new User({
+            email: user.email!,
+            name: user.displayName!,
+            status: 'online',
+            avatarUrl: user.photoURL,
+            userId: this.authService.us.loggedUser.userId,
+            logIn: this.authService.us.loggedUser.logIn,
+            usedLastTwoEmojis: this.authService.us.loggedUser.usedLastTwoEmojis,
+            uid: user.uid
+          });
+          this.authService.currentUserSignal.set(customUser);
+        } else {
+          this.authService.currentUserSignal.set(null);
+        }
+      })
+    }, 1000);
+    
   }
 }
