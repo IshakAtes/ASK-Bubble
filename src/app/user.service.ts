@@ -229,6 +229,41 @@ export class UserService {
   }
 
 
+  getUserAfterGoogleAuth(email: string, token: string): Promise<User | null> {
+    return new Promise<User | null>((resolve, reject) => {
+        const usersCollection = collection(this.firestore, 'users');
+        let foundUser: User | null = null;
+
+        onSnapshot(usersCollection, (users) => {
+            users.forEach(user => {
+                const userData = user.data();
+
+                if (userData['email'] === email && userData['uid'] === token) {
+                    foundUser = new User({
+                        email: userData['email'],
+                        name: userData['name'],
+                        status: userData['status'],
+                        avatarUrl: userData['avatarUrl'],
+                        userId: user.id,
+                        logIn: userData['logIn'],
+                        usedLastTwoEmojis: userData['usedLastTwoEmojis'],
+                        uid: userData['uid']
+                    });
+                }
+            });
+
+            if (foundUser) {
+                resolve(foundUser);
+            } else {
+                resolve(null); // Anstatt ein Fehler zurückzugeben, löse null auf
+            }
+        }, (error) => {
+            reject(error); // Falls es einen Fehler bei der Datenbankabfrage gibt
+        });
+    });
+}
+
+
   getUser(email: string, token: string): Promise<User> {
     return new Promise<User>((resolve, reject) => {
       const usersCollection = collection(this.firestore, 'users');

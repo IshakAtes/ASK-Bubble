@@ -80,8 +80,6 @@ export class AuthService {
     const provider = new GoogleAuthProvider();
     console.log('google Provider', provider);
     provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-    // const auth = getAuth();
-    // await signInWithRedirect(this.firebaseAuth, provider);
     await this.getToken(provider);
   }
 
@@ -97,7 +95,7 @@ export class AuthService {
         this.infos = result;
         // IdP data available using getAdditionalUserInfo(result)
         console.log(user, token, getAdditionalUserInfo(result));
-        
+        this.handleUserAfterGoogleLogin(user);
       }).catch((error) => {
         console.log(error);
         // Handle Errors here.
@@ -107,9 +105,46 @@ export class AuthService {
         const email = error.customData.email;
         // The AuthCredential type that was used.
         const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
       });
   }
+
+  async handleUserAfterGoogleLogin(user: any) {
+    // Check if user already exists in Firestore
+    const userDoc = await this.us.getUserAfterGoogleAuth(user.email!, user.uid);
+
+    if (!userDoc) {
+        // Create new user object
+        this.us.userCache = new User();
+        this.us.userCache.email = user.email;
+        this.us.userCache.name = user.displayName;
+        this.us.userCache.avatarUrl = user.photoURL;
+        this.us.userToken = user.uid
+        // Save user object to Firestore
+        this.us.createAndSaveUser();
+        const getUserAgain = await this.us.getUserAfterGoogleAuth(user.email!, user.uid);
+        this.logGoogleUser(this.us.userCache);
+        console.log('New user created in Firestore:', this.us.userCache);
+    } else {
+        console.log('User already exists in Firestore:', userDoc);
+        this.logGoogleUser(userDoc);
+    }
+}
+
+
+logGoogleUser(acceptedUser: User) {
+  try {
+    this.us.loggedUser = acceptedUser;
+    this.us.loadActiveUserChannels();
+    this.us.loadActiveUserConversations();
+    this.us.userOnline(this.us.loggedUser.userId);
+    this.router.navigate(['/main']);
+    this.us.guest = false;
+    this.us.userToken = '';
+  } catch (error) {
+    console.error('Fehler beim Abrufen des Benutzers:', error);
+  }
+}
+
 
 
   register(email: string, username: string, password: string): Observable <void> {
