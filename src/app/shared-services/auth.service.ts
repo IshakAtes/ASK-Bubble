@@ -23,7 +23,7 @@ export class AuthService {
   
 
   constructor(private router: Router) {
-    console.log('googleInfos', this.infos);
+    // console.log('googleInfos', this.infos);
   }
 
 
@@ -33,21 +33,21 @@ export class AuthService {
 //Ist currentUser ein vordefinierter Wert?
       try {
         if (fbUser) {
-          console.log('currentUser', fbUser);
+          // console.log('currentUser', fbUser);
           // Update email
           if (newEmail !== fbUser.email && currentPassword) {
             try {
               // Reauthenticate the user with the current email and password
               const credential = EmailAuthProvider.credential(email, currentPassword ?? '');
-              console.log(credential);
+              // console.log(credential);
               await reauthenticateWithCredential(fbUser, credential);
               await updateEmail(fbUser, newEmail);
               await sendEmailVerification(fbUser);
               await this.us.changeEmail(email, newEmail, name, avatar)
-              console.log('Verification email sent to', newEmail);
+              // console.log('Verification email sent to', newEmail);
             } catch (error) {
               this.wrongEmail = true;
-              console.error('Error during reauthentication:', error);
+              // console.error('Error during reauthentication:', error);
             }
             
           }
@@ -65,12 +65,12 @@ export class AuthService {
             displayName: name,
             photoURL: avatar ?? '/assets/img/unUsedDefault.png'
           }); 
-          console.log('Profile updated!', fbUser);
+          // console.log('Profile updated!', fbUser);
       } else {
-        console.error('Current user or password is null');
+        // console.error('Current user or password is null');
       }
       } catch (error: any) {
-        console.error('Error updating user:', error);
+        // console.error('Error updating user:', error);
         this.errorMessage = error.message;
       }
   }
@@ -78,7 +78,7 @@ export class AuthService {
 
   async googleAuth() {
     const provider = new GoogleAuthProvider();
-    console.log('google Provider', provider);
+    // console.log('google Provider', provider);
     provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
     await this.getToken(provider);
   }
@@ -94,10 +94,10 @@ export class AuthService {
         const user = result.user;
         this.infos = result;
         // IdP data available using getAdditionalUserInfo(result)
-        console.log(user, token, getAdditionalUserInfo(result));
+        // console.log(user, token, getAdditionalUserInfo(result));
         this.handleUserAfterGoogleLogin(user);
       }).catch((error) => {
-        console.log(error);
+        // console.log(error);
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -123,9 +123,9 @@ export class AuthService {
         this.us.createAndSaveUser();
         const getUserAgain = await this.us.getUserAfterGoogleAuth(user.email!, user.uid);
         this.logGoogleUser(this.us.userCache);
-        console.log('New user created in Firestore:', this.us.userCache);
+        // console.log('New user created in Firestore:', this.us.userCache);
     } else {
-        console.log('User already exists in Firestore:', userDoc);
+        // console.log('User already exists in Firestore:', userDoc);
         this.logGoogleUser(userDoc);
     }
 }
@@ -170,7 +170,7 @@ logGoogleUser(acceptedUser: User) {
       },
       error: (err) => {
         this.errorMessage = err.code;
-        console.log(this.errorMessage);
+        // console.log(this.errorMessage);
       },
     });
   }
@@ -197,7 +197,7 @@ logGoogleUser(acceptedUser: User) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/auth.user
         this.us.getUser(user.email ?? '', user.uid).then((activeUser) => {
-          console.log('activeUser:', activeUser);
+          // console.log('activeUser:', activeUser);
           this.us.loggedUser = activeUser;
           // console.log('loggedUser', this.us.loggedUser);
         }).catch((error) => {
@@ -207,7 +207,7 @@ logGoogleUser(acceptedUser: User) {
         // ...
       } else {
         // User is signed out
-        console.log('authState logged out', this.us.loggedUser, 'user variable', user);
+        // console.log('authState logged out', this.us.loggedUser, 'user variable', user);
         this.router.navigateByUrl('');
       }
     });

@@ -119,7 +119,7 @@ export class ChatComponent implements OnInit {
       .then(creatorUser => {
         if (creatorUser.userId == this.user.userId) {
           this.sendingUser = creatorUser;
-          console.log('this is the creatorUser', this.sendingUser)
+          // console.log('this is the creatorUser', this.sendingUser)
         }
         else {
           this.passiveUser = creatorUser;
@@ -130,7 +130,7 @@ export class ChatComponent implements OnInit {
       .then(recipientUser => {
         if (recipientUser.userId == this.user.userId) {
           this.sendingUser = recipientUser;
-          console.log('this is the recipientUser', this.passiveUser)
+          // console.log('this is the recipientUser', this.passiveUser)
         }
         else {
           this.passiveUser = recipientUser;
@@ -184,7 +184,7 @@ export class ChatComponent implements OnInit {
       .then(creatorUser => {
         if (creatorUser.userId == this.user.userId) {
           this.sendingUser = creatorUser;
-          console.log('this is the creatorUser', this.sendingUser)
+          // console.log('this is the creatorUser', this.sendingUser)
         }
         else {
           this.passiveUser = creatorUser;
@@ -195,7 +195,7 @@ export class ChatComponent implements OnInit {
       .then(recipientUser => {
         if (recipientUser.userId == this.user.userId) {
           this.sendingUser = recipientUser;
-          console.log('this is the recipientUser', this.passiveUser)
+          // console.log('this is the recipientUser', this.passiveUser)
         }
         else {
           this.passiveUser = recipientUser;
@@ -227,10 +227,10 @@ export class ChatComponent implements OnInit {
         this.filteredList = this.list.filter(message =>
           message.content.toLowerCase().includes(query.toLowerCase())
         );
-        console.log('filtered list:', this.filteredList);
+        // console.log('filtered list:', this.filteredList);
 
         this.list = this.filteredList;
-        console.log('list as filtered list:', this.list);
+        // console.log('list as filtered list:', this.list);
       } else {
         this.loadAllMessages();
         setTimeout(() => {
@@ -321,7 +321,7 @@ export class ChatComponent implements OnInit {
     this.fileUploadError = 'Das abschicken von leeren Nachrichten ist nicht möglich';
     setTimeout(() => {
       this.fileUploadError = null;
-      console.log(this.fileUploadError);
+      // console.log(this.fileUploadError);
     }, 2500);
   };
 
@@ -372,7 +372,7 @@ export class ChatComponent implements OnInit {
       reaction.messageId === convo.messageId && reaction.emoji === emoji && reaction.userId === userId
     );
     if (userAlreadyReacted) {
-      console.log('User has already reacted with this emoji');
+      // console.log('User has already reacted with this emoji');
       return true;
     }
     return false;
@@ -437,9 +437,9 @@ export class ChatComponent implements OnInit {
     message.content = updatedContent;
 
     this.databaseService.updateMessage(message, this.specific).then(() => {
-      console.log('Message updated successfully');
+      // console.log('Message updated successfully');
     }).catch(error => {
-      console.error('Error updating message: ', error);
+      // console.error('Error updating message: ', error);
     });
 
     this.loadAllMessages();
@@ -451,16 +451,16 @@ export class ChatComponent implements OnInit {
    */
   createOrOpenThread(message: ConversationMessage) {
     if (message.threadId !== '') {
-      console.log('Thread already exists');
+      // console.log('Thread already exists');
       this.databaseService.loadSpecificThread(message, this.sendingUser)
         .then(oldThread => {
-          console.log(oldThread);
+          // console.log(oldThread);
           this.openThread(oldThread);
         })
         .catch(error => console.error('Error loading thread:', error));
     } else {
       const thread: Thread = this.databaseService.createThread(message, this.sendingUser, this.passiveUser);
-      console.log(thread);
+      // console.log(thread);
       this.databaseService.addThread(thread)
       this.databaseService.updateMessageThreadId(thread)
       this.ngOnChanges();

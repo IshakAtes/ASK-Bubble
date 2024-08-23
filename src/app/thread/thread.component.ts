@@ -182,7 +182,6 @@ export class ThreadComponent {
    * loads all threadmessages from the conversation or channel mainmessage
    */
   loadAllMessages() {
-    // debugger
     if (this.channelThread) {
       this.loadChannelThreadMessages()
     }
@@ -276,9 +275,9 @@ export class ThreadComponent {
     this.edit.selectedMessageIdEdit = null;
     message.content = updatedContent;
     this.databaseService.updateThreadMessage(message, this.specific).then(() => {
-      console.log('Message updated successfully');
+      // console.log('Message updated successfully');
     }).catch(error => {
-      console.error('Error updating message: ', error);
+      // console.error('Error updating message: ', error);
     });
     this.loadAllMessages();
 }
@@ -366,7 +365,7 @@ displayEmptyContentError() {
   this.fileUploadError = 'Das abschicken von leeren Nachrichten ist nicht möglich';
   setTimeout(() => {
     this.fileUploadError = null;
-    console.log(this.fileUploadError);
+    // console.log(this.fileUploadError);
   }, 2500);
 };
 
@@ -514,9 +513,7 @@ closeThread(){
  */
 async saveNewMessageReaction(event: any, convo: ThreadMessage, userId: string, reactionbar?: string) {
   let emoji: string =  this.selectEmoji(reactionbar, event)
-  if (this.checkUserAlreadyReacted(convo, emoji, userId)) {console.log('User has already reacted with this emoji'); 
-    return;
-  }
+  if (this.checkUserAlreadyReacted(convo, emoji, userId)) { return;}
   this.reactions = [];
   let reaction = this.databaseService.createThreadMessageReaction(emoji, userId, this.user.name, convo);
   await this.databaseService.addThreadMessageReaction(this.specific, convo, reaction)
@@ -540,9 +537,7 @@ async saveNewMessageReaction(event: any, convo: ThreadMessage, userId: string, r
  */
 async saveNewChannelMessageReaction(event: any, convo: ChannelThreadMessage, userId: string, reactionbar ?: string) {    
   let emoji: string =  this.selectEmoji(reactionbar, event)
-  if (this.checkUserAlreadyReacted(convo, emoji, userId)) {console.log('User has already reacted with this emoji');
-    return;
-  }
+  if (this.checkUserAlreadyReacted(convo, emoji, userId)) {return;}
   this.reactions = [];
   let reaction = this.databaseService.createChannelThreadMessageReaction(emoji, userId, this.user.name, convo);
   await this.databaseService.addChannelThreadMessageReaction(this.currentChannel, convo, reaction)

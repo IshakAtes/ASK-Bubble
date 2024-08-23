@@ -68,7 +68,7 @@ export class DialogShowUserProfilComponent implements OnInit {
       } else {
         this.authService.currentUserSignal.set(null);
       }
-      console.log(this.authService.currentUserSignal());
+      // console.log(this.authService.currentUserSignal());
     })
   }
 
@@ -79,7 +79,7 @@ export class DialogShowUserProfilComponent implements OnInit {
 
 
   async editUser() {
-    console.log('editForm', this.myForm.value, 'userData after edit', this.userData);
+    // console.log('editForm', this.myForm.value, 'userData after edit', this.userData);
     // Erfasse das aktuelle Passwort nur, wenn die E-Mail geändert wurde
     const currentPassword: string | null = this.showPasswordInput ? this.userPassword : null;
   
@@ -111,20 +111,7 @@ export class DialogShowUserProfilComponent implements OnInit {
       this.editMode = false;
     }
   }
-  
-
-  // editUser() {
-  //   console.log('userData', this.userData);
-  //   this.authService.changeUserData(this.userData.avatarUrl, this.userData.name, this.userData.email);
-
-  //   // Hier können Sie die aktualisierten Benutzerdaten speichern, z.B. durch einen Service-Aufruf.
-  //   // this.database.updateUser(this.newData).subscribe(response => {
-  //   //   console.log('User updated successfully', response);
-  //   //   this.onClose();
-  //   // });
-  // }
-  
-  
+ 
 
   selectFile(event: Event): void {
     const input = event.target as HTMLInputElement;

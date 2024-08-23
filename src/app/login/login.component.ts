@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
   });
 
   constructor(private fb: FormBuilder, private router: Router, public us: UserService) {
-    console.log(this.us.loadAllUsers());
+    // console.log(this.us.loadAllUsers());
     this.hub.guestData = this.guestLog;
     this.us.wrongLogin = false;
     this.myForm = this.fb.group({
@@ -89,7 +89,7 @@ export class LoginComponent implements OnInit {
       try {
         this.authAsGuest();
       } catch (error) {
-        console.log('Kein Gastbenutzer gefunden, erstelle neuen Gastbenutzer');
+        // console.log('Kein Gastbenutzer gefunden, erstelle neuen Gastbenutzer');
         this.authService.register(this.guestLog.email, this.guestLog.name, this.guestPw);
       }
     } else {
@@ -108,7 +108,7 @@ export class LoginComponent implements OnInit {
       error: (err) => {
         this.errorMessage = err.code;
         this.authService.register(this.guestLog.email, this.guestLog.name, this.guestPw);
-        console.log(this.errorMessage);
+        // console.log(this.errorMessage);
       },
     });
 
@@ -125,7 +125,7 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => {
         this.errorMessage = err.code;
-        console.log(this.errorMessage);
+        // console.log(this.errorMessage);
       },
     });
   }

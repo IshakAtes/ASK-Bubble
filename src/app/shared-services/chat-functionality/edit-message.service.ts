@@ -25,7 +25,6 @@ export class EditMessageService {
   }
 
   editMessage(message: ConversationMessage | ChannelMessage | ThreadMessage | ChannelThreadMessage, thread?: string) {
-    debugger
     if (thread) {
       if ('threadMessageId' in message) {
       this.toggleMessageEdit(message.threadMessageId)

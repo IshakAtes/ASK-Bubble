@@ -52,7 +52,7 @@ export class DialogChooseAvatarComponent {
     .subscribe({
       next: (_response: any) => {
         // this.us.resetUserPw = '';
-        console.log('Userform Registered', this.us.userCache);
+        // console.log('Userform Registered', this.us.userCache);
       },
       error: (error: any) => {
         console.error(error);

@@ -50,7 +50,7 @@ export class DialogPasswordResetComponent {
     sendPasswordResetEmail(this.authService.firebaseAuth, email)
       .then(() => {
         // Password reset email sent!
-        console.log('Password reset email sent to ', email);
+        // console.log('Password reset email sent to ', email);
         this.emailSent = true;
         setTimeout(() => {
           this.emailSent = false;

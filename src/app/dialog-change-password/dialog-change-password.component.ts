@@ -26,7 +26,7 @@ export class DialogChangePasswordComponent implements OnInit {
 
   ngOnInit():void {
     this.userId = this.route.snapshot.paramMap.get('id');
-    console.log(this.userId);
+    // console.log(this.userId);
   }
 
 
@@ -46,7 +46,7 @@ export class DialogChangePasswordComponent implements OnInit {
         this.router.navigate(['/']);
       }, 2000);
     } else {
-      console.log('Form not valid');
+      // console.log('Form not valid');
     }
   }
 }

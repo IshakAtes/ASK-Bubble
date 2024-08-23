@@ -49,7 +49,6 @@ export class MainComponent{
   constructor(public userservice: UserService, public database: DatabaseService){
     userservice.getDeviceWidth();
     this.authService.checkUserStatus();
-    console.log(this.authService.checkUserStatus());
   }
 
 

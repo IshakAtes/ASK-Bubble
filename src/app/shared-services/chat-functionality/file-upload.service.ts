@@ -30,7 +30,6 @@ export class FileUploadService {
   fileUploadingThread: boolean = false;
 
   onFileSelected(event: any, user: User, chat: Conversation | Channel | Thread | ChannelThread, thread?: string) {
-    // debugger;
     const selectedFile: File = event.target.files[0];
     if (thread) {
       this.uploadFile(selectedFile, user, chat, thread);
@@ -38,11 +37,10 @@ export class FileUploadService {
       this.uploadFile(selectedFile, user, chat);
     }
 
-    console.log(selectedFile);
+    // console.log(selectedFile);
   }
 
   async uploadFile(file: File, user: User, chat: Conversation | Channel | Thread | ChannelThread, thread?: string) {
-    debugger;
     const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif'];
     const maxSize = 500 * 1024; // 500 KB
 
@@ -77,10 +75,10 @@ export class FileUploadService {
           this.fileUploading = true;
         }
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Loading progress:', progress);
+        // console.log('Loading progress:', progress);
       },
       (error) => {
-        console.error('Error while loading:', error);
+        // console.error('Error while loading:', error);
         if (thread) {
           this.fileUploadErrorSubjectThread.next('Fehler beim Hochladen der Datei.');
         } else {
@@ -88,9 +86,9 @@ export class FileUploadService {
         }
       },
       async () => {
-        console.log("Die Datei wurde erfolgreich hochgeladen!");
+        // console.log("Die Datei wurde erfolgreich hochgeladen!");
         const url = await getDownloadURL(fileRef);
-        console.log("URL: ", url);
+        // console.log("URL: ", url);
 
         if (thread) {
           this.fileUploadingThread = false;
@@ -117,23 +115,22 @@ export class FileUploadService {
   }
 
   async deletePreview(thread?: string) {
-    //debugger;
     if (this.downloadURL || this.downloadURLThread) {
       try {
 
         if (thread) {
           const fileRef = ref(this.storage, this.downloadURLThread);
           await deleteObject(fileRef);
-          console.log("Die Datei wurde erfolgreich gelöscht!");
+          // console.log("Die Datei wurde erfolgreich gelöscht!");
           this.downloadURLThread = '';
         } else {
           const fileRef = ref(this.storage, this.downloadURL);
           await deleteObject(fileRef);
-          console.log("Die Datei wurde erfolgreich gelöscht!");
+          // console.log("Die Datei wurde erfolgreich gelöscht!");
           this.downloadURL = '';
         }
       } catch (error) {
-        console.error('Fehler beim Löschen der Datei:', error);
+        // console.error('Fehler beim Löschen der Datei:', error);
         if (thread) {
           this.fileUploadErrorSubjectThread.next('Fehler beim Hochladen der Datei.');
         } else {
@@ -141,7 +138,7 @@ export class FileUploadService {
         }
       }
     } else {
-      console.log("Keine Datei zum Löschen gefunden.");
+      // console.log("Keine Datei zum Löschen gefunden.");
     }
   }
 

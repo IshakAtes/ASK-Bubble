@@ -60,8 +60,6 @@ export class HeaderComponent  {
     });
     dialogRef.afterClosed().subscribe((conversation) => {
       if(conversation){
-        console.log('Header: active user own conversation:')
-        console.log(this.us.activeUserOwnConversation)
         this.openOwnConversation.emit(conversation)
 
       }

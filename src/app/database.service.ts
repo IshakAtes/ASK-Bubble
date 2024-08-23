@@ -65,7 +65,6 @@ export class DatabaseService {
     const randomNumber = Math.random();
     channel.createdAt = new Date();
     channel.createdBy = createdBy;
-    debugger;
     if(channel.description == undefined){
       channel.description = ' ';
     }
@@ -418,8 +417,7 @@ export class DatabaseService {
     updateMessageChannelThreadId(thread: ChannelThread, channel: Channel) {
       let channelThreadObject = new ChannelThread(thread);
       channel.membersId.forEach(user => {
-        updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/' + thread.channelId + '/channelmessages'), thread.messageId), channelThreadObject.toJSON())
-        .catch(error => console.log('this error:', error));
+        updateDoc(doc(collection(this.firestore, 'users/' + user + '/channels/' + thread.channelId + '/channelmessages'), thread.messageId), channelThreadObject.toJSON());
       })
     }
 
@@ -537,24 +535,14 @@ export class DatabaseService {
       updateMessageChannelThreadCountAndThreadTime(threadMessage: ChannelThreadMessage, channel: Channel, count: number, timestamp: Timestamp, ) {
         channel.membersId.forEach(userid => {
           let docRef = doc(this.firestore, 'users/' + userid + '/channels/' + threadMessage.channelId + '/channelmessages/' + threadMessage.messageId);
-
-          console.log('user: ', userid);
-          console.log('converter: ', docRef.converter);
-          console.log('firestore: ', docRef.firestore);
-          console.log('docID: ', docRef.id);
-          console.log('parent: ', docRef.parent);
-          console.log('path: ', docRef.path);
-          console.log('type: ', docRef.type);
-         
-
           updateDoc(docRef, {threadMessageCount: count, lastThreadMessage: timestamp })
             .then(() => {
-              console.log('Message updated successfully for users: ', userid);
+              // console.log('Message updated successfully for users: ', userid);
           })
           .catch((error) => { //HttpErrorResponse
              if(error.code === 'not-found'){
-              console.log(error.code)
-              console.log('Message not updated successfully for users: ', userid);
+              // console.log(error.code)
+              // console.log('Message not updated successfully for users: ', userid);
             }
           })
 
@@ -653,7 +641,6 @@ export class DatabaseService {
    */
   addChannel(channel: Channel) {
     let channelObject = new Channel(channel)
-    debugger;
     channel.membersId.forEach(userId => {
       setDoc(doc(this.firestore, 'users/' + userId + '/channels', channel.channelId), channelObject.toJSON());
     });
@@ -1452,9 +1439,9 @@ export class DatabaseService {
       updateDoc(creatorMessageRef, { threadId: thread.threadId }),
       updateDoc(recipientMessageRef, { threadId: thread.threadId })
     ]).then(() => {
-      console.log('Message updated successfully for both users');
+      // console.log('Message updated successfully for both users');
     }).catch(error => {
-      console.error('Error updating message: ', error);
+      // console.error('Error updating message: ', error);
     });
 
   }
@@ -1482,9 +1469,9 @@ export class DatabaseService {
       updateDoc(creatorMessageRef, { content: message.content }),
       updateDoc(recipientMessageRef, { content: message.content })
     ]).then(() => {
-      console.log('Message updated successfully for both users');
+      // console.log('Message updated successfully for both users');
     }).catch(error => {
-      console.error('Error updating message: ', error);
+      // console.error('Error updating message: ', error);
     });
   }
 
@@ -1526,9 +1513,9 @@ export class DatabaseService {
         updateDoc(creatorMessageRef, { content: threadMessage.content }),
         updateDoc(recipientMessageRef, { content: threadMessage.content })
       ]).then(() => {
-        console.log('Message updated successfully for both users');
+        // console.log('Message updated successfully for both users');
       }).catch(error => {
-        console.error('Error updating message: ', error);
+        // console.error('Error updating message: ', error);
       });
     }
 
@@ -1555,9 +1542,9 @@ export class DatabaseService {
           updateDoc(creatorMessageRef, { lastThreadMessage: timestamp }),
           updateDoc(recipientMessageRef, { lastThreadMessage: timestamp }),
         ]).then(() => {
-          console.log('Message updated successfully for both users');
+          // console.log('Message updated successfully for both users');
         }).catch(error => {
-          console.error('Error updating message: ', error);
+          // console.error('Error updating message: ', error);
         });
       }
 

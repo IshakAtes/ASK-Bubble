@@ -122,7 +122,7 @@ export class ChannelComponent implements OnInit {
       ]).then(() => {
         this.initializeChannel();
       }).catch(error => {
-        console.log('this ', error)
+        // console.log('this ', error)
       });
     }, 500);
   }
@@ -156,7 +156,7 @@ export class ChannelComponent implements OnInit {
         ]).then(() => {
           this.reload = false;
           this.initializeChannelAfterChange()
-        }).catch(error => { console.log('this ', error) });
+        }).catch(error => { /* console.log('this ', error)*/ });
       }, 1000);
     }
     if (changes!= undefined && changes!['filterQuery']) {
@@ -187,10 +187,9 @@ export class ChannelComponent implements OnInit {
         this.filteredMessageList = this.messageList.filter(message =>
           message.content.toLowerCase().includes(query.toLowerCase())
         );
-        console.log('filtered list:', this.filteredMessageList);
-  
+        // console.log('filtered list:', this.filteredMessageList);
         this.messageList = this.filteredMessageList;
-        console.log('list as filtered list:', this.messageList);
+        // console.log('list as filtered list:', this.messageList);
       } else {
         this.loadChannelMessages();
         setTimeout(() => {
@@ -315,7 +314,7 @@ export class ChannelComponent implements OnInit {
     this.fileUploadError = 'Das abschicken von leeren Nachrichten ist nicht möglich';
     setTimeout(() => {
       this.fileUploadError = null;
-      console.log(this.fileUploadError);
+      // console.log(this.fileUploadError);
     }, 2500);
   };
 
@@ -332,7 +331,7 @@ export class ChannelComponent implements OnInit {
     let emoji: string
     if (reactionbar) { emoji = reactionbar } else { emoji = event.emoji.native }
     const userAlreadyReacted = this.reactions.some(reaction => reaction.messageId === message.messageId && reaction.emoji === emoji && reaction.userId === userId);
-    if (userAlreadyReacted) { console.log('User has already reacted with this emoji'); return; }
+    if (userAlreadyReacted) {return;}
     await this.createAndSaveChannelReaction(message, emoji, userId);
     setTimeout(() => { this.chatService.groupReactions(this.messageList) }, 500);
     this.chatService.checkIfEmojiIsAlreadyInUsedLastEmojis(this.activeUser, emoji, userId);
