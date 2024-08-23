@@ -46,6 +46,7 @@ export class ChatComponent implements OnInit {
 
   allUsers = [] as Array<User>;
   list: Array<ConversationMessage> = [];
+  list$: Observable<Array<ConversationMessage>>;
   allChannels: Array<Channel> = [];
   reactions: Array<Reaction> = [];
   filteredList: Array<ConversationMessage> = [];
@@ -108,6 +109,7 @@ export class ChatComponent implements OnInit {
      */
   ngOnInit() {
     this.isChatDataLoaded = false;
+    this.list$ = this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId);
 
     /*
     this.loadAllMessages().then(() => {
@@ -207,10 +209,10 @@ export class ChatComponent implements OnInit {
     this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.user.userId);
 
     //schauen ob das Doppelladen Problem dadruch behoben wird 
-    this.list = [];
-    this.loadAllMessages().then(() => {
+    // this.list = [];
+    // this.loadAllMessages().then(() => {
       this.initializeChatAfterChange();
-    })
+    // })
 
     if (changes != undefined && changes!['filterQuery']) {
       this.filterMessages(this.filterQuery);
@@ -232,7 +234,7 @@ export class ChatComponent implements OnInit {
         this.list = this.filteredList;
         // console.log('list as filtered list:', this.list);
       } else {
-        this.loadAllMessages();
+        // this.loadAllMessages();
         setTimeout(() => {
           this.scrollToBottom();
         }, 10);
@@ -265,12 +267,12 @@ export class ChatComponent implements OnInit {
    * Loads all messages of the conversation
    * @returns an array with all messages of the conversation
    */
-  loadAllMessages(): Promise<void> {
-    return this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId).then(messageList => {
-      this.list = messageList;
-      this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-    });
-  }
+  // loadAllMessages(): Promise<void> {
+  //   return this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId).then(messageList => {
+  //     this.list = messageList;
+  //     this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+  //   });
+  // }
 
 
   /**
@@ -291,24 +293,43 @@ export class ChatComponent implements OnInit {
   /**
    * saves the new message into the database and displays it in the chat area
    */
+  // saveNewMessage() {
+  //   if (this.content == '' && this.fileUpload.downloadURL == '') {
+  //     this.displayEmptyContentError();
+  //   } else {
+  //     this.list = [];
+  //     let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specific, this.content, this.user.userId, this.fileUpload.downloadURL)
+
+  //     this.databaseService.addConversationMessage(this.specific, newMessage)
+
+  //     this.content = '';
+  //     const newContent = '';
+  //     this.mAndC.content.next(newContent);
+  //     this.loadAllMessages()
+
+  //     setTimeout(() => {
+  //       this.scrollToBottom();
+  //     }, 10);
+
+  //     this.fileUpload.downloadURL = '';
+  //   }
+  // }
+
   saveNewMessage() {
     if (this.content == '' && this.fileUpload.downloadURL == '') {
       this.displayEmptyContentError();
     } else {
-      this.list = [];
-      let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specific, this.content, this.user.userId, this.fileUpload.downloadURL)
-
-      this.databaseService.addConversationMessage(this.specific, newMessage)
-
+      let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specific, this.content, this.user.userId, this.fileUpload.downloadURL);
+      this.databaseService.addConversationMessage(this.specific, newMessage);
+  
       this.content = '';
       const newContent = '';
       this.mAndC.content.next(newContent);
-      this.loadAllMessages()
-
+  
       setTimeout(() => {
         this.scrollToBottom();
       }, 10);
-
+  
       this.fileUpload.downloadURL = '';
     }
   }
@@ -442,7 +463,7 @@ export class ChatComponent implements OnInit {
       // console.error('Error updating message: ', error);
     });
 
-    this.loadAllMessages();
+    // this.loadAllMessages();
   }
 
   /**

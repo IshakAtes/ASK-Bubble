@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, onSnapshot } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, onSnapshot, collectionData } from '@angular/fire/firestore';
 import { User } from '../models/user.class';
 import { Channel } from '../models/channel.class';
 import { Conversation } from '../models/conversation.class';
@@ -15,6 +15,7 @@ import { ThreadMessage } from '../models/threadMessage';
 import { ChannelThread } from '../models/channelThread.class';
 import { ChannelThreadMessage } from '../models/channelThreadMessage';
 import { HttpClient } from '@angular/common/http';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -1275,35 +1276,56 @@ export class DatabaseService {
   }
 
 
-  /**
-   * loads all messages of a specific conversation
-   * @param userId user id
-   * @param conversationId conversation id
-   * @returns list of conversation messages
-   */
-  loadConversationMessages(userId: string, conversationId: string): Promise<Array<ConversationMessage>> {
-    return new Promise<Array<ConversationMessage>>((resolve, reject) => {
-      const messageList = [] as Array<ConversationMessage>
-      onSnapshot(collection(this.firestore, 'users/' + userId + '/conversations/' + conversationId + '/conversationmessages'), (messages) => {
-        messages.forEach(message => {
-          const messageData = message.data();
-          const messageObject = {} as ConversationMessage;
-          messageObject.conversationId = messageData['conversationId'];
-          messageObject.content = messageData['content'];
-          messageObject.createdAt = messageData['createdAt'];
-          messageObject.createdBy = messageData['createdBy'];
-          messageObject.fileUrl = messageData['fileUrl'];
-          messageObject.threadId = messageData['threadId'];
-          messageObject.messageId = messageData['messageId'];
-          messageObject.threadMessageCount = messageData['threadMessageCount'];
-          messageObject.lastThreadMessage = messageData['lastThreadMessage'];
-          messageList.push(messageObject);
-        })
-        resolve(messageList);
-      }, (error) => {
-        reject(error)
-      })
-    })
+  // /**
+  //  * loads all messages of a specific conversation
+  //  * @param userId user id
+  //  * @param conversationId conversation id
+  //  * @returns list of conversation messages
+  //  */
+  // loadConversationMessages(userId: string, conversationId: string): Promise<Array<ConversationMessage>> {
+  //   return new Promise<Array<ConversationMessage>>((resolve, reject) => {
+  //     const messageList = [] as Array<ConversationMessage>
+      // onSnapshot(collection(this.firestore, 'users/' + userId + '/conversations/' + conversationId + '/conversationmessages'), (messages) => {
+  //       messages.forEach(message => {
+  //         const messageData = message.data();
+  //         const messageObject = {} as ConversationMessage;
+  //         messageObject.conversationId = messageData['conversationId'];
+  //         messageObject.content = messageData['content'];
+  //         messageObject.createdAt = messageData['createdAt'];
+  //         messageObject.createdBy = messageData['createdBy'];
+  //         messageObject.fileUrl = messageData['fileUrl'];
+  //         messageObject.threadId = messageData['threadId'];
+  //         messageObject.messageId = messageData['messageId'];
+  //         messageObject.threadMessageCount = messageData['threadMessageCount'];
+  //         messageObject.lastThreadMessage = messageData['lastThreadMessage'];
+  //         messageList.push(messageObject);
+  //       })
+  //       resolve(messageList);
+  //     }, (error) => {
+  //       reject(error)
+  //     })
+  //   })
+  // }
+
+
+  loadConversationMessages(userId: string, conversationId: string): Observable<Array<ConversationMessage>> {
+    const messagesRef = collection(this.firestore, `users/${userId}/conversations/${conversationId}/conversationmessages`);
+    return collectionData(messagesRef).pipe(
+      map(messages => messages.map(messageData => {
+        return {
+          conversationId: messageData['conversationId'],
+          content: messageData['content'],
+          createdAt: messageData['createdAt'],
+          createdBy: messageData['createdBy'],
+          fileUrl: messageData['fileUrl'],
+          threadId: messageData['threadId'],
+          messageId: messageData['messageId'],
+          threadMessageCount: messageData['threadMessageCount'],
+          lastThreadMessage: messageData['lastThreadMessage']
+        } as ConversationMessage;
+      })),
+      map(messages => messages.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis()))
+    );
   }
 
 

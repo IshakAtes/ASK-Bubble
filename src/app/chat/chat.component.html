@@ -27,7 +27,8 @@
             </div>
         </div>
 
-        @if (list.length>0) {
+        <!-- @if (list.length>0) { -->
+        @if (list$ | async; as list) {
 
         <div #chatArea class="chat-area">
             <div class="time-separator">
@@ -37,7 +38,8 @@
                 <div class="line"></div>
             </div>
 
-            @for (message of list; track $index) {
+            <!-- @for (message of list; track $index) { -->
+            @for (message of list; track message.messageId) {
             @if ($index > 0) {
             @if (time.formatDate(time.formatTimestamp(list[$index].createdAt)) !=
             time.formatDate(time.formatTimestamp(list[$index-1].createdAt)))
