@@ -122,7 +122,7 @@
                     }
 
 
-                    <div class="reaction-bar">
+                    <!-- <div class="reaction-bar">
                         @for (reaction of groupedReactions.get(message.messageId); track $index) {
                         <div class="emoji-div" (mouseenter)="chat.showTooltip(reaction)"
                             (mouseleave)="chat.hideTooltip()">
@@ -136,8 +136,27 @@
                             </div>
                             }
                         </div>
+                        } 
+                    </div>-->
+
+                    <div class="reaction-bar">
+                        @if (list$ | async; as list) {
+                          @for (reaction of groupedReactions.get(message.messageId); track $index) {
+                            <div class="emoji-div" (mouseenter)="chat.showTooltip(reaction)"
+                                (mouseleave)="chat.hideTooltip()">
+                              {{ reaction.emoji }} {{ reaction.count }}
+                      
+                              @if (chat.emojiInfoVisible && chat.hoveredReaction === reaction) {
+                                <div class="emoji-info">
+                                  <div class="emojo-info-emoji-div">{{ reaction.emoji }}</div>
+                                  <div class="emojo-info-user-div">{{ chat.getReactionUser(reaction.users) }}</div>
+                                  <div class="emojo-info-text-div">{{ chat.getReactionText(reaction.users) }}</div>
+                                </div>
+                              }
+                            </div>
+                          }
                         }
-                    </div>
+                      </div>
 
                     @if(message.threadMessageCount > 0){
                     <div class="own-answer-bar">
@@ -167,9 +186,9 @@
                 <div class="reactionbar">
                     @if (passiveUser.usedLastTwoEmojis) {
                     <div (click)="saveNewMessageReaction($event, message, user.userId, user.usedLastTwoEmojis[0])"
-                        class="reactionbar-emoji-div">{{passiveUser.usedLastTwoEmojis[0]}}</div>
+                        class="reactionbar-emoji-div">{{user.usedLastTwoEmojis[0]}}</div>
                     <div (click)="saveNewMessageReaction($event, message, user.userId, user.usedLastTwoEmojis[1])"
-                        class="reactionbar-emoji-div">{{passiveUser.usedLastTwoEmojis[1]}}</div>
+                        class="reactionbar-emoji-div">{{user.usedLastTwoEmojis[1]}}</div>
                     }
                     @else {
                     <img src="../../assets/img/reactionbar_add_reaction.png" alt="">

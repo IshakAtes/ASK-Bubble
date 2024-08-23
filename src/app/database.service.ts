@@ -1336,29 +1336,44 @@ export class DatabaseService {
    * @param conversationMessageId message id
    * @returns list of reactions of a conversation message
    */
-  loadConversationMessagesReactions(userId: string, conversationId: string, conversationMessageId: string): Promise<Array<Reaction>> {
-    return new Promise<Array<Reaction>>((resolve, reject) => {
-      const reactionList = [] as Array<Reaction>;
-      const path = `users/${userId}/conversations/${conversationId}/conversationmessages/${conversationMessageId}/reactions`;
-      const reactionsCollection = collection(this.firestore, path);
+  // loadConversationMessagesReactions(userId: string, conversationId: string, conversationMessageId: string): Promise<Array<Reaction>> {
+  //   return new Promise<Array<Reaction>>((resolve, reject) => {
+  //     const reactionList = [] as Array<Reaction>;
+  //     const path = `users/${userId}/conversations/${conversationId}/conversationmessages/${conversationMessageId}/reactions`;
+  //     const reactionsCollection = collection(this.firestore, path);
 
-      onSnapshot(reactionsCollection, (snapshot) => {
-        snapshot.forEach((doc) => {
-          const reactionData = doc.data();
-          const reactionObject = {
-            emoji: reactionData['emoji'],
-            messageId: reactionData['messageId'],
-            reactionId: reactionData['reactionId'],
-            userId: reactionData['userId'],
-            userName: reactionData['userName'],
-          } as Reaction;
-          reactionList.push(reactionObject);
-        });
-        resolve(reactionList);
-      }, (error) => {
-        reject(error);
-      });
-    });
+  //     onSnapshot(reactionsCollection, (snapshot) => {
+  //       snapshot.forEach((doc) => {
+  //         const reactionData = doc.data();
+  //         const reactionObject = {
+  //           emoji: reactionData['emoji'],
+  //           messageId: reactionData['messageId'],
+  //           reactionId: reactionData['reactionId'],
+  //           userId: reactionData['userId'],
+  //           userName: reactionData['userName'],
+  //         } as Reaction;
+  //         reactionList.push(reactionObject);
+  //       });
+  //       resolve(reactionList);
+  //     }, (error) => {
+  //       reject(error);
+  //     });
+  //   });
+  // }
+
+  loadConversationMessagesReactions(userId: string, conversationId: string, conversationMessageId: string): Observable<Array<Reaction>> {
+    const path = `users/${userId}/conversations/${conversationId}/conversationmessages/${conversationMessageId}/reactions`;
+    const reactionsCollection = collection(this.firestore, path);
+    
+    return collectionData(reactionsCollection).pipe(
+      map(reactions => reactions.map(reactionData => ({
+        emoji: reactionData['emoji'],
+        messageId: reactionData['messageId'],
+        reactionId: reactionData['reactionId'],
+        userId: reactionData['userId'],
+        userName: reactionData['userName'],
+      } as Reaction)))
+    );
   }
 
 

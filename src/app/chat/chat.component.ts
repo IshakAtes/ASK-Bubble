@@ -14,7 +14,7 @@ import { TimeFormatingService } from '../shared-services/chat-functionality/time
 import { MentionAndChannelDropdownService } from '../shared-services/chat-functionality/mention-and-channel-dropdown.service';
 import { EditMessageService } from '../shared-services/chat-functionality/edit-message.service';
 import { FileUploadService } from '../shared-services/chat-functionality/file-upload.service';
-import { Observable } from 'rxjs';
+import { combineLatest, map, Observable, switchMap, take, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { GeneralChatService } from '../shared-services/chat-functionality/general-chat.service';
 import { Thread } from '../../models/thread.class';
@@ -45,8 +45,9 @@ export class ChatComponent implements OnInit {
 
 
   allUsers = [] as Array<User>;
-  list: Array<ConversationMessage> = [];
+  // list: Array<ConversationMessage> = [];
   list$: Observable<Array<ConversationMessage>>;
+  private originalList$: Observable<Array<ConversationMessage>>;
   allChannels: Array<Channel> = [];
   reactions: Array<Reaction> = [];
   filteredList: Array<ConversationMessage> = [];
@@ -110,6 +111,8 @@ export class ChatComponent implements OnInit {
   ngOnInit() {
     this.isChatDataLoaded = false;
     this.list$ = this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId);
+    this.originalList$ = this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId);
+    this.list$ = this.originalList$;
 
     /*
     this.loadAllMessages().then(() => {
@@ -166,10 +169,24 @@ export class ChatComponent implements OnInit {
     this.passiveUser = new User()
 
     /*reset reactions and set reactions to observable to avoid double loading reactions*/
-    this.chat.reactions = [];
-    this.reactions = this.chat.reactions;
-    this.chat.groupedReactions$.subscribe(groupedReactions => { this.groupedReactions = groupedReactions; });
+    // this.chat.reactions = [];
+    // this.reactions = this.chat.reactions;
+    // this.chat.groupedReactions$.subscribe(groupedReactions => { this.groupedReactions = groupedReactions; });
 
+    this.loadAllMessageReactions();
+    this.list$.pipe(take(1)).subscribe(list => {
+      setTimeout(() => {
+        this.chat.groupReactions(list)
+          .then(() => {
+            this.changeReload();
+            this.isChatDataLoaded = true;
+            setTimeout(() => {
+              this.scrollToBottom();
+              this.setFocus();
+            }, 1000);
+          });
+      }, 1000);
+    });
 
     //defining passiveUser if specific = ConversationWithSelf
     if (this.specific.createdBy == this.specific.recipientId) {
@@ -211,7 +228,7 @@ export class ChatComponent implements OnInit {
     //schauen ob das Doppelladen Problem dadruch behoben wird 
     // this.list = [];
     // this.loadAllMessages().then(() => {
-      this.initializeChatAfterChange();
+    this.initializeChatAfterChange();
     // })
 
     if (changes != undefined && changes!['filterQuery']) {
@@ -223,23 +240,39 @@ export class ChatComponent implements OnInit {
      * searches for already sent messages
      * @param query the content of the searchbar
      */
-  filterMessages(query: string): void {
-    setTimeout(() => {
-      if (query) {
-        this.filteredList = this.list.filter(message =>
-          message.content.toLowerCase().includes(query.toLowerCase())
-        );
-        // console.log('filtered list:', this.filteredList);
+  // filterMessages(query: string): void {
+  //   setTimeout(() => {
+  //     if (query) {
+  //       this.filteredList = this.list.filter(message =>
+  //         message.content.toLowerCase().includes(query.toLowerCase())
+  //       );
+  //       // console.log('filtered list:', this.filteredList);
 
-        this.list = this.filteredList;
-        // console.log('list as filtered list:', this.list);
-      } else {
-        // this.loadAllMessages();
-        setTimeout(() => {
-          this.scrollToBottom();
-        }, 10);
-      }
-    }, 1300);
+  //       this.list = this.filteredList;
+  //       // console.log('list as filtered list:', this.list);
+  //     } else {
+  //       // this.loadAllMessages();
+  //       setTimeout(() => {
+  //         this.scrollToBottom();
+  //       }, 10);
+  //     }
+  //   }, 1300);
+  // }
+
+  filterMessages(query: string): void {
+    if (query) {
+      this.list$ = this.originalList$.pipe(
+        map(list => list.filter(message =>
+          message.content.toLowerCase().includes(query.toLowerCase())
+        ))
+      );
+    } else {
+      this.list$ = this.originalList$;
+    }
+  
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 10);
   }
 
 
@@ -250,15 +283,15 @@ export class ChatComponent implements OnInit {
   initializeChatAfterChange() {
     this.loadAllMessageReactions();
     setTimeout(() => {
-      this.chat.groupReactions(this.list)
-        .then(() => {
-          this.changeReload();
-          this.isChatDataLoaded = true;
-          setTimeout(() => {
-            this.scrollToBottom();
-            this.setFocus();
-          }, 1000);
-        });
+      // this.chat.groupReactions(this.list)
+      // .then(() => {
+      this.changeReload();
+      this.isChatDataLoaded = true;
+      setTimeout(() => {
+        this.scrollToBottom();
+        this.setFocus();
+      }, 1000);
+      // });
     }, 1000);
   }
 
@@ -278,15 +311,45 @@ export class ChatComponent implements OnInit {
   /**
    * loads all message reactions and groups them after DOM is loaded
    */
+  // loadAllMessageReactions() {
+  //   for (let i = 0; i < this.list.length; i++) {
+  //     const list = this.list[i];
+  //     this.databaseService.loadConversationMessagesReactions(this.user.userId, this.specific.conversationId, list.messageId).then(reaction => {
+  //       reaction.forEach(reaction => {
+  //         this.reactions.push(reaction)
+  //       });
+  //     })
+  //   }
+  // }
+  // loadAllMessageReactions() {
+  //   this.list$.pipe(take(1)).subscribe(list => {
+  //     const reactionPromises = list.map(message => 
+  //       this.databaseService.loadConversationMessagesReactions(this.user.userId, this.specific.conversationId, message.messageId)
+  //     );
+
+  //     Promise.all(reactionPromises).then(reactionLists => {
+  //       this.reactions = reactionLists.flat();
+  //       this.chat.reactions = this.reactions;
+  //       this.chat.groupReactions(list);
+  //     });
+  //   });
+  // }
+
   loadAllMessageReactions() {
-    for (let i = 0; i < this.list.length; i++) {
-      const list = this.list[i];
-      this.databaseService.loadConversationMessagesReactions(this.user.userId, this.specific.conversationId, list.messageId).then(reaction => {
-        reaction.forEach(reaction => {
-          this.reactions.push(reaction)
-        });
+    this.list$.pipe(
+      switchMap(list => {
+        const reactionObservables = list.map(message =>
+          this.databaseService.loadConversationMessagesReactions(this.user.userId, this.specific.conversationId, message.messageId)
+        );
+        return combineLatest(reactionObservables);
       })
-    }
+    ).subscribe(reactionLists => {
+      this.reactions = reactionLists.flat();
+      this.chat.reactions = this.reactions;
+      this.list$.pipe(take(1)).subscribe(list => {
+        this.chat.groupReactions(list);
+      });
+    });
   }
 
 
@@ -321,15 +384,15 @@ export class ChatComponent implements OnInit {
     } else {
       let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specific, this.content, this.user.userId, this.fileUpload.downloadURL);
       this.databaseService.addConversationMessage(this.specific, newMessage);
-  
+
       this.content = '';
       const newContent = '';
       this.mAndC.content.next(newContent);
-  
+
       setTimeout(() => {
         this.scrollToBottom();
       }, 10);
-  
+
       this.fileUpload.downloadURL = '';
     }
   }
@@ -355,12 +418,37 @@ export class ChatComponent implements OnInit {
    * @param reactionbar infos about the last two used emoji
    * @returns returns nothing if the user already used the selected emoji
    */
+  // async saveNewMessageReaction(event: any, convo: ConversationMessage, userId: string, reactionbar?: string) {
+  //   let emoji: string
+  //   if (reactionbar) {
+  //     emoji = reactionbar
+  //   } else {
+  //     emoji = event.emoji.native
+  //   }
+
+  //   const userAlreadyReacted = await this.userHasAlreadyReacted(convo, emoji, userId);
+  //   if (userAlreadyReacted) {
+  //     return;
+  //   }
+
+  //   await this.createAndSaveReaction(convo, emoji, userId);
+
+  //   setTimeout(() => {
+  //     this.chat.groupReactions(this.list)
+  //   }, 500);
+
+  //   this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
+  //   this.mAndC.loadUsersOfUser();
+  //   this.mAndC.loadChannlesofUser()
+  //   this.mAndC.selectedMessageId = null;
+  // }
+
   async saveNewMessageReaction(event: any, convo: ConversationMessage, userId: string, reactionbar?: string) {
-    let emoji: string
+    let emoji: string;
     if (reactionbar) {
-      emoji = reactionbar
+      emoji = reactionbar;
     } else {
-      emoji = event.emoji.native
+      emoji = event.emoji.native;
     }
 
     const userAlreadyReacted = await this.userHasAlreadyReacted(convo, emoji, userId);
@@ -370,16 +458,20 @@ export class ChatComponent implements OnInit {
 
     await this.createAndSaveReaction(convo, emoji, userId);
 
-    setTimeout(() => {
-      this.chat.groupReactions(this.list)
-    }, 500);
+    // Aktualisieren Sie die Reaktionen
+    this.loadAllMessageReactions();
+
+    this.list$.pipe(take(1)).subscribe(list => {
+      setTimeout(() => {
+        this.chat.groupReactions(list);
+      }, 500);
+    });
 
     this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
     this.mAndC.loadUsersOfUser();
-    this.mAndC.loadChannlesofUser()
+    this.mAndC.loadChannlesofUser();
     this.mAndC.selectedMessageId = null;
   }
-
 
   /**
    * checks if the user has already reacted with the emoji
@@ -429,13 +521,13 @@ export class ChatComponent implements OnInit {
    * Scroll to the bottom of the chatarea 
    */
   scrollToBottom(): void {
-    try {
-      if (this.list.length > 0) {
-        this.lastDiv.nativeElement.scrollIntoView();
-      }
-    } catch (err) {
-      console.error('Scroll to bottom failed', err);
-    }
+    // try {
+    // if (this.list.length > 0) {
+    this.lastDiv.nativeElement.scrollIntoView();
+    //   }
+    // } catch (err) {
+    //   console.error('Scroll to bottom failed', err);
+    // }
   }
 
 
