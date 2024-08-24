@@ -1,7 +1,7 @@
 @import url(../app.component.scss);
 
 .main-chat {
-    height: 940px;
+    height: 85vh;//940px;
     width: 51vw;
     min-width: 430px;
     max-width: 95vw; //1450px;
@@ -66,7 +66,7 @@
 
 
 .chat-area {
-    height: 550px;
+    height: 43vh;
     overflow-y: scroll;
 }
 
