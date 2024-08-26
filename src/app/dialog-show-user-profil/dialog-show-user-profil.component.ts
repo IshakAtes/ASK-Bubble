@@ -38,18 +38,13 @@ export class DialogShowUserProfilComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.userData = data.user;
-    // this.myForm = this.fb.group({
-    //   name: [this.userData.name, [Validators.minLength(6)]],
-    //   email: [this.userData.email, [Validators.email]],
-    //   password: ['', [Validators.maxLength(6)]]
-    // });
   }
 
 
   ngOnInit() {
     this.myForm = this.fb.group({
-      name: [this.userData.name, [Validators.minLength(6)]],
-      email: [this.userData.email, [Validators.email]],
+      name: [this.userData.name, [Validators.required, Validators.minLength(6)]],
+      email: [this.userData.email, [Validators.required, Validators.email]],
       password: ['', [Validators.minLength(6)]]
     });
     this.authService.activeUser?.subscribe((user) => {
@@ -73,45 +68,53 @@ export class DialogShowUserProfilComponent implements OnInit {
   }
 
   onEmailChange(): void {
-    this.showPasswordInput = this.userData.email !== this.myForm.value.email;
+    this.showPasswordInput = this.userData.email !== this.myForm.get('email')?.value;
   }
 
 
 
   async editUser() {
-    // console.log('editForm', this.myForm.value, 'userData after edit', this.userData);
-    // Erfasse das aktuelle Passwort nur, wenn die E-Mail geändert wurde
-    const currentPassword: string | null = this.showPasswordInput ? this.userPassword : null;
+    if (this.myForm.valid) {
+      const formData = this.myForm.value;
+      const currentPassword: string | null = this.showPasswordInput ? this.userPassword : null;
   
-    if (currentPassword === '') {
-      alert('Falsches Passwort');
-      this.userData.email = this.myForm.value.email;
-    } else {
+      if (this.showPasswordInput && !currentPassword) {
+        alert('Bitte geben Sie Ihr aktuelles Passwort ein');
+        return;
+      }
+  
       this.userData.avatarUrl = this.selectedAvatar;
-      await this.authService.changeUserData(
-        this.myForm.value.email,
-        this.userData.email,
-        currentPassword,
-        this.userData.name,
-        this.selectedAvatar
-      );
-      // ES KANN SEIN DAS ICH DIESEN ABSCHNITT MIT SETTIMEOUT RAUSNEHMEN MUSS; DA ICH
-      // PROBLEMMELDUNGEN IN FIREBASE BEKOMME
-      setTimeout(() => {
+      try {
+        await this.authService.changeUserData(
+          formData.email,
+          this.userData.email,
+          currentPassword,
+          formData.name,
+          this.selectedAvatar
+        );
+  
+        // Aktualisiere die lokalen Daten
+        this.userData.name = formData.name;
+        this.userData.email = formData.email;
+  
+        this.editMode = false;
+        this.userPassword = '';
+      } catch (error) {
+        console.error('Fehler beim Aktualisieren der Benutzerdaten:', error);
         if (this.authService.wrongEmail) {
           this.authService.wrongEmail = false;
-          this.us.loggedUser.email = this.myForm.value.email;
-          alert('Falsches Passwort');
-        } else {
-          this.myForm.value.email = this.userData.email;
+          alert('Falsches Passwort oder E-Mail');
         }
-      }, 512)
-      this.userPassword = '';
-      
-      this.editMode = false;
+      }
+    } else {
+      // Markiere alle Formularfelder als berührt, um Validierungsfehler anzuzeigen
+      Object.values(this.myForm.controls).forEach(control => {
+        control.markAsTouched();
+      });
+      alert('Bitte korrigieren Sie die Fehler im Formular');
     }
   }
- 
+
 
   selectFile(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -134,6 +137,12 @@ export class DialogShowUserProfilComponent implements OnInit {
     this.showPasswordInput = false;
     this.newData = this.userData;
     this.selectedAvatar = this.userData.avatarUrl ?? '/assets/img/unUsedDefault.png';
+    
+    // Aktualisieren Sie das Formular mit den aktuellen Werten
+    this.myForm.patchValue({
+      name: this.userData.name,
+      email: this.userData.email
+    });
   }
 
   openConversation(conversation: Conversation){
@@ -142,6 +151,12 @@ export class DialogShowUserProfilComponent implements OnInit {
 
   closeEdit() {
     this.editMode = false;
+    this.myForm.reset({
+      name: this.userData.name,
+      email: this.userData.email
+    });
+    this.showPasswordInput = false;
+    this.userPassword = '';
   }
 
 

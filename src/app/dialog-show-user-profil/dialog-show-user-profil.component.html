@@ -1,7 +1,9 @@
-<section
-[ngStyle]="showPasswordInput ? {'height': '700px', 'gap': '38px'} : {'height': '625px', 'gap': '45px'}">
-    
-  <div class="headline">
+<section>
+  <form
+  [formGroup]="myForm"
+  (ngSubmit)="editUser()"
+  [ngStyle]="showPasswordInput ? {'height': '700px', 'gap': '38px'} : {'height': '625px', 'gap': '45px'}">
+    <div class="headline">
       <ng-container *ngIf="editMode; then thenTemplate; else elseTemplate"></ng-container>
       <ng-template #thenTemplate>
           <span>Dein Profil bearbeiten</span>
@@ -45,7 +47,8 @@
   <ng-template #thenTemplate1>
       <div class="userNameCt">
           <span>Vollständiger Name</span>
-          <input [(ngModel)]="userData.name" type="text">
+          <input formControlName="name" type="text">
+          <p *ngIf="myForm.get('name')?.invalid && myForm.get('name')?.touched">*Dieser Name ist leider ungültig</p>
       </div>
   </ng-template>
   <ng-template #elseTemplate1>
@@ -81,11 +84,15 @@
         </svg>
         <span>E-Mail-Adresse</span>
       </div>
-      <input [(ngModel)]="userData.email" type="text" (input)="onEmailChange()">
+      <input formControlName="email" type="text" (input)="onEmailChange()">
+      <p *ngIf="myForm.get('email')?.invalid && myForm.get('email')?.touched">*Diese E-Mail-Adresse ist leider ungültig.</p>
+      <input class="passwordField"
+      *ngIf="showPasswordInput" 
+      formControlName="password"
+      type="password"
+      placeholder="Bitte Passwort eingeben">
+      <p class="showErrorByWrongPassword" *ngIf="myForm.get('password')?.invalid && myForm.get('password')?.touched">*Das Passwort ist ungültig oder zu kurz</p>
     </div>
-    <input class="passwordField"
-    *ngIf="showPasswordInput" type="password" [(ngModel)]="userPassword"
-    placeholder="Bitte Passwort eingeben">
   </ng-template>
   <ng-template #elseTemplate2>
     <div class="userMailContainer"> 
@@ -106,17 +113,12 @@
   </ng-template>
 
 
-  <!-- <div *ngIf="showPasswordInput">
-      <input id="userPassword" type="password" [(ngModel)]="userPassword" placeholder="Aktuelles Passwort">
-  </div> -->
-
-  
-
   <ng-container *ngIf="editMode; then thenTemplate3; else elseTemplate3"></ng-container>
   <ng-template #thenTemplate3>
-      <div class="btnContainer">
+      <div class="btnContainer"
+      [ngStyle]="showPasswordInput ? {'margin-top': '106px'} : {'margin-top': '10px'}">
           <button class="secondaryBtn" (click)="closeEdit()">Abbrechen</button>
-          <button class="primaryBtn" (click)="editUser()">Speichern</button>
+          <button type="submit" class="primaryBtn">Speichern</button>
       </div>
       
   </ng-template>
@@ -135,5 +137,6 @@
           </button>
       </div>
   </ng-template>
+  </form>
 
 </section>
