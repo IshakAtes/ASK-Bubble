@@ -76,35 +76,46 @@ export class DialogShowUserProfilComponent implements OnInit {
   async editUser() {
     if (this.myForm.valid) {
       const formData = this.myForm.value;
-      const currentPassword: string | null = this.showPasswordInput ? this.userPassword : null;
-  
-      if (this.showPasswordInput && !currentPassword) {
-        alert('Bitte geben Sie Ihr aktuelles Passwort ein');
-        return;
-      }
-  
+      const currentPassword = this.showPasswordInput ? formData.password : null;
+      console.log(formData);
       this.userData.avatarUrl = this.selectedAvatar;
       try {
-        await this.authService.changeUserData(
-          formData.email,
+        console.log(formData.email,
           this.userData.email,
+          currentPassword,
+          formData.name,
+          this.selectedAvatar);
+        await this.authService.changeUserData(
+          this.userData.email,
+          formData.email,
           currentPassword,
           formData.name,
           this.selectedAvatar
         );
-  
+        await this.authService.checkUserStatus();
         // Aktualisiere die lokalen Daten
         this.userData.name = formData.name;
         this.userData.email = formData.email;
-  
         this.editMode = false;
         this.userPassword = '';
+
+        setTimeout(() => {
+          if (this.authService.wrongEmail) {
+            this.authService.wrongEmail = false;
+            console.log(this.us.loggedUser.email);
+            this.myForm.patchValue({
+              email: this.us.loggedUser.email,
+              password: ''
+            });
+            this.userData.email = this.us.loggedUser.email;
+            formData.email = this.us.loggedUser.email
+            alert('Falsches Passwort oder E-Mail');
+            this.editMode = true;
+          }
+        }, 512)
+        
       } catch (error) {
         console.error('Fehler beim Aktualisieren der Benutzerdaten:', error);
-        if (this.authService.wrongEmail) {
-          this.authService.wrongEmail = false;
-          alert('Falsches Passwort oder E-Mail');
-        }
       }
     } else {
       // Markiere alle Formularfelder als berührt, um Validierungsfehler anzuzeigen
@@ -114,6 +125,42 @@ export class DialogShowUserProfilComponent implements OnInit {
       alert('Bitte korrigieren Sie die Fehler im Formular');
     }
   }
+
+
+
+  // async editUsereee() {
+  //   // console.log('editForm', this.myForm.value, 'userData after edit', this.userData);
+  //   // Erfasse das aktuelle Passwort nur, wenn die E-Mail geändert wurde
+  //   const currentPassword: string | null = this.showPasswordInput ? this.userPassword : null;
+
+  //   if (currentPassword === '') {
+  //     alert('Falsches Passwort');
+  //     this.userData.email = this.myForm.value.email;
+  //   } else {
+  //     this.userData.avatarUrl = this.selectedAvatar;
+  //     await this.authService.changeUserData(
+  //       this.myForm.value.email,
+  //       this.userData.email,
+  //       currentPassword,
+  //       this.userData.name,
+  //       this.selectedAvatar
+  //     );
+  //     // ES KANN SEIN DAS ICH DIESEN ABSCHNITT MIT SETTIMEOUT RAUSNEHMEN MUSS; DA ICH
+  //     // PROBLEMMELDUNGEN IN FIREBASE BEKOMME
+  //     setTimeout(() => {
+  //       if (this.authService.wrongEmail) {
+  //         this.authService.wrongEmail = false;
+  //         this.us.loggedUser.email = this.myForm.value.email;
+  //         alert('Falsches Passwort');
+  //       } else {
+  //         this.myForm.value.email = this.userData.email;
+  //       }
+  //     }, 512)
+  //     this.userPassword = '';
+
+  //     this.editMode = false;
+  //   }
+  // }
 
 
   selectFile(event: Event): void {
@@ -136,6 +183,7 @@ export class DialogShowUserProfilComponent implements OnInit {
     this.editMode = true;
     this.showPasswordInput = false;
     this.newData = this.userData;
+    console.log(this.newData);
     this.selectedAvatar = this.userData.avatarUrl ?? '/assets/img/unUsedDefault.png';
     
     // Aktualisieren Sie das Formular mit den aktuellen Werten
