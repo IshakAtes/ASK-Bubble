@@ -1,4 +1,4 @@
-import { Component, inject} from '@angular/core';
+import { Component, inject, OnInit} from '@angular/core';
 import { WorkspaceComponent } from '../workspace/workspace.component';
 import { ChannelComponent } from '../channel/channel.component';
 import { ChatComponent } from '../chat/chat.component';
@@ -21,7 +21,7 @@ import { ChannelThread } from '../../models/channelThread.class';
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss'
 })
-export class MainComponent{
+export class MainComponent implements OnInit{
   authService = inject(AuthService);
   conversation: boolean = false;
   channel: boolean = false;
@@ -48,6 +48,14 @@ export class MainComponent{
 
   constructor(public userservice: UserService, public database: DatabaseService){
     userservice.getDeviceWidth();
+    this.authService.checkUserStatus();
+    setTimeout(() => {
+      this.authService.checkUserStatus()
+    }, 1000);
+  }
+
+
+  ngOnInit(): void {
     this.authService.checkUserStatus();
   }
 
