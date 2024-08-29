@@ -14,6 +14,7 @@ import { AuthService } from '../shared-services/auth.service';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit {
+  checkLoginData: boolean = false;
   intro = true;
   switchlogo = false;
   textVisible = false;
@@ -61,6 +62,7 @@ export class LoginComponent implements OnInit {
 
   
   async onSubmit() {
+    this.checkLoginData = false;
     if (this.us.guest) {
       this.myForm.setValue({
         pw: this.guestPw,
@@ -125,7 +127,8 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => {
         this.errorMessage = err.code;
-        // console.log(this.errorMessage);
+        this.checkLoginData = true;
+        console.log(this.errorMessage?.split(/\//)[1]);
       },
     });
   }
