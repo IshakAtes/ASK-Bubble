@@ -1,5 +1,5 @@
 <div *ngIf="us.isWorkspaceDataLoaded; else loadingTemplate" #main>
-   
+
 
     @if(us.deviceWidth > 850){
         <!--Desktop View-->
@@ -13,15 +13,20 @@
             </div>
             <div class="loggedUserBar" (click)="toggleDropdown()" (mouseenter)="hovered = true" (mouseleave)="hovered = false">
                 <span>{{ us.activeUserObject.name }}</span>
-                <div [ngStyle]="{'background-image': 'url(' + us.activeUserObject.avatarUrl + ')'}" class="userAvatarCT"></div>
-                <img  [src]="hovered ? '/assets/img/expand_more.png' : '/assets/img/keyboard_arrow_down.png'" alt="dropdown">
+                <div class="userAvatarCT" [ngStyle]="{'background-image': 'url(' + us.activeUserObject.avatarUrl + ')'}">
+                    <div class="status-indicator" [ngClass]="{
+                    'online': us.loggedUser.status === 'online',
+                    'offline': us.loggedUser.status !== 'online'
+                }"></div>
+                </div>
+                <img [src]="hovered ? '/assets/img/expand_more.png' : '/assets/img/keyboard_arrow_down.png'" alt="dropdown">
                 
                 <!-- Dropdown-Menü -->
                 <div class="dropdown" *ngIf="dropdownOpen">
-                  <ul>
-                    <li (click)="openProfileDialog($event)">Profil</li>
-                    <li (click)="logout()">Logout</li>
-                  </ul>
+                    <ul>
+                        <li (click)="openProfileDialog($event)">Profil</li>
+                        <li (click)="logout()">Logout</li>
+                    </ul>
                 </div>
             </div>
         </header>
