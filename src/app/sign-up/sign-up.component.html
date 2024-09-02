@@ -53,7 +53,15 @@
             </p>
         </div>
         <div class="privacyCheckbox">
-            <mat-checkbox formControlName="box" class="checkboxStyle"></mat-checkbox>
+            <input formControlName="box" id="cbx" class="inp-cbx" type="checkbox" style="display: none">
+            <label class="cbx" for="cbx">
+                <span>
+                    <svg width="12px" height="10px" viewBox="0 0 12 10">
+                    <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+            </label>
+            
             <span>Ich stimme der <a [routerLink]="['/privacyPolicy']">Datenschutzerklärung</a> zu.</span>
         </div>
         <div class="nextBtn">
