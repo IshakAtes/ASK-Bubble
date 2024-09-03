@@ -127,9 +127,17 @@
                             
                             <button (click)="openConversation(userService.activeUserOwnConversation)">
                                 <img src="{{userService.activeUserObject.avatarUrl}}" alt="">
-                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
-                                </svg>
+                                <ng-container *ngIf="(userService.activeUserObject.status === 'online'); then onlineIndicatorTemplateHTML; else OfflineIndicatorTemplateHTML"></ng-container>
+                                <ng-template #onlineIndicatorTemplateHTML>
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
+                                    </svg>
+                                </ng-template>
+                                <ng-template #OfflineIndicatorTemplateHTML>
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="7" cy="7" r="6" fill="#686868" stroke="white" stroke-width="2"/>
+                                    </svg>
+                                </ng-template>
                                 <span>{{activeUser.name}} (Du)</span>
                             </button>
                             
@@ -138,9 +146,7 @@
                                     
                                     <button (click)="openConversation(userService.activeUserConversationList[i])">
                                         <img src="{{user.avatarUrl}}" alt="">
-                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
-                                        </svg>
+                                        <ng-container *ngIf="(user.status === 'online'); then onlineIndicatorTemplateHTML; else OfflineIndicatorTemplateHTML"></ng-container>
                                         <span>{{user.name}}</span>
                                         
                                     </button>

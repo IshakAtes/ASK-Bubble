@@ -1,4 +1,4 @@
-import { Component, inject, Output, EventEmitter, OnChanges, Input, output } from '@angular/core';
+import { Component, inject, Output, EventEmitter, Input } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { User } from '../../models/user.class';
 import { Channel } from '../../models/channel.class';
@@ -47,7 +47,7 @@ export class WorkspaceComponent {
   @Input() reload: boolean;
 
 
- 
+
   @Output() changeToChannel = new EventEmitter<Channel>();
   @Output() changeToConversation = new EventEmitter<Conversation>();
   @Output() changeToNewConversation = new EventEmitter<Conversation>();
