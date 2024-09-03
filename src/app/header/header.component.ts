@@ -38,8 +38,6 @@ export class HeaderComponent  {
 
   logout() {
     this.authService.logout();
-    this.us.loggedUser = new User();
-    this.router.navigate(['']);
   }
 
   onSearch(event: any): void {

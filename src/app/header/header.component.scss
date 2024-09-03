@@ -279,7 +279,35 @@ header {
                 }
             }
         }
+        .userAvatarCT {
+            width: 50px;
+            height: 50px;
+            border-radius: 50px;
+            background-position: center;
+            object-fit: cover;
+            background-size: cover;
+            margin-left: 20px;
+            cursor: pointer;
+            position: relative;
     
+            .status-indicator {
+                position: absolute;
+                bottom: 0px;
+                right: 0px;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                border: 2px solid #fff;
+            
+                &.online {
+                  background-color: #92C83E; /* Farbe für Online-Status */
+                }
+            
+                &.offline {
+                  background-color: #686868; /* Farbe für Offline-Status */
+                }
+            }
+        }
         >img {
             width: 50px;
             height: 50px;

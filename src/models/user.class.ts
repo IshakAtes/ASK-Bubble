@@ -11,7 +11,7 @@ export class User {
     constructor(obj?: any){
         this.email = obj ? obj.email : '';
         this.name = obj ? obj.name : '';
-        this.status = obj ? obj.status : '';
+        this.status = obj ? obj.status : 'offline';
         this.avatarUrl = obj ? obj.avatarUrl : '/assets/img/unUsedDefault.png';
         this.userId = obj ? obj.userId : '';
         this.logIn = obj && obj.logIn || 'https://bubble.ishakates.com/';

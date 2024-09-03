@@ -33,7 +33,7 @@ export class UserService {
   activeUserConversationList: Array<Conversation> = [];
   usersFromActiveUserConversationList: Array<User> = [];
   activeUserOwnConversation: Conversation;
- 
+
   activeUserObject: User;
   isWorkspaceDataLoaded: boolean = true;
   deviceWidth: number
@@ -47,8 +47,6 @@ export class UserService {
           this.loadActiveUserConversations();
         }
     }, 1000);
-
- 
   }
 
 
@@ -207,6 +205,14 @@ export class UserService {
     const userDocRef = doc(this.firestore, "users", id);
     updateDoc(userDocRef, {
       status: "online"
+    });
+  }
+
+
+  userOffline(id: string) {
+    const userDocRef = doc(this.firestore, "users", id);
+    updateDoc(userDocRef, {
+      status: "offline"
     });
   }
 
