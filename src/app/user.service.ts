@@ -27,6 +27,7 @@ export class UserService {
   guestData: User;
   userToken: string;
   pwCache: string = '';
+  deviceMobileWidth: number = window.innerWidth;
   private baseUrl = 'http://localhost:4200';
 
   activeUserChannels: Array<Channel> = [];
@@ -36,7 +37,7 @@ export class UserService {
 
   activeUserObject: User;
   isWorkspaceDataLoaded: boolean = true;
-  deviceWidth: number
+  deviceWidth: number;
 
 
   constructor(private http: HttpClient, private router: Router, public database: DatabaseService) { 
@@ -47,6 +48,7 @@ export class UserService {
           this.loadActiveUserConversations();
         }
     }, 1000);
+    console.log(this.deviceWidth);
   }
 
 
