@@ -5,7 +5,7 @@ import { Conversation } from '../../models/conversation.class';
 import { ConversationMessage } from '../../models/conversationMessage.class';
 import { Channel } from '../../models/channel.class';
 import { Reaction } from '../../models/reactions.class';
-import { Observable } from 'rxjs';
+import { forkJoin, map, Observable, switchMap, take } from 'rxjs';
 import { DatabaseService } from '../database.service';
 import { UserService } from '../user.service';
 import { LastTwoEmojisService } from '../shared-services/chat-functionality/last-two-emojis.service';
@@ -49,8 +49,10 @@ export class ThreadComponent {
   @Output() emitReloadToFalse = new EventEmitter<boolean>()
   @Output() emitCloseThread = new EventEmitter<string>();
 
-  channelThreadMessageList: Array<ChannelThreadMessage> = [];
-  conversationThreadMessagelist: Array<ThreadMessage> = [];
+  // channelThreadMessageList: Array<ChannelThreadMessage> = [];
+  // conversationThreadMessagelist: Array<ThreadMessage> = [];
+  channelThreadMessageList$: Observable<Array<ChannelThreadMessage>>;
+  conversationThreadMessagelist$: Observable<Array<ThreadMessage>>;
   allUsers = [] as Array<User>;
   allChannels: Array<Channel> = [];
   reactions: Array<Reaction> = [];
@@ -95,10 +97,13 @@ export class ThreadComponent {
     this.mAndC.getFocusTrigger().subscribe(() => {
       if (this.myTextarea) {this.myTextarea.nativeElement.focus();}
     });
-    setTimeout(() => {this.loadAllMessages();}, 1000);
+    // setTimeout(() => {this.loadAllMessages();}, 1000);
     this.fileUpload.downloadURLThread = '';
   }
 
+  ngOnInit(): void {
+    this.loadAllMessages()
+  }
 
   /**
    * loads member list for html if thread is opened by channel
@@ -181,12 +186,23 @@ export class ThreadComponent {
   /**
    * loads all threadmessages from the conversation or channel mainmessage
    */
+  // loadAllMessages() {
+  //   if (this.channelThread) {
+  //     this.loadChannelThreadMessages()
+  //   }
+  //   else {
+  //     this.loadConversationThreadMessages()
+  //   }
+  // }
   loadAllMessages() {
     if (this.channelThread) {
-      this.loadChannelThreadMessages()
-    }
-    else {
-      this.loadConversationThreadMessages()
+      this.channelThreadMessageList$ = this.databaseService.loadChannelThreadMessages(this.currentChannelThread).pipe(
+        map(messages => messages.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis()))
+      );
+    } else {
+      this.conversationThreadMessagelist$ = this.databaseService.loadThreadMessages(this.currentThread).pipe(
+        map(messages => messages.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis()))
+      );
     }
   }
 
@@ -194,75 +210,125 @@ export class ThreadComponent {
   /**
    * loads all threadmessages from the main channelmessage
    */
-  loadChannelThreadMessages(){
-    this.databaseService.loadChannelThreadMessages(this.currentChannelThread).then(messageList => {
-      this.channelThreadMessageList = messageList;
-      this.channelThreadMessageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-    });
-  }
+  // loadChannelThreadMessages(){
+  //   this.databaseService.loadChannelThreadMessages(this.currentChannelThread).then(messageList => {
+  //     this.channelThreadMessageList = messageList;
+  //     this.channelThreadMessageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+  //   });
+  // }
 
 
   /**
    * loads all threadmessages from the main conversationmessage
    */
-  loadConversationThreadMessages(){
-    this.databaseService.loadThreadMessages(this.currentThread).then(messageList => {
-      this.conversationThreadMessagelist = messageList;
-      this.conversationThreadMessagelist.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-    });
-  }
+  // loadConversationThreadMessages(){
+  //   this.databaseService.loadThreadMessages(this.currentThread).then(messageList => {
+  //     this.conversationThreadMessagelist = messageList;
+  //     this.conversationThreadMessagelist.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+  //   });
+  // }
 
 
   /**
    * loads threadmessage reactions depending on channelthreadmessage
    * or conversationthreadmessage
    */
+  // loadAllMessageReactions() {
+  //   if (this.channelThread) {
+  //     this.loadChannelThreadMessageReactions();
+  //   }
+  //   else {
+  //     this.loadConversationThreadMessageReactions();
+  //   }
+  // }
+
+  
+  
   loadAllMessageReactions() {
     if (this.channelThread) {
-      this.loadChannelThreadMessageReactions();
+      this.channelThreadMessageList$.pipe(
+        take(1),
+        switchMap(messages => this.loadChannelThreadMessageReactions(messages))
+      ).subscribe(reactions => {
+        this.reactions = reactions;
+        this.chat.reactionsThread = this.reactions;
+      });
+    } else {
+      this.conversationThreadMessagelist$.pipe(
+        take(1),
+        switchMap(messages => this.loadConversationThreadMessageReactions(messages))
+      ).subscribe(reactions => {
+        this.reactions = reactions;
+        this.chat.reactionsThread = this.reactions;
+      });
     }
-    else {
-      this.loadConversationThreadMessageReactions();
-    }
+  }
+  
+  loadChannelThreadMessageReactions(messages: ChannelThreadMessage[]): Observable<Reaction[]> {
+    const reactionObservables = messages.map(message =>
+      this.databaseService.loadChannelThreadMessageReactions(
+        this.user.userId,
+        this.currentChannel.channelId,
+        message.messageId,
+        message
+      )
+    );
+    return forkJoin(reactionObservables).pipe(
+      map(reactionArrays => reactionArrays.flat())
+    );
+  }
+  
+  loadConversationThreadMessageReactions(messages: ThreadMessage[]): Observable<Reaction[]> {
+    const reactionObservables = messages.map(message =>
+      this.databaseService.loadConversationThreadMessageReactions(
+        this.user.userId,
+        this.specific.conversationId,
+        message.messageId,
+        message
+      )
+    );
+    return forkJoin(reactionObservables).pipe(
+      map(reactionArrays => reactionArrays.flat())
+    );
   }
 
 
   /**
    * load threadmessage reactions from channelthreadmessage
-   */
-  loadChannelThreadMessageReactions(){
-    this.reactions = []
-    for (let i = 0; i < this.channelThreadMessageList.length; i++) {
-      const list = this.channelThreadMessageList[i];
-      this.databaseService.loadChannelThreadMessageReactions(this.user.userId, this.currentChannel.channelId, list.messageId, list).then(reaction => {
-        reaction.forEach(reaction => {
-          this.reactions.push(reaction)
-        });
-      })
-    }
-    setTimeout(() => {
-      this.chat.reactionsThread = this.reactions
-    }, 300);
-  }
+  */
+  // loadChannelThreadMessageReactions(){
+  //   this.reactions = []
+  //   for (let i = 0; i < this.channelThreadMessageList$.length; i++) {
+  //     const list = this.channelThreadMessageList$[i];
+  //     this.databaseService.loadChannelThreadMessageReactions(this.user.userId, this.currentChannel.channelId, list.messageId, list).then(reaction => {
+  //       reaction.forEach(reaction => {
+  //         this.reactions.push(reaction)
+  //       });
+  //     })
+  //   }
+  //   setTimeout(() => {
+  //     this.chat.reactionsThread = this.reactions
+  //   }, 300);
+  // }
 
 
   /**
    * load threadmessage reactions from conversationthreadmessage
    */
-  loadConversationThreadMessageReactions(){
-    this.reactions = []
-      for (let i = 0; i < this.conversationThreadMessagelist.length; i++) {
-        const list = this.conversationThreadMessagelist[i];
-        this.databaseService.loadConversationThreadMessageReactions(this.user.userId, this.specific.conversationId, list.messageId, list).then(reaction => {
-          reaction.forEach(reaction => {
-            this.reactions.push(reaction)
-          });
-        })
-      }
-    setTimeout(() => {
-      this.chat.reactionsThread = this.reactions
-    }, 300);
-  }
+  // loadConversationThreadMessageReactions(){
+  //   this.reactions = []
+  //     for (let i = 0; i < this.conversationThreadMessagelist$.length; i++) {
+  //       const list = this.conversationThreadMessagelist$[i];
+  //       this.databaseService.loadConversationThreadMessageReactions(this.user.userId, this.specific.conversationId, list.messageId, list).then(reaction => {
+  //         reaction.forEach(reaction => {
+  //           this.reactions.push(reaction)
+  //         });
+  //       })
+  //     }
+  //   setTimeout(() => {
+  //     this.chat.reactionsThread = this.reactions
+  //   }, 300);
+  // }
 
   
   /**
@@ -290,15 +356,15 @@ export class ThreadComponent {
     if (this.content == '' && this.fileUpload.downloadURLThread == '') {
       this.displayEmptyContentError();
     } else {
-      this.conversationThreadMessagelist = [];
+      // this.conversationThreadMessagelist = [];
       let newMessage: ThreadMessage = this.databaseService.createThreadMessage(this.specific, this.content, this.user.userId, this.currentThread, this.fileUpload.downloadURLThread)
       const timestamp: Timestamp = newMessage.createdAt;
       this.databaseService.addThreadMessage(this.currentThread, newMessage)
       this.resetContent();
-      await this.databaseService.loadThreadMessages(this.currentThread).then(messageList => {
-        this.conversationThreadMessagelist = messageList;
-        this.conversationThreadMessagelist.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-      })
+      // await this.databaseService.loadThreadMessages(this.currentThread).then(messageList => {
+      //   this.conversationThreadMessagelist = messageList;
+      //   this.conversationThreadMessagelist.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+      // })
       this.saveThreadCountAndtime(new ThreadMessage(newMessage), timestamp)
     }
 }
@@ -311,15 +377,15 @@ async saveNewChannelThreadMessage() {
   if (this.content == '' && this.fileUpload.downloadURLThread == '') {
       this.displayEmptyContentError();
     } else {
-      this.channelThreadMessageList = [];
+      // this.channelThreadMessageList = [];
       let newMessage: ChannelThreadMessage = this.databaseService.createChannelThreadMessage(this.currentChannel, this.content, this.user.userId, this.currentChannelThread, this.fileUpload.downloadURLThread)
       const timestamp: Timestamp = newMessage.createdAt;
       this.databaseService.addChannelThreadMessage(this.currentChannelThread, newMessage, this.currentChannel)
       this.resetContent();
-      await this.databaseService.loadChannelThreadMessages(this.currentChannelThread).then(messageList => {
-        this.channelThreadMessageList = messageList;
-        this.channelThreadMessageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-      })
+      // await this.databaseService.loadChannelThreadMessages(this.currentChannelThread).then(messageList => {
+      //   this.channelThreadMessageList = messageList;
+      //   this.channelThreadMessageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+      // })
       this.saveThreadCountAndtime(new ChannelThreadMessage(newMessage), timestamp)
     }
 }
@@ -340,20 +406,40 @@ resetContent(){
  * @param newMessage threadmessage from channel or conversation
  * @param timestamp timestamp
  */
+// saveThreadCountAndtime(newMessage: ChannelThreadMessage | ThreadMessage, timestamp: Timestamp){
+//   if(newMessage instanceof ThreadMessage){
+//     const count: number = this.conversationThreadMessagelist$.length;
+//     this.databaseService.updateMessageThreadCountAndThreadTime(newMessage, this.specific, count, timestamp)
+//     setTimeout(() => {this.scrollToBottom();}, 10);
+//     this.fileUpload.downloadURLThread = '';
+//     this.emitReloadChat.emit();
+//   }
+//   else{
+//     const count: number = this.channelThreadMessageList$.length;
+//     this.databaseService.updateMessageChannelThreadCountAndThreadTime(newMessage, this.currentChannel, count, timestamp)
+//     setTimeout(() => {this.scrollToBottom();}, 10);
+//     this.fileUpload.downloadURLThread = '';
+//     this.emitReloadChannel.emit()
+//   }
+// }
+
 saveThreadCountAndtime(newMessage: ChannelThreadMessage | ThreadMessage, timestamp: Timestamp){
   if(newMessage instanceof ThreadMessage){
-    const count: number = this.conversationThreadMessagelist.length;
-    this.databaseService.updateMessageThreadCountAndThreadTime(newMessage, this.specific, count, timestamp)
-    setTimeout(() => {this.scrollToBottom();}, 10);
-    this.fileUpload.downloadURLThread = '';
-    this.emitReloadChat.emit();
-  }
-  else{
-    const count: number = this.channelThreadMessageList.length;
-    this.databaseService.updateMessageChannelThreadCountAndThreadTime(newMessage, this.currentChannel, count, timestamp)
-    setTimeout(() => {this.scrollToBottom();}, 10);
-    this.fileUpload.downloadURLThread = '';
-    this.emitReloadChannel.emit()
+    this.conversationThreadMessagelist$.pipe(take(1)).subscribe(messages => {
+      const count: number = messages.length;
+      this.databaseService.updateMessageThreadCountAndThreadTime(newMessage, this.specific, count, timestamp);
+      setTimeout(() => {this.scrollToBottom();}, 10);
+      this.fileUpload.downloadURLThread = '';
+      this.emitReloadChat.emit();
+    });
+  } else {
+    this.channelThreadMessageList$.pipe(take(1)).subscribe(messages => {
+      const count: number = messages.length;
+      this.databaseService.updateMessageChannelThreadCountAndThreadTime(newMessage, this.currentChannel, count, timestamp);
+      setTimeout(() => {this.scrollToBottom();}, 10);
+      this.fileUpload.downloadURLThread = '';
+      this.emitReloadChannel.emit();
+    });
   }
 }
 
@@ -373,16 +459,29 @@ displayEmptyContentError() {
 /**
  * Scroll to the bottom of the chatarea 
  */
+// scrollToBottom(): void {
+//   try {
+//     if(this.conversationThreadMessagelist$.length > 0) {
+//       this.lastDiv.nativeElement.scrollIntoView();
+//     }
+//   } catch (err) {
+//     console.error('Scroll to bottom failed', err);
+//   }
+// }
+
 scrollToBottom(): void {
   try {
-    if(this.conversationThreadMessagelist.length > 0) {
-      this.lastDiv.nativeElement.scrollIntoView();
-    }
+    this.conversationThreadMessagelist$.pipe(take(1)).subscribe(messages => {
+      if(messages.length > 0) {
+        setTimeout(() => {
+          this.lastDiv.nativeElement.scrollIntoView();
+        }, 0);
+      }
+    });
   } catch (err) {
     console.error('Scroll to bottom failed', err);
   }
 }
-
 
 /**
  * loads the memberlist of the channel need for the HTML
@@ -422,29 +521,42 @@ updateChannelThreadMessage(message: ChannelThreadMessage){
 ngOnChanges() {
   this.isThreadDataLoaded = false;
   this.loadMainMessage();
-  setTimeout(() => {this.loadAllMessages();}, 1000);
+  this.loadAllMessages();
   setTimeout(async () => {await this.loadAllMessageReactions();}, 2000);
-  setTimeout(() => {
-    if (this.channelThread) {
-      this.chat.groupReactionsThread(this.channelThreadMessageList);
-    } else {
-      this.chat.groupReactionsThread(this.conversationThreadMessagelist);
-    }
-  }, 3000);
- 
-  if (!this.channelThread) {
-    this.loadingPassiveUserConversationWithSelf()
-    this.loadingPassiveUserFromCreatorUser();
-    this.loadingPassiveUserFromRecipientUser();
-  }
-  else{
-    this.loadMemberListForChannelThreadHTML();
+  
+  if (this.channelThread) {
+    this.channelThreadMessageList$.pipe(take(1)).subscribe(list => {
+      setTimeout(() => {
+        this.chat.groupReactionsThread(list)
+          .then(() => {
+            setTimeout(() => {
+              this.scrollToBottom();
+              this.setFocus();
+            }, 1000);
+          });
+      }, 1000);
+    });
+  } else {
+    this.conversationThreadMessagelist$.pipe(take(1)).subscribe(list => {
+      setTimeout(() => {
+        this.chat.groupReactionsThread(list)
+          .then(() => {
+            setTimeout(() => {
+              this.scrollToBottom();
+              this.setFocus();
+            }, 1000);
+          });
+      }, 1000);
+    });
   }
 
-  setTimeout(() => {
-    this.setFocus();
-  }, 4000);
-  
+  if (!this.channelThread) {
+    this.loadingPassiveUserConversationWithSelf();
+    this.loadingPassiveUserFromCreatorUser();
+    this.loadingPassiveUserFromRecipientUser();
+  } else {
+    this.loadMemberListForChannelThreadHTML();
+  }
 }
 
 
@@ -518,8 +630,12 @@ async saveNewMessageReaction(event: any, convo: ThreadMessage, userId: string, r
   let reaction = this.databaseService.createThreadMessageReaction(emoji, userId, this.user.name, convo);
   await this.databaseService.addThreadMessageReaction(this.specific, convo, reaction)
   await this.loadAllMessageReactions();
-  this.chat.reactionsThread = this.reactions
-  setTimeout(() => {this.chat.groupReactionsThread(this.conversationThreadMessagelist)}, 500);
+  this.chat.reactionsThread = this.reactions;
+  this.conversationThreadMessagelist$.pipe(take(1)).subscribe(list => {
+    setTimeout(() => {
+      this.chat.groupReactionsThread(list);
+    }, 500);
+  });
   this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
   this.mAndC.loadUsersOfUser();
   this.mAndC.loadChannlesofUser()
@@ -542,8 +658,12 @@ async saveNewChannelMessageReaction(event: any, convo: ChannelThreadMessage, use
   let reaction = this.databaseService.createChannelThreadMessageReaction(emoji, userId, this.user.name, convo);
   await this.databaseService.addChannelThreadMessageReaction(this.currentChannel, convo, reaction)
   await this.loadAllMessageReactions();
-  this.chat.reactionsThread = this.reactions
-  setTimeout(() => {this.chat.groupReactionsThread(this.channelThreadMessageList)}, 500);
+  this.chat.reactionsThread = this.reactions;
+  this.channelThreadMessageList$.pipe(take(1)).subscribe(list => {
+    setTimeout(() => {
+      this.chat.groupReactionsThread(list);
+    }, 500);
+  });
   this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
   this.mAndC.loadUsersOfUser();
   this.mAndC.loadChannlesofUser()

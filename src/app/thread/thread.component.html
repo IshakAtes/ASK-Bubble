@@ -24,7 +24,8 @@
             </div>
         
             <div class="chat-area">
-                @if (channelThreadMessageList.length>0) {
+                <!-- @if (channelThreadMessageList.length>0) -->
+                @if (channelThreadMessageList$ | async; as channelThreadMessageList) {
                 <div class="time-separator">
                     <div class="date">
                         <span>{{time.formatDate(time.formatTimestamp(channelThreadMessageList[0].createdAt))}}</span>
@@ -97,14 +98,16 @@
                                 }
                 }
         
-                @if (channelThreadMessageList.length > 0) {
+                <!-- @if (channelThreadMessageList.length > 0)  -->
+                @if (channelThreadMessageList$ | async; as channelThreadMessageList) {
                 <div class="thread-message-separator">
                     <span> {{channelThreadMessageList.length}} Antworten</span>
                     <div class="thread-message-separator-line"></div>
                 </div>
                 }
         
-                @if (channelThreadMessageList.length>0) {
+                <!-- @if (channelThreadMessageList.length>0) -->
+                @if (channelThreadMessageList$ | async; as channelThreadMessageList) {
                     <div class="time-separator">
                         <div class="date">
                             <span>{{time.formatDate(time.formatTimestamp(channelThreadMessageList[0].createdAt))}}</span>
@@ -224,9 +227,9 @@
                                     <div class="reactionbar">
                                         @if (member.usedLastTwoEmojis) {
                                         <div (click)="saveNewChannelMessageReaction($event, message, user.userId, user.usedLastTwoEmojis[0])"
-                                            class="reactionbar-emoji-div">{{member.usedLastTwoEmojis[0]}}</div>
+                                            class="reactionbar-emoji-div">{{user.usedLastTwoEmojis[0]}}</div>
                                         <div (click)="saveNewChannelMessageReaction($event, message, user.userId, user.usedLastTwoEmojis[1])"
-                                            class="reactionbar-emoji-div">{{member.usedLastTwoEmojis[1]}}</div>
+                                            class="reactionbar-emoji-div">{{user.usedLastTwoEmojis[1]}}</div>
                                         }
                                         @else {
                                         <img src="../../assets/img/reactionbar_add_reaction.png" alt="">
@@ -430,7 +433,8 @@
             </div>
         
             <div class="chat-area">
-                @if (conversationThreadMessagelist.length>0) {
+                <!-- @if (conversationThreadMessagelist.length>0)  -->
+                @if (conversationThreadMessagelist$ | async; as conversationThreadMessagelist) {
                 <div class="time-separator">
                     <div class="date">
                         <span>{{time.formatDate(time.formatTimestamp(conversationThreadMessagelist[0].createdAt))}}</span>
@@ -501,14 +505,16 @@
                 }
                 }
         
-                @if (conversationThreadMessagelist.length > 0) {
+                <!-- @if (conversationThreadMessagelist.length > 0) { -->
+                @if (conversationThreadMessagelist$ | async; as conversationThreadMessagelist) {
                 <div class="thread-message-separator">
                     <span> {{conversationThreadMessagelist.length}} Antworten</span>
                     <div class="thread-message-separator-line"></div>
                 </div>
                 }
         
-                @if (conversationThreadMessagelist.length>0) {
+                <!-- @if (conversationThreadMessagelist.length>0) { -->
+                @if (conversationThreadMessagelist$ | async; as conversationThreadMessagelist) {
                     <div class="time-separator">
                         <div class="date">
                             <span>{{time.formatDate(time.formatTimestamp(conversationThreadMessagelist[0].createdAt))}}</span>

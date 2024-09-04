@@ -317,29 +317,45 @@ export class DatabaseService {
    * @param thread specific thread
    * @returns list of thread messages
    */
-  loadThreadMessages(thread: Thread): Promise<Array<ThreadMessage>> {
-    return new Promise<Array<ThreadMessage>>((resolve, reject) => {
-      const messageList = [] as Array<ThreadMessage>
-      onSnapshot(collection(this.firestore, 'users/' + thread.createdBy + '/conversations', thread.conversationId + '/conversationmessages/' + thread.messageId + '/threads/', thread.threadId + '/threadmessages'), (messages) => {
-        messages.forEach(message => {
-          const messageData = message.data();
-          const messageObject = {} as ThreadMessage;
-          messageObject.threadMessageId = messageData ['threadMessageId']
-          messageObject.conversationId = messageData['conversationId'];
-          messageObject.content = messageData['content'];
-          messageObject.createdAt = messageData['createdAt'];
-          messageObject.createdBy = messageData['createdBy'];
-          messageObject.fileUrl = messageData['fileUrl'];
-          messageObject.threadId = messageData['threadId'];
-          messageObject.messageId = messageData['messageId'];
-          messageList.push(messageObject);
-        })
-        resolve(messageList);
-      }, (error) => {
-        reject(error)
-      })
-    })
- }
+//   loadThreadMessages(thread: Thread): Promise<Array<ThreadMessage>> {
+//     return new Promise<Array<ThreadMessage>>((resolve, reject) => {
+//       const messageList = [] as Array<ThreadMessage>
+//       onSnapshot(collection(this.firestore, 'users/' + thread.createdBy + '/conversations', thread.conversationId + '/conversationmessages/' + thread.messageId + '/threads/', thread.threadId + '/threadmessages'), (messages) => {
+//         messages.forEach(message => {
+//           const messageData = message.data();
+//           const messageObject = {} as ThreadMessage;
+//           messageObject.threadMessageId = messageData ['threadMessageId']
+//           messageObject.conversationId = messageData['conversationId'];
+//           messageObject.content = messageData['content'];
+//           messageObject.createdAt = messageData['createdAt'];
+//           messageObject.createdBy = messageData['createdBy'];
+//           messageObject.fileUrl = messageData['fileUrl'];
+//           messageObject.threadId = messageData['threadId'];
+//           messageObject.messageId = messageData['messageId'];
+//           messageList.push(messageObject);
+//         })
+//         resolve(messageList);
+//       }, (error) => {
+//         reject(error)
+//       })
+//     })
+//  }
+
+ loadThreadMessages(thread: Thread): Observable<Array<ThreadMessage>> {
+  const path = `users/${thread.createdBy}/conversations/${thread.conversationId}/conversationmessages/${thread.messageId}/threads/${thread.threadId}/threadmessages`;
+  return collectionData(collection(this.firestore, path)).pipe(
+    map(messages => messages.map(messageData => ({
+      threadMessageId: messageData['threadMessageId'],
+      conversationId: messageData['conversationId'],
+      content: messageData['content'],
+      createdAt: messageData['createdAt'],
+      createdBy: messageData['createdBy'],
+      fileUrl: messageData['fileUrl'],
+      threadId: messageData['threadId'],
+      messageId: messageData['messageId'],
+    } as ThreadMessage)))
+  );
+}
 
 
   /*START CHANNEL THREAD FUNCTIONS */
@@ -430,29 +446,45 @@ export class DatabaseService {
    * @param thread specific thread
    * @returns list of thread messages
    */
-    loadChannelThreadMessages(thread: ChannelThread): Promise<Array<ChannelThreadMessage>> {
-      return new Promise<Array<ChannelThreadMessage>>((resolve, reject) => {
-        const messageList = [] as Array<ChannelThreadMessage>
-        onSnapshot(collection(this.firestore, 'users/' + thread.createdBy + '/channels/' + thread.channelId + '/channelmessages/' + thread.messageId + '/threads/', thread.threadId + '/threadmessages'), (messages) => {
-          messages.forEach(message => {
-            const messageData = message.data();
-            const messageObject = {} as ChannelThreadMessage;
-            messageObject.threadMessageId = messageData ['threadMessageId']
-            messageObject.channelId = messageData['channelId'];
-            messageObject.content = messageData['content'];
-            messageObject.createdAt = messageData['createdAt'];
-            messageObject.createdBy = messageData['createdBy'];
-            messageObject.fileUrl = messageData['fileUrl'];
-            messageObject.threadId = messageData['threadId'];
-            messageObject.messageId = messageData['messageId'];
-            messageList.push(messageObject);
-          })
-          resolve(messageList);
-        }, (error) => {
-          reject(error)
-        })
-      })
-   }
+  //   loadChannelThreadMessages(thread: ChannelThread): Promise<Array<ChannelThreadMessage>> {
+  //     return new Promise<Array<ChannelThreadMessage>>((resolve, reject) => {
+  //       const messageList = [] as Array<ChannelThreadMessage>
+  //       onSnapshot(collection(this.firestore, 'users/' + thread.createdBy + '/channels/' + thread.channelId + '/channelmessages/' + thread.messageId + '/threads/', thread.threadId + '/threadmessages'), (messages) => {
+  //         messages.forEach(message => {
+  //           const messageData = message.data();
+  //           const messageObject = {} as ChannelThreadMessage;
+  //           messageObject.threadMessageId = messageData ['threadMessageId']
+  //           messageObject.channelId = messageData['channelId'];
+  //           messageObject.content = messageData['content'];
+  //           messageObject.createdAt = messageData['createdAt'];
+  //           messageObject.createdBy = messageData['createdBy'];
+  //           messageObject.fileUrl = messageData['fileUrl'];
+  //           messageObject.threadId = messageData['threadId'];
+  //           messageObject.messageId = messageData['messageId'];
+  //           messageList.push(messageObject);
+  //         })
+  //         resolve(messageList);
+  //       }, (error) => {
+  //         reject(error)
+  //       })
+  //     })
+  //  }
+
+  loadChannelThreadMessages(thread: ChannelThread): Observable<Array<ChannelThreadMessage>> {
+    const path = `users/${thread.createdBy}/channels/${thread.channelId}/channelmessages/${thread.messageId}/threads/${thread.threadId}/threadmessages`;
+    return collectionData(collection(this.firestore, path)).pipe(
+      map(messages => messages.map(messageData => ({
+        threadMessageId: messageData['threadMessageId'],
+        channelId: messageData['channelId'],
+        content: messageData['content'],
+        createdAt: messageData['createdAt'],
+        createdBy: messageData['createdBy'],
+        fileUrl: messageData['fileUrl'],
+        threadId: messageData['threadId'],
+        messageId: messageData['messageId'],
+      } as ChannelThreadMessage)))
+    );
+  }
 
 
   /** NEEDED FOR SAVENEWMESSAGEREACTION AND SAVENEWMESSAGE
@@ -1066,31 +1098,44 @@ export class DatabaseService {
    * @param channelMessageId message id
    * @returns list of reactions of a single message in the channel
    */
-    loadChannelThreadMessageReactions(userId: string, channelId: string, channelMessageId: string, threadMessage: ChannelThreadMessage): Promise<Array<Reaction>> {
-      return new Promise<Array<Reaction>>((resolve, reject) => {
-        const reactionList = [] as Array<Reaction>;
+    // loadChannelThreadMessageReactions(userId: string, channelId: string, channelMessageId: string, threadMessage: ChannelThreadMessage): Promise<Array<Reaction>> {
+    //   return new Promise<Array<Reaction>>((resolve, reject) => {
+    //     const reactionList = [] as Array<Reaction>;
   
 
-        const path = `users/${userId}/channels/${channelId}/channelmessages/${channelMessageId}/threads/${threadMessage.threadId}/threadmessages/${threadMessage.threadMessageId}/reactions`;
-        const reactionsCollection = collection(this.firestore, path);
+    //     const path = `users/${userId}/channels/${channelId}/channelmessages/${channelMessageId}/threads/${threadMessage.threadId}/threadmessages/${threadMessage.threadMessageId}/reactions`;
+    //     const reactionsCollection = collection(this.firestore, path);
   
-        onSnapshot(reactionsCollection, (snapshot) => {
-          snapshot.forEach((doc) => {
-            const reactionData = doc.data();
-            const reactionObject = {
-              emoji: reactionData['emoji'],
-              messageId: reactionData['messageId'],
-              reactionId: reactionData['reactionId'],
-              userId: reactionData['userId'],
-              userName: reactionData['userName'],
-            } as Reaction;
-            reactionList.push(reactionObject);
-          });
-          resolve(reactionList);
-        }, (error) => {
-          reject(error);
-        });
-      });
+    //     onSnapshot(reactionsCollection, (snapshot) => {
+    //       snapshot.forEach((doc) => {
+    //         const reactionData = doc.data();
+    //         const reactionObject = {
+    //           emoji: reactionData['emoji'],
+    //           messageId: reactionData['messageId'],
+    //           reactionId: reactionData['reactionId'],
+    //           userId: reactionData['userId'],
+    //           userName: reactionData['userName'],
+    //         } as Reaction;
+    //         reactionList.push(reactionObject);
+    //       });
+    //       resolve(reactionList);
+    //     }, (error) => {
+    //       reject(error);
+    //     });
+    //   });
+    // }
+
+    loadChannelThreadMessageReactions(userId: string, channelId: string, channelMessageId: string, threadMessage: ChannelThreadMessage): Observable<Array<Reaction>> {
+      const path = `users/${userId}/channels/${channelId}/channelmessages/${channelMessageId}/threads/${threadMessage.threadId}/threadmessages/${threadMessage.threadMessageId}/reactions`;
+      return collectionData(collection(this.firestore, path)).pipe(
+        map(reactions => reactions.map(reactionData => ({
+          emoji: reactionData['emoji'],
+          messageId: reactionData['messageId'],
+          reactionId: reactionData['reactionId'],
+          userId: reactionData['userId'],
+          userName: reactionData['userName'],
+        } as Reaction)))
+      );
     }
 
 
@@ -1101,31 +1146,44 @@ export class DatabaseService {
    * @param channelMessageId message id
    * @returns list of reactions of a single message in the channel
    */
-     loadConversationThreadMessageReactions(userId: string, conversationId: string, conversationMessageId: string, threadMessage: ThreadMessage): Promise<Array<Reaction>> {
-      return new Promise<Array<Reaction>>((resolve, reject) => {
-        const reactionList = [] as Array<Reaction>;
+    //  loadConversationThreadMessageReactions(userId: string, conversationId: string, conversationMessageId: string, threadMessage: ThreadMessage): Promise<Array<Reaction>> {
+    //   return new Promise<Array<Reaction>>((resolve, reject) => {
+    //     const reactionList = [] as Array<Reaction>;
   
-        // /users/Adxrm7CExizb76lVrknu/conversations/CONV-Adxrm7CExizb76lVrknu-0.9989840950446485/conversationmessages/CONV-MSG-0.40775953339191817/threads/THR-Adxrm7CExizb76lVrknu-0.5432444949979081/threadmessages/THR-MSG-0.6462466209007238/reactions/THR-MSG-REACT-0.703860335842865
-        const path = `users/${userId}/conversations/${conversationId}/conversationmessages/${conversationMessageId}/threads/${threadMessage.threadId}/threadmessages/${threadMessage.threadMessageId}/reactions`;
-        const reactionsCollection = collection(this.firestore, path);
+    //     // /users/Adxrm7CExizb76lVrknu/conversations/CONV-Adxrm7CExizb76lVrknu-0.9989840950446485/conversationmessages/CONV-MSG-0.40775953339191817/threads/THR-Adxrm7CExizb76lVrknu-0.5432444949979081/threadmessages/THR-MSG-0.6462466209007238/reactions/THR-MSG-REACT-0.703860335842865
+    //     const path = `users/${userId}/conversations/${conversationId}/conversationmessages/${conversationMessageId}/threads/${threadMessage.threadId}/threadmessages/${threadMessage.threadMessageId}/reactions`;
+    //     const reactionsCollection = collection(this.firestore, path);
   
-        onSnapshot(reactionsCollection, (snapshot) => {
-          snapshot.forEach((doc) => {
-            const reactionData = doc.data();
-            const reactionObject = {
-              emoji: reactionData['emoji'],
-              messageId: reactionData['messageId'],
-              reactionId: reactionData['reactionId'],
-              userId: reactionData['userId'],
-              userName: reactionData['userName'],
-            } as Reaction;
-            reactionList.push(reactionObject);
-          });
-          resolve(reactionList);
-        }, (error) => {
-          reject(error);
-        });
-      });
+    //     onSnapshot(reactionsCollection, (snapshot) => {
+    //       snapshot.forEach((doc) => {
+    //         const reactionData = doc.data();
+    //         const reactionObject = {
+    //           emoji: reactionData['emoji'],
+    //           messageId: reactionData['messageId'],
+    //           reactionId: reactionData['reactionId'],
+    //           userId: reactionData['userId'],
+    //           userName: reactionData['userName'],
+    //         } as Reaction;
+    //         reactionList.push(reactionObject);
+    //       });
+    //       resolve(reactionList);
+    //     }, (error) => {
+    //       reject(error);
+    //     });
+    //   });
+    // }
+
+    loadConversationThreadMessageReactions(userId: string, conversationId: string, conversationMessageId: string, threadMessage: ThreadMessage): Observable<Array<Reaction>> {
+      const path = `users/${userId}/conversations/${conversationId}/conversationmessages/${conversationMessageId}/threads/${threadMessage.threadId}/threadmessages/${threadMessage.threadMessageId}/reactions`;
+      return collectionData(collection(this.firestore, path)).pipe(
+        map(reactions => reactions.map(reactionData => ({
+          emoji: reactionData['emoji'],
+          messageId: reactionData['messageId'],
+          reactionId: reactionData['reactionId'],
+          userId: reactionData['userId'],
+          userName: reactionData['userName'],
+        } as Reaction)))
+      );
     }
 
 
