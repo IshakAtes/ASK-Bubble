@@ -340,25 +340,24 @@ header {
         padding: 0;
         margin: 0;
         padding: 15px 16px 15px 16px !important;
-       
     }
     
     .dropdown ul li {
-        width: calc(100%);
+        cursor: pointer;
         height: 53px;
-        padding: 10px 0 10px 0px;
+        padding: 10px 80px 10px 80px;
         gap: 15px;
         border-radius: 100px;
         opacity: 0px;
         display: flex;
-        justify-content: flex-start;
-        align-items: flex-start;
+        justify-content: start;
+        align-items: center;
         text-decoration: none;
         color: #000;
         font-family: "Nunito";
         font-size: 24px;
         font-weight: 600;
-        line-height: 32.74px;
+        line-height: 32px;
         text-align: left;
     }
     
