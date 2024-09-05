@@ -288,3 +288,98 @@ nav {
         }
     }
 }
+
+
+@media only screen and (max-width: 850px) {
+    section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: 100vh;
+    }
+
+    nav {
+        padding: 20px 100px 20px 100px;
+    }
+
+    .card {
+        width: 400px;
+        border-radius: 30px;
+    }
+
+    .card .formHeadline h1 {
+        font-size: 32px;
+        line-height: 38px;
+        
+    }
+
+    .card .formHeadline img {
+        top: 18px;
+    }
+
+    .card > span {
+        font-size: 17px;
+        line-height: 20px;
+    }
+
+    .card .loginCt {
+        margin-top: 20px;
+    }
+
+    .card .loginCt img {
+        left: 20px;
+    }
+
+    .card .loginCt input {
+        padding-left: 46px;
+    }
+
+    .privacyCheckbox {
+        margin-top: 20px;
+    }
+
+    .nextBtn {
+        margin-top: 20px;
+    }
+}
+
+
+@media only screen and (max-width: 460px) {
+    nav {
+        padding: 20px 0 20px 0;
+    }
+
+    .card {
+        width: 320px;
+        padding: 20px;
+    }
+
+    .card .formHeadline h1 {
+        font-size: 32px;
+        line-height: 38px;
+        
+    }
+
+    .card .formHeadline img {
+        top: 18px;
+        left: -18px;
+    }
+
+    .card > span {
+        font-size: 17px;
+        line-height: 20px;
+    }
+
+    .card .loginCt img {
+        left: 20px;
+    }
+
+    .card .loginCt input {
+        padding-left: 46px;
+    }
+
+    .footerCt {
+        width: 320px;
+    }
+}
