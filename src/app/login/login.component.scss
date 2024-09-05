@@ -383,8 +383,9 @@ nav {
 @media only screen and (max-width: 850px) {
     section {
         height: 100%;
-        overflow: hidden;
+        overflow-x: hidden;
     }
+
     nav {
         padding: 20px 100px 20px 100px;
     }
@@ -395,13 +396,32 @@ nav {
 
     .logoIntroAnimation {
         height: 56px;
-        top: 0;
+        top: 0px;
         left: 50%;
         transform: translate(-50%, 0);
+        transition: top 1000ms ease-in-out, height 1000ms ease-in-out;
     }
 
     nav .logoMainContainer {
         position: relative;
+    }
+
+    nav .logoMainContainer .logoContainer {
+        top: 570%;
+    }
+
+    .introLogoCt {
+        width: 260px;
+        height: 260px;
+    }
+
+    .introLogoCt img {
+        width: 70px;
+        height: 70px;
+    }
+
+    .introLogoCt span {
+        font-size: 56px;
     }
 
     .contentContainer {
@@ -491,5 +511,53 @@ nav {
                 color: #fff;
             }
         }
+    }
+}
+
+
+@media only screen and (max-width: 460px) {
+    nav {
+        padding: 20px 60px 20px 60px;
+    }
+
+    .card .loginCt img {
+        left: 20px;
+    }
+
+    .card .loginCt input {
+        padding-left: 46px;
+    }
+
+    .btnCt button:first-child {
+        padding: 12px 14px 12px 14px;
+    }
+
+    .btnCt button:last-child {
+        padding: 12px 14px 12px 14px;
+    }
+
+    .introLogoCt {
+        width: 300px;
+        height: 300px;
+    }
+
+    .introLogoCt img {
+        width: 60px;
+        height: 60px;
+        &.toLeft {
+            transform: translate(20%, -50%);
+            left: 0%;
+        }
+    }
+
+    .introLogoCt span {
+        font-size: 46px;
+        letter-spacing: normal;
+        transform: translate(-60%, -50%);
+    }
+
+    nav .logoMainContainer .logoContainer {
+        top: 604%;
+        height: 90px;
     }
 }
