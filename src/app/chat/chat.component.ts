@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, OnInit, Input, Output, EventEmitter, SimpleChanges, SimpleChange } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, Input, Output, EventEmitter, SimpleChanges, SimpleChange } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { UserService } from '../user.service';
 import { Conversation } from '../../models/conversation.class';
@@ -45,7 +45,6 @@ export class ChatComponent implements OnInit {
 
 
   allUsers = [] as Array<User>;
-  // list: Array<ConversationMessage> = [];
   list$: Observable<Array<ConversationMessage>>;
   private originalList$: Observable<Array<ConversationMessage>>;
   allChannels: Array<Channel> = [];
@@ -114,12 +113,6 @@ export class ChatComponent implements OnInit {
     this.originalList$ = this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId);
     this.list$ = this.originalList$;
 
-    /*
-    this.loadAllMessages().then(() => {
-      this.initializeChat()
-    });
-    */
-
     this.databaseService.loadUser(this.specific.createdBy)
       .then(creatorUser => {
         if (creatorUser.userId == this.user.userId) {
@@ -167,11 +160,6 @@ export class ChatComponent implements OnInit {
     this.isChatDataLoaded = false;
     this.sendingUser = new User()
     this.passiveUser = new User()
-
-    /*reset reactions and set reactions to observable to avoid double loading reactions*/
-    // this.chat.reactions = [];
-    // this.reactions = this.chat.reactions;
-    // this.chat.groupedReactions$.subscribe(groupedReactions => { this.groupedReactions = groupedReactions; });
 
     this.loadAllMessageReactions();
     this.list$.pipe(take(1)).subscribe(list => {
@@ -225,11 +213,7 @@ export class ChatComponent implements OnInit {
     this.mAndC.loadChannlesofUser();
     this.userEmojis$ = this.lastTwoEmojiService.watchUserEmojis(this.user.userId);
 
-    //schauen ob das Doppelladen Problem dadruch behoben wird 
-    // this.list = [];
-    // this.loadAllMessages().then(() => {
     this.initializeChatAfterChange();
-    // })
 
     if (changes != undefined && changes!['filterQuery']) {
       this.filterMessages(this.filterQuery);
@@ -240,25 +224,6 @@ export class ChatComponent implements OnInit {
      * searches for already sent messages
      * @param query the content of the searchbar
      */
-  // filterMessages(query: string): void {
-  //   setTimeout(() => {
-  //     if (query) {
-  //       this.filteredList = this.list.filter(message =>
-  //         message.content.toLowerCase().includes(query.toLowerCase())
-  //       );
-  //       // console.log('filtered list:', this.filteredList);
-
-  //       this.list = this.filteredList;
-  //       // console.log('list as filtered list:', this.list);
-  //     } else {
-  //       // this.loadAllMessages();
-  //       setTimeout(() => {
-  //         this.scrollToBottom();
-  //       }, 10);
-  //     }
-  //   }, 1300);
-  // }
-
   filterMessages(query: string): void {
     if (query) {
       this.list$ = this.originalList$.pipe(
@@ -269,7 +234,7 @@ export class ChatComponent implements OnInit {
     } else {
       this.list$ = this.originalList$;
     }
-  
+
     setTimeout(() => {
       this.scrollToBottom();
     }, 10);
@@ -295,46 +260,9 @@ export class ChatComponent implements OnInit {
     }, 1000);
   }
 
-
-  /**
-   * Loads all messages of the conversation
-   * @returns an array with all messages of the conversation
-   */
-  // loadAllMessages(): Promise<void> {
-  //   return this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId).then(messageList => {
-  //     this.list = messageList;
-  //     this.list.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-  //   });
-  // }
-
-
   /**
    * loads all message reactions and groups them after DOM is loaded
    */
-  // loadAllMessageReactions() {
-  //   for (let i = 0; i < this.list.length; i++) {
-  //     const list = this.list[i];
-  //     this.databaseService.loadConversationMessagesReactions(this.user.userId, this.specific.conversationId, list.messageId).then(reaction => {
-  //       reaction.forEach(reaction => {
-  //         this.reactions.push(reaction)
-  //       });
-  //     })
-  //   }
-  // }
-  // loadAllMessageReactions() {
-  //   this.list$.pipe(take(1)).subscribe(list => {
-  //     const reactionPromises = list.map(message => 
-  //       this.databaseService.loadConversationMessagesReactions(this.user.userId, this.specific.conversationId, message.messageId)
-  //     );
-
-  //     Promise.all(reactionPromises).then(reactionLists => {
-  //       this.reactions = reactionLists.flat();
-  //       this.chat.reactions = this.reactions;
-  //       this.chat.groupReactions(list);
-  //     });
-  //   });
-  // }
-
   loadAllMessageReactions() {
     this.list$.pipe(
       switchMap(list => {
@@ -356,28 +284,6 @@ export class ChatComponent implements OnInit {
   /**
    * saves the new message into the database and displays it in the chat area
    */
-  // saveNewMessage() {
-  //   if (this.content == '' && this.fileUpload.downloadURL == '') {
-  //     this.displayEmptyContentError();
-  //   } else {
-  //     this.list = [];
-  //     let newMessage: ConversationMessage = this.databaseService.createConversationMessage(this.specific, this.content, this.user.userId, this.fileUpload.downloadURL)
-
-  //     this.databaseService.addConversationMessage(this.specific, newMessage)
-
-  //     this.content = '';
-  //     const newContent = '';
-  //     this.mAndC.content.next(newContent);
-  //     this.loadAllMessages()
-
-  //     setTimeout(() => {
-  //       this.scrollToBottom();
-  //     }, 10);
-
-  //     this.fileUpload.downloadURL = '';
-  //   }
-  // }
-
   saveNewMessage() {
     if (this.content == '' && this.fileUpload.downloadURL == '') {
       this.displayEmptyContentError();
@@ -418,31 +324,6 @@ export class ChatComponent implements OnInit {
    * @param reactionbar infos about the last two used emoji
    * @returns returns nothing if the user already used the selected emoji
    */
-  // async saveNewMessageReaction(event: any, convo: ConversationMessage, userId: string, reactionbar?: string) {
-  //   let emoji: string
-  //   if (reactionbar) {
-  //     emoji = reactionbar
-  //   } else {
-  //     emoji = event.emoji.native
-  //   }
-
-  //   const userAlreadyReacted = await this.userHasAlreadyReacted(convo, emoji, userId);
-  //   if (userAlreadyReacted) {
-  //     return;
-  //   }
-
-  //   await this.createAndSaveReaction(convo, emoji, userId);
-
-  //   setTimeout(() => {
-  //     this.chat.groupReactions(this.list)
-  //   }, 500);
-
-  //   this.chat.checkIfEmojiIsAlreadyInUsedLastEmojis(this.user, emoji, userId);
-  //   this.mAndC.loadUsersOfUser();
-  //   this.mAndC.loadChannlesofUser()
-  //   this.mAndC.selectedMessageId = null;
-  // }
-
   async saveNewMessageReaction(event: any, convo: ConversationMessage, userId: string, reactionbar?: string) {
     let emoji: string;
     if (reactionbar) {
@@ -458,7 +339,6 @@ export class ChatComponent implements OnInit {
 
     await this.createAndSaveReaction(convo, emoji, userId);
 
-    // Aktualisieren Sie die Reaktionen
     this.loadAllMessageReactions();
 
     this.list$.pipe(take(1)).subscribe(list => {
@@ -554,8 +434,6 @@ export class ChatComponent implements OnInit {
     }).catch(error => {
       // console.error('Error updating message: ', error);
     });
-
-    // this.loadAllMessages();
   }
 
   /**
@@ -581,4 +459,3 @@ export class ChatComponent implements OnInit {
     }
   }
 }
-
