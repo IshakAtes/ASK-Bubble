@@ -56,7 +56,7 @@
         </div> <!--main-chat-header END-->
     
 
-        @if(messageList.length > 0){
+        @if(messageList$ | async; as messageList) {
             <div class="chat-area">
                 <div class="time-separator">
                     <div class="date">
@@ -428,7 +428,7 @@
             </div>
         </div> 
 
-        @if(messageList.length > 0){
+        @if(messageList$ | async; as messageList) {
             <div class="chat-area">
                 <div class="time-separator">
                     <div class="date">

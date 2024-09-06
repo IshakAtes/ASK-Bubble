@@ -20,6 +20,7 @@ import { Reaction } from '../../models/reactions.class';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { Conversation } from '../../models/conversation.class';
 import { ChannelThread } from '../../models/channelThread.class';
+import { combineLatest, from, map, Observable, switchMap, take } from 'rxjs';
 
 
 
@@ -49,7 +50,9 @@ export class ChannelComponent implements OnInit {
   @Output() emitThread = new EventEmitter<ChannelThread>();
 
   memberList: Array<User> = [];
-  messageList: Array<ChannelMessage>
+  // messageList: Array<ChannelMessage>
+  messageList$: Observable<Array<ChannelMessage>>;
+  private originalMessageList$: Observable<Array<ChannelMessage>>;
   filteredMessageList: Array<ChannelMessage>
   reactions: Array<Reaction> = [];
   groupedReactions: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
@@ -110,21 +113,29 @@ export class ChannelComponent implements OnInit {
   /**
    * loads all needed data after DOM is loaded
    */
+  // ngOnInit() {
+  //   this.memberList = [];
+  //   this.messageList = [];
+  //   setTimeout(() => {
+  //     Promise.all([
+  //       this.loadMemberList(),
+  //       this.loadChannelMessages(),
+  //       this.loadChannelCreator(),
+  //       this.loadAllMessageReactions(),
+  //     ]).then(() => {
+  //       this.initializeChannel();
+  //     }).catch(error => {
+  //       // console.log('this ', error)
+  //     });
+  //   }, 500);
+  // }
+
   ngOnInit() {
-    this.memberList = [];
-    this.messageList = [];
-    setTimeout(() => {
-      Promise.all([
-        this.loadMemberList(),
-        this.loadChannelMessages(),
-        this.loadChannelCreator(),
-        this.loadAllMessageReactions(),
-      ]).then(() => {
-        this.initializeChannel();
-      }).catch(error => {
-        // console.log('this ', error)
-      });
-    }, 500);
+    this.messageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
+    this.originalMessageList$ = this.messageList$;
+    this.loadAllMessageReactions();
+    this.loadMemberList();
+    this.loadChannelCreator();
   }
 
 
@@ -132,14 +143,14 @@ export class ChannelComponent implements OnInit {
    * loads all message reactions and groups them after DOM
    * is loaded
    */
-  initializeChannel() {
-    this.loadAllMessageReactions()
-    setTimeout(() => {
-      this.chatService.groupReactions(this.messageList).then(() => {
-        this.isdataLoaded = true;
-      })
-    }, 1000);
-  }
+  // initializeChannel() {
+  //   this.loadAllMessageReactions()
+  //   setTimeout(() => {
+  //     this.chatService.groupReactions(this.messageList).then(() => {
+  //       this.isdataLoaded = true;
+  //     })
+  //   }, 1000);
+  // }
 
 
   /**
@@ -151,7 +162,7 @@ export class ChannelComponent implements OnInit {
       setTimeout(() => {
         Promise.all([
           this.loadMemberList(),
-          this.loadChannelMessages(),
+          // this.loadChannelMessages(),
           this.loadChannelCreator(),
         ]).then(() => {
           this.reload = false;
@@ -159,7 +170,7 @@ export class ChannelComponent implements OnInit {
         }).catch(error => { /* console.log('this ', error)*/ });
       }, 1000);
     }
-    if (changes!= undefined && changes!['filterQuery']) {
+    if (changes != undefined && changes!['filterQuery']) {
       this.filterMessages(this.filterQuery);
     }
   }
@@ -168,12 +179,12 @@ export class ChannelComponent implements OnInit {
   /**
    * reset all neccessary variables to default before loading
    */
-  setDefaultForNgOnChange(){
+  setDefaultForNgOnChange() {
     this.chatService.reactions = [];
     this.reactions = this.chatService.reactions;
     this.chatService.groupedReactions$.subscribe(groupedReactions => { this.groupedReactions = groupedReactions; });
     this.memberList = [];
-    this.messageList = [];
+    // this.messageList = [];
     this.isdataLoaded = false;
   }
 
@@ -181,42 +192,75 @@ export class ChannelComponent implements OnInit {
    * searches for already sent messages
    * @param query the content of the searchbar
    */
-  filterMessages(query: string): void {
-    setTimeout(() => {
-      if (query) {
-        this.filteredMessageList = this.messageList.filter(message =>
-          message.content.toLowerCase().includes(query.toLowerCase())
-        );
-        // console.log('filtered list:', this.filteredMessageList);
-        this.messageList = this.filteredMessageList;
-        // console.log('list as filtered list:', this.messageList);
-      } else {
-        this.loadChannelMessages();
-        setTimeout(() => {
-          this.scrollToBottom();
-        }, 1000);
-      }
-    }, 1300);   
-}
+  // filterMessages(query: string): void {
+  //   setTimeout(() => {
+  //     if (query) {
+  //       this.filteredMessageList = this.messageList.filter(message =>
+  //         message.content.toLowerCase().includes(query.toLowerCase())
+  //       );
+  //       // console.log('filtered list:', this.filteredMessageList);
+  //       this.messageList = this.filteredMessageList;
+  //       // console.log('list as filtered list:', this.messageList);
+  //     } else {
+  //       this.loadChannelMessages();
+  //       setTimeout(() => {
+  //         this.scrollToBottom();
+  //       }, 1000);
+  //     }
+  //   }, 1300);
+  // }
 
+  filterMessages(query: string): void {
+    if (query) {
+      this.messageList$ = this.originalMessageList$.pipe(
+        map(messages => messages.filter(message =>
+          message.content.toLowerCase().includes(query.toLowerCase())
+        ))
+      );
+    } else {
+      this.messageList$ = this.originalMessageList$;
+    }
+
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 10);
+  }
 
   /**
    * loads all message reactions and groups them after something changed
    * in the channel
    */
+  // initializeChannelAfterChange() {
+  //   this.loadAllMessageReactions()
+  //   setTimeout(() => {
+  //     this.chatService.groupReactions(this.messageList)
+  //       .then(() => {
+  //         this.changeReload();
+  //         this.isdataLoaded = true;
+  //         setTimeout(() => {
+  //           this.scrollToBottom();
+  //           this.setFocus();
+  //         }, 1000);
+  //       })
+  //   }, 1000);
+  // }
+
   initializeChannelAfterChange() {
-    this.loadAllMessageReactions()
-    setTimeout(() => {
-      this.chatService.groupReactions(this.messageList)
-        .then(() => {
-          this.changeReload();
-          this.isdataLoaded = true;
-          setTimeout(() => {
-            this.scrollToBottom();
-            this.setFocus();
-          }, 1000);
-        })
-    }, 1000);
+    this.loadAllMessageReactions();
+    
+    this.messageList$.pipe(
+      take(1),
+      switchMap(messageList => {
+        return from(this.chatService.groupReactions(messageList));
+      })
+    ).subscribe(() => {
+      this.changeReload();
+      this.isdataLoaded = true;
+      setTimeout(() => {
+        this.scrollToBottom();
+        this.setFocus();
+      }, 1000);
+    });
   }
 
 
@@ -230,7 +274,7 @@ export class ChannelComponent implements OnInit {
 
   /**
    * loads the memberlist of the channel
-   * @returns  promise 
+   * @returns  promise
    */
   loadMemberList(): Promise<void> {
     const memberPromises = this.channel.membersId.map(member => {
@@ -259,54 +303,103 @@ export class ChannelComponent implements OnInit {
    * loads all channel messages of the channel
    * @returns promise
    */
-  loadChannelMessages(): Promise<void> {
-    return this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId)
-      .then(messages => {
-        this.messageList = messages;
-        this.messageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-      })
-  }
+  // loadChannelMessages(): Promise<void> {
+  //   return this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId)
+  //     .then(messages => {
+  //       this.messageList = messages;
+  //       this.messageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+  //     })
+  // }
 
 
   /**
    * loads all message reactions of the messages in the channel
    */
+  // loadAllMessageReactions() {
+  //   for (let i = 0; i < this.messageList.length; i++) {
+  //     const list = this.messageList[i];
+  //     this.database.loadChannelMessagesReactions(this.activeUser.userId, this.channel.channelId, list.messageId)
+  //       .then(reactions => {
+  //         reactions.forEach(reaction => {
+  //           this.reactions.push(reaction)
+  //         });
+  //       })
+  //   }
+  // }
+
   loadAllMessageReactions() {
-    for (let i = 0; i < this.messageList.length; i++) {
-      const list = this.messageList[i];
-      this.database.loadChannelMessagesReactions(this.activeUser.userId, this.channel.channelId, list.messageId)
-        .then(reactions => {
-          reactions.forEach(reaction => {
-            this.reactions.push(reaction)
-          });
-        })
-    }
+    this.messageList$.pipe(
+      take(1),
+      switchMap(messages => {
+        const reactionObservables = messages.map(message =>
+          this.database.loadChannelMessagesReactions(this.activeUser.userId, this.channel.channelId, message.messageId)
+        );
+        return combineLatest(reactionObservables);
+      })
+    ).subscribe(reactionLists => {
+      this.reactions = reactionLists.flat();
+      this.chatService.reactions = this.reactions;
+      this.messageList$.pipe(take(1)).subscribe(messages => {
+        this.chatService.groupReactions(messages);
+      });
+    });
   }
 
 
   /**
    * saves the new message into the database and displays it in the chat area
    */
+  // saveNewMessage() {
+  //   if (this.content == '' && this.fileService.downloadURL == '') {
+  //     this.displayEmptyContentError();
+  //   } else {
+  //     this.messageList = [];
+  //     let newMessage: ChannelMessage = this.database.createChannelMessage(this.channel, this.content, this.activeUser.userId, this.fileService.downloadURL)
+  //     this.database.addChannelMessage(this.channel, newMessage)
+  //     this.content = '';
+  //     const newContent = '';
+  //     this.mAndC.content.next(newContent);
+  //     this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId).then(messageList => {
+  //       this.messageList = messageList;
+  //       this.messageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+  //     })
+  //     setTimeout(() => { this.scrollToBottom(); }, 1000);
+  //     this.fileService.downloadURL = '';
+  //   }
+  // }
+
   saveNewMessage() {
     if (this.content == '' && this.fileService.downloadURL == '') {
       this.displayEmptyContentError();
     } else {
-      this.messageList = [];
-      let newMessage: ChannelMessage = this.database.createChannelMessage(this.channel, this.content, this.activeUser.userId, this.fileService.downloadURL)
-      this.database.addChannelMessage(this.channel, newMessage)
-      this.content = '';
-      const newContent = '';
-      this.mAndC.content.next(newContent);
-      this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId).then(messageList => {
-        this.messageList = messageList;
-        this.messageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-      })
-      setTimeout(() => {this.scrollToBottom();}, 1000);
-      this.fileService.downloadURL = '';
+      let newMessage: ChannelMessage = this.database.createChannelMessage(this.channel, this.content, this.activeUser.userId, this.fileService.downloadURL);
+      this.database.addChannelMessage(this.channel, newMessage).then(() => {
+        this.content = '';
+        const newContent = '';
+        this.mAndC.content.next(newContent);
+        
+        // Aktualisieren Sie die messageList$
+        this.messageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
+        
+        // Aktualisieren Sie auch die originalMessageList$
+        this.originalMessageList$ = this.messageList$;
+  
+        // Laden Sie die Reaktionen neu
+        this.loadAllMessageReactions();
+  
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 1000);
+        
+        this.fileService.downloadURL = '';
+      }).catch(error => {
+        console.error("Error adding message: ", error);
+        // Hier können Sie eine Fehlermeldung für den Benutzer anzeigen
+      });
     }
   }
 
-  
+
   /**
    * avoids sending empty messages
    */
@@ -321,22 +414,40 @@ export class ChannelComponent implements OnInit {
 
   /**
    * saves the message reaction to the database
-   * @param event 
+   * @param event
    * @param message channelmessage object
    * @param userId userid
    * @param reactionbar infos about the last two used emoji
    * @returns returns nothing if the user already used the selected emoji
    */
+  // async saveNewMessageReaction(event: any, message: ChannelMessage, userId: string, reactionbar?: string) {
+  //   let emoji: string
+  //   if (reactionbar) { emoji = reactionbar } else { emoji = event.emoji.native }
+  //   const userAlreadyReacted = this.reactions.some(reaction => reaction.messageId === message.messageId && reaction.emoji === emoji && reaction.userId === userId);
+  //   if (userAlreadyReacted) { return; }
+  //   await this.createAndSaveChannelReaction(message, emoji, userId);
+  //   setTimeout(() => { this.chatService.groupReactions(this.messageList) }, 500);
+  //   this.chatService.checkIfEmojiIsAlreadyInUsedLastEmojis(this.activeUser, emoji, userId);
+  //   this.mAndC.loadUsersOfUser();
+  //   this.mAndC.loadChannlesofUser()
+  //   this.mAndC.selectedMessageId = null;
+  // }
+
   async saveNewMessageReaction(event: any, message: ChannelMessage, userId: string, reactionbar?: string) {
-    let emoji: string
-    if (reactionbar) { emoji = reactionbar } else { emoji = event.emoji.native }
-    const userAlreadyReacted = this.reactions.some(reaction => reaction.messageId === message.messageId && reaction.emoji === emoji && reaction.userId === userId);
-    if (userAlreadyReacted) {return;}
+    let emoji: string = reactionbar || event.emoji.native;
+
+    const userAlreadyReacted = this.reactions.some(reaction =>
+      reaction.messageId === message.messageId && reaction.emoji === emoji && reaction.userId === userId
+    );
+
+    if (userAlreadyReacted) return;
+
     await this.createAndSaveChannelReaction(message, emoji, userId);
-    setTimeout(() => { this.chatService.groupReactions(this.messageList) }, 500);
+    this.loadAllMessageReactions();
+
     this.chatService.checkIfEmojiIsAlreadyInUsedLastEmojis(this.activeUser, emoji, userId);
     this.mAndC.loadUsersOfUser();
-    this.mAndC.loadChannlesofUser()
+    this.mAndC.loadChannlesofUser();
     this.mAndC.selectedMessageId = null;
   }
 
@@ -366,7 +477,7 @@ export class ChannelComponent implements OnInit {
     this.editService.selectedMessageIdEdit = null;
     message.content = updatedContent;
     this.database.updateChannelMessage(message, this.channel)
-    this.loadChannelMessages();
+    // this.loadChannelMessages();
   }
 
 
@@ -385,13 +496,13 @@ export class ChannelComponent implements OnInit {
    * scrolls to the newest message of the channel
    */
   scrollToBottom(): void {
-    try {
-      if (this.messageList.length > 0) {
+    // try {
+      // if (this.messageList.length > 0) {
         this.lastDiv.nativeElement.scrollIntoView();
-      }
-    } catch (err) {
-      console.error('Scroll to bottom failed', err);
-    }
+    //   }
+    // } catch (err) {
+    //   console.error('Scroll to bottom failed', err);
+    // }
   }
 
 
@@ -451,7 +562,7 @@ export class ChannelComponent implements OnInit {
 
 
   /**
-   * creates a new or opens an already existing thred 
+   * creates a new or opens an already existing thred
    * @param message channel message object
    */
   createOrOpenThread(message: ChannelMessage) {

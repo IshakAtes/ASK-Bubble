@@ -687,11 +687,18 @@ export class DatabaseService {
    * @param channel channel object
    * @param channelMessage message object
    */
+  // addChannelMessage(channel: Channel, channelMessage: ChannelMessage) {
+  //   channel.membersId.forEach(userId => {
+  //     setDoc(doc(this.firestore, 'users/' + userId + '/channels/' + channel.channelId + '/channelmessages', channelMessage.messageId), channelMessage);
+  //   });
+  // }
+
   addChannelMessage(channel: Channel, channelMessage: ChannelMessage) {
-    channel.membersId.forEach(userId => {
-      setDoc(doc(this.firestore, 'users/' + userId + '/channels/' + channel.channelId + '/channelmessages', channelMessage.messageId), channelMessage);
-    });
-  }
+  const promises = channel.membersId.map(userId => 
+    setDoc(doc(this.firestore, 'users/' + userId + '/channels/' + channel.channelId + '/channelmessages', channelMessage.messageId), channelMessage)
+  );
+  return Promise.all(promises);
+}
 
 
   /**
@@ -999,29 +1006,46 @@ export class DatabaseService {
    * @param channelId channel id
    * @returns list of messages of a specific channel
    */
-  loadChannelMessages(userId: string, channelId: string): Promise<Array<ChannelMessage>> {
-    return new Promise<Array<ChannelMessage>>((resolve, reject) => {
-      const messageList = [] as Array<ChannelMessage>
-      onSnapshot(collection(this.firestore, 'users/' + userId + '/channels/' + channelId + '/channelmessages'), (messages) => {
-        messages.forEach(message => {
-          const messageData = message.data();
-          const channelMessageObject = {} as ChannelMessage;
-          channelMessageObject.channelId = messageData['channelId'];
-          channelMessageObject.content = messageData['content'];
-          channelMessageObject.createdAt = messageData['createdAt'];
-          channelMessageObject.createdBy = messageData['createdBy'];
-          channelMessageObject.fileUrl = messageData['fileUrl'];
-          channelMessageObject.threadId = messageData['threadId'];
-          channelMessageObject.messageId = messageData['messageId'];
-          channelMessageObject.threadMessageCount = messageData['threadMessageCount'];
-          channelMessageObject.lastThreadMessage = messageData['lastThreadMessage'];
-          messageList.push(channelMessageObject);
-        })
-        resolve(messageList);
-      }, (error) => {
-        reject(error)
-      })
-    })
+  // loadChannelMessages(userId: string, channelId: string): Promise<Array<ChannelMessage>> {
+  //   return new Promise<Array<ChannelMessage>>((resolve, reject) => {
+  //     const messageList = [] as Array<ChannelMessage>
+  //     onSnapshot(collection(this.firestore, 'users/' + userId + '/channels/' + channelId + '/channelmessages'), (messages) => {
+  //       messages.forEach(message => {
+  //         const messageData = message.data();
+  //         const channelMessageObject = {} as ChannelMessage;
+  //         channelMessageObject.channelId = messageData['channelId'];
+  //         channelMessageObject.content = messageData['content'];
+  //         channelMessageObject.createdAt = messageData['createdAt'];
+  //         channelMessageObject.createdBy = messageData['createdBy'];
+  //         channelMessageObject.fileUrl = messageData['fileUrl'];
+  //         channelMessageObject.threadId = messageData['threadId'];
+  //         channelMessageObject.messageId = messageData['messageId'];
+  //         channelMessageObject.threadMessageCount = messageData['threadMessageCount'];
+  //         channelMessageObject.lastThreadMessage = messageData['lastThreadMessage'];
+  //         messageList.push(channelMessageObject);
+  //       })
+  //       resolve(messageList);
+  //     }, (error) => {
+  //       reject(error)
+  //     })
+  //   })
+  // }
+
+  loadChannelMessages(userId: string, channelId: string): Observable<Array<ChannelMessage>> {
+    const path = `users/${userId}/channels/${channelId}/channelmessages`;
+    return collectionData(collection(this.firestore, path)).pipe(
+      map(messages => messages.map(messageData => ({
+        channelId: messageData['channelId'],
+        content: messageData['content'],
+        createdAt: messageData['createdAt'],
+        createdBy: messageData['createdBy'],
+        fileUrl: messageData['fileUrl'],
+        threadId: messageData['threadId'],
+        messageId: messageData['messageId'],
+        threadMessageCount: messageData['threadMessageCount'],
+        lastThreadMessage: messageData['lastThreadMessage'],
+      } as ChannelMessage)))
+    );
   }
 
 
@@ -1063,30 +1087,43 @@ export class DatabaseService {
    * @param channelMessageId message id
    * @returns list of reactions of a single message in the channel
    */
-  loadChannelMessagesReactions(userId: string, channelId: string, channelMessageId: string): Promise<Array<Reaction>> {
-    return new Promise<Array<Reaction>>((resolve, reject) => {
-      const reactionList = [] as Array<Reaction>;
+  // loadChannelMessagesReactions(userId: string, channelId: string, channelMessageId: string): Promise<Array<Reaction>> {
+  //   return new Promise<Array<Reaction>>((resolve, reject) => {
+  //     const reactionList = [] as Array<Reaction>;
 
-      const path = `users/${userId}/channels/${channelId}/channelmessages/${channelMessageId}/reactions`;
-      const reactionsCollection = collection(this.firestore, path);
+  //     const path = `users/${userId}/channels/${channelId}/channelmessages/${channelMessageId}/reactions`;
+  //     const reactionsCollection = collection(this.firestore, path);
 
-      onSnapshot(reactionsCollection, (snapshot) => {
-        snapshot.forEach((doc) => {
-          const reactionData = doc.data();
-          const reactionObject = {
-            emoji: reactionData['emoji'],
-            messageId: reactionData['messageId'],
-            reactionId: reactionData['reactionId'],
-            userId: reactionData['userId'],
-            userName: reactionData['userName'],
-          } as Reaction;
-          reactionList.push(reactionObject);
-        });
-        resolve(reactionList);
-      }, (error) => {
-        reject(error);
-      });
-    });
+  //     onSnapshot(reactionsCollection, (snapshot) => {
+  //       snapshot.forEach((doc) => {
+  //         const reactionData = doc.data();
+  //         const reactionObject = {
+  //           emoji: reactionData['emoji'],
+  //           messageId: reactionData['messageId'],
+  //           reactionId: reactionData['reactionId'],
+  //           userId: reactionData['userId'],
+  //           userName: reactionData['userName'],
+  //         } as Reaction;
+  //         reactionList.push(reactionObject);
+  //       });
+  //       resolve(reactionList);
+  //     }, (error) => {
+  //       reject(error);
+  //     });
+  //   });
+  // }
+
+  loadChannelMessagesReactions(userId: string, channelId: string, channelMessageId: string): Observable<Array<Reaction>> {
+    const path = `users/${userId}/channels/${channelId}/channelmessages/${channelMessageId}/reactions`;
+    return collectionData(collection(this.firestore, path)).pipe(
+      map(reactions => reactions.map(reactionData => ({
+        emoji: reactionData['emoji'],
+        messageId: reactionData['messageId'],
+        reactionId: reactionData['reactionId'],
+        userId: reactionData['userId'],
+        userName: reactionData['userName'],
+      } as Reaction)))
+    );
   }
 
 
