@@ -1044,7 +1044,8 @@ export class DatabaseService {
         messageId: messageData['messageId'],
         threadMessageCount: messageData['threadMessageCount'],
         lastThreadMessage: messageData['lastThreadMessage'],
-      } as ChannelMessage)))
+      } as ChannelMessage))),
+      map(messages => messages.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis()))
     );
   }
 
