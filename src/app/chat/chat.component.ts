@@ -563,7 +563,6 @@ export class ChatComponent implements OnInit {
    * @param message conversation message object
    */
   createOrOpenThread(message: ConversationMessage) {
-    debugger
     if (message.threadId !== '') {
       // console.log('Thread already exists');
       this.databaseService.loadSpecificThread(message, this.sendingUser)
