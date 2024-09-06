@@ -49,8 +49,6 @@ export class ThreadComponent {
   @Output() emitReloadToFalse = new EventEmitter<boolean>()
   @Output() emitCloseThread = new EventEmitter<string>();
 
-  // channelThreadMessageList: Array<ChannelThreadMessage> = [];
-  // conversationThreadMessagelist: Array<ThreadMessage> = [];
   channelThreadMessageList$: Observable<Array<ChannelThreadMessage>>;
   conversationThreadMessagelist$: Observable<Array<ThreadMessage>>;
   allUsers = [] as Array<User>;
@@ -104,9 +102,6 @@ export class ThreadComponent {
     setTimeout(() => {
       this.loadAllMessages()
       this.loadAllMessageReactions()
-      console.log('reactions');
-      console.log(this.groupedReactionsThread);
-      console.log(this.reactions);
     }, 1000);
 
   }

@@ -1098,33 +1098,6 @@ export class DatabaseService {
    * @param channelMessageId message id
    * @returns list of reactions of a single message in the channel
    */
-    // loadChannelThreadMessageReactions(userId: string, channelId: string, channelMessageId: string, threadMessage: ChannelThreadMessage): Promise<Array<Reaction>> {
-    //   return new Promise<Array<Reaction>>((resolve, reject) => {
-    //     const reactionList = [] as Array<Reaction>;
-  
-
-    //     const path = `users/${userId}/channels/${channelId}/channelmessages/${channelMessageId}/threads/${threadMessage.threadId}/threadmessages/${threadMessage.threadMessageId}/reactions`;
-    //     const reactionsCollection = collection(this.firestore, path);
-  
-    //     onSnapshot(reactionsCollection, (snapshot) => {
-    //       snapshot.forEach((doc) => {
-    //         const reactionData = doc.data();
-    //         const reactionObject = {
-    //           emoji: reactionData['emoji'],
-    //           messageId: reactionData['messageId'],
-    //           reactionId: reactionData['reactionId'],
-    //           userId: reactionData['userId'],
-    //           userName: reactionData['userName'],
-    //         } as Reaction;
-    //         reactionList.push(reactionObject);
-    //       });
-    //       resolve(reactionList);
-    //     }, (error) => {
-    //       reject(error);
-    //     });
-    //   });
-    // }
-
     loadChannelThreadMessageReactions(userId: string, channelId: string, channelMessageId: string, threadMessage: ChannelThreadMessage): Observable<Array<Reaction>> {
       const path = `users/${userId}/channels/${channelId}/channelmessages/${channelMessageId}/threads/${threadMessage.threadId}/threadmessages/${threadMessage.threadMessageId}/reactions`;
       return collectionData(collection(this.firestore, path)).pipe(
@@ -1146,33 +1119,6 @@ export class DatabaseService {
    * @param channelMessageId message id
    * @returns list of reactions of a single message in the channel
    */
-    //  loadConversationThreadMessageReactions(userId: string, conversationId: string, conversationMessageId: string, threadMessage: ThreadMessage): Promise<Array<Reaction>> {
-    //   return new Promise<Array<Reaction>>((resolve, reject) => {
-    //     const reactionList = [] as Array<Reaction>;
-  
-    //     // /users/Adxrm7CExizb76lVrknu/conversations/CONV-Adxrm7CExizb76lVrknu-0.9989840950446485/conversationmessages/CONV-MSG-0.40775953339191817/threads/THR-Adxrm7CExizb76lVrknu-0.5432444949979081/threadmessages/THR-MSG-0.6462466209007238/reactions/THR-MSG-REACT-0.703860335842865
-    //     const path = `users/${userId}/conversations/${conversationId}/conversationmessages/${conversationMessageId}/threads/${threadMessage.threadId}/threadmessages/${threadMessage.threadMessageId}/reactions`;
-    //     const reactionsCollection = collection(this.firestore, path);
-  
-    //     onSnapshot(reactionsCollection, (snapshot) => {
-    //       snapshot.forEach((doc) => {
-    //         const reactionData = doc.data();
-    //         const reactionObject = {
-    //           emoji: reactionData['emoji'],
-    //           messageId: reactionData['messageId'],
-    //           reactionId: reactionData['reactionId'],
-    //           userId: reactionData['userId'],
-    //           userName: reactionData['userName'],
-    //         } as Reaction;
-    //         reactionList.push(reactionObject);
-    //       });
-    //       resolve(reactionList);
-    //     }, (error) => {
-    //       reject(error);
-    //     });
-    //   });
-    // }
-
     loadConversationThreadMessageReactions(userId: string, conversationId: string, conversationMessageId: string, threadMessage: ThreadMessage): Observable<Array<Reaction>> {
       const path = `users/${userId}/conversations/${conversationId}/conversationmessages/${conversationMessageId}/threads/${threadMessage.threadId}/threadmessages/${threadMessage.threadMessageId}/reactions`;
       return collectionData(collection(this.firestore, path)).pipe(
@@ -1340,32 +1286,6 @@ export class DatabaseService {
   //  * @param conversationId conversation id
   //  * @returns list of conversation messages
   //  */
-  // loadConversationMessages(userId: string, conversationId: string): Promise<Array<ConversationMessage>> {
-  //   return new Promise<Array<ConversationMessage>>((resolve, reject) => {
-  //     const messageList = [] as Array<ConversationMessage>
-      // onSnapshot(collection(this.firestore, 'users/' + userId + '/conversations/' + conversationId + '/conversationmessages'), (messages) => {
-  //       messages.forEach(message => {
-  //         const messageData = message.data();
-  //         const messageObject = {} as ConversationMessage;
-  //         messageObject.conversationId = messageData['conversationId'];
-  //         messageObject.content = messageData['content'];
-  //         messageObject.createdAt = messageData['createdAt'];
-  //         messageObject.createdBy = messageData['createdBy'];
-  //         messageObject.fileUrl = messageData['fileUrl'];
-  //         messageObject.threadId = messageData['threadId'];
-  //         messageObject.messageId = messageData['messageId'];
-  //         messageObject.threadMessageCount = messageData['threadMessageCount'];
-  //         messageObject.lastThreadMessage = messageData['lastThreadMessage'];
-  //         messageList.push(messageObject);
-  //       })
-  //       resolve(messageList);
-  //     }, (error) => {
-  //       reject(error)
-  //     })
-  //   })
-  // }
-
-
   loadConversationMessages(userId: string, conversationId: string): Observable<Array<ConversationMessage>> {
     const messagesRef = collection(this.firestore, `users/${userId}/conversations/${conversationId}/conversationmessages`);
     return collectionData(messagesRef).pipe(
@@ -1394,31 +1314,6 @@ export class DatabaseService {
    * @param conversationMessageId message id
    * @returns list of reactions of a conversation message
    */
-  // loadConversationMessagesReactions(userId: string, conversationId: string, conversationMessageId: string): Promise<Array<Reaction>> {
-  //   return new Promise<Array<Reaction>>((resolve, reject) => {
-  //     const reactionList = [] as Array<Reaction>;
-  //     const path = `users/${userId}/conversations/${conversationId}/conversationmessages/${conversationMessageId}/reactions`;
-  //     const reactionsCollection = collection(this.firestore, path);
-
-  //     onSnapshot(reactionsCollection, (snapshot) => {
-  //       snapshot.forEach((doc) => {
-  //         const reactionData = doc.data();
-  //         const reactionObject = {
-  //           emoji: reactionData['emoji'],
-  //           messageId: reactionData['messageId'],
-  //           reactionId: reactionData['reactionId'],
-  //           userId: reactionData['userId'],
-  //           userName: reactionData['userName'],
-  //         } as Reaction;
-  //         reactionList.push(reactionObject);
-  //       });
-  //       resolve(reactionList);
-  //     }, (error) => {
-  //       reject(error);
-  //     });
-  //   });
-  // }
-
   loadConversationMessagesReactions(userId: string, conversationId: string, conversationMessageId: string): Observable<Array<Reaction>> {
     const path = `users/${userId}/conversations/${conversationId}/conversationmessages/${conversationMessageId}/reactions`;
     const reactionsCollection = collection(this.firestore, path);
