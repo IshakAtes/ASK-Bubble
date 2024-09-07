@@ -445,7 +445,12 @@ export class ThreadComponent {
 
     if (this.channelThread) {
       this.channelThreadMessageList$.pipe(take(1)).subscribe(list => {
-
+        if(list.length == 0){
+          setTimeout(() => {
+            this.setFocus();
+          }, 1000);
+        }
+        else{
         this.chat.groupReactionsThread(list)
           .then(() => {
             setTimeout(() => {
@@ -453,6 +458,8 @@ export class ThreadComponent {
               this.setFocus();
             }, 1000);
           });
+        }
+
 
       });
     } else {
