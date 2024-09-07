@@ -173,9 +173,9 @@
                                 @if(message.threadMessageCount > 0){
                                     <div class="own-answer-bar">
                                         @if (message.threadMessageCount == 1) {
-                                            <span class="answer-count"> {{message.threadMessageCount}} Antwort</span>
+                                            <span (click)="createOrOpenThread(message)" class="answer-count"> {{message.threadMessageCount}} Antwort</span>
                                         } @else {
-                                            <span class="answer-count"> {{message.threadMessageCount}} Antworten</span>
+                                            <span (click)="createOrOpenThread(message)" class="answer-count"> {{message.threadMessageCount}} Antworten</span>
                                         }
                                         
                                         @if (message.lastThreadMessage) {
@@ -272,9 +272,9 @@
                                         @if(message.threadMessageCount > 0){
                                             <div class="own-answer-bar">
                                                 @if (message.threadMessageCount == 1) {
-                                                    <span class="answer-count"> {{message.threadMessageCount}} Antwort</span>
+                                                    <span (click)="createOrOpenThread(message)" class="answer-count"> {{message.threadMessageCount}} Antwort</span>
                                                 } @else {
-                                                    <span class="answer-count"> {{message.threadMessageCount}} Antworten</span>
+                                                    <span (click)="createOrOpenThread(message)" class="answer-count"> {{message.threadMessageCount}} Antworten</span>
                                                 }
                                                 
                                                 @if (message.lastThreadMessage) {
@@ -544,9 +544,9 @@
                                 @if(message.threadMessageCount > 0){
                                     <div class="own-answer-bar">
                                         @if (message.threadMessageCount == 1) {
-                                            <span class="answer-count"> {{message.threadMessageCount}} Antwort</span>
+                                            <span (click)="createOrOpenThread(message)" class="answer-count"> {{message.threadMessageCount}} Antwort</span>
                                         } @else {
-                                            <span class="answer-count"> {{message.threadMessageCount}} Antworten</span>
+                                            <span (click)="createOrOpenThread(message)" class="answer-count"> {{message.threadMessageCount}} Antworten</span>
                                         }
                                         
                                         @if (message.lastThreadMessage) {
@@ -639,9 +639,9 @@
                                         @if(message.threadMessageCount > 0){
                                             <div class="answer-bar">
                                                 @if (message.threadMessageCount == 1) {
-                                                    <span class="answer-count"> {{message.threadMessageCount}} Antwort</span>
+                                                    <span (click)="createOrOpenThread(message)" class="answer-count"> {{message.threadMessageCount}} Antwort</span>
                                                 } @else {
-                                                    <span class="answer-count"> {{message.threadMessageCount}} Antworten</span>
+                                                    <span (click)="createOrOpenThread(message)" class="answer-count"> {{message.threadMessageCount}} Antworten</span>
                                                 }
                                                 @if (message.lastThreadMessage) {
                                                 <span class="last-answer"> Letzte Antwort

@@ -290,6 +290,12 @@
     font-size: 18px;
     font-weight: 400;
     line-height: 24.55px;
+
+    &:hover {
+        cursor: pointer;
+        font-weight: 700;
+        color: #444DF2;
+    }
 }
 
 .last-answer {
@@ -389,6 +395,7 @@
         border-radius: 50px;
         background: #444DF2;
         color: white;
+        cursor: pointer;
     }
 }
 
