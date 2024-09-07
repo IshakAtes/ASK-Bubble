@@ -161,6 +161,10 @@ export class ChatComponent implements OnInit {
     this.sendingUser = new User()
     this.passiveUser = new User()
 
+    this.list$ = this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId);
+    this.originalList$ = this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId);
+    this.list$ = this.originalList$;
+    
     this.loadAllMessageReactions();
     this.list$.pipe(take(1)).subscribe(list => {
       setTimeout(() => {
@@ -235,9 +239,9 @@ export class ChatComponent implements OnInit {
       this.list$ = this.originalList$;
     }
 
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 10);
+    // setTimeout(() => {
+    //   this.scrollToBottom();
+    // }, 10);
   }
 
 

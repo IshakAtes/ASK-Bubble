@@ -157,22 +157,22 @@ export class ChannelComponent implements OnInit {
    * reloads the data after a change happend in the channel
    */
   ngOnChanges(changes?: SimpleChanges) {
-    if (this.reload) {
-      this.setDefaultForNgOnChange();
-      setTimeout(() => {
-        Promise.all([
-          this.loadMemberList(),
-          // this.loadChannelMessages(),
-          this.loadChannelCreator(),
-        ]).then(() => {
-          this.reload = false;
-          this.initializeChannelAfterChange()
-        }).catch(error => { /* console.log('this ', error)*/ });
-      }, 1000);
-    }
-    if (changes != undefined && changes!['filterQuery']) {
+    this.setDefaultForNgOnChange();
+    setTimeout(() => {
+      Promise.all([
+        this.loadMemberList(),
+        // this.loadChannelMessages(),
+        this.loadChannelCreator(),
+      ]).then(() => {
+        this.reload = false;
+        this.initializeChannelAfterChange()
+      }).catch(error => { /* console.log('this ', error)*/ });
+    }, 1000);
+ 
+
+   if (changes != undefined && changes!['filterQuery']) {
       this.filterMessages(this.filterQuery);
-    }
+   }
   }
 
 
@@ -221,9 +221,9 @@ export class ChannelComponent implements OnInit {
       this.messageList$ = this.originalMessageList$;
     }
 
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 10);
+    // setTimeout(() => {
+    //   this.scrollToBottom();
+    // }, 10);
   }
 
   /**
@@ -246,15 +246,17 @@ export class ChannelComponent implements OnInit {
   // }
 
   initializeChannelAfterChange() {
+    this.messageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
+    this.originalMessageList$ = this.messageList$;
     this.loadAllMessageReactions();
-    
     this.messageList$.pipe(
       take(1),
       switchMap(messageList => {
         return from(this.chatService.groupReactions(messageList));
       })
     ).subscribe(() => {
-      this.changeReload();
+      
+      //this.changeReload();
       this.isdataLoaded = true;
       setTimeout(() => {
         this.scrollToBottom();
@@ -496,6 +498,7 @@ export class ChannelComponent implements OnInit {
    * scrolls to the newest message of the channel
    */
   scrollToBottom(): void {
+    
     // try {
       // if (this.messageList.length > 0) {
         this.lastDiv.nativeElement.scrollIntoView();
