@@ -29,6 +29,7 @@
 
         <!-- @if (list.length>0) { -->
         @if (list$ | async; as list) {
+            @if (list.length > 0) {
 
         <div #chatArea class="chat-area">
             <div class="time-separator">
@@ -286,12 +287,14 @@
 
         </div>
 
+    }
+    @else {
+        <div class="chat-area">
+            
+        </div> 
+    }
         }
-        @else {
-            <div class="chat-area">
-                
-            </div> 
-        }
+        
 
 
         <div class="message-container-orientation">

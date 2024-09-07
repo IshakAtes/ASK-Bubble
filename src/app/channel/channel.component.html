@@ -57,6 +57,7 @@
     
 
         @if(messageList$ | async; as messageList) {
+            @if (messageList.length > 0) {
             <div class="chat-area">
                 <div class="time-separator">
                     <div class="date">
@@ -301,6 +302,8 @@
                 
             </div>
         }
+        }
+        
 
     
         <!-- END OF channelmessages -->
@@ -429,6 +432,7 @@
         </div> 
 
         @if(messageList$ | async; as messageList) {
+            @if (messageList.length > 0) {
             <div class="chat-area">
                 <div class="time-separator">
                     <div class="date">
@@ -665,6 +669,8 @@
                 
             </div>
         }
+        }
+        
 
 
 

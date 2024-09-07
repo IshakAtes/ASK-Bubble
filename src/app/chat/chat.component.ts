@@ -407,7 +407,10 @@ export class ChatComponent implements OnInit {
   scrollToBottom(): void {
     // try {
     // if (this.list.length > 0) {
-    this.lastDiv.nativeElement.scrollIntoView();
+    setTimeout(() => {
+      this.lastDiv.nativeElement.scrollIntoView();
+    }, 250);
+    
     //   }
     // } catch (err) {
     //   console.error('Scroll to bottom failed', err);

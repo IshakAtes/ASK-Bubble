@@ -501,7 +501,10 @@ export class ChannelComponent implements OnInit {
     
     // try {
       // if (this.messageList.length > 0) {
+      setTimeout(() => {
         this.lastDiv.nativeElement.scrollIntoView();
+      }, 250);
+        
     //   }
     // } catch (err) {
     //   console.error('Scroll to bottom failed', err);

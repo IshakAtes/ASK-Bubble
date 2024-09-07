@@ -389,17 +389,17 @@ export class ThreadComponent {
    * Scroll to the bottom of the chatarea 
    */
   scrollToBottom(): void {
-    try {
-      this.conversationThreadMessagelist$.pipe(take(1)).subscribe(messages => {
-        if (messages.length > 0) {
+    // try {
+    //   this.conversationThreadMessagelist$.pipe(take(1)).subscribe(messages => {
+    //     if (messages.length > 0) {
           setTimeout(() => {
             this.lastDiv.nativeElement.scrollIntoView();
-          }, 0);
-        }
-      });
-    } catch (err) {
-      console.error('Scroll to bottom failed', err);
-    }
+          }, 250);
+    //     }
+    //   });
+    // } catch (err) {
+    //   console.error('Scroll to bottom failed', err);
+    // }
   }
 
   /**
