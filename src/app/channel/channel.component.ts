@@ -113,15 +113,9 @@ export class ChannelComponent implements OnInit {
    * loads all needed data after DOM is loaded
    */
   ngOnInit() {
-    //debugger;
     this.messageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
     this.originalMessageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
     this.messageList$ = this.originalMessageList$;
-    //this.messageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
-    //this.originalMessageList$ = this.messageList$;
-    // this.loadAllMessageReactions();
-    // this.loadMemberList();
-    // this.loadChannelCreator();
   }
 
 
@@ -129,7 +123,6 @@ export class ChannelComponent implements OnInit {
    * reloads the data after a change happend in the channel
    */
   ngOnChanges(changes?: SimpleChanges) {
-    //debugger;
     this.isdataLoaded = false;
     this.setDefaultForNgOnChange();
     setTimeout(() => {
@@ -142,8 +135,6 @@ export class ChannelComponent implements OnInit {
         this.initializeChannelAfterChange()
       }).catch(error => { /* console.log('this ', error)*/ });
     }, 1000);
- 
-
    if (changes != undefined && changes!['filterQuery']) {
       this.filterMessages(this.filterQuery);
    }
@@ -154,15 +145,13 @@ export class ChannelComponent implements OnInit {
    * reset all neccessary variables to default before loading
    */
   setDefaultForNgOnChange() {
-    this.messageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
-    this.originalMessageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
-    this.messageList$ = this.originalMessageList$;
+    // this.messageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
+    // this.originalMessageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
+    // this.messageList$ = this.originalMessageList$;
     this.chatService.reactions = [];
     this.reactions = this.chatService.reactions;
     this.chatService.groupedReactions$.subscribe(groupedReactions => { this.groupedReactions = groupedReactions; });
     this.memberList = [];
- 
-  
   }
 
 
@@ -189,17 +178,12 @@ export class ChannelComponent implements OnInit {
      * in the conversation
    */
   initializeChannelAfterChange() {
-    //debugger;
     this.messageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
     this.originalMessageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
     this.messageList$ = this.originalMessageList$;
-    
     this.loadAllMessageReactions();
-    
-
-
     this.messageList$.pipe(take(1)).subscribe(messageList => {
-      setTimeout(() => {
+     
         this.chatService.groupReactions(messageList)
           .then(() => {
             //this.changeReload();
@@ -209,12 +193,8 @@ export class ChannelComponent implements OnInit {
               this.setFocus();
             }, 1000);
           });
-      }, 1000);
+   
     });
-
-
-
-
   }
 
 
@@ -468,8 +448,6 @@ export class ChannelComponent implements OnInit {
       const thread: ChannelThread = this.database.createChannelThread(message, this.channel);
       this.database.addChannelThread(thread, this.channel)
       this.database.updateMessageChannelThreadId(thread, this.channel)
-      //this.reload = true;
-      //this.ngOnChanges();
       this.openThread(thread);
     }
   }
