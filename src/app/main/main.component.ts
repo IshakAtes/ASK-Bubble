@@ -213,7 +213,6 @@ export class MainComponent implements OnInit{
    */
   openChannelThread(thread: ChannelThread){
     this.currentChannelThread = thread;
-    this.reloadChannel = false;
     if(this.userservice.deviceWidth < 1200){
       this.thread = true;
       this.channelThread = true;

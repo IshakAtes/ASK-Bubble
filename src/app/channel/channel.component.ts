@@ -50,7 +50,6 @@ export class ChannelComponent implements OnInit {
   @Output() emitThread = new EventEmitter<ChannelThread>();
 
   memberList: Array<User> = [];
-  // messageList: Array<ChannelMessage>
   messageList$: Observable<Array<ChannelMessage>>;
   private originalMessageList$: Observable<Array<ChannelMessage>>;
   filteredMessageList: Array<ChannelMessage>
@@ -113,50 +112,25 @@ export class ChannelComponent implements OnInit {
   /**
    * loads all needed data after DOM is loaded
    */
-  // ngOnInit() {
-  //   this.memberList = [];
-  //   this.messageList = [];
-  //   setTimeout(() => {
-  //     Promise.all([
-  //       this.loadMemberList(),
-  //       this.loadChannelMessages(),
-  //       this.loadChannelCreator(),
-  //       this.loadAllMessageReactions(),
-  //     ]).then(() => {
-  //       this.initializeChannel();
-  //     }).catch(error => {
-  //       // console.log('this ', error)
-  //     });
-  //   }, 500);
-  // }
-
   ngOnInit() {
+    //debugger;
     this.messageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
-    this.originalMessageList$ = this.messageList$;
-    this.loadAllMessageReactions();
-    this.loadMemberList();
-    this.loadChannelCreator();
+    this.originalMessageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
+    this.messageList$ = this.originalMessageList$;
+    //this.messageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
+    //this.originalMessageList$ = this.messageList$;
+    // this.loadAllMessageReactions();
+    // this.loadMemberList();
+    // this.loadChannelCreator();
   }
-
-
-  /**
-   * loads all message reactions and groups them after DOM
-   * is loaded
-   */
-  // initializeChannel() {
-  //   this.loadAllMessageReactions()
-  //   setTimeout(() => {
-  //     this.chatService.groupReactions(this.messageList).then(() => {
-  //       this.isdataLoaded = true;
-  //     })
-  //   }, 1000);
-  // }
 
 
   /**
    * reloads the data after a change happend in the channel
    */
   ngOnChanges(changes?: SimpleChanges) {
+    //debugger;
+    this.isdataLoaded = false;
     this.setDefaultForNgOnChange();
     setTimeout(() => {
       Promise.all([
@@ -180,36 +154,23 @@ export class ChannelComponent implements OnInit {
    * reset all neccessary variables to default before loading
    */
   setDefaultForNgOnChange() {
+    this.messageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
+    this.originalMessageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
+    this.messageList$ = this.originalMessageList$;
     this.chatService.reactions = [];
     this.reactions = this.chatService.reactions;
     this.chatService.groupedReactions$.subscribe(groupedReactions => { this.groupedReactions = groupedReactions; });
     this.memberList = [];
-    // this.messageList = [];
-    this.isdataLoaded = false;
+ 
+  
   }
+
+
 
   /**
    * searches for already sent messages
    * @param query the content of the searchbar
    */
-  // filterMessages(query: string): void {
-  //   setTimeout(() => {
-  //     if (query) {
-  //       this.filteredMessageList = this.messageList.filter(message =>
-  //         message.content.toLowerCase().includes(query.toLowerCase())
-  //       );
-  //       // console.log('filtered list:', this.filteredMessageList);
-  //       this.messageList = this.filteredMessageList;
-  //       // console.log('list as filtered list:', this.messageList);
-  //     } else {
-  //       this.loadChannelMessages();
-  //       setTimeout(() => {
-  //         this.scrollToBottom();
-  //       }, 1000);
-  //     }
-  //   }, 1300);
-  // }
-
   filterMessages(query: string): void {
     if (query) {
       this.messageList$ = this.originalMessageList$.pipe(
@@ -220,49 +181,40 @@ export class ChannelComponent implements OnInit {
     } else {
       this.messageList$ = this.originalMessageList$;
     }
-
-    // setTimeout(() => {
-    //   this.scrollToBottom();
-    // }, 10);
   }
 
-  /**
-   * loads all message reactions and groups them after something changed
-   * in the channel
-   */
-  // initializeChannelAfterChange() {
-  //   this.loadAllMessageReactions()
-  //   setTimeout(() => {
-  //     this.chatService.groupReactions(this.messageList)
-  //       .then(() => {
-  //         this.changeReload();
-  //         this.isdataLoaded = true;
-  //         setTimeout(() => {
-  //           this.scrollToBottom();
-  //           this.setFocus();
-  //         }, 1000);
-  //       })
-  //   }, 1000);
-  // }
 
+  /**
+     * loads all message reactions and groups them after something changed
+     * in the conversation
+   */
   initializeChannelAfterChange() {
+    //debugger;
     this.messageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
-    this.originalMessageList$ = this.messageList$;
+    this.originalMessageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
+    this.messageList$ = this.originalMessageList$;
+    
     this.loadAllMessageReactions();
-    this.messageList$.pipe(
-      take(1),
-      switchMap(messageList => {
-        return from(this.chatService.groupReactions(messageList));
-      })
-    ).subscribe(() => {
-      
-      //this.changeReload();
-      this.isdataLoaded = true;
+    
+
+
+    this.messageList$.pipe(take(1)).subscribe(messageList => {
       setTimeout(() => {
-        this.scrollToBottom();
-        this.setFocus();
+        this.chatService.groupReactions(messageList)
+          .then(() => {
+            //this.changeReload();
+            this.isdataLoaded = true;
+            setTimeout(() => {
+              this.scrollToBottom();
+              this.setFocus();
+            }, 1000);
+          });
       }, 1000);
     });
+
+
+
+
   }
 
 
@@ -302,33 +254,8 @@ export class ChannelComponent implements OnInit {
 
 
   /**
-   * loads all channel messages of the channel
-   * @returns promise
+   * loads all message reactions and groups them after DOM is loaded
    */
-  // loadChannelMessages(): Promise<void> {
-  //   return this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId)
-  //     .then(messages => {
-  //       this.messageList = messages;
-  //       this.messageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-  //     })
-  // }
-
-
-  /**
-   * loads all message reactions of the messages in the channel
-   */
-  // loadAllMessageReactions() {
-  //   for (let i = 0; i < this.messageList.length; i++) {
-  //     const list = this.messageList[i];
-  //     this.database.loadChannelMessagesReactions(this.activeUser.userId, this.channel.channelId, list.messageId)
-  //       .then(reactions => {
-  //         reactions.forEach(reaction => {
-  //           this.reactions.push(reaction)
-  //         });
-  //       })
-  //   }
-  // }
-
   loadAllMessageReactions() {
     this.messageList$.pipe(
       take(1),
@@ -351,25 +278,6 @@ export class ChannelComponent implements OnInit {
   /**
    * saves the new message into the database and displays it in the chat area
    */
-  // saveNewMessage() {
-  //   if (this.content == '' && this.fileService.downloadURL == '') {
-  //     this.displayEmptyContentError();
-  //   } else {
-  //     this.messageList = [];
-  //     let newMessage: ChannelMessage = this.database.createChannelMessage(this.channel, this.content, this.activeUser.userId, this.fileService.downloadURL)
-  //     this.database.addChannelMessage(this.channel, newMessage)
-  //     this.content = '';
-  //     const newContent = '';
-  //     this.mAndC.content.next(newContent);
-  //     this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId).then(messageList => {
-  //       this.messageList = messageList;
-  //       this.messageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-  //     })
-  //     setTimeout(() => { this.scrollToBottom(); }, 1000);
-  //     this.fileService.downloadURL = '';
-  //   }
-  // }
-
   saveNewMessage() {
     if (this.content == '' && this.fileService.downloadURL == '') {
       this.displayEmptyContentError();
@@ -422,19 +330,6 @@ export class ChannelComponent implements OnInit {
    * @param reactionbar infos about the last two used emoji
    * @returns returns nothing if the user already used the selected emoji
    */
-  // async saveNewMessageReaction(event: any, message: ChannelMessage, userId: string, reactionbar?: string) {
-  //   let emoji: string
-  //   if (reactionbar) { emoji = reactionbar } else { emoji = event.emoji.native }
-  //   const userAlreadyReacted = this.reactions.some(reaction => reaction.messageId === message.messageId && reaction.emoji === emoji && reaction.userId === userId);
-  //   if (userAlreadyReacted) { return; }
-  //   await this.createAndSaveChannelReaction(message, emoji, userId);
-  //   setTimeout(() => { this.chatService.groupReactions(this.messageList) }, 500);
-  //   this.chatService.checkIfEmojiIsAlreadyInUsedLastEmojis(this.activeUser, emoji, userId);
-  //   this.mAndC.loadUsersOfUser();
-  //   this.mAndC.loadChannlesofUser()
-  //   this.mAndC.selectedMessageId = null;
-  // }
-
   async saveNewMessageReaction(event: any, message: ChannelMessage, userId: string, reactionbar?: string) {
     let emoji: string = reactionbar || event.emoji.native;
 
@@ -479,7 +374,6 @@ export class ChannelComponent implements OnInit {
     this.editService.selectedMessageIdEdit = null;
     message.content = updatedContent;
     this.database.updateChannelMessage(message, this.channel)
-    // this.loadChannelMessages();
   }
 
 
@@ -498,17 +392,9 @@ export class ChannelComponent implements OnInit {
    * scrolls to the newest message of the channel
    */
   scrollToBottom(): void {
-    
-    // try {
-      // if (this.messageList.length > 0) {
-      setTimeout(() => {
+    setTimeout(() => {
         this.lastDiv.nativeElement.scrollIntoView();
-      }, 250);
-        
-    //   }
-    // } catch (err) {
-    //   console.error('Scroll to bottom failed', err);
-    // }
+     }, 250);
   }
 
 
@@ -582,8 +468,8 @@ export class ChannelComponent implements OnInit {
       const thread: ChannelThread = this.database.createChannelThread(message, this.channel);
       this.database.addChannelThread(thread, this.channel)
       this.database.updateMessageChannelThreadId(thread, this.channel)
-      this.reload = true;
-      this.ngOnChanges();
+      //this.reload = true;
+      //this.ngOnChanges();
       this.openThread(thread);
     }
   }
@@ -591,7 +477,7 @@ export class ChannelComponent implements OnInit {
 
   /**
    * Opens a thread
-   * @param thread thr thread that should be opened
+   * @param thread thread that should be opened
    */
   openThread(thread: ChannelThread) {
     this.emitThread.emit(thread)

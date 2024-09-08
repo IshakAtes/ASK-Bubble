@@ -264,3 +264,11 @@
         height: 100%;
     }
 }
+
+
+
+@media (min-height: 1200px) {
+    section {
+        max-height: 1200px;
+    }
+}

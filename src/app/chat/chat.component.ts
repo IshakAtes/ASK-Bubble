@@ -51,7 +51,7 @@ export class ChatComponent implements OnInit {
   reactions: Array<Reaction> = [];
   filteredList: Array<ConversationMessage> = [];
 
-  isChatDataLoaded: boolean = true;
+  isChatDataLoaded: boolean = false;
   userEmojis$: Observable<Array<string>>;
   fileUploadError: string | null = null;
   groupedReactions: Map<string, Array<{ emoji: string, count: number, users: string[] }>> = new Map();
@@ -108,7 +108,7 @@ export class ChatComponent implements OnInit {
      * loads all needed data after DOM is loaded
      */
   ngOnInit() {
-    this.isChatDataLoaded = false;
+   
     this.list$ = this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId);
     this.originalList$ = this.databaseService.loadConversationMessages(this.user.userId, this.specific.conversationId);
     this.list$ = this.originalList$;
@@ -170,7 +170,7 @@ export class ChatComponent implements OnInit {
       setTimeout(() => {
         this.chat.groupReactions(list)
           .then(() => {
-            this.changeReload();
+            //this.changeReload();
             this.isChatDataLoaded = true;
             setTimeout(() => {
               this.scrollToBottom();
@@ -458,10 +458,9 @@ export class ChatComponent implements OnInit {
         .catch(error => console.error('Error loading thread:', error));
     } else {
       const thread: Thread = this.databaseService.createThread(message, this.sendingUser, this.passiveUser);
-      // console.log(thread);
       this.databaseService.addThread(thread)
       this.databaseService.updateMessageThreadId(thread)
-      this.ngOnChanges();
+      //this.ngOnChanges();
       this.openThread(thread);
     }
   }

@@ -1,10 +1,10 @@
 @import url(../app.component.scss);
 
 .main-chat {
-    height: 85vh;//940px;
+    height: 85vh;
     width: 51vw;
     min-width: 430px;
-    max-width: 95vw; //1450px;
+    max-width: 95vw;
     background-color: white;
     border-radius: 30px;
     position: relative;
@@ -397,4 +397,11 @@
         }
 
 
+    }
+
+
+    @media (min-height: 900px) {
+        .main-chat {
+            max-height: 850px;
+        }
     }
