@@ -270,7 +270,7 @@ export class MainComponent implements OnInit{
   */
   setReloadToFalse(reload: boolean){
     this.reloadChannel = false;
-    this.reloadChat = false;
+    this.reloadChat = true;
   }
 
 

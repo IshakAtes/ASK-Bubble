@@ -219,6 +219,7 @@
                     [channel]="currentChannel"
                     [reload]="reloadChannel"
                     [filterQuery]="searchQuery"
+
                     [channelSizeSmaller]="channelSizeSmaller"
                     [channelSizeSmall]="channelSizeSmall"
                     [channelSizeBig]="channelSizeBig"
@@ -231,6 +232,7 @@
                 [channelSizeSmall]="channelSizeSmall"
                 [channelSizeBig]="channelSizeBig"
                 [channelSizeBigger]="channelSizeBigger"
+                
                 (changeToChannel)="changeChannel($event)"
                 (changeToConversation)="changeConversation($event)"
                 ></app-create-conversation>

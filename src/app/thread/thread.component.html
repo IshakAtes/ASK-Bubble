@@ -14,7 +14,7 @@
                 <span class="header">Thread</span>
                 @for (member of channelMemberList; track $index) {
                 @if(currentChannelThread.threadNameCreator == member.userId){
-                <span class="channel"> {{member.name}}</span>
+                <span class="channel"> {{currentChannel.name}}</span>
                 }
                 }
             </div>
@@ -384,7 +384,7 @@
                 @for (member of channelMemberList; track $index) {
                 @if(currentChannelThread.threadNameCreator == member.userId){
                 <textarea (input)="mAndC.onInput($event, 'thread')" #myTextarea [(ngModel)]="content"
-                    class="message-input" placeholder="Nachricht an {{member.name}}">
+                    class="message-input" placeholder="Nachricht an {{currentChannel.name}}">
                                 </textarea>
                 }
                 }
