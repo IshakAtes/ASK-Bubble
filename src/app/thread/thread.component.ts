@@ -5,10 +5,9 @@ import { Conversation } from '../../models/conversation.class';
 import { ConversationMessage } from '../../models/conversationMessage.class';
 import { Channel } from '../../models/channel.class';
 import { Reaction } from '../../models/reactions.class';
-import { combineLatest, forkJoin, map, Observable, switchMap, take } from 'rxjs';
+import { combineLatest, map, Observable, switchMap, take } from 'rxjs';
 import { DatabaseService } from '../database.service';
 import { UserService } from '../user.service';
-import { LastTwoEmojisService } from '../shared-services/chat-functionality/last-two-emojis.service';
 import { TimeFormatingService } from '../shared-services/chat-functionality/time-formating.service';
 import { MentionAndChannelDropdownService } from '../shared-services/chat-functionality/mention-and-channel-dropdown.service';
 import { FileUploadService } from '../shared-services/chat-functionality/file-upload.service';
@@ -77,7 +76,6 @@ export class ThreadComponent {
   constructor(
     public databaseService: DatabaseService,
     public userService: UserService,
-    private lastTwoEmojiService: LastTwoEmojisService,
     public time: TimeFormatingService,
     public mAndC: MentionAndChannelDropdownService,
     public fileUpload: FileUploadService,
@@ -187,14 +185,6 @@ export class ThreadComponent {
   /**
    * loads all threadmessages from the conversation or channel mainmessage
    */
-  // loadAllMessages() {
-  //   if (this.channelThread) {
-  //     this.loadChannelThreadMessages()
-  //   }
-  //   else {
-  //     this.loadConversationThreadMessages()
-  //   }
-  // }
   loadAllMessages() {
     if (this.channelThread) {
       this.channelThreadMessageList$ = this.databaseService.loadChannelThreadMessages(this.currentChannelThread).pipe(
@@ -302,15 +292,10 @@ export class ThreadComponent {
     if (this.content == '' && this.fileUpload.downloadURLThread == '') {
       this.displayEmptyContentError();
     } else {
-      // this.conversationThreadMessagelist = [];
       let newMessage: ThreadMessage = this.databaseService.createThreadMessage(this.specific, this.content, this.user.userId, this.currentThread, this.fileUpload.downloadURLThread)
       const timestamp: Timestamp = newMessage.createdAt;
       this.databaseService.addThreadMessage(this.currentThread, newMessage)
       this.resetContent();
-      // await this.databaseService.loadThreadMessages(this.currentThread).then(messageList => {
-      //   this.conversationThreadMessagelist = messageList;
-      //   this.conversationThreadMessagelist.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-      // })
       this.saveThreadCountAndtime(new ThreadMessage(newMessage), timestamp)
     }
   }
@@ -323,15 +308,10 @@ export class ThreadComponent {
     if (this.content == '' && this.fileUpload.downloadURLThread == '') {
       this.displayEmptyContentError();
     } else {
-      // this.channelThreadMessageList = [];
       let newMessage: ChannelThreadMessage = this.databaseService.createChannelThreadMessage(this.currentChannel, this.content, this.user.userId, this.currentChannelThread, this.fileUpload.downloadURLThread)
       const timestamp: Timestamp = newMessage.createdAt;
       this.databaseService.addChannelThreadMessage(this.currentChannelThread, newMessage, this.currentChannel)
       this.resetContent();
-      // await this.databaseService.loadChannelThreadMessages(this.currentChannelThread).then(messageList => {
-      //   this.channelThreadMessageList = messageList;
-      //   this.channelThreadMessageList.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-      // })
       this.saveThreadCountAndtime(new ChannelThreadMessage(newMessage), timestamp)
     }
   }
@@ -389,12 +369,11 @@ export class ThreadComponent {
    * Scroll to the bottom of the chatarea 
    */
   scrollToBottom(): void {
-
-          setTimeout(() => {
-            this.lastDiv.nativeElement.scrollIntoView();
-          }, 250);
-
+    setTimeout(() => {
+      this.lastDiv.nativeElement.scrollIntoView();
+    }, 250);
   }
+
 
   /**
    * loads the memberlist of the channel need for the HTML
@@ -428,8 +407,7 @@ export class ThreadComponent {
 
 
   /**
-   * reloads channel and chat threadmessages and loads html information
-   *  after a change
+   * reloads channel and chat threadmessages and loads html information after a change
    */
   ngOnChanges() {
     this.isThreadDataLoaded = false;
@@ -439,34 +417,37 @@ export class ThreadComponent {
 
     if (this.channelThread) {
       this.channelThreadMessageList$.pipe(take(1)).subscribe(list => {
-        if(list.length == 0){
+        if (list.length == 0) {
           setTimeout(() => {
             this.setFocus();
-          }, 1000);
+          }, 3000);
         }
-        else{
-        this.chat.groupReactionsThread(list)
-          .then(() => {
-            setTimeout(() => {
-              this.scrollToBottom();
-              this.setFocus();
-            }, 2000);
-          });
+        else {
+          this.chat.groupReactionsThread(list)
+            .then(() => {
+              setTimeout(() => {
+                this.scrollToBottom();
+                this.setFocus();
+              }, 3000);
+            });
         }
-
-
       });
     } else {
       this.conversationThreadMessagelist$.pipe(take(1)).subscribe(list => {
-
-        this.chat.groupReactionsThread(list)
-          .then(() => {
-            setTimeout(() => {
-              this.scrollToBottom();
-              this.setFocus();
-            }, 2000);
-          });
-
+        if (list.length == 0) {
+          setTimeout(() => {
+            this.setFocus();
+          }, 3000);
+        }
+        else {
+          this.chat.groupReactionsThread(list)
+            .then(() => {
+              setTimeout(() => {
+                this.scrollToBottom();
+                this.setFocus();
+              }, 3000);
+            });
+        }
       });
     }
 
@@ -621,6 +602,7 @@ export class ThreadComponent {
       reaction.messageId === convo.threadMessageId && reaction.emoji === emoji && reaction.userId === userId
     );
   }
+
 
   /**
      * Focusing textarea after component is initilized 
