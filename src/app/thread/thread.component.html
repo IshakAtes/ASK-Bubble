@@ -22,9 +22,6 @@
         </div>
 
         <div class="chat-area">
-            <!-- @if (channelThreadMessageList.length>0) -->
-            <!-- @if (channelThreadMessageList$ | async; as channelThreadMessageList) { -->
-
             <div class="time-separator">
                 <div class="date">
                     <span>{{time.formatDate(time.formatTimestamp(mainChannelMessage.createdAt))}}</span>
@@ -32,7 +29,6 @@
                 <div class="line"></div>
             </div>
             
-            <!-- } -->
             @if (mainChannelMessage.createdBy == user.userId) {
             <div class="own-message">
                 <div>
@@ -100,17 +96,14 @@
             }
             }
 
-            <!-- @if (channelThreadMessageList.length > 0)  -->
             @if (channelThreadMessageList$ | async; as channelThreadMessageList) {
                
             <div class="thread-message-separator">
                 <span> {{channelThreadMessageList.length}} Antworten</span>
                 <div class="thread-message-separator-line"></div>
-            </div>
-        
+            </div>        
             }
 
-            <!-- @if (channelThreadMessageList.length>0) -->
             @if (channelThreadMessageList$ | async; as channelThreadMessageList) {
                 @if (channelThreadMessageList.length > 0) {
             <div class="time-separator">
@@ -443,16 +436,12 @@
         </div>
 
         <div class="chat-area">
-            <!-- @if (conversationThreadMessagelist.length>0)  -->
-            <!-- @if (conversationThreadMessagelist$ | async; as conversationThreadMessagelist) { -->
             <div class="time-separator">
                 <div class="date">
                     <span>{{time.formatDate(time.formatTimestamp(mainMessage.createdAt))}}</span>
                 </div>
                 <div class="line"></div>
             </div>
-        
-            <!-- } -->
 
             @if (mainMessage.createdBy == user.userId) {
             <div class="own-message">
@@ -518,16 +507,13 @@
             }
             }
 
-            <!-- @if (conversationThreadMessagelist.length > 0) { -->
             @if (conversationThreadMessagelist$ | async; as conversationThreadMessagelist) {
             <div class="thread-message-separator">
                 <span> {{conversationThreadMessagelist.length}} Antworten</span>
                 <div class="thread-message-separator-line"></div>
-            </div>
-        
+            </div>        
             }
 
-            <!-- @if (conversationThreadMessagelist.length>0) { -->
             @if (conversationThreadMessagelist$ | async; as conversationThreadMessagelist) {
                 @if (conversationThreadMessagelist.length > 0) {
             <div class="time-separator">
