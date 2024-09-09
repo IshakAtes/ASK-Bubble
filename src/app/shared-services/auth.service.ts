@@ -33,7 +33,7 @@ export class AuthService {
 //Ist currentUser ein vordefinierter Wert?
       try {
         if (fbUser) {
-          console.log('currentUser', fbUser);
+          // console.log('currentUser', fbUser);
           if (newEmail !== fbUser.email && currentPassword) {
             try {
               // Reauthenticate the user with the current email and password
@@ -205,7 +205,7 @@ logGoogleUser(acceptedUser: User) {
         this.us.getUser(user.email ?? '', user.uid).then((activeUser) => {
           // console.log('activeUser:', activeUser);
           this.us.loggedUser = activeUser;
-          console.log('loggedUser', this.us.loggedUser);
+          // console.log('loggedUser', this.us.loggedUser);
         }).catch((error) => {
           console.error('Fehler beim Abrufen des Benutzers:', error);
         });
