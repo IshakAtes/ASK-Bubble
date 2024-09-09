@@ -187,9 +187,12 @@ logGoogleUser(acceptedUser: User) {
     this.us.loggedUser.status = 'offline';
     this.us.userOffline(this.us.loggedUser.userId);
     const promise = signOut(this.firebaseAuth);
+    return from(promise);
+  }
+
+  redirectToLogin() {
     this.us.loggedUser = new User();
     this.router.navigateByUrl('');
-    return from(promise);
   }
 
 
@@ -210,6 +213,7 @@ logGoogleUser(acceptedUser: User) {
         // ...
       } else {
         this.logout();
+        this.redirectToLogin();
         // User is signed out
         // console.log('authState logged out', this.us.loggedUser, 'user variable', user);
       }

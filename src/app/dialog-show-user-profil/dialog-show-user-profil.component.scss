@@ -371,15 +371,23 @@ section {
     @media (max-width: 850px) {
         ::ng-deep .cdk-overlay-container{
             .cdk-global-overlay-wrapper {
-                justify-content: flex-start !important;
+                justify-content: center !important;
             }
         }
         
+        // section {
+        //     width: calc(100vw - 40px);
+        //     padding: 30px 20px 30px 20px;
+        //     position: relative;
+        //     top: 0vw;
+        // }
+
         section {
-            width: calc(100vw - 40px);
-            padding: 30px 20px 30px 20px;
             position: relative;
             top: 0vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
 
