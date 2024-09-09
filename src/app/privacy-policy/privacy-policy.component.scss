@@ -85,3 +85,58 @@ nav {
     top: 120px;
     padding: 40px;
 }
+
+
+
+//Responsive
+@media only screen and (max-width: 850px) {
+    section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: 100vh;
+    }
+
+    nav {
+        padding: 20px 100px 20px 100px;
+    }
+
+    .card {
+        width: 400px;
+        border-radius: 30px;
+    }
+
+    .card .formHeadline h1 {
+        font-size: 32px;
+        line-height: 38px;
+        
+    }
+
+    .card .formHeadline img {
+        top: 18px;
+    }
+
+    .card h1, .card h2 {
+        font-size: 30px;
+        line-height: 30px;
+        margin: 0px 0;
+    }
+}
+
+
+@media only screen and (max-width: 450px) {
+    nav {
+        padding: 20px 0px 20px 0px;
+    }
+
+    .card {
+        width: 320px;
+        border-radius: 30px;
+        padding: 20px;
+    }
+
+    .policy {
+        padding: 20px;
+    }
+}
