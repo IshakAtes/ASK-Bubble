@@ -4,11 +4,16 @@ section {
     width: 100% !important;
     max-width: 1920px;
     min-width: 320px;
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 app-workspace {
     margin-left: 10px;
     margin-top: 120px;
+    
 }
 
 app-channel {
@@ -102,7 +107,7 @@ app-chat {
         margin-right: 0px;
         margin-left: 0px;
         margin-top: 80px;
-        overflow-y: scroll;
+        //overflow-y: scroll;
         overflow-x: hidden;
     }
     

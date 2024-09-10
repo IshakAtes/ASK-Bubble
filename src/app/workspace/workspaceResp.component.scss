@@ -254,12 +254,12 @@
 
 @media (max-width: 390px) {
     section {
-        height: 100vh;
+        height: calc(100vh - 112px);
     }
 }
 
 
-@media (max-height: 670px) {
+@media (max-height: 740px) {
     section {
         height: 100%;
     }
@@ -267,8 +267,28 @@
 
 
 
-@media (min-height: 900px) {
+@media (min-height: 900px) and (min-width: 850px) {
     section {
-        max-height: 785px;
+        height: 78.5vh;
+    }
+}
+
+
+
+@media (min-height: 1100px) and (min-width: 850px) {
+    section {
+        height: 79.5vh;
+    }
+}
+
+@media (min-height: 1300px) and (min-width: 850px) {
+    section {
+        height: 80vh;
+    }
+}
+
+@media (min-height: 1500px) and (min-width: 850px) {
+    section {
+        height: 81vh
     }
 }

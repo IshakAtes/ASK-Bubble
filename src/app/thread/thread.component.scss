@@ -252,6 +252,16 @@
     }
 
 
+    .online-indicator {
+        bottom: 15px;
+    }
+
+    .avatar-div {
+        margin-right: 20px;
+    }
+
+
+
     .edit-message-content-bubble {
         textarea {
             min-width: 100px;
@@ -306,6 +316,7 @@
         height: 50px;
         gap: 10px;
         border-radius: 40px;
+        margin-left: 10px;
     }
 
 
@@ -428,6 +439,11 @@
         right: 40px;
     }
 
+
+    .massage-content-bubble {
+        width: 50vw;
+    }
+
     .thread-message-separator-line {
         width: 200px;
         border: 1px solid #ADB0D9;
@@ -456,7 +472,6 @@
         padding: 0px 0px 0px 0px;
         width: 220px;
         position: relative;
-        right: 11%;
     }
 
     .own-message {
@@ -465,6 +480,7 @@
 
     .message{
         width: calc(100%);
+        justify-content: unset;
     }
 
     .edit-message-content-bubble-BTN-div{
@@ -495,7 +511,7 @@
         padding: 0px 0px 0px 0px;
         width: 220px;
         position: relative;
-        right: 20%;
+        right: 25%;
     }
 
     .message-header {
@@ -505,7 +521,6 @@
         padding: 0px 0px 0px 0px;
         width: 220px;
         position: relative;
-        right: 20%;
     }
 }
 
@@ -537,8 +552,3 @@
     
 }
 
-@media (min-height: 900px) {
-    .main-thread {
-        max-height: 850px;
-    }
-}

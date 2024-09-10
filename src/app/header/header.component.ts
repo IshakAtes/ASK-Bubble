@@ -59,7 +59,7 @@ export class HeaderComponent  {
     });
     dialogRef.afterClosed().subscribe((conversation) => {
       if(conversation){
-        this.openOwnConversation.emit(conversation)
+        //this.openOwnConversation.emit(conversation)
 
       }
 
