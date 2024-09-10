@@ -387,9 +387,16 @@ section {
         //     position: relative;
         //     top: 0vw;
         // }
+        .cdk-global-overlay-wrapper {
+            overflow-y: scroll;
+        }
+
         section {
-            position: relative;
-            top: 0vw;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -433,11 +440,15 @@ section {
     @media only screen and (max-width: 480px) {
         section > form {
             width: 100%;
-            height: 100% !important;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 40px;
             gap: 20px;
+            overflow-y: scroll;
+        }
+
+        .headline {
+            margin-top: 140px;
         }
 
         .userHeadCt span {
@@ -453,5 +464,6 @@ section {
         .btnContainer {
             flex-direction: column;
             gap: 10px;
+            margin-bottom: 60px;
         }
     }
