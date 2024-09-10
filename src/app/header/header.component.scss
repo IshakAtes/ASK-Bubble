@@ -44,7 +44,7 @@ header {
     align-items: center;
     position: relative; /* Wichtig für die Positionierung des Dropdowns */
     cursor: pointer; /* Zeiger-Cursor beim Überfahren mit der Maus */
-    right: 20px;
+    right: 2vw;
 
     >span {
         font-family: "Nunito";
@@ -98,7 +98,7 @@ header {
 .dropdown {
     position: absolute;
     top: 100%;
-    left: 0;
+    right: 15%;
     background: #fff;
     z-index: 1000;
     width: 282px;
