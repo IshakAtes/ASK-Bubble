@@ -48,7 +48,6 @@ export class UserService {
           this.loadActiveUserConversations();
         }
     }, 1000);
-    console.log(this.deviceWidth);
   }
 
 

@@ -22,7 +22,7 @@ export class SignUpComponent {
   constructor(private fb: FormBuilder, private router: Router, public us: UserService) {
     this.myForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(5)]],
-      pw: ['', [Validators.required, Validators.minLength(5)]],
+      pw: ['', [Validators.required, Validators.minLength(6)]],
       mail: ['', [Validators.required, Validators.email]],
       box: ['', [Validators.requiredTrue]],
     });

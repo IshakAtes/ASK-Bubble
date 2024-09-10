@@ -70,3 +70,37 @@ nav {
         top: 40px;
     }
 }
+
+
+//Responsive
+@media only screen and (max-width: 850px) {
+    section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: 100vh;
+    }
+
+    nav {
+        padding: 20px 100px 20px 100px;
+    }
+
+    .card {
+        width: 400px;
+        border-radius: 30px;
+    }
+}
+
+
+@media only screen and (max-width: 450px) {
+    nav {
+        padding: 20px 0px 20px 0px;
+    }
+
+    .card {
+        width: 320px;
+        border-radius: 30px;
+        padding: 20px;
+    }
+}

@@ -38,6 +38,7 @@ export class HeaderComponent  {
 
   logout() {
     this.authService.logout();
+    this.authService.redirectToLogin();
   }
 
   onSearch(event: any): void {

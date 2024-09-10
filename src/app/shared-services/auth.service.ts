@@ -33,7 +33,7 @@ export class AuthService {
 //Ist currentUser ein vordefinierter Wert?
       try {
         if (fbUser) {
-          console.log('currentUser', fbUser);
+          // console.log('currentUser', fbUser);
           if (newEmail !== fbUser.email && currentPassword) {
             try {
               // Reauthenticate the user with the current email and password
@@ -187,9 +187,12 @@ logGoogleUser(acceptedUser: User) {
     this.us.loggedUser.status = 'offline';
     this.us.userOffline(this.us.loggedUser.userId);
     const promise = signOut(this.firebaseAuth);
+    return from(promise);
+  }
+
+  redirectToLogin() {
     this.us.loggedUser = new User();
     this.router.navigateByUrl('');
-    return from(promise);
   }
 
 
@@ -202,7 +205,7 @@ logGoogleUser(acceptedUser: User) {
         this.us.getUser(user.email ?? '', user.uid).then((activeUser) => {
           // console.log('activeUser:', activeUser);
           this.us.loggedUser = activeUser;
-          console.log('loggedUser', this.us.loggedUser);
+          // console.log('loggedUser', this.us.loggedUser);
         }).catch((error) => {
           console.error('Fehler beim Abrufen des Benutzers:', error);
         });
@@ -210,6 +213,7 @@ logGoogleUser(acceptedUser: User) {
         // ...
       } else {
         this.logout();
+        this.redirectToLogin();
         // User is signed out
         // console.log('authState logged out', this.us.loggedUser, 'user variable', user);
       }

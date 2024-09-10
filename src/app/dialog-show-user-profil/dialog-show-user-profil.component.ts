@@ -77,14 +77,14 @@ export class DialogShowUserProfilComponent implements OnInit {
     if (this.myForm.valid) {
       const formData = this.myForm.value;
       const currentPassword = this.showPasswordInput ? formData.password : null;
-      console.log(formData);
+      // console.log(formData);
       this.userData.avatarUrl = this.selectedAvatar;
       try {
-        console.log(formData.email,
-          this.userData.email,
-          currentPassword,
-          formData.name,
-          this.selectedAvatar);
+        // console.log(formData.email,
+        //   this.userData.email,
+        //   currentPassword,
+        //   formData.name,
+        //   this.selectedAvatar);
         await this.authService.changeUserData(
           this.userData.email,
           formData.email,
@@ -102,7 +102,7 @@ export class DialogShowUserProfilComponent implements OnInit {
         setTimeout(() => {
           if (this.authService.wrongEmail) {
             this.authService.wrongEmail = false;
-            console.log(this.us.loggedUser.email);
+            // console.log(this.us.loggedUser.email);
             this.myForm.patchValue({
               email: this.us.loggedUser.email,
               password: ''
@@ -127,42 +127,6 @@ export class DialogShowUserProfilComponent implements OnInit {
   }
 
 
-
-  // async editUsereee() {
-  //   // console.log('editForm', this.myForm.value, 'userData after edit', this.userData);
-  //   // Erfasse das aktuelle Passwort nur, wenn die E-Mail geändert wurde
-  //   const currentPassword: string | null = this.showPasswordInput ? this.userPassword : null;
-
-  //   if (currentPassword === '') {
-  //     alert('Falsches Passwort');
-  //     this.userData.email = this.myForm.value.email;
-  //   } else {
-  //     this.userData.avatarUrl = this.selectedAvatar;
-  //     await this.authService.changeUserData(
-  //       this.myForm.value.email,
-  //       this.userData.email,
-  //       currentPassword,
-  //       this.userData.name,
-  //       this.selectedAvatar
-  //     );
-  //     // ES KANN SEIN DAS ICH DIESEN ABSCHNITT MIT SETTIMEOUT RAUSNEHMEN MUSS; DA ICH
-  //     // PROBLEMMELDUNGEN IN FIREBASE BEKOMME
-  //     setTimeout(() => {
-  //       if (this.authService.wrongEmail) {
-  //         this.authService.wrongEmail = false;
-  //         this.us.loggedUser.email = this.myForm.value.email;
-  //         alert('Falsches Passwort');
-  //       } else {
-  //         this.myForm.value.email = this.userData.email;
-  //       }
-  //     }, 512)
-  //     this.userPassword = '';
-
-  //     this.editMode = false;
-  //   }
-  // }
-
-
   selectFile(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
@@ -183,7 +147,7 @@ export class DialogShowUserProfilComponent implements OnInit {
     this.editMode = true;
     this.showPasswordInput = false;
     this.newData = this.userData;
-    console.log(this.newData);
+    // console.log(this.newData);
     this.selectedAvatar = this.userData.avatarUrl ?? '/assets/img/unUsedDefault.png';
     
     // Aktualisieren Sie das Formular mit den aktuellen Werten
