@@ -1,4 +1,6 @@
 @import url(../chat/chat.component.scss);
+@import url(../app.component.scss);
+
 
 .main-thread {
     height: 85vh; //940px;
@@ -192,6 +194,11 @@
 
 @media (max-width: 850px) {
     
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
     ::ng-deep .customDialog {
         width: 100vw;
         .mdc-dialog {
