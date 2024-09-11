@@ -6,7 +6,6 @@ import { UserService } from '../user.service';
 import { Conversation } from '../../models/conversation.class';
 import { CommonModule, NgIf, NgStyle } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Auth, updateProfile } from '@angular/fire/auth';
 import { AuthService } from '../shared-services/auth.service';
 
 @Component({
@@ -74,6 +73,7 @@ export class DialogShowUserProfilComponent implements OnInit {
 
 
   async editUser() {
+    console.log('hallo');
     if (this.myForm.valid) {
       const formData = this.myForm.value;
       const currentPassword = this.showPasswordInput ? formData.password : null;
@@ -158,7 +158,12 @@ export class DialogShowUserProfilComponent implements OnInit {
   }
 
   openConversation(conversation: Conversation){
-    this.dialogRef.close(conversation)
+    if (conversation) {
+      console.log('Conversation found:', conversation);
+      this.changeToConversation.emit(conversation);
+    } else {
+      console.error('Keine Konversation gefunden!');
+    }
   }
 
   closeEdit() {
