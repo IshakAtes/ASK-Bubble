@@ -34,7 +34,7 @@
                     formControlName="mail"
                     (focus)="img.src = 'assets/img/mail-focus.png'"
                     (blur)="img.src = 'assets/img/mail-Icon.png'"
-                    [class.redBorder]="this.us.wrongLogin"
+                    [class.redBorder]="this.checkLoginData"
                     placeholder="beispielname&#64;email.com" required>
                     <img #img src="assets/img/mail-Icon.png" alt="">
                     <p
@@ -50,7 +50,7 @@
                     formControlName="pw"
                     (focus)="lockImg.src = 'assets/img/lock-focus.png'"
                     (blur)="lockImg.src = 'assets/img/lock-icon.png'"
-                    [class.redBorder]="this.us.wrongLogin"
+                    [class.redBorder]="this.checkLoginData"
                     placeholder="Passwort" required>
                     <img #lockImg src="assets/img/lock-icon.png" alt="">
                     <p

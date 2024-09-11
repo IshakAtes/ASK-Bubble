@@ -158,12 +158,7 @@ export class DialogShowUserProfilComponent implements OnInit {
   }
 
   openConversation(conversation: Conversation){
-    if (conversation) {
-      console.log('Conversation found:', conversation);
-      this.changeToConversation.emit(conversation);
-    } else {
-      console.error('Keine Konversation gefunden!');
-    }
+      this.dialogRef.close(conversation);
   }
 
   closeEdit() {

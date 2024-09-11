@@ -141,10 +141,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 :hover::-webkit-scrollbar {
   background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(105, 105, 105, 0.6);
+  background-color: rgba(68, 77, 242, 0.5);
   border-radius: 10px;
   border: 3px solid transparent;
   background-clip: padding-box;
