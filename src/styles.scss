@@ -93,32 +93,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 
-
-
-.feedbackBubble {
-  position: absolute;
-  right: -600px;
-  bottom: 100px;
-  padding: 50px;
-  gap: 10px;
-  border-radius: 30px 30px 0px 30px;
-  background-color: #444DF2;
-  font-family: "Nunito";
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 49.1px;
-  text-align: left;
-  color: #FFFFFF;
-  opacity: 0;
-  transition: ease-in-out 516ms;
-}
-
-.bubbleVisible {
-  right: 0px;
-  opacity: 1;
-}
-
-
 .mat-mdc-dialog-container {
   --mdc-dialog-container-shape: 30px;
   background-color: transparent !important;

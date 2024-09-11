@@ -384,3 +384,14 @@ nav {
         width: 320px;
     }
 }
+
+
+@media only screen and (max-height: 900px) {
+    nav {
+        margin-top: 60px;
+    }
+
+    .footerCt {
+        margin-bottom: 40px;
+    }
+}
