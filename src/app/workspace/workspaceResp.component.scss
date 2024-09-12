@@ -30,12 +30,16 @@
 @media (max-width: 850px) {
     section {
         width: 100vw;
-        height: calc(100vh - 112px);
-        padding: 32px 0px 0px 0px;
+        height: 100vh;
+        padding: 0px 0px 0px 0px;
         border-radius: 0px;
         min-width: 270px;
         max-width: 100%;
         
+    }
+
+    .workspaceHead{
+        padding: 16px 0px 0px 0px;
     }
 
     .userlistContainer{
@@ -254,9 +258,11 @@
 
 @media (max-width: 390px) {
     section {
-        height: calc(100vh - 112px);
+        height: calc(100vh - 32px);
     }
 }
+
+
 
 
 @media (max-height: 740px) {
@@ -264,6 +270,13 @@
         height: 100%;
     }
 }
+
+
+// @media (max-height: 670) {
+//     section {
+//         //height: calc(100vh - 32px);
+//     }
+// }
 
 
 

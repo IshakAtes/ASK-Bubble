@@ -183,10 +183,7 @@
 }
 @else {
     <!--mobile View-->
-    <div *ngIf="userService.isWorkspaceDataLoaded; else loadingTemplate" #main class="main-chat">
-
-
-        <section>
+        <section *ngIf="userService.isWorkspaceDataLoaded; else loadingTemplate" #main>
 
             <div class="bgContainer" (click)="openNewConversation()">
                 <!-- svg add conversation-->
@@ -433,7 +430,7 @@
                 </div> <!--ConversationListContainer-End-->
             </div> <!--WorkspaceBody-End-->
         </section>
-    </div>
+    
     
 }
 
