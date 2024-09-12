@@ -375,28 +375,19 @@ section {
 
 
     @media (max-width: 850px) {
-        // ::ng-deep .cdk-overlay-container{
-        //     .cdk-global-overlay-wrapper {
-        //         justify-content: center !important;
-        //     }
-        // }
-        
-        // section {
-        //     width: calc(100vw - 40px);
-        //     padding: 30px 20px 30px 20px;
-        //     position: relative;
-        //     top: 0vw;
-        // }
+
         .cdk-global-overlay-wrapper {
-            overflow-y: scroll;
+            //overflow-y: scroll;
         }
 
+        //      <!--  [ngStyle]="showPasswordInput ? {'height': '83vh', 'gap': '38px'} : {'height': '80vh', 'gap': '38px'}" -->
+
         section {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            // position: fixed;
+            // top: 0;
+            // left: 0;
+            // right: 0;
+            // bottom: 0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -404,6 +395,7 @@ section {
 
         section > form {
             width: 96%;
+            height: 83vh;
         }
 
         .headline .closeSvgBg {
@@ -424,7 +416,7 @@ section {
 
         //edit User Template
         .headline > span {
-            width: unset;
+            width: 270px;
         }
 
         .userNameCt {
@@ -438,18 +430,18 @@ section {
 
 
     @media only screen and (max-width: 480px) {
+        
+        
         section > form {
             width: 100%;
             align-items: center;
             justify-content: center;
             padding: 40px;
-            gap: 20px;
-            overflow-y: scroll;
+            gap: 38px //20px;
+            //overflow-y: scroll;
         }
 
-        .headline {
-            margin-top: 140px;
-        }
+
 
         .userHeadCt span {
             font-size: 24px;
@@ -465,5 +457,46 @@ section {
             flex-direction: column;
             gap: 10px;
             margin-bottom: 60px;
+        }
+    }
+
+
+    @media (max-height: 741px) {
+        section > form {
+            gap: 30px //20px;
+        }
+
+        .headline {
+            position: relative;
+            top: 30px !important;
+            width: 320px;
+        }
+
+        section > form {
+            width: 95%;
+
+        }
+    }
+
+
+    @media (max-height: 670px) {
+        section > form {
+            gap: 25px !important;
+            height: 87vh !important;
+        }
+
+        section > form {
+            width: 95%;
+        }
+
+        .headline {
+            position: relative;
+            top: 55px !important;
+            width: 320px;
+        }
+
+        .image {
+            position: relative;
+            top: 30px;
         }
     }

@@ -2,8 +2,10 @@
   <form
   [formGroup]="myForm"
   (ngSubmit)="editUser()"
-  [ngStyle]="showPasswordInput ? {'height': '700px', 'gap': '38px'} : {'height': '625px', 'gap': '45px'}">
-    <div class="headline">
+  [ngStyle]="showPasswordInput ? {'height': '85vh', 'gap': '25px'} : {'height': '83vh', 'gap': '38px'}"
+  >
+    <div class="headline"
+    >
       <ng-container *ngIf="editMode; then thenTemplate; else elseTemplate"></ng-container>
       <ng-template #thenTemplate>
           <span>Dein Profil bearbeiten</span>

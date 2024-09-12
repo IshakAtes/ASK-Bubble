@@ -46,11 +46,22 @@
         overflow-x: hidden;
     }
 
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
     ::ng-deep .cdk-overlay-container{
         
         .cdk-global-overlay-wrapper {
             align-items: flex-end !important;
         }
+    }
+
+
+    .channelNameWrapper {
+        max-height: 200px;
+        //overflow-y: scroll;
+        overflow-x: scroll;
     }
 
     .headline {
@@ -124,7 +135,7 @@
 
     .channelUser {
         display: flex;
-        width: fit-content;
+        //width: fit-content;
         height: fit-content;
         flex-direction: column;
         padding: 2px 1px 2px 1px;

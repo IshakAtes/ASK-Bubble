@@ -145,7 +145,7 @@ export class DialogShowUserProfilComponent implements OnInit {
 
   openEditTemplate() {
     this.editMode = true;
-    this.showPasswordInput = false;
+    this.showPasswordInput = true;
     this.newData = this.userData;
     // console.log(this.newData);
     this.selectedAvatar = this.userData.avatarUrl ?? '/assets/img/unUsedDefault.png';

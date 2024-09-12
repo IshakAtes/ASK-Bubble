@@ -35,6 +35,7 @@
         <!--Mobile View-->
         @if(isWSVisible){
             <header>
+                <div class="overlay" *ngIf="dropdownOpen" (click)="toggleDropdown()"></div>
                 <div>
                     <img src="/assets/img/Logo.png" alt="Logo">
                 </div>
@@ -82,6 +83,8 @@
         }
         @else{
             <header>
+                <div class="overlay" *ngIf="dropdownOpen" (click)="toggleDropdown()"></div>
+
                 <div (click)="viewWorkspace()" >
                     <svg width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <mask id="mask0_62625_3608" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="25" height="26">
