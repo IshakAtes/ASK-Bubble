@@ -2,7 +2,10 @@
   <form
   [formGroup]="myForm"
   (ngSubmit)="editUser()"
-  [ngStyle]="showPasswordInput ? {'height': '85vh', 'gap': '25px'} : {'height': '83vh', 'gap': '38px'}"
+  [ngStyle]="{
+    'height': (showPasswordInput && isScreenSmall()) ? '83vh' : (showPasswordInput ? '685px' : (isScreenSmall() ? '80vh' : '625px')),
+    'gap': (showPasswordInput || isScreenSmall()) ? '36px' : '44px'
+  }"
   >
     <div class="headline"
     >
@@ -99,7 +102,7 @@
       <input formControlName="email" type="text" (input)="onEmailChange()">
       <p *ngIf="myForm.get('email')?.invalid && myForm.get('email')?.touched">*Diese E-Mail-Adresse ist leider ungültig.</p>
       <input class="passwordField"
-      *ngIf="showPasswordInput" 
+      *ngIf="showPasswordInput"
       formControlName="password"
       type="password"
       placeholder="Bitte Passwort eingeben">

@@ -31,6 +31,10 @@ export class DialogShowUserProfilComponent implements OnInit {
 
   @Output() changeToConversation = new EventEmitter<Conversation>();
 
+  isScreenSmall(): boolean {
+    return window.innerWidth <= 850;
+  }
+
   constructor(
     public dialogRef: MatDialogRef<DialogShowUserProfilComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { user: User },
@@ -69,7 +73,6 @@ export class DialogShowUserProfilComponent implements OnInit {
   onEmailChange(): void {
     this.showPasswordInput = this.userData.email !== this.myForm.get('email')?.value;
   }
-
 
 
   async editUser() {
@@ -145,7 +148,7 @@ export class DialogShowUserProfilComponent implements OnInit {
 
   openEditTemplate() {
     this.editMode = true;
-    this.showPasswordInput = true;
+    this.showPasswordInput = false;
     this.newData = this.userData;
     // console.log(this.newData);
     this.selectedAvatar = this.userData.avatarUrl ?? '/assets/img/unUsedDefault.png';
