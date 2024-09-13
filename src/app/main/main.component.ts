@@ -48,11 +48,7 @@ export class MainComponent implements OnInit{
 
   searchQuery: string = '';
 
-  // @HostListener('window:popstate', ['$event'])
-  // onPopState(event: any){
-  //   console.log('back button pressed')
-  //   console.log(event)
-  // }
+
 
   constructor(public userservice: UserService, public database: DatabaseService, router: Router){
     userservice.getDeviceWidth();
@@ -64,9 +60,7 @@ export class MainComponent implements OnInit{
     router.events.forEach((event) => {    
       if(event instanceof NavigationStart){
         if(event.navigationTrigger === "popstate"){
-          console.log('NavigationStart:')
-          console.log(event)
-          if(event.url == 'https://bubble.ishakates.com/main'){
+          if(event.url == '/main'){
             window.location.href = "https://bubble.ishakates.com"
           }
         }
