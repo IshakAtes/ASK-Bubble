@@ -15,6 +15,10 @@ import { AuthService } from '../shared-services/auth.service';
 })
 export class LoginComponent implements OnInit {
   checkLoginData: boolean = false;
+  falseLoginAnimation: boolean = false;
+  borderAnimation: boolean = false;
+  invalidMail: boolean = false;
+  invalidPassword: boolean = false;
   intro = true;
   switchlogo = false;
   textVisible = false;
@@ -127,8 +131,28 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => {
         this.errorMessage = err.code;
+        this.errorMessage = this.errorMessage ? this.errorMessage.split(/\//)[1] || '' : '';
         this.checkLoginData = true;
-        console.log(this.errorMessage?.split(/\//)[1]);
+        if (this.checkLoginData) {
+          this.borderAnimation = true;
+            if (this.errorMessage === 'invalid-email' || this.errorMessage === 'user-not-found') {
+              this.invalidMail = true;
+            }
+            if (this.errorMessage === 'wrong-password') {
+              this.invalidPassword = true;
+            }
+          setTimeout(() => {
+            this.borderAnimation = false;
+            this.falseLoginAnimation = true;
+            setTimeout(() => {
+              this.falseLoginAnimation = false;
+              this.checkLoginData = false;
+              this.invalidMail = false;
+              this.invalidPassword = false;
+            }, 4000)
+          }, 2000)
+        }
+        console.log(this.errorMessage);
       },
     });
   }
