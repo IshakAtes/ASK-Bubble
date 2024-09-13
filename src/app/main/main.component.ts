@@ -1,4 +1,4 @@
-import { Component, inject, OnInit} from '@angular/core';
+import { Component, HostListener, inject, OnInit} from '@angular/core';
 import { WorkspaceComponent } from '../workspace/workspace.component';
 import { ChannelComponent } from '../channel/channel.component';
 import { ChatComponent } from '../chat/chat.component';
@@ -13,6 +13,8 @@ import { HeaderComponent } from '../header/header.component';
 import { AuthService } from '../shared-services/auth.service';
 import { Thread } from '../../models/thread.class';
 import { ChannelThread } from '../../models/channelThread.class';
+import { Navigation, NavigationEnd, NavigationStart, Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-main',
@@ -46,12 +48,30 @@ export class MainComponent implements OnInit{
 
   searchQuery: string = '';
 
-  constructor(public userservice: UserService, public database: DatabaseService){
+  // @HostListener('window:popstate', ['$event'])
+  // onPopState(event: any){
+  //   console.log('back button pressed')
+  //   console.log(event)
+  // }
+
+  constructor(public userservice: UserService, public database: DatabaseService, router: Router){
     userservice.getDeviceWidth();
     this.authService.checkUserStatus();
     setTimeout(() => {
       this.authService.checkUserStatus()
     }, 1000);
+
+    router.events.forEach((event) => {    
+      if(event instanceof NavigationStart){
+        if(event.navigationTrigger === "popstate"){
+          console.log('NavigationStart:')
+          console.log(event)
+          if(event.url == 'https://bubble.ishakates.com/main'){
+            window.location.href = "https://bubble.ishakates.com"
+          }
+        }
+      }
+    })
   }
 
 
@@ -59,6 +79,8 @@ export class MainComponent implements OnInit{
     this.authService.checkUserStatus();
   }
 
+
+ 
 
   /**
    * Sets the size of the channel or Chat to Big
