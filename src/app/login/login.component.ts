@@ -141,6 +141,9 @@ export class LoginComponent implements OnInit {
             if (this.errorMessage === 'wrong-password') {
               this.invalidPassword = true;
             }
+            if (this.errorMessage === 'too-many-requests') {
+              alert('Zu viele Anmeldeversuche. Bitte versuchen Sie es später erneut.')
+            }
           setTimeout(() => {
             this.borderAnimation = false;
             this.falseLoginAnimation = true;
@@ -149,7 +152,7 @@ export class LoginComponent implements OnInit {
               this.checkLoginData = false;
               this.invalidMail = false;
               this.invalidPassword = false;
-            }, 4000)
+            }, 1000)
           }, 2000)
         }
         console.log(this.errorMessage);
