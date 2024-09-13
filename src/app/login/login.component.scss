@@ -177,11 +177,11 @@ nav {
             gap: 10px;
             border-radius: 100px;
             background-color: #ECEEFE;
-            border: 1px solid #68686800;
             padding-left: 80px;
+            border: 1px solid #68686800;
 
             &::placeholder {
-                font-family: Nunito;
+                font-family: "Nunito";
                 font-size: 18px;
                 font-weight: 500;
                 line-height: 21.6px;
@@ -189,11 +189,15 @@ nav {
             }
 
             &:hover {
-                border: 1px solid #686868;
+                border: 1px solid;
+                border-color: #686868;
+                transition: none;
             }
             &:focus {
-                border: 1px solid #444DF2;
+                border: 1px solid;
+                border-color: #444DF2;
                 outline: none;
+                transition: none;
             }
         }
     }
@@ -223,7 +227,12 @@ nav {
 }
 
 .redBorder {
-    border: 1px solid #ED1E79 !important;
+    border: 1px solid #ED1E79 !important; /* Rot */
+}
+
+.defaultBorder {
+    border: 1px solid #68686800 !important; /* Startet transparent */
+    transition: 2000ms ease-in-out;
 }
 
 .errorStyle {
@@ -246,6 +255,11 @@ nav {
     line-height: 19.1px;
     text-align: left;
     color: #ED1E79;
+    transition: 2000ms ease-in-out;
+}
+
+.opacityAnimation {
+    opacity: 0;
 }
 
 .separaterCt {
@@ -350,6 +364,12 @@ nav {
             color: #fff;
         }
     }
+}
+
+.disabledBtn {
+    background-color: #686868 !important;
+    color: #fff;
+    cursor: not-allowed;
 }
 
 .footerCt {

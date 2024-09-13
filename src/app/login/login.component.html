@@ -34,11 +34,12 @@
                     formControlName="mail"
                     (focus)="img.src = 'assets/img/mail-focus.png'"
                     (blur)="img.src = 'assets/img/mail-Icon.png'"
-                    [class.redBorder]="this.checkLoginData"
+                    [ngClass]="{'redBorder': checkLoginData, 'defaultBorder': !borderAnimation}"
                     placeholder="beispielname&#64;email.com" required>
                     <img #img src="assets/img/mail-Icon.png" alt="">
                     <p
-                    *ngIf="myForm.get('mail')?.invalid && myForm.get('mail')?.touched"
+                    *ngIf="myForm.get('mail')?.invalid && myForm.get('mail')?.touched || invalidMail"
+                    [ngClass]="{'errorStyle': invalidMail || myForm.get('mail')?.invalid, 'opacityAnimation': falseLoginAnimation}"
                     class="errorStyle">
                         *Diese E-Mail-Adresse is leider ungültig.
                     </p>
@@ -50,21 +51,16 @@
                     formControlName="pw"
                     (focus)="lockImg.src = 'assets/img/lock-focus.png'"
                     (blur)="lockImg.src = 'assets/img/lock-icon.png'"
-                    [class.redBorder]="this.checkLoginData"
+                    [ngClass]="{'redBorder': checkLoginData, 'defaultBorder': !borderAnimation}"
                     placeholder="Passwort" required>
                     <img #lockImg src="assets/img/lock-icon.png" alt="">
-                    <p
-                    *ngIf="myForm.get('pw')?.invalid && myForm.get('pw')?.touched && !this.us.wrongLogin"
-                    class="errorStyle">
-                        Falsches Passwort. Bitte noch einmal versuchen.
+                    <p 
+                        *ngIf="(myForm.get('pw')?.invalid && myForm.get('pw')?.touched) || invalidPassword" 
+                        [ngClass]="{'errorStyle': invalidPassword || myForm.get('pw')?.invalid, 'opacityAnimation': falseLoginAnimation}"
+                        class="errorStyle">
+                        *Falsches Passwort. Bitte noch einmal versuchen.
                     </p>
                 </div>
-                <!-- General Error Message -->
-                <p
-                *ngIf="this.checkLoginData"
-                class="errorStyle2">
-                    Falsche E-Mail-Adresse oder Passwort. Bitte versuchen Sie es erneut.
-                </p>
 
                 <!-- Forgot Password Link -->
                 <a [routerLink]="['/forgotPassword']">Passwort vergessen?</a>
@@ -89,7 +85,9 @@
                 <!-- Login and Guest Login Buttons -->
                 <div class="btnCt">
                     <button
-                    type="submit">
+                        type="submit"
+                        [disabled]="myForm.invalid || checkLoginData"
+                        [ngClass]="{'disabledBtn': myForm.invalid || checkLoginData}">
                         Anmelden
                     </button>
                     <button type="button" (click)="guestLogin()">
