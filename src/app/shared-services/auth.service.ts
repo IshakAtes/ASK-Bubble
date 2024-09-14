@@ -191,13 +191,14 @@ logGoogleUser(acceptedUser: User) {
   }
 
   redirectToLogin() {
-    this.us.loggedUser = new User();
+    //this.us.loggedUser = new User();
     this.router.navigateByUrl('');
   }
 
 
 
-  checkUserStatus() {
+  checkUserStatus(): boolean {
+  
     onAuthStateChanged(this.firebaseAuth, (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
@@ -206,18 +207,25 @@ logGoogleUser(acceptedUser: User) {
           // console.log('activeUser:', activeUser);
           this.us.loggedUser = activeUser;
           // console.log('loggedUser', this.us.loggedUser);
+          return true;
         }).catch((error) => {
           console.error('Fehler beim Abrufen des Benutzers:', error);
+          return false
         });
-  
+        return false;
         // ...
       } else {
-        this.logout();
+        //this.logout();
+        
         this.redirectToLogin();
+        return false;
+       
         // User is signed out
         // console.log('authState logged out', this.us.loggedUser, 'user variable', user);
       }
+     
     });
+    return false;
   }
 
 

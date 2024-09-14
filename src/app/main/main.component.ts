@@ -53,9 +53,10 @@ export class MainComponent implements OnInit{
   constructor(public userservice: UserService, public database: DatabaseService, router: Router){
     userservice.getDeviceWidth();
     this.authService.checkUserStatus();
-    setTimeout(() => {
-      this.authService.checkUserStatus()
-    }, 1000);
+    // setTimeout(() => {
+    //   debugger;
+    //   this.authService.checkUserStatus()
+    // }, 1000);
 
     router.events.forEach((event) => {    
       if(event instanceof NavigationStart){
@@ -70,7 +71,7 @@ export class MainComponent implements OnInit{
 
 
   ngOnInit(): void {
-    this.authService.checkUserStatus();
+    //this.authService.checkUserStatus();
   }
 
 

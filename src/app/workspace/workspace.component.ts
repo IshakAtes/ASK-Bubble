@@ -10,6 +10,7 @@ import { UserService } from '../user.service';
 import { ChannelComponent } from '../channel/channel.component';
 import { FormsModule } from '@angular/forms';
 import { ConversationMessage } from '../../models/conversationMessage.class';
+import { AuthService } from '../shared-services/auth.service';
 
 
 
@@ -54,12 +55,15 @@ export class WorkspaceComponent {
   
 
 
-  constructor(public dialog: MatDialog, public us: UserService){  
-    setTimeout(() => {
-      this.loadUserList();
-      this.loadUserChannel();
-      this.loadUserConversation();
-    }, 1000);
+  constructor(public dialog: MatDialog, public us: UserService, public auth: AuthService){  
+    if(auth.checkUserStatus()){
+      setTimeout(() => {
+        this.loadUserList();
+        this.loadUserChannel();
+        this.loadUserConversation();
+      }, 1000);
+    }
+
 
   }
 

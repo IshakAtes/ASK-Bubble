@@ -7,6 +7,7 @@ import { MatDialog} from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { Conversation } from '../../models/conversation.class';
 import { UserService } from '../user.service';
+import { AuthService } from '../shared-services/auth.service';
 
 
 @Component({
@@ -40,10 +41,15 @@ export class CreateConversationComponent {
   foundChannelList: Array<Channel> = [];
 
 
-  constructor(public dialog: MatDialog, private database: DatabaseService, public us: UserService){
-    this.loadUserList();
-    this.loadUserChannel();
-    this.loadUserConversation();
+  constructor(public dialog: MatDialog, private database: DatabaseService, public us: UserService, public auth: AuthService){
+    setTimeout(() => {
+    if(us.loggedUser){
+        this.loadUserList();
+        this.loadUserChannel();
+        this.loadUserConversation();
+     }
+    }, 1000);
+
   }
 
 
@@ -69,7 +75,7 @@ export class CreateConversationComponent {
       this.database.loadAllUserChannels(this.us.activeUserObject.userId).then(allChannel => {
         this.channelList = allChannel;
       })
-    }, 1500);
+    }, 1000);
   }
 
 
@@ -83,7 +89,7 @@ export class CreateConversationComponent {
         this.conversationList = allConversations;
         this.isdataLoaded = true;
       })
-    }, 1500);
+    }, 1000);
   }
 
 

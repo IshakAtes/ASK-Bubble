@@ -41,6 +41,7 @@ export class UserService {
 
 
   constructor(private http: HttpClient, private router: Router, public database: DatabaseService) { 
+
     this.isWorkspaceDataLoaded = false,
     setTimeout(() => {
       if(this.loggedUser){
