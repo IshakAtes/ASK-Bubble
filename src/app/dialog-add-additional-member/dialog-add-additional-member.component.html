@@ -31,9 +31,17 @@
                     <div  #selectedList class="selectedList"> 
                         <div *ngFor="let item of [].constructor(1); let i = index" class="selectedUser">
                             <img  src="{{selectedUserList[i].avatarUrl}}">
-                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
-                            </svg>
+                            <ng-container *ngIf="(selectedUserList[i].status === 'online'); then onlineIndicatorTemplateHTML; else OfflineIndicatorTemplateHTML"></ng-container>
+                                    <ng-template #onlineIndicatorTemplateHTML>
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
+                                        </svg>
+                                    </ng-template>
+                                    <ng-template #OfflineIndicatorTemplateHTML>
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="7" cy="7" r="6" fill="#686868" stroke="white" stroke-width="2"/>
+                                        </svg>
+                                    </ng-template>
                             <span>{{selectedUserList[i].name}}</span>
                             <div class="close">
                                 <svg class="close" (click)="removeUser(selectedUserList[i])" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -57,9 +65,17 @@
                     <div #selectedList class="selectedList"> 
                         <div *ngFor="let user of selectedUserList" class="selectedUser">
                             <img  src="{{user.avatarUrl}}">
-                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
-                            </svg>
+                            <ng-container *ngIf="(user.status === 'online'); then onlineIndicatorTemplateHTML; else OfflineIndicatorTemplateHTML"></ng-container>
+                                    <ng-template #onlineIndicatorTemplateHTML>
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
+                                        </svg>
+                                    </ng-template>
+                                    <ng-template #OfflineIndicatorTemplateHTML>
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="7" cy="7" r="6" fill="#686868" stroke="white" stroke-width="2"/>
+                                        </svg>
+                                    </ng-template>
                             <span>{{user.name}}</span>
                             <div class="close">
                                 <svg class="close" (click)="removeUser(user)" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -86,9 +102,17 @@
             <div *ngFor="let user of userlist" class="userList">
                 <div class="userContainer" (click)="selectUser(user);">
                     <img src="{{user.avatarUrl}}">
-                    <svg  width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
-                    </svg>
+                    <ng-container *ngIf="(user.status === 'online'); then onlineIndicatorTemplateHTML; else OfflineIndicatorTemplateHTML"></ng-container>
+                                    <ng-template #onlineIndicatorTemplateHTML>
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
+                                        </svg>
+                                    </ng-template>
+                                    <ng-template #OfflineIndicatorTemplateHTML>
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="7" cy="7" r="6" fill="#686868" stroke="white" stroke-width="2"/>
+                                        </svg>
+                                    </ng-template>
                     <span>{{user.name}}</span>
                 </div>
             </div>
@@ -102,9 +126,17 @@
             <div *ngFor="let user of foundUserList" class="userList" >
                 <div  class="userContainer" (click)="selectUser(user);">
                     <img src="{{user.avatarUrl}}">
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
-                    </svg>
+                    <ng-container *ngIf="(user.status === 'online'); then onlineIndicatorTemplateHTML; else OfflineIndicatorTemplateHTML"></ng-container>
+                                    <ng-template #onlineIndicatorTemplateHTML>
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
+                                        </svg>
+                                    </ng-template>
+                                    <ng-template #OfflineIndicatorTemplateHTML>
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="7" cy="7" r="6" fill="#686868" stroke="white" stroke-width="2"/>
+                                        </svg>
+                                    </ng-template>
                     <span>{{user.name}}</span>
                 </div>
             </div>
@@ -140,9 +172,17 @@
                     <div  #selectedList class="selectedList"> 
                         <div *ngFor="let item of [].constructor(1); let i = index" class="selectedUser">
                             <img  src="{{selectedUserList[i].avatarUrl}}">
-                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
-                            </svg>
+                            <ng-container *ngIf="(selectedUserList[i].status === 'online'); then onlineIndicatorTemplateHTML; else OfflineIndicatorTemplateHTML"></ng-container>
+                                    <ng-template #onlineIndicatorTemplateHTML>
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
+                                        </svg>
+                                    </ng-template>
+                                    <ng-template #OfflineIndicatorTemplateHTML>
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="7" cy="7" r="6" fill="#686868" stroke="white" stroke-width="2"/>
+                                        </svg>
+                                    </ng-template>
                             <span>{{selectedUserList[i].name}}</span>
                             <div class="close">
                                 <svg class="close" (click)="removeUser(selectedUserList[i])" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -166,9 +206,17 @@
                     <div #selectedList class="selectedList"> 
                         <div *ngFor="let user of selectedUserList" class="selectedUser">
                             <img  src="{{user.avatarUrl}}">
-                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
-                            </svg>
+                            <ng-container *ngIf="(user.status === 'online'); then onlineIndicatorTemplateHTML; else OfflineIndicatorTemplateHTML"></ng-container>
+                                    <ng-template #onlineIndicatorTemplateHTML>
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
+                                        </svg>
+                                    </ng-template>
+                                    <ng-template #OfflineIndicatorTemplateHTML>
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="7" cy="7" r="6" fill="#686868" stroke="white" stroke-width="2"/>
+                                        </svg>
+                                    </ng-template>
                             <span>{{user.name}}</span>
                             <div class="close">
                                 <svg class="close" (click)="removeUser(user)" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -206,9 +254,17 @@
             <div *ngFor="let user of userlist" class="userList">
                 <div class="userContainer" (click)="selectUser(user);">
                     <img src="{{user.avatarUrl}}">
-                    <svg  width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
-                    </svg>
+                    <ng-container *ngIf="(user.status === 'online'); then onlineIndicatorTemplateHTML; else OfflineIndicatorTemplateHTML"></ng-container>
+                                    <ng-template #onlineIndicatorTemplateHTML>
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
+                                        </svg>
+                                    </ng-template>
+                                    <ng-template #OfflineIndicatorTemplateHTML>
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="7" cy="7" r="6" fill="#686868" stroke="white" stroke-width="2"/>
+                                        </svg>
+                                    </ng-template>
                     <span>{{user.name}}</span>
                 </div>
             </div>
@@ -222,9 +278,17 @@
             <div *ngFor="let user of foundUserList" class="userList" >
                 <div  class="userContainer" (click)="selectUser(user);">
                     <img src="{{user.avatarUrl}}">
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
-                    </svg>
+                    <ng-container *ngIf="(user.status === 'online'); then onlineIndicatorTemplateHTML; else OfflineIndicatorTemplateHTML"></ng-container>
+                                    <ng-template #onlineIndicatorTemplateHTML>
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="7" cy="7" r="6" fill="#92C83E" stroke="white" stroke-width="2"/>
+                                        </svg>
+                                    </ng-template>
+                                    <ng-template #OfflineIndicatorTemplateHTML>
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="7" cy="7" r="6" fill="#686868" stroke="white" stroke-width="2"/>
+                                        </svg>
+                                    </ng-template>
                     <span>{{user.name}}</span>
                 </div>
             </div>

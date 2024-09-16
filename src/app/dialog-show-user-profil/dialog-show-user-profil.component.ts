@@ -76,7 +76,6 @@ export class DialogShowUserProfilComponent implements OnInit {
 
 
   async editUser() {
-    console.log('hallo');
     if (this.myForm.valid) {
       const formData = this.myForm.value;
       const currentPassword = this.showPasswordInput ? formData.password : null;

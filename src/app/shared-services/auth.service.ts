@@ -219,8 +219,7 @@ logGoogleUser(acceptedUser: User) {
         return false;
         // ...
       } else {
-        this.logout();
-        
+        // this.logout();
         this.redirectToLogin();
         return false;
        
