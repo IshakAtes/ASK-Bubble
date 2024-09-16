@@ -184,8 +184,12 @@ logGoogleUser(acceptedUser: User) {
   }
 
   logout(): Observable<void> {
-    this.us.loggedUser.status = 'offline';
-    this.us.userOffline(this.us.loggedUser.userId);
+    if(this.us.loggedUser){
+      this.us.loggedUser.status = 'offline';
+      this.us.userOffline(this.us.loggedUser.userId);
+      const promise = signOut(this.firebaseAuth);
+      return from(promise);
+    }
     const promise = signOut(this.firebaseAuth);
     return from(promise);
   }
@@ -215,7 +219,7 @@ logGoogleUser(acceptedUser: User) {
         return false;
         // ...
       } else {
-        //this.logout();
+        this.logout();
         
         this.redirectToLogin();
         return false;
