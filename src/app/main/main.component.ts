@@ -71,7 +71,7 @@ export class MainComponent implements OnInit{
 
 
   ngOnInit(): void {
-    //this.authService.checkUserStatus();
+    // this.authService.checkActiveUser();
   }
 
 

@@ -1,6 +1,6 @@
 import { Injectable, inject, OnInit, Component } from '@angular/core';
 import { User } from '../models/user.class';
-import { Firestore, collection, addDoc, updateDoc, doc, onSnapshot } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, updateDoc, doc, onSnapshot, getDoc } from '@angular/fire/firestore';
 import { getDocs, query, where } from "firebase/firestore";
 import { HttpClient, HttpRequest, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -77,28 +77,59 @@ export class UserService {
   }
 
 
-
-  changeUserName(newName: string, token: string): Promise<any> {
+  changeUserName(newName: string, uid: string): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       const usersCollection = collection(this.firestore, 'users');
-
-      onSnapshot(usersCollection, (users) => {
-        users.forEach(async user => {
-          const userData = user.data();
+      
+      // Query Firestore to find the user with the matching uid
+      const userQuery = query(usersCollection, where('uid', '==', uid));
   
-          if (userData['uid'] === token) {
-            const userDocRef = doc(this.firestore, "users", userData['userId']);
-            await updateDoc(userDocRef, {
-              name: newName,
-            });
+      getDocs(userQuery).then(snapshot => {
+        if (!snapshot.empty) {
+          const userDoc = snapshot.docs[0];
+          const userDocRef = doc(this.firestore, "users", userDoc.id);
+          
+          updateDoc(userDocRef, {
+            name: newName,
+          }).then(() => {
             resolve(newName);
-          }
-        });
-      }, (error) => {
+          }).catch(error => {
+            console.error('Error updating user name:', error);
+            reject(error);
+          });
+        } else {
+          reject('No user found with this uid.');
+        }
+      }).catch(error => {
+        console.error('Error fetching user document:', error);
         reject(error);
       });
     });
   }
+
+
+  // changeUserName(newName: string, token: string): Promise<any> {
+  //   return new Promise<any>((resolve, reject) => {
+  //     const usersCollection = collection(this.firestore, 'users');
+
+  //     onSnapshot(usersCollection, (users) => {
+  //       users.forEach(user => {
+  //         const userData = user.data();
+  
+  //         if (userData['uid'] === token) {
+  //           console.log(userData, user);
+  //           const userDocRef = doc(this.firestore, "users", userData['userId']);
+  //           updateDoc(userDocRef, {
+  //             name: newName,
+  //           });
+  //           resolve(newName);
+  //         }
+  //       });
+  //     }, (error) => {
+  //       reject(error);
+  //     });
+  //   });
+  // }
 
 
   changeAvatar(avatar: string | undefined | null, token: string): Promise<any> {

@@ -164,6 +164,7 @@ export class LoginComponent implements OnInit {
 
   async logCorrectUser() {
     const acceptedUser = await this.us.getUser(this.myForm.value.mail, this.us.userToken);
+    console.log(acceptedUser);
     if (this.myForm.valid && acceptedUser || this.authMessage) {
       try {
         this.us.loggedUser = acceptedUser;

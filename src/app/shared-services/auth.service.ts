@@ -24,6 +24,8 @@ export class AuthService {
 
   constructor(private router: Router) {
     // console.log('googleInfos', this.infos);
+    console.log('observ', this.activeUser);
+    
   }
 
 
@@ -52,7 +54,8 @@ export class AuthService {
           }
     
           if (name !== fbUser.displayName) {
-            await this.us.changeUserName(name, fbUser.uid)
+            await updateProfile(fbUser, { displayName: name });
+            await this.us.changeUserName(name, fbUser.uid);
           }
 
           if (avatar !== fbUser.photoURL) {
@@ -60,10 +63,6 @@ export class AuthService {
           }
 
           // Update profile
-          await updateProfile(fbUser, {
-            displayName: name,
-            photoURL: avatar ?? '/assets/img/unUsedDefault.png'
-          }); 
           // console.log('Profile updated!', fbUser);
       } else {
         // console.error('Current user or password is null');
@@ -202,7 +201,6 @@ logGoogleUser(acceptedUser: User) {
 
 
   checkUserStatus(): boolean {
-  
     onAuthStateChanged(this.firebaseAuth, (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
@@ -210,23 +208,20 @@ logGoogleUser(acceptedUser: User) {
         this.us.getUser(user.email ?? '', user.uid).then((activeUser) => {
           // console.log('activeUser:', activeUser);
           this.us.loggedUser = activeUser;
-          // console.log('loggedUser', this.us.loggedUser);
           return true;
         }).catch((error) => {
           console.error('Fehler beim Abrufen des Benutzers:', error);
           return false
         });
         return false;
-        // ...
       } else {
         // this.logout();
         this.redirectToLogin();
         return false;
-       
+
         // User is signed out
         // console.log('authState logged out', this.us.loggedUser, 'user variable', user);
       }
-     
     });
     return false;
   }

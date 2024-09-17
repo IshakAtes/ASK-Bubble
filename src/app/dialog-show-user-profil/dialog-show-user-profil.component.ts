@@ -82,11 +82,6 @@ export class DialogShowUserProfilComponent implements OnInit {
       // console.log(formData);
       this.userData.avatarUrl = this.selectedAvatar;
       try {
-        // console.log(formData.email,
-        //   this.userData.email,
-        //   currentPassword,
-        //   formData.name,
-        //   this.selectedAvatar);
         await this.authService.changeUserData(
           this.userData.email,
           formData.email,
@@ -94,7 +89,7 @@ export class DialogShowUserProfilComponent implements OnInit {
           formData.name,
           this.selectedAvatar
         );
-        await this.authService.checkUserStatus();
+        // this.authService.checkUserStatus();
         // Aktualisiere die lokalen Daten
         this.userData.name = formData.name;
         this.userData.email = formData.email;
@@ -151,7 +146,6 @@ export class DialogShowUserProfilComponent implements OnInit {
     this.newData = this.userData;
     // console.log(this.newData);
     this.selectedAvatar = this.userData.avatarUrl ?? '/assets/img/unUsedDefault.png';
-    
     // Aktualisieren Sie das Formular mit den aktuellen Werten
     this.myForm.patchValue({
       name: this.userData.name,
