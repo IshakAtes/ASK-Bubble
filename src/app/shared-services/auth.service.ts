@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateEmail, updatePassword, user, updateProfile, sendEmailVerification } from '@angular/fire/auth';
-import { from, Observable } from 'rxjs';
+import { catchError, EMPTY, from, Observable, tap } from 'rxjs';
 import { EmailAuthProvider, getAuth, onAuthStateChanged, UserCredential, reauthenticateWithCredential, AuthProvider, getAdditionalUserInfo } from "firebase/auth";
 import { UserService } from '../user.service';
 import { User } from '../../models/user.class';
@@ -24,8 +24,7 @@ export class AuthService {
 
   constructor(private router: Router) {
     // console.log('googleInfos', this.infos);
-    console.log('observ', this.activeUser);
-    
+    // console.log('observ', this.activeUser);
   }
 
 
@@ -50,20 +49,15 @@ export class AuthService {
               this.wrongEmail = true;
               // console.error('Error during reauthentication:', error);
             }
-            
           }
-    
+
           if (name !== fbUser.displayName) {
             await updateProfile(fbUser, { displayName: name });
             await this.us.changeUserName(name, fbUser.uid);
           }
-
           if (avatar !== fbUser.photoURL) {
             await this.us.changeAvatar(avatar, fbUser.uid);
           }
-
-          // Update profile
-          // console.log('Profile updated!', fbUser);
       } else {
         // console.error('Current user or password is null');
       }
@@ -144,35 +138,41 @@ logGoogleUser(acceptedUser: User) {
 }
 
 
-
-  register(email: string, username: string, password: string): Observable <void> {
-    const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, password
-    ).then(response => updateProfile(response.user, {displayName: username, photoURL: this.us.userCache.avatarUrl}).then(() => {
-        // this.us.userCache['uid'] = response.user.uid;
+register(email: string, username: string, password: string): Observable<void> {
+  const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, password)
+    .then(response => {
+      return updateProfile(response.user, {
+        displayName: username,
+        photoURL: this.us.userCache.avatarUrl
+      }).then(() => {
         this.us.userToken = response.user.uid;
         if (this.us.guest) {
           this.us.createAndSaveGuest();
         }
-      })
-    );
-    return from(promise);
-  }
+      });
+    })
+    .catch((error) => {
+      console.error('Error during registration:', error);  // Loggen des Fehlers
+      throw error;  // Fehler weiterleiten, um ihn in subscribe() abzufangen
+    });
 
+  return from(promise);
+}
 
-  async authRegistration() {
-    await this.register(this.us.userCache.email, this.us.userCache.name, this.us.pwCache)
-      .subscribe({
-        next: () => {
-          this.us.pwCache = '';
-          this.us.createAndSaveUser()
+authRegistration() {
+  this.register(this.us.userCache.email, this.us.userCache.name, this.us.pwCache)
+    .subscribe({
+      next: () => {
+        this.us.pwCache = '';
+        this.us.createAndSaveUser();
       },
       error: (err) => {
+        console.error('Error during registration:', err);
         this.errorMessage = err.code;
-        // console.log(this.errorMessage);
-      },
+      }
     });
-  }
-  
+}
+
 
   login(email: string, password: string,): Observable <void> {
     const promise = signInWithEmailAndPassword(this.firebaseAuth, email, password
@@ -208,9 +208,11 @@ logGoogleUser(acceptedUser: User) {
         this.us.getUser(user.email ?? '', user.uid).then((activeUser) => {
           // console.log('activeUser:', activeUser);
           this.us.loggedUser = activeUser;
+          this.us.activeUserObject = activeUser;
           return true;
         }).catch((error) => {
-          console.error('Fehler beim Abrufen des Benutzers:', error);
+          // console.error('Fehler beim Abrufen des Benutzers:', error);
+          this.redirectToLogin();
           return false
         });
         return false;
@@ -218,8 +220,6 @@ logGoogleUser(acceptedUser: User) {
         // this.logout();
         this.redirectToLogin();
         return false;
-
-        // User is signed out
         // console.log('authState logged out', this.us.loggedUser, 'user variable', user);
       }
     });

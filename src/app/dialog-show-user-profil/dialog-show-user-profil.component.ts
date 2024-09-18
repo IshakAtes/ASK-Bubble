@@ -21,7 +21,7 @@ export class DialogShowUserProfilComponent implements OnInit {
   us = inject(UserService);
   authService = inject(AuthService);
   editMode: boolean = false;
-  selectedAvatar: string = '../../assets/img/unUsedDefault.png';
+  selectedAvatar: string = '/assets/img/unUsedDefault.png';
   newData: User;
   myForm: FormGroup;
   showPasswordInput: boolean = false;
@@ -63,6 +63,8 @@ export class DialogShowUserProfilComponent implements OnInit {
           uid: user.uid
         });
         this.authService.currentUserSignal.set(customUser);
+        console.log('customUser', customUser);
+        console.log('currentUserSignal', this.authService.currentUserSignal);
       } else {
         this.authService.currentUserSignal.set(null);
       }
@@ -78,6 +80,7 @@ export class DialogShowUserProfilComponent implements OnInit {
   async editUser() {
     if (this.myForm.valid) {
       const formData = this.myForm.value;
+      const usedMail = this.userData.email;
       const currentPassword = this.showPasswordInput ? formData.password : null;
       // console.log(formData);
       this.userData.avatarUrl = this.selectedAvatar;
@@ -89,7 +92,7 @@ export class DialogShowUserProfilComponent implements OnInit {
           formData.name,
           this.selectedAvatar
         );
-        // this.authService.checkUserStatus();
+        this.authService.checkUserStatus();
         // Aktualisiere die lokalen Daten
         this.userData.name = formData.name;
         this.userData.email = formData.email;
@@ -97,18 +100,7 @@ export class DialogShowUserProfilComponent implements OnInit {
         this.userPassword = '';
 
         setTimeout(() => {
-          if (this.authService.wrongEmail) {
-            this.authService.wrongEmail = false;
-            // console.log(this.us.loggedUser.email);
-            this.myForm.patchValue({
-              email: this.us.loggedUser.email,
-              password: ''
-            });
-            this.userData.email = this.us.loggedUser.email;
-            formData.email = this.us.loggedUser.email
-            alert('Falsches Passwort oder E-Mail');
-            this.editMode = true;
-          }
+          this.emailNotChanged(formData, usedMail);
         }, 512)
         
       } catch (error) {
@@ -119,7 +111,26 @@ export class DialogShowUserProfilComponent implements OnInit {
       Object.values(this.myForm.controls).forEach(control => {
         control.markAsTouched();
       });
-      alert('Bitte korrigieren Sie die Fehler im Formular');
+    }
+  }
+
+
+  emailNotChanged(formData: { email: string; }, usedMail: string) {
+    if (this.authService.wrongEmail) {
+      this.authService.wrongEmail = false;
+      this.myForm.value.email = usedMail;
+      this.us.loggedUser.email = usedMail;
+      formData.email = usedMail;
+      console.log(usedMail);
+      
+      this.myForm.patchValue({
+        email: usedMail,
+        password: ''
+      });
+      this.userData.email = this.us.loggedUser.email;
+      formData.email = this.us.loggedUser.email
+      alert('Falsches Passwort oder E-Mail');
+      this.editMode = true;
     }
   }
 

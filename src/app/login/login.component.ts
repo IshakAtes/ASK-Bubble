@@ -45,6 +45,7 @@ export class LoginComponent implements OnInit {
     // console.log(this.us.loadAllUsers());
     this.hub.guestData = this.guestLog;
     this.us.wrongLogin = false;
+    this.checkLoginData = false;
     this.myForm = this.fb.group({
       pw: ['', [Validators.required, Validators.minLength(5)]],
       mail: ['', [Validators.required, Validators.email]],
@@ -66,7 +67,6 @@ export class LoginComponent implements OnInit {
 
   
   async onSubmit() {
-    this.checkLoginData = false;
     if (this.us.guest) {
       this.myForm.setValue({
         pw: this.guestPw,
@@ -164,7 +164,6 @@ export class LoginComponent implements OnInit {
 
   async logCorrectUser() {
     const acceptedUser = await this.us.getUser(this.myForm.value.mail, this.us.userToken);
-    console.log(acceptedUser);
     if (this.myForm.valid && acceptedUser || this.authMessage) {
       try {
         this.us.loggedUser = acceptedUser;

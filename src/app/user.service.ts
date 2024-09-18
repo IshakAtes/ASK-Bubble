@@ -80,10 +80,8 @@ export class UserService {
   changeUserName(newName: string, uid: string): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       const usersCollection = collection(this.firestore, 'users');
-      
-      // Query Firestore to find the user with the matching uid
       const userQuery = query(usersCollection, where('uid', '==', uid));
-  
+
       getDocs(userQuery).then(snapshot => {
         if (!snapshot.empty) {
           const userDoc = snapshot.docs[0];

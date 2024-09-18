@@ -48,6 +48,7 @@ section {
             gap: 0px;
             border-radius: 30px;
             opacity: 0px;
+            object-fit: cover;
         }
 
         >span{
@@ -378,6 +379,7 @@ section {
                     gap: 0px;
                     border-radius: 30px;
                     opacity: 0px;
+                    object-fit: cover;
                 }
                 >svg{
                     display: flex;

@@ -1,12 +1,9 @@
 import { CommonModule, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../user.service';
 import { HttpClient } from '@angular/common/http';
-import { HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { AuthService } from '../shared-services/auth.service';
-
 
 
 @Component({
@@ -21,12 +18,12 @@ import { AuthService } from '../shared-services/auth.service';
 export class DialogChooseAvatarComponent {
   http = inject(HttpClient);
   images: string[] = [
-    '../../assets/img/defaultAvatars/defaultFemale1.png',
-    '../../assets/img/defaultAvatars/defaultMale1.png',
-    '../../assets/img/defaultAvatars/defaultMale4.png',
-    '../../assets/img/defaultAvatars/defaultMale2.png',
-    '../../assets/img/defaultAvatars/defaultFemale2.png',
-    '../../assets/img/defaultAvatars/defaultMale3.png'
+    '/assets/img/defaultAvatars/defaultFemale1.png',
+    '/assets/img/defaultAvatars/defaultMale1.png',
+    '/assets/img/defaultAvatars/defaultMale4.png',
+    '/assets/img/defaultAvatars/defaultMale2.png',
+    '/assets/img/defaultAvatars/defaultFemale2.png',
+    '/assets/img/defaultAvatars/defaultMale3.png'
   ];
   selectedAvatar: string = "";
   userCreated: boolean = false;
@@ -84,9 +81,9 @@ export class DialogChooseAvatarComponent {
   }
 
 
-  async createUser() {
+  createUser() {
     this.us.userCache.avatarUrl = this.selectedAvatar;
-    await this.authService.authRegistration();
+    this.authService.authRegistration();
     this.sendRegisteredMail();
   }
   

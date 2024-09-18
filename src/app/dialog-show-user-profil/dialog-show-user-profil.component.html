@@ -105,7 +105,8 @@
       *ngIf="showPasswordInput"
       formControlName="password"
       type="password"
-      placeholder="Bitte Passwort eingeben">
+      placeholder="Bitte Passwort eingeben"
+      required>
       <p class="showErrorByWrongPassword" *ngIf="myForm.get('password')?.invalid && myForm.get('password')?.touched">*Das Passwort ist ungültig oder zu kurz</p>
     </div>
   </ng-template>

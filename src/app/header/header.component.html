@@ -12,8 +12,8 @@
                 <input type="text" (input)="onSearch($event)" placeholder="Suche...">
             </div>
             <div class="loggedUserBar" (click)="toggleDropdown()" (mouseenter)="hovered = true" (mouseleave)="hovered = false">
-                <span>{{ us.activeUserObject.name }}</span>
-                <div class="userAvatarCT" [ngStyle]="{'background-image': 'url(' + us.activeUserObject.avatarUrl + ')'}">
+                <span>{{ us.loggedUser.name }}</span>
+                <div class="userAvatarCT" [ngStyle]="{'background-image': 'url(' + us.loggedUser.avatarUrl + ')'}">
                     <div class="status-indicator" [ngClass]="{
                     'online': us.loggedUser.status === 'online',
                     'offline': us.loggedUser.status !== 'online'
