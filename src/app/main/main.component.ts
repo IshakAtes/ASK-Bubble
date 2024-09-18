@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, OnInit} from '@angular/core';
+import { Component, inject, OnInit} from '@angular/core';
 import { WorkspaceComponent } from '../workspace/workspace.component';
 import { ChannelComponent } from '../channel/channel.component';
 import { ChatComponent } from '../chat/chat.component';
@@ -13,7 +13,7 @@ import { HeaderComponent } from '../header/header.component';
 import { AuthService } from '../shared-services/auth.service';
 import { Thread } from '../../models/thread.class';
 import { ChannelThread } from '../../models/channelThread.class';
-import { Navigation, NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { NavigationStart, Router } from '@angular/router';
 
 
 @Component({

@@ -106,30 +106,6 @@ export class UserService {
   }
 
 
-  // changeUserName(newName: string, token: string): Promise<any> {
-  //   return new Promise<any>((resolve, reject) => {
-  //     const usersCollection = collection(this.firestore, 'users');
-
-  //     onSnapshot(usersCollection, (users) => {
-  //       users.forEach(user => {
-  //         const userData = user.data();
-  
-  //         if (userData['uid'] === token) {
-  //           console.log(userData, user);
-  //           const userDocRef = doc(this.firestore, "users", userData['userId']);
-  //           updateDoc(userDocRef, {
-  //             name: newName,
-  //           });
-  //           resolve(newName);
-  //         }
-  //       });
-  //     }, (error) => {
-  //       reject(error);
-  //     });
-  //   });
-  // }
-
-
   changeAvatar(avatar: string | undefined | null, token: string): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       const usersCollection = collection(this.firestore, 'users');
