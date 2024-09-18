@@ -26,7 +26,6 @@ export class DialogChangePasswordComponent implements OnInit {
 
   ngOnInit():void {
     this.userId = this.route.snapshot.paramMap.get('id');
-    // console.log(this.userId);
   }
 
 

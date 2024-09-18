@@ -27,8 +27,6 @@ export class GeneralChatService {
 
 
   async groupReactions(messageList: Array<ConversationMessage> | Array<ChannelMessage>) {
-    // console.log('messageList: ', messageList);
-    // console.log('reactions:', this.reactions);
     const groupedReactions = new Map<string, Array<{ emoji: string, count: number, users: string[] }>>();
     messageList.forEach(message => {
       const reactionMap = new Map<string, { count: number, users: string[] }>();
@@ -53,9 +51,6 @@ export class GeneralChatService {
   }
 
   async groupReactionsThread(messageList: Array<ThreadMessage> | Array<ChannelThreadMessage>) {
-    // console.log('messageList: ', messageList);
-    // console.log('reactionsThread:', this.reactionsThread);
-    // console.log('reactions:', this.reactions);
     const groupedReactionsThread = new Map<string, Array<{ emoji: string, count: number, users: string[] }>>();
     messageList.forEach(message => {
       const reactionMap = new Map<string, { count: number, users: string[] }>();
@@ -74,14 +69,9 @@ export class GeneralChatService {
         message.threadMessageId,
         Array.from(reactionMap.entries()).map(([emoji, { count, users }]) => ({ emoji, count, users }))
       );
-      // console.log('variable innerhalb funktion');
-      // console.log(groupedReactionsThread);
-      
-      
     });
 
     this.groupedReactionsThread.next(groupedReactionsThread);
-    // console.log(this.groupedReactionsThread);
     
   }
 

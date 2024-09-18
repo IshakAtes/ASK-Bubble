@@ -277,9 +277,8 @@ export class ThreadComponent {
     this.edit.selectedMessageIdEdit = null;
     message.content = updatedContent;
     this.databaseService.updateThreadMessage(message, this.specific).then(() => {
-      // console.log('Message updated successfully');
     }).catch(error => {
-      // console.error('Error updating message: ', error);
+      console.error('Error updating message: ', error);
     });
     this.loadAllMessages();
   }
@@ -360,7 +359,7 @@ export class ThreadComponent {
     this.fileUploadError = 'Das abschicken von leeren Nachrichten ist nicht möglich';
     setTimeout(() => {
       this.fileUploadError = null;
-      // console.log(this.fileUploadError);
+
     }, 2500);
   };
 

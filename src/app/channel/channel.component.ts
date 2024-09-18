@@ -145,9 +145,6 @@ export class ChannelComponent implements OnInit {
    * reset all neccessary variables to default before loading
    */
   setDefaultForNgOnChange() {
-    // this.messageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
-    // this.originalMessageList$ = this.database.loadChannelMessages(this.activeUser.userId, this.channel.channelId);
-    // this.messageList$ = this.originalMessageList$;
     this.chatService.reactions = [];
     this.reactions = this.chatService.reactions;
     this.chatService.groupedReactions$.subscribe(groupedReactions => { this.groupedReactions = groupedReactions; });
@@ -183,10 +180,8 @@ export class ChannelComponent implements OnInit {
     this.messageList$ = this.originalMessageList$;
     this.loadAllMessageReactions();
     this.messageList$.pipe(take(1)).subscribe(messageList => {
-     
         this.chatService.groupReactions(messageList)
           .then(() => {
-            //this.changeReload();
             this.isdataLoaded = true;
             setTimeout(() => {
               this.scrollToBottom();
@@ -297,7 +292,6 @@ export class ChannelComponent implements OnInit {
     this.fileUploadError = 'Das abschicken von leeren Nachrichten ist nicht möglich';
     setTimeout(() => {
       this.fileUploadError = null;
-      // console.log(this.fileUploadError);
     }, 2500);
   };
 

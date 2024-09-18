@@ -117,7 +117,6 @@ export class ChatComponent implements OnInit {
       .then(creatorUser => {
         if (creatorUser.userId == this.user.userId) {
           this.sendingUser = creatorUser;
-          // console.log('this is the creatorUser', this.sendingUser)
         }
         else {
           this.passiveUser = creatorUser;
@@ -128,7 +127,6 @@ export class ChatComponent implements OnInit {
       .then(recipientUser => {
         if (recipientUser.userId == this.user.userId) {
           this.sendingUser = recipientUser;
-          // console.log('this is the recipientUser', this.passiveUser)
         }
         else {
           this.passiveUser = recipientUser;
@@ -195,7 +193,6 @@ export class ChatComponent implements OnInit {
       .then(creatorUser => {
         if (creatorUser.userId == this.user.userId) {
           this.sendingUser = creatorUser;
-          // console.log('this is the creatorUser', this.sendingUser)
         }
         else {
           this.passiveUser = creatorUser;
@@ -206,7 +203,6 @@ export class ChatComponent implements OnInit {
       .then(recipientUser => {
         if (recipientUser.userId == this.user.userId) {
           this.sendingUser = recipientUser;
-          // console.log('this is the recipientUser', this.passiveUser)
         }
         else {
           this.passiveUser = recipientUser;
@@ -315,7 +311,6 @@ export class ChatComponent implements OnInit {
     this.fileUploadError = 'Das abschicken von leeren Nachrichten ist nicht möglich';
     setTimeout(() => {
       this.fileUploadError = null;
-      // console.log(this.fileUploadError);
     }, 2500);
   };
 
@@ -449,10 +444,8 @@ export class ChatComponent implements OnInit {
    */
   createOrOpenThread(message: ConversationMessage) {
     if (message.threadId !== '') {
-      // console.log('Thread already exists');
       this.databaseService.loadSpecificThread(message, this.sendingUser)
         .then(oldThread => {
-          // console.log(oldThread);
           this.openThread(oldThread);
         })
         .catch(error => console.error('Error loading thread:', error));
@@ -460,7 +453,6 @@ export class ChatComponent implements OnInit {
       const thread: Thread = this.databaseService.createThread(message, this.sendingUser, this.passiveUser);
       this.databaseService.addThread(thread)
       this.databaseService.updateMessageThreadId(thread)
-      //this.ngOnChanges();
       this.openThread(thread);
     }
   }

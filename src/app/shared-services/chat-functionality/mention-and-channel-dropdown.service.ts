@@ -32,7 +32,6 @@ export class MentionAndChannelDropdownService {
   loadUsersOfUser() {
     this.data.loadAllUsers().then(userList => {
       this.allUsers = userList;
-      // console.log('All Users:', this.allUsers);
     }).catch(error => {
       // console.error('Fehler beim Laden der Benutzer:', error);
     });
@@ -42,8 +41,7 @@ export class MentionAndChannelDropdownService {
   loadChannlesofUser() {
     this.data.loadAllUserChannels(this.userService.activeUserObject.userId).then(channel => {
       this.allChannels = channel;
-      // console.log('channels:');
-      // console.log(this.allChannels);
+
     })
   }
 

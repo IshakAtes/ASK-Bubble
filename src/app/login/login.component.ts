@@ -42,7 +42,6 @@ export class LoginComponent implements OnInit {
   });
 
   constructor(private fb: FormBuilder, private router: Router, public us: UserService) {
-    // console.log(this.us.loadAllUsers());
     this.hub.guestData = this.guestLog;
     this.us.wrongLogin = false;
     this.checkLoginData = false;

@@ -63,12 +63,9 @@ export class DialogShowUserProfilComponent implements OnInit {
           uid: user.uid
         });
         this.authService.currentUserSignal.set(customUser);
-        console.log('customUser', customUser);
-        console.log('currentUserSignal', this.authService.currentUserSignal);
       } else {
         this.authService.currentUserSignal.set(null);
       }
-      // console.log(this.authService.currentUserSignal());
     })
   }
 
@@ -82,7 +79,6 @@ export class DialogShowUserProfilComponent implements OnInit {
       const formData = this.myForm.value;
       const usedMail = this.userData.email;
       const currentPassword = this.showPasswordInput ? formData.password : null;
-      // console.log(formData);
       this.userData.avatarUrl = this.selectedAvatar;
       try {
         await this.authService.changeUserData(
@@ -155,7 +151,6 @@ export class DialogShowUserProfilComponent implements OnInit {
     this.editMode = true;
     this.showPasswordInput = false;
     this.newData = this.userData;
-    // console.log(this.newData);
     this.selectedAvatar = this.userData.avatarUrl ?? '/assets/img/unUsedDefault.png';
     // Aktualisieren Sie das Formular mit den aktuellen Werten
     this.myForm.patchValue({
