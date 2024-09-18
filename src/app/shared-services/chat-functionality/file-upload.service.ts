@@ -29,6 +29,13 @@ export class FileUploadService {
   fileUploading: boolean = false;
   fileUploadingThread: boolean = false;
 
+  /**
+   * Selects a file and passes it to the uploadFile function
+   * @param event Fileselection 
+   * @param user User that selected the file 
+   * @param chat Conversation, channel or thread in witch the files has been selected 
+   * @param thread Variable to check if the file was selected in a thread
+   */
   onFileSelected(event: any, user: User, chat: Conversation | Channel | Thread | ChannelThread, thread?: string) {
     const selectedFile: File = event.target.files[0];
     if (thread) {
@@ -36,10 +43,16 @@ export class FileUploadService {
     } else {
       this.uploadFile(selectedFile, user, chat);
     }
-
-    // console.log(selectedFile);
   }
 
+  /**
+   * Upload the selected file to the firebase database
+   * @param file Selected file 
+   * @param user User that selected the file 
+   * @param chat Conversation, channel or thread in witch the files has been selected 
+   * @param thread Variable to check if the file was selected in a thread
+   * @returns 
+   */
   async uploadFile(file: File, user: User, chat: Conversation | Channel | Thread | ChannelThread, thread?: string) {
     const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif'];
     const maxSize = 500 * 1024; // 500 KB
@@ -62,7 +75,6 @@ export class FileUploadService {
       return;
     }
 
-    // const filePath = `messageFiles/${file.name}`;
     const filePath = this.defineUploadPath(file, user, chat);
     const fileRef = ref(this.storage, filePath);
     const uploadFile = uploadBytesResumable(fileRef, file);
@@ -75,10 +87,8 @@ export class FileUploadService {
           this.fileUploading = true;
         }
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        // console.log('Loading progress:', progress);
       },
       (error) => {
-        // console.error('Error while loading:', error);
         if (thread) {
           this.fileUploadErrorSubjectThread.next('Fehler beim Hochladen der Datei.');
         } else {
@@ -86,10 +96,7 @@ export class FileUploadService {
         }
       },
       async () => {
-        // console.log("Die Datei wurde erfolgreich hochgeladen!");
         const url = await getDownloadURL(fileRef);
-        // console.log("URL: ", url);
-
         if (thread) {
           this.fileUploadingThread = false;
           this.downloadURLThread = url;
@@ -101,6 +108,13 @@ export class FileUploadService {
     );
   }
 
+  /**
+   * Defines the upload path within the firebase database
+   * @param file Selected file 
+   * @param user User that selected the file 
+   * @param chat Conversation, channel or thread in witch the files has been selected 
+   * @returns 
+   */
   defineUploadPath(file: File, user: User, chat: Conversation | Channel | Thread | ChannelThread) {
     const randomNumber = Math.random();
     let filePath: string ='';
@@ -114,6 +128,10 @@ export class FileUploadService {
     return filePath
   }
 
+  /**
+   * Deletes the file from the firebase database and message textarea preview
+   * @param thread Variable to check if the file was selected in a thread
+   */
   async deletePreview(thread?: string) {
     if (this.downloadURL || this.downloadURLThread) {
       try {
@@ -121,27 +139,27 @@ export class FileUploadService {
         if (thread) {
           const fileRef = ref(this.storage, this.downloadURLThread);
           await deleteObject(fileRef);
-          // console.log("Die Datei wurde erfolgreich gelöscht!");
           this.downloadURLThread = '';
         } else {
           const fileRef = ref(this.storage, this.downloadURL);
           await deleteObject(fileRef);
-          // console.log("Die Datei wurde erfolgreich gelöscht!");
           this.downloadURL = '';
         }
       } catch (error) {
-        // console.error('Fehler beim Löschen der Datei:', error);
         if (thread) {
           this.fileUploadErrorSubjectThread.next('Fehler beim Hochladen der Datei.');
         } else {
           this.fileUploadErrorSubject.next('Fehler beim Hochladen der Datei.');
         }
       }
-    } else {
-      // console.log("Keine Datei zum Löschen gefunden.");
     }
   }
 
+  /**
+   * Checks if the uploaded file is a image 
+   * @param fileUrl the upload URL of the uploaded file
+   * @returns 
+   */
   isImage(fileUrl: string): boolean {
     const url = new URL(fileUrl);
     const path = url.pathname;

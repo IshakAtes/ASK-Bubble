@@ -16,6 +16,10 @@ export class EditMessageService {
   editContent: string = '';
   selectedMessageIdEdit: string | null = null;
 
+  /**
+   * Defines the selectedMessageIdEdit variable to only edit the choosen message
+   * @param messageId The Id  of the message that is edited 
+   */
   toggleMessageEdit(messageId: string) {
     if (this.selectedMessageIdEdit === messageId) {
       this.selectedMessageIdEdit = null;
@@ -24,6 +28,11 @@ export class EditMessageService {
     }
   }
 
+  /**
+   * Edits the content of a message
+   * @param message The message object thats content is edited
+   * @param thread The thread object if a message in a thread is edited 
+   */
   editMessage(message: ConversationMessage | ChannelMessage | ThreadMessage | ChannelThreadMessage, thread?: string) {
     if (thread) {
       if ('threadMessageId' in message) {
@@ -38,6 +47,10 @@ export class EditMessageService {
     this.editContent = message.content;
   }
 
+  /**
+   * Cancels the edit of the message content
+   * @param thread The thread object if a message in a thread is edited 
+   */
   cancelEditMessage(thread?: string) {
     if (thread) {
       this.isEditingThread = false;

@@ -28,25 +28,23 @@ export class MentionAndChannelDropdownService {
     this.loadChannlesofUser()
   }
 
-
+/**
+ * load all useres known by the active user
+ */
   loadUsersOfUser() {
     this.data.loadAllUsers().then(userList => {
       this.allUsers = userList;
-    }).catch(error => {
-      // console.error('Fehler beim Laden der Benutzer:', error);
-    });
-  }
-
-
-  loadChannlesofUser() {
-    this.data.loadAllUserChannels(this.userService.activeUserObject.userId).then(channel => {
-      this.allChannels = channel;
-
     })
   }
 
-
-  //show dropdownmenu with mentions or channels 
+/**
+ * load all channels of the active user
+ */
+  loadChannlesofUser() {
+    this.data.loadAllUserChannels(this.userService.activeUserObject.userId).then(channel => {
+      this.allChannels = channel;
+    })
+  }
   showDropdown: boolean = false;
   showDropdownThread: boolean = false;
   filteredItems: Array<User | Channel> = [];
@@ -63,8 +61,6 @@ export class MentionAndChannelDropdownService {
 
     if (cursorPosition > 0) {
       const lastTypedChar = input[cursorPosition - 1];
-
-      // Überprüfen, ob das zuletzt getippte Zeichen ein Trigger-Zeichen ist
       if (lastTypedChar === '#' || lastTypedChar === '@') {
         if (thread) {
           this.showDropdownThread = true;
@@ -73,7 +69,6 @@ export class MentionAndChannelDropdownService {
         }
         this.filterItems(input, lastTypedChar, cursorPosition);
       } else if (this.showDropdown) {
-        // Überprüfen, ob der Eingabetext ein Trigger-Zeichen enthält
         const hashIndex = input.lastIndexOf('#', cursorPosition - 1);
         const atIndex = input.lastIndexOf('@', cursorPosition - 1);
 
@@ -105,6 +100,12 @@ export class MentionAndChannelDropdownService {
     }
   }
 
+  /**
+   * shows items that fit in the search 
+   * @param input input after a triggerchar
+   * @param triggerChar '#' : '@' in the input that trigger a search 
+   * @param cursorPosition current cursor position
+   */
   filterItems(input: string, triggerChar: string, cursorPosition: number): void {
     const queryArray = input.slice(0, cursorPosition).split(triggerChar);
     const query = queryArray.length > 1 ? queryArray.pop()?.trim().toLowerCase() : '';
@@ -118,23 +119,24 @@ export class MentionAndChannelDropdownService {
     }
   }
 
-
+/**
+ * selects the chosen item from the filtered ones 
+ * @param item name of a user or channel
+ * @param textarea the textarea in witch the user writes 
+ * @param thread variable to check if the item was selected in a thread
+ */
   selectItem(item: User | Channel, textarea: HTMLTextAreaElement, thread?: string): void {
     const triggerChar = item.hasOwnProperty('channelId') ? '#' : '@';
-    const currentContent = textarea.value; // Den aktuellen Wert direkt aus der Textarea holen
+    const currentContent = textarea.value;
     const cursorPosition = textarea.selectionStart;
 
-    // Finde das letzte Trigger-Zeichen vor der aktuellen Cursor-Position
     const lastTriggerIndex = currentContent.lastIndexOf(triggerChar, cursorPosition - 1);
 
-    // Teile den Inhalt in drei Teile auf: vor dem Trigger, das Trigger-Segment und nach dem Trigger
     const beforeTrigger = currentContent.slice(0, lastTriggerIndex);
     const afterTrigger = currentContent.slice(cursorPosition);
 
-    // Füge das ausgewählte Item in den bestehenden Text ein
     const newContent = beforeTrigger + `${triggerChar}${item.name} ` + afterTrigger;
 
-    // Aktualisiere das Textarea-Element und den BehaviorSubject-Wert
     textarea.value = newContent;
     if (thread) {
       this.contentThread.next(newContent);
@@ -144,21 +146,29 @@ export class MentionAndChannelDropdownService {
       this.showDropdown = false;
     }
 
-    // Setze den Cursor ans Ende des neu eingefügten Texts
     const newCursorPosition = beforeTrigger.length + triggerChar.length + item.name.length + 1;
     textarea.setSelectionRange(newCursorPosition, newCursorPosition);
     textarea.focus();
   }
 
+  /**
+   * focuses the textarea 
+   */
   triggerFocus() {
     this.focusTrigger.next();
   }
 
+  /**
+   * @returns the focusTrigger obseravle 
+   */
   getFocusTrigger() {
     return this.focusTrigger.asObservable();
   }
 
-
+/**
+ * 
+ * @param thread shows and hides the emojis
+ */
   toggleEmoticons(thread?: string) {
     if (thread) {
       if (this.showMentionThread) {
@@ -175,6 +185,10 @@ export class MentionAndChannelDropdownService {
   }
 
 
+  /**
+   * shows and hides the reactionsbar of a message 
+   * @param messageId the message if of the message thats reactionsbar need to be toggled
+   */
   toggleEmoticonsReactionbar(messageId: string) {
     if (this.selectedMessageId === messageId) {
       this.selectedMessageId = null;
@@ -183,6 +197,10 @@ export class MentionAndChannelDropdownService {
     }
   }
 
+  /**
+   * shows and hides the mentions
+   * @param thread variable to check if mentions within a thread a toggled 
+   */
   toggleMention(thread?: string) {
     if (thread) {
       if (this.showEmoticonsThread) {
@@ -198,6 +216,11 @@ export class MentionAndChannelDropdownService {
 
   }
 
+  /**
+   * adds emoji to textarea content 
+   * @param event emoji elections
+   * @param thread variable to check if emoji was selected within a thread
+   */
   addEmoji(event: any, thread?: string) {
     if (thread) {
       const currentValue = this.contentThread.value;
@@ -213,6 +236,11 @@ export class MentionAndChannelDropdownService {
     }
   }
 
+  /**
+   * adds mentions to textarea content
+   * @param mention the added mention 
+   * @param thread variable to check if mentions was selected within a thread
+   */
   addMention(mention: string, thread?: string) {
     if (thread) {
       const currentValue = this.contentThread.value;

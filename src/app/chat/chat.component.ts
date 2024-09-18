@@ -14,7 +14,7 @@ import { TimeFormatingService } from '../shared-services/chat-functionality/time
 import { MentionAndChannelDropdownService } from '../shared-services/chat-functionality/mention-and-channel-dropdown.service';
 import { EditMessageService } from '../shared-services/chat-functionality/edit-message.service';
 import { FileUploadService } from '../shared-services/chat-functionality/file-upload.service';
-import { combineLatest, map, Observable, switchMap, take, tap } from 'rxjs';
+import { combineLatest, map, Observable, switchMap, take } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { GeneralChatService } from '../shared-services/chat-functionality/general-chat.service';
 import { Thread } from '../../models/thread.class';
@@ -168,7 +168,6 @@ export class ChatComponent implements OnInit {
       setTimeout(() => {
         this.chat.groupReactions(list)
           .then(() => {
-            //this.changeReload();
             this.isChatDataLoaded = true;
             setTimeout(() => {
               this.scrollToBottom();
@@ -234,10 +233,6 @@ export class ChatComponent implements OnInit {
     } else {
       this.list$ = this.originalList$;
     }
-
-    // setTimeout(() => {
-    //   this.scrollToBottom();
-    // }, 10);
   }
 
 
@@ -248,15 +243,12 @@ export class ChatComponent implements OnInit {
   initializeChatAfterChange() {
     this.loadAllMessageReactions();
     setTimeout(() => {
-      // this.chat.groupReactions(this.list)
-      // .then(() => {
       this.changeReload();
       this.isChatDataLoaded = true;
       setTimeout(() => {
         this.scrollToBottom();
         this.setFocus();
       }, 1000);
-      // });
     }, 1000);
   }
 
@@ -364,7 +356,6 @@ export class ChatComponent implements OnInit {
       reaction.messageId === convo.messageId && reaction.emoji === emoji && reaction.userId === userId
     );
     if (userAlreadyReacted) {
-      // console.log('User has already reacted with this emoji');
       return true;
     }
     return false;
@@ -400,16 +391,9 @@ export class ChatComponent implements OnInit {
    * Scroll to the bottom of the chatarea 
    */
   scrollToBottom(): void {
-    // try {
-    // if (this.list.length > 0) {
     setTimeout(() => {
       this.lastDiv.nativeElement.scrollIntoView();
     }, 250);
-    
-    //   }
-    // } catch (err) {
-    //   console.error('Scroll to bottom failed', err);
-    // }
   }
 
 
@@ -430,12 +414,7 @@ export class ChatComponent implements OnInit {
     this.edit.isEditing = false;
     this.edit.selectedMessageIdEdit = null;
     message.content = updatedContent;
-
-    this.databaseService.updateMessage(message, this.specific).then(() => {
-      // console.log('Message updated successfully');
-    }).catch(error => {
-      // console.error('Error updating message: ', error);
-    });
+    this.databaseService.updateMessage(message, this.specific);
   }
 
   /**

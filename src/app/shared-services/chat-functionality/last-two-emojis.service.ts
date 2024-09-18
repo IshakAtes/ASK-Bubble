@@ -15,6 +15,11 @@ export class LastTwoEmojisService {
     this.firestore = firestore;
   }
 
+  /**
+   * Updates the last two used emojis 
+   * @param userId User Id of a user whos used last two emijos needs to be watched
+   * @returns 
+   */
   watchUserEmojis(userId: string): Observable<Array<string>> {
     const userDocRef = doc(this.firestore, 'users', userId);
     onSnapshot(userDocRef, (doc) => {

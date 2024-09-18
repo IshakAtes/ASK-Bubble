@@ -25,7 +25,10 @@ export class GeneralChatService {
   groupedReactionsThread$ = this.groupedReactionsThread.asObservable();
   reactionsThread: Array<Reaction> = [];
 
-
+/**
+ * Groupes together all reations of a chat to a new map with count, names for every emoji
+ * @param messageList The List of all messages within a chat
+ */
   async groupReactions(messageList: Array<ConversationMessage> | Array<ChannelMessage>) {
     const groupedReactions = new Map<string, Array<{ emoji: string, count: number, users: string[] }>>();
     messageList.forEach(message => {
@@ -50,6 +53,10 @@ export class GeneralChatService {
     this.groupedReactions.next(groupedReactions);
   }
 
+  /**
+   * Groupes together all reations of a thread chat to a new map with count, names for every emoji
+   * @param messageList The List of all messages within a thread
+   */
   async groupReactionsThread(messageList: Array<ThreadMessage> | Array<ChannelThreadMessage>) {
     const groupedReactionsThread = new Map<string, Array<{ emoji: string, count: number, users: string[] }>>();
     messageList.forEach(message => {
@@ -72,12 +79,16 @@ export class GeneralChatService {
     });
 
     this.groupedReactionsThread.next(groupedReactionsThread);
-    
+
   }
 
-
+/**
+ * Checks if the last used emoji is already in the last used two emojis of the user
+ * @param user User who reacted 
+ * @param emoji Emoji with which was reacted 
+ * @param userId Id of the user that reacted 
+ */
   checkIfEmojiIsAlreadyInUsedLastEmojis(user: User, emoji: string, userId: string) {
-
     let usedLastEmoji = user.usedLastTwoEmojis[0]
 
     let usedSecondEmoji = user.usedLastTwoEmojis[1]
@@ -86,20 +97,31 @@ export class GeneralChatService {
     }
   }
 
-  //display and hide the reaction info on hover and retun the right text based on reaction(s) creator(s)
   emojiInfoVisible: boolean = false;
   hoveredReaction: { emoji: string, count: number, users: string[] } | null = null;
 
+  /**
+   * Shows the reaction info
+   * @param reaction the grouped together reaction
+   */
   showTooltip(reaction: { emoji: string, count: number, users: string[] }) {
     this.hoveredReaction = reaction;
     this.emojiInfoVisible = true;
   }
 
+  /**
+   * Hides the reaction info
+   */
   hideTooltip() {
     this.emojiInfoVisible = false;
     this.hoveredReaction = null;
   }
 
+  /**
+   * Displays all names of users that reacted with an emojis
+   * @param users Names of the user that reacted with an emoji
+   * @returns 
+   */
   getReactionUser(users: string[]): string {
     const userName = this.userService.activeUserObject.name;
     const userText = users.map(user => user === userName ? 'du' : user);
@@ -114,6 +136,11 @@ export class GeneralChatService {
     }
   }
 
+/**
+ *  Displays the necessary text fot the emoji info 
+ * @param users the user objects of the users that reacted with an emoji
+ * @returns 
+ */
   getReactionText(users: string[]): string {
     const userName = this.userService.activeUserObject.name;
     const userText = users.map(user => user === userName ? 'du' : user);
@@ -125,4 +152,3 @@ export class GeneralChatService {
     }
   }
 }
-

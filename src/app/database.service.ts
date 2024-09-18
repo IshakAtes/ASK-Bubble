@@ -519,12 +519,9 @@ export class DatabaseService {
           let docRef = doc(this.firestore, 'users/' + userid + '/channels/' + threadMessage.channelId + '/channelmessages/' + threadMessage.messageId);
           updateDoc(docRef, {threadMessageCount: count, lastThreadMessage: timestamp })
             .then(() => {
-              // console.log('Message updated successfully for users: ', userid);
           })
           .catch((error) => { //HttpErrorResponse
              if(error.code === 'not-found'){
-              // console.log(error.code)
-              // console.log('Message not updated successfully for users: ', userid);
             }
           })
         });
@@ -1327,11 +1324,7 @@ export class DatabaseService {
     return Promise.all([
       updateDoc(creatorMessageRef, { threadId: thread.threadId }),
       updateDoc(recipientMessageRef, { threadId: thread.threadId })
-    ]).then(() => {
-      // console.log('Message updated successfully for both users');
-    }).catch(error => {
-      // console.error('Error updating message: ', error);
-    });
+    ])
   }
 
 
@@ -1341,7 +1334,7 @@ export class DatabaseService {
    * @param conversation conversation object
    * @returns error or confirmation message
    */
-  updateMessage(message: ConversationMessage, conversation: Conversation): Promise<void> {
+  updateMessage(message: ConversationMessage, conversation: Conversation){
     const creatorMessageRef = doc(
       this.firestore,
       'users/' + conversation.createdBy + '/conversations/' + message.conversationId + '/conversationmessages',
@@ -1356,11 +1349,7 @@ export class DatabaseService {
     return Promise.all([
       updateDoc(creatorMessageRef, { content: message.content }),
       updateDoc(recipientMessageRef, { content: message.content })
-    ]).then(() => {
-      // console.log('Message updated successfully for both users');
-    }).catch(error => {
-      // console.error('Error updating message: ', error);
-    });
+    ])
   }
 
 
@@ -1385,7 +1374,7 @@ export class DatabaseService {
    * @param conversation conversation object
    * @returns error or confirmation message
    */
-    updateThreadMessage(threadMessage: ThreadMessage, conversation: Conversation): Promise<void> {
+    updateThreadMessage(threadMessage: ThreadMessage, conversation: Conversation) {
       const creatorMessageRef = doc(
         this.firestore, 'users/' + conversation.createdBy + '/conversations/'
       + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId +
@@ -1400,11 +1389,7 @@ export class DatabaseService {
       return Promise.all([
         updateDoc(creatorMessageRef, { content: threadMessage.content }),
         updateDoc(recipientMessageRef, { content: threadMessage.content })
-      ]).then(() => {
-        // console.log('Message updated successfully for both users');
-      }).catch(error => {
-        // console.error('Error updating message: ', error);
-      });
+      ])
     }
 
        /**
@@ -1413,7 +1398,7 @@ export class DatabaseService {
    * @param conversation conversation object
    * @returns error or confirmation message
    */
-       updateMessageThreadCountAndThreadTime(threadMessage: ThreadMessage, conversation: Conversation, count: number, timestamp: Timestamp, ): Promise<void> {
+       updateMessageThreadCountAndThreadTime(threadMessage: ThreadMessage, conversation: Conversation, count: number, timestamp: Timestamp, ) {
         const creatorMessageRef = doc(
           this.firestore, 'users/' + conversation.createdBy + '/conversations/'
         + conversation.conversationId + '/conversationmessages/' + threadMessage.messageId 
@@ -1429,11 +1414,7 @@ export class DatabaseService {
 
           updateDoc(creatorMessageRef, { lastThreadMessage: timestamp }),
           updateDoc(recipientMessageRef, { lastThreadMessage: timestamp }),
-        ]).then(() => {
-          // console.log('Message updated successfully for both users');
-        }).catch(error => {
-          // console.error('Error updating message: ', error);
-        });
+        ])
       }
 
 
