@@ -20,7 +20,6 @@ export class AppComponent implements OnInit{
   title = 'DA-Bubble';
 
   ngOnInit(): void {
-
-    
   }
+  
 }

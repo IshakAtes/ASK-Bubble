@@ -51,6 +51,10 @@ export class LoginComponent implements OnInit {
     });
   }
 
+
+  /**
+ * Initialization function
+ */
   ngOnInit(): void {
     setTimeout(() => {
       this.switchlogo = true;
@@ -65,6 +69,9 @@ export class LoginComponent implements OnInit {
   }
 
   
+  /**
+ * Asynchronous function to handle form submission
+ */
   async onSubmit() {
     if (this.us.guest) {
       this.myForm.setValue({
@@ -78,17 +85,26 @@ export class LoginComponent implements OnInit {
   }
 
 
+  /**
+ * Function to initiate Google authentication
+ */
   googleAuthentification() {
     this.authService.googleAuth();
   }
 
 
+  /**
+ * Function to perform guest login
+ */
   guestLogin() {
     this.us.guest = true;
     this.onSubmit()
   }
 
 
+  /**
+ * Asynchronous function to sign in
+ */
   async signIn() {
     if (this.us.guest) {
       try {
@@ -103,6 +119,12 @@ export class LoginComponent implements OnInit {
   }
 
 
+  /**
+ * Function to authenticate as a guest user.
+ * Attempts to login using the provided email and password.
+ * If successful, logs the correct user.
+ * If an error occurs, sets the error message and registers a new guest user with the provided credentials.
+ */
   authAsGuest() {
     this.authService
       .login(this.myForm.value.mail, this.myForm.value.pw)
@@ -113,54 +135,75 @@ export class LoginComponent implements OnInit {
       error: (err) => {
         this.errorMessage = err.code;
         this.authService.register(this.guestLog.email, this.guestLog.name, this.guestPw);
-        // console.log(this.errorMessage);
       },
     });
-
   }
 
 
+/**
+ * Function to handle accepted authentication.
+ */
   acceptedAuth() {
     this.authService
       .login(this.myForm.value.mail, this.myForm.value.pw)
       .subscribe({
         next: () => {
-        // this.authMessage = true;
         this.logCorrectUser();
       },
       error: (err) => {
         this.errorMessage = err.code;
         this.errorMessage = this.errorMessage ? this.errorMessage.split(/\//)[1] || '' : '';
         this.checkLoginData = true;
-        if (this.checkLoginData) {
-          this.borderAnimation = true;
-            if (this.errorMessage === 'invalid-email' || this.errorMessage === 'user-not-found') {
-              this.invalidMail = true;
-            }
-            if (this.errorMessage === 'wrong-password') {
-              this.invalidPassword = true;
-            }
-            if (this.errorMessage === 'too-many-requests') {
-              alert('Zu viele Anmeldeversuche. Bitte versuchen Sie es später erneut.')
-            }
-          setTimeout(() => {
-            this.borderAnimation = false;
-            this.falseLoginAnimation = true;
-            setTimeout(() => {
-              this.falseLoginAnimation = false;
-              this.checkLoginData = false;
-              this.invalidMail = false;
-              this.invalidPassword = false;
-            }, 1000)
-          }, 2000)
-        }
+        this.errorEvaluation();
         console.log(this.errorMessage);
       },
     });
   }
 
 
+  /**
+ * Function to evaluate errors during authentication.
+ */
+  errorEvaluation() {
+    if (this.checkLoginData) {
+      this.borderAnimation = true;
+        if (this.errorMessage === 'invalid-email' || this.errorMessage === 'user-not-found') {
+          this.invalidMail = true;
+        }
+        if (this.errorMessage === 'wrong-password') {
+          this.invalidPassword = true;
+        }
+        if (this.errorMessage === 'too-many-requests') {
+          alert('Zu viele Anmeldeversuche. Bitte versuchen Sie es später erneut.')
+        }
+      this.invalidLogAnimation();
+    }
+  }
 
+
+  /**
+ * Function to handle invalid login animation.
+ */
+  invalidLogAnimation() {
+    setTimeout(() => {
+      this.borderAnimation = false;
+      this.falseLoginAnimation = true;
+      setTimeout(() => {
+        this.falseLoginAnimation = false;
+        this.checkLoginData = false;
+        this.invalidMail = false;
+        this.invalidPassword = false;
+      }, 1000)
+    }, 2000)
+  }
+
+
+  /**
+ * Asynchronous function to log the correct user.
+ * Retrieves the accepted user based on the provided email and user token.
+ * Updates user information and navigates to the main page if user is valid.
+ * If error occurs during user retrieval, logs the error message.
+ */
   async logCorrectUser() {
     const acceptedUser = await this.us.getUser(this.myForm.value.mail, this.us.userToken);
     if (this.myForm.valid && acceptedUser || this.authMessage) {
@@ -181,10 +224,17 @@ export class LoginComponent implements OnInit {
   }
 
 
+  /**
+ * Function to handle mouse down event
+ */
   onMouseDown() {
     this.isPressed = true;
   }
 
+
+  /**
+ * Function to handle mouse up event
+ */
   onMouseUp() {
     this.isPressed = false;
   }

@@ -41,7 +41,6 @@ export class UserService {
 
 
   constructor(private http: HttpClient, private router: Router, public database: DatabaseService) { 
-
     this.isWorkspaceDataLoaded = false,
     setTimeout(() => {
       if(this.loggedUser){
@@ -52,6 +51,14 @@ export class UserService {
   }
 
 
+  /**
+   * Function for changing some user data
+   * @param currentMail actually used email
+   * @param newEmail new Email that was entered by the user
+   * @param newName provided name
+   * @param avatar
+   * @returns Promise<any>
+   */
   changeEmail(currentMail: string, newEmail: string, newName: string, avatar: string | undefined | null): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       const usersCollection = collection(this.firestore, 'users');
@@ -67,7 +74,7 @@ export class UserService {
               name: newName,
               avatarUrl: avatar
             });
-            resolve(userData);
+            return resolve(userData);
           }
         });
       }, (error) => {
@@ -77,6 +84,12 @@ export class UserService {
   }
 
 
+  /**
+   * Function for changing the user's name
+   * @param newName The new name to be set for the user
+   * @param uid The unique identifier of the user
+   * @returns Promise<any>
+ */
   changeUserName(newName: string, uid: string): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       const usersCollection = collection(this.firestore, 'users');
@@ -106,6 +119,12 @@ export class UserService {
   }
 
 
+  /**
+   * Function for changing the user's avatar
+   * @param avatar The new avatar to be set for the user
+   * @param token The token used to identify the user
+   * @returns Promise<any>
+   */
   changeAvatar(avatar: string | undefined | null, token: string): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       const usersCollection = collection(this.firestore, 'users');
@@ -129,7 +148,9 @@ export class UserService {
   }
 
 
-
+  /**
+   * Function for creating and saving a user
+   */
   createAndSaveUser() {
     this.userCache['uid'] = this.userToken;
     this.addUser(this.userCache);
@@ -143,6 +164,9 @@ export class UserService {
   }
 
 
+  /**
+   * Function for creating and saving a guest user
+   */
   createAndSaveGuest() {
     this.guestData.uid = this.userToken;
     this.addUser(this.guestData);
@@ -156,6 +180,11 @@ export class UserService {
   }
 
   
+  /**
+   * Function for uploading a file
+   * @param file The file to be uploaded
+   * @returns Observable<HttpEvent<any>>
+   */
   upload(file: File): Observable<HttpEvent<any>> {
     const formData: FormData = new FormData();
     formData.append('file', file);
@@ -165,13 +194,21 @@ export class UserService {
     return this.http.request(req);
   }
 
-  
+
+  /**
+   * Function for getting files from the server
+   * @returns Observable<any>
+   */
   getFiles(): Observable<any> {
     return this.http.get(`${this.baseUrl}/files`);
   }
 
 
-  
+  /**
+   * Check if useraccount exist, and create one if user not registered
+   * @param email entered email
+   * @param myForm data that was entered by the user
+   */
   async checkEmail(email: string, myForm: FormGroup): Promise<void> {
     try {
       const q = query(collection(this.firestore, 'users'), where('email', '==', email));
@@ -200,6 +237,11 @@ export class UserService {
   }
 
 
+  /**
+   * Function for changing the user's password
+   * @param id The user ID
+   * @param pw The new password to be set
+   */
   changePassword(id: string, pw: string) {
     const userDocRef = doc(this.firestore, "users", id);
     updateDoc(userDocRef, {
@@ -208,6 +250,10 @@ export class UserService {
   }
 
 
+  /**
+ * Function to set a user's status as online
+ * @param id The user ID
+ */
   userOnline(id: string) {
     const userDocRef = doc(this.firestore, "users", id);
     updateDoc(userDocRef, {
@@ -216,6 +262,10 @@ export class UserService {
   }
 
 
+  /**
+ * Function to set a user's status as offline
+ * @param id The user ID
+ */
   userOffline(id: string) {
     const userDocRef = doc(this.firestore, "users", id);
     updateDoc(userDocRef, {
@@ -224,6 +274,10 @@ export class UserService {
   }
 
 
+  /**
+ * Function for adding a user to the database
+ * @param user The user object to be added
+ */
   addUser(user: User) {
     addDoc(collection(this.firestore, 'users'), user.toJSON())
     .then((data) => {
@@ -233,6 +287,10 @@ export class UserService {
   }
 
 
+  /**
+ * Function for updating the user's ID in the database
+ * @param id The user ID to be updated
+ */
   pushUserId(id: string) {
     const userDocRef = doc(this.firestore, "users", id);
     updateDoc(userDocRef, {
@@ -241,6 +299,12 @@ export class UserService {
   }
 
 
+  /**
+ * Function to get a user after Google authentication
+ * @param email The user's email
+ * @param token The authentication token
+ * @returns Promise<User | null>
+ */
   getUserAfterGoogleAuth(email: string, token: string): Promise<User | null> {
     return new Promise<User | null>((resolve, reject) => {
         const usersCollection = collection(this.firestore, 'users');
@@ -276,6 +340,12 @@ export class UserService {
 }
 
 
+/**
+ * Function to get a user based on email and token
+ * @param email The user's email
+ * @param token The authentication token
+ * @returns Promise<User>
+ */
   getUser(email: string, token: string): Promise<User> {
     return new Promise<User>((resolve, reject) => {
       const usersCollection = collection(this.firestore, 'users');
@@ -309,9 +379,12 @@ export class UserService {
       });
     });
   }
-  
 
 
+  /**
+ * Function to load all users from the database
+ * @returns Promise<Array<any>>
+ */
   loadAllUsers(): Promise<Array<any>>{
     return new Promise<Array<any>>((resolve, reject) =>{
       const userList = [] as Array<any>
@@ -345,8 +418,10 @@ export class UserService {
   }
 
 
+  /**
+ * Function to load active user conversations
+ */
   loadActiveUserConversations() {
-
     this.isWorkspaceDataLoaded = false;
     this.activeUserConversationList = [];
     this.usersFromActiveUserConversationList = [];
@@ -400,7 +475,7 @@ export class UserService {
       }
     })
   }
- 
+
 
   /**
    * loads a user from the database based on the creator

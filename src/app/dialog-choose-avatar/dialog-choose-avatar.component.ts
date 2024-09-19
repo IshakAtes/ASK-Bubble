@@ -44,6 +44,9 @@ export class DialogChooseAvatarComponent {
   };
 
 
+  /**
+ * Function to send a registered mail
+ */
   sendRegisteredMail() {
     this.http.post(this.post.endPoint, this.post.body(this.us.userCache))
     .subscribe({
@@ -65,6 +68,10 @@ export class DialogChooseAvatarComponent {
   }
 
 
+  /**
+ * Function to select a file
+ * @param event The event containing the file input
+ */
   selectFile(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
@@ -76,11 +83,19 @@ export class DialogChooseAvatarComponent {
     }
   }
 
+
+  /**
+ * Function to trigger file upload
+ * @param fileInput The HTMLInputElement for file input
+ */
   triggerFileUpload(fileInput: HTMLInputElement): void {
     fileInput.click();
   }
 
 
+  /**
+ * Function to create a user
+ */
   createUser() {
     this.us.userCache.avatarUrl = this.selectedAvatar;
     this.authService.authRegistration();
@@ -88,6 +103,10 @@ export class DialogChooseAvatarComponent {
   }
   
 
+  /**
+ * Function to select a dummy avatar
+ * @param item The selected dummy avatar item
+ */
   selectDummyAvatar(item: any) {
     this.selectedAvatar = item;
   }

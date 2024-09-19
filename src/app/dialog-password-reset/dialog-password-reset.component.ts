@@ -46,11 +46,15 @@ export class DialogPasswordResetComponent {
     this.checkEmail(this.myForm.value.mail);
   }
 
+
+  /**
+ * Asynchronous function to check email and send password reset email
+ * @param email The email to check
+ * @returns Promise<void>
+ */
   async checkEmail(email: string): Promise<void> {
     sendPasswordResetEmail(this.authService.firebaseAuth, email)
       .then(() => {
-        // Password reset email sent!
-        // console.log('Password reset email sent to ', email);
         this.emailSent = true;
         setTimeout(() => {
           this.emailSent = false;
@@ -64,50 +68,4 @@ export class DialogPasswordResetComponent {
       });
   }
 
-
 }
-
-
-
-
-
-// sendMail() {
-//   if (this.myForm.valid) {
-//     this.http.post(this.post.endPoint, this.post.body(this.us.resetUserPw))
-//       .subscribe({
-//         next: (_response: any) => {
-//           // this.us.resetUserPw = '';
-//           console.log('form', this.us.resetUserPw);
-//           this.myForm.reset();
-//         },
-//         error: (error: any) => {
-//           console.error(error);
-//         },
-//         complete: () => {
-//           this.emailSent = true;
-//           setTimeout(() => {
-//             this.emailSent = false;
-//             this.router.navigate(['/']);
-//           }, 2000);
-//         },
-//       });
-//   }
-// }
-
-    // try {
-    //   const q = query(collection(this.firestore, 'users'), where('email', '==', email));
-    //   const querySnapshot = await getDocs(q);
-
-    //   if (querySnapshot.empty) {
-    //     alert('Kein User mit der angegebenen E-Mail-Adresse gefunden');
-    //   } else {
-    //     querySnapshot.forEach((doc) => {
-    //       this.us.resetUserPw = doc.data();
-    //       this.us.resetUserPw['resetLink'] = 'https://bubble.ishakates.com/changePassword/' + doc.id; // Siemon und Kerim hier müsst ihr eure eigene server adresse eingeben.
-    //       console.log(this.us.resetUserPw);
-    //       this.sendMail()
-    //     });
-    //   }
-    // } catch (error) {
-    //   console.error('Fehler beim Abrufen der Dokumente:', error);
-    // }

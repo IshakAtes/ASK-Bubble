@@ -28,26 +28,29 @@ export class AuthService {
   }
 
 
+  /**
+   * Function to change some user data on firebase
+   * @param email actually email
+   * @param newEmail entered new Email by the user
+   * @param currentPassword current Password entered by the user
+   * @param name provided name
+   * @param avatar provided avatar url
+   */
   async changeUserData(email: string, newEmail: string, currentPassword: string | null, name: string, avatar: string | undefined | null) {
     const auth = this.firebaseAuth;
     const fbUser = auth.currentUser;
-//Ist currentUser ein vordefinierter Wert?
       try {
         if (fbUser) {
-          // console.log('currentUser', fbUser);
           if (newEmail !== fbUser.email && currentPassword) {
             try {
-              // Reauthenticate the user with the current email and password
               const credential = EmailAuthProvider.credential(email, currentPassword ?? '');
-              // console.log(credential);
               await reauthenticateWithCredential(fbUser, credential);
               await updateEmail(fbUser, newEmail);
               await sendEmailVerification(fbUser);
               await this.us.changeEmail(email, newEmail, name, avatar)
-              // console.log('Verification email sent to', newEmail);
+              console.log(await this.us.changeEmail(email, newEmail, name, avatar));
             } catch (error) {
               this.wrongEmail = true;
-              // console.error('Error during reauthentication:', error);
             }
           }
 
@@ -59,22 +62,27 @@ export class AuthService {
             await this.us.changeAvatar(avatar, fbUser.uid);
           }
       } else {
-        // console.error('Current user or password is null');
+        console.error('Current user or password is null');
       }
       } catch (error: any) {
-        // console.error('Error updating user:', error);
         this.errorMessage = error.message;
       }
   }
 
-
-  async googleAuth() {
+  /**
+   * function to provide google
+   */
+  googleAuth() {
     const provider = new GoogleAuthProvider();
-    // console.log('google Provider', provider);
     provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-    await this.getToken(provider);
+    this.getToken(provider);
   }
 
+
+  /**
+   * 
+   * @param provider interface from google
+   */
   getToken(provider: any) {
     const auth = getAuth();
     signInWithPopup(auth, provider)
@@ -100,12 +108,15 @@ export class AuthService {
       });
   }
 
+
+  /**
+   * get Data from Google and create a new User
+   * @param user user information received by google
+   */
   async handleUserAfterGoogleLogin(user: any) {
-    // Check if user already exists in Firestore
     const userDoc = await this.us.getUserAfterGoogleAuth(user.email!, user.uid);
 
     if (!userDoc) {
-        // Create new user object
         this.us.userCache = new User();
         this.us.userCache.email = user.email;
         this.us.userCache.name = user.displayName;
@@ -115,14 +126,16 @@ export class AuthService {
         this.us.createAndSaveUser();
         const getUserAgain = await this.us.getUserAfterGoogleAuth(user.email!, user.uid);
         this.logGoogleUser(this.us.userCache);
-        // console.log('New user created in Firestore:', this.us.userCache);
     } else {
-        // console.log('User already exists in Firestore:', userDoc);
         this.logGoogleUser(userDoc);
     }
 }
 
 
+/**
+ * Login with user that was created with google auth
+ * @param acceptedUser 
+ */
 logGoogleUser(acceptedUser: User) {
   try {
     this.us.loggedUser = acceptedUser;
@@ -138,6 +151,14 @@ logGoogleUser(acceptedUser: User) {
 }
 
 
+/**
+ * Register a new user in firebase authentication
+ * @param email email address entered
+ * @param username name entered
+ * @param password password entered
+ * @returns An Observable that resolves when the user is successfully created and profile updated.
+ * @throws Will throw an error if user registration or profile update fails.
+ */
 register(email: string, username: string, password: string): Observable<void> {
   const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, password)
     .then(response => {
@@ -152,13 +173,16 @@ register(email: string, username: string, password: string): Observable<void> {
       });
     })
     .catch((error) => {
-      console.error('Error during registration:', error);  // Loggen des Fehlers
-      throw error;  // Fehler weiterleiten, um ihn in subscribe() abzufangen
+      console.error('Error during registration:', error);
+      throw error;
     });
-
   return from(promise);
 }
 
+
+/**
+ * After Registreiting user in firebase authentication create an userobject in firestore with the function createAndSaveUser() or log an error
+ */
 authRegistration() {
   this.register(this.us.userCache.email, this.us.userCache.name, this.us.pwCache)
     .subscribe({
@@ -174,6 +198,12 @@ authRegistration() {
 }
 
 
+/**
+ * This method log the user with the credentials and, upon successful login, stores the user's unique identifier (UID) in the service for further use.
+ * @param email entered email
+ * @param password entered password
+ * @returns An Observable that resolves when the user has successfully signed in.
+ */
   login(email: string, password: string,): Observable <void> {
     const promise = signInWithEmailAndPassword(this.firebaseAuth, email, password
     ).then((response) => {
@@ -182,6 +212,11 @@ authRegistration() {
     return from(promise);
   }
 
+
+  /**
+   * This method set the user in firestore offline, and logged him out
+   * @returns An Observable that resolves, when the user is logged out and the status ist offline
+   */
   logout(): Observable<void> {
     if(this.us.loggedUser){
       this.us.loggedUser.status = 'offline';
@@ -193,34 +228,34 @@ authRegistration() {
     return from(promise);
   }
 
+
+  /**
+   * this method navigate to the login Component
+   */
   redirectToLogin() {
-    //this.us.loggedUser = new User();
     this.router.navigateByUrl('');
   }
 
 
-
+/**
+ * Checks the current user's authentication status using Firebase Authentication.
+ * @returns  A boolean value indicating whether the user is authenticated or not. The method resolves `true` if the user is authenticated, otherwise `false`.
+ */
   checkUserStatus(): boolean {
     onAuthStateChanged(this.firebaseAuth, (user) => {
       if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/auth.user
         this.us.getUser(user.email ?? '', user.uid).then((activeUser) => {
-          // console.log('activeUser:', activeUser);
           this.us.loggedUser = activeUser;
           this.us.activeUserObject = activeUser;
           return true;
         }).catch((error) => {
-          // console.error('Fehler beim Abrufen des Benutzers:', error);
           this.redirectToLogin();
           return false
         });
         return false;
       } else {
-        // this.logout();
         this.redirectToLogin();
         return false;
-        // console.log('authState logged out', this.us.loggedUser, 'user variable', user);
       }
     });
     return false;

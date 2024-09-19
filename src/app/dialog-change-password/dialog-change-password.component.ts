@@ -29,13 +29,21 @@ export class DialogChangePasswordComponent implements OnInit {
   }
 
 
+  /**
+ * Custom validator function to check if passwords match
+ * @param group The form group containing the passwords
+ * @returns Validation error if passwords do not match
+ */
   passwordMatchValidator(group: FormGroup): { [key: string]: any } | null {
     const newPass1 = group.get('newPass1')?.value;
     const newPass2 = group.get('newPass2')?.value;
-    return newPass1 === newPass2 ? null : { passwordMismatch: true }; // Rückgabe eines Fehlers, wenn die Passwörter nicht übereinstimmen
+    return newPass1 === newPass2 ? null : { passwordMismatch: true };
   }
 
 
+  /**
+ * Function to handle form submission
+ */
   onSubmit() {
     if (this.myForm.valid && this.myForm.get('newPass1')?.value === this.myForm.get('newPass2')?.value) {
       this.us.changePassword(this.userId, this.myForm.value.newPass1);
@@ -48,4 +56,5 @@ export class DialogChangePasswordComponent implements OnInit {
       // console.log('Form not valid');
     }
   }
+
 }

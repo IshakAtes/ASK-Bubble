@@ -53,11 +53,6 @@ export class MainComponent implements OnInit{
   constructor(public userservice: UserService, public database: DatabaseService, router: Router){
     userservice.getDeviceWidth();
     this.authService.checkUserStatus();
-    // setTimeout(() => {
-    //   debugger;
-    //   this.authService.checkUserStatus()
-    // }, 1000);
-
     router.events.forEach((event) => {    
       if(event instanceof NavigationStart){
         if(event.navigationTrigger === "popstate"){
@@ -74,8 +69,6 @@ export class MainComponent implements OnInit{
     // this.authService.checkActiveUser();
   }
 
-
- 
 
   /**
    * Sets the size of the channel or Chat to Big
@@ -246,7 +239,7 @@ export class MainComponent implements OnInit{
     }
   }
 
-  
+
   /**
    * closes the open thread and returns the user to the
    * previous channel or conversation

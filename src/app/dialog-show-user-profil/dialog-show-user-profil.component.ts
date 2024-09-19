@@ -31,6 +31,10 @@ export class DialogShowUserProfilComponent implements OnInit {
 
   @Output() changeToConversation = new EventEmitter<Conversation>();
 
+  /**
+ * Function to check if the screen width is small
+ * @returns boolean
+ */
   isScreenSmall(): boolean {
     return window.innerWidth <= 850;
   }
@@ -44,6 +48,9 @@ export class DialogShowUserProfilComponent implements OnInit {
   }
 
 
+  /**
+ * Function called when the component is initialized
+ */
   ngOnInit() {
     this.myForm = this.fb.group({
       name: [this.userData.name, [Validators.required, Validators.minLength(6)]],
@@ -69,11 +76,18 @@ export class DialogShowUserProfilComponent implements OnInit {
     })
   }
 
+
+  /**
+ * Function to handle email change
+ */
   onEmailChange(): void {
     this.showPasswordInput = this.userData.email !== this.myForm.get('email')?.value;
   }
 
 
+  /**
+ * Asynchronous function to edit user data
+ */
   async editUser() {
     if (this.myForm.valid) {
       const formData = this.myForm.value;
@@ -111,6 +125,11 @@ export class DialogShowUserProfilComponent implements OnInit {
   }
 
 
+  /**
+ * Function to handle email not changed scenario
+ * @param formData The form data with email
+ * @param usedMail The email that was being used
+ */
   emailNotChanged(formData: { email: string; }, usedMail: string) {
     if (this.authService.wrongEmail) {
       this.authService.wrongEmail = false;
@@ -131,6 +150,10 @@ export class DialogShowUserProfilComponent implements OnInit {
   }
 
 
+  /**
+ * Function to handle file selection
+ * @param event The event containing the file input
+ */
   selectFile(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
@@ -142,27 +165,43 @@ export class DialogShowUserProfilComponent implements OnInit {
     }
   }
 
+
+  /**
+ * Function to trigger file upload by clicking the file input element
+ * @param fileInput The HTMLInputElement for file upload
+ */
   triggerFileUpload(fileInput: HTMLInputElement): void {
     fileInput.click();
   }
 
 
+  /**
+ * Function to open the edit template
+ */
   openEditTemplate() {
     this.editMode = true;
     this.showPasswordInput = false;
     this.newData = this.userData;
     this.selectedAvatar = this.userData.avatarUrl ?? '/assets/img/unUsedDefault.png';
-    // Aktualisieren Sie das Formular mit den aktuellen Werten
     this.myForm.patchValue({
       name: this.userData.name,
       email: this.userData.email
     });
   }
 
+
+  /**
+ * Function to open a conversation
+ * @param conversation The conversation to open
+ */
   openConversation(conversation: Conversation){
       this.dialogRef.close(conversation);
   }
 
+
+  /**
+ * Function to close the edit mode
+ */
   closeEdit() {
     this.editMode = false;
     this.myForm.reset({
@@ -174,6 +213,9 @@ export class DialogShowUserProfilComponent implements OnInit {
   }
 
 
+  /**
+ * Function to handle dialog close
+ */
   onClose(): void {
     this.editMode = false;
     this.dialogRef.close();
