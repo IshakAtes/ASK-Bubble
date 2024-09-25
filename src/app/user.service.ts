@@ -167,16 +167,16 @@ export class UserService {
   /**
    * Function for creating and saving a guest user
    */
-  createAndSaveGuest() {
-    this.guestData.uid = this.userToken;
-    this.addUser(this.guestData);
-    setTimeout(() => {
-      this.database.getUser(this.guestData.email)
-        .then(user =>{
-          this.database.addConversation(this.database.createConversation(user.userId, user.userId));
-          this.userToken = '';
-        })
-    }, 1000);
+  async createAndSaveGuest() {
+    try {
+      this.guestData.uid = this.userToken;
+      this.addUser(this.guestData);
+      const user = await this.database.getUser(this.guestData.email)
+      await this.database.addConversation(this.database.createConversation(user.userId, user.userId));
+      this.userToken = '';
+    } catch (error) {
+      console.error('Error creating and saving guest:', error);
+    }
   }
 
   
@@ -278,11 +278,11 @@ export class UserService {
  * Function for adding a user to the database
  * @param user The user object to be added
  */
-  addUser(user: User) {
-    addDoc(collection(this.firestore, 'users'), user.toJSON())
+  addUser(user: User): Promise<void> {
+    return addDoc(collection(this.firestore, 'users'), user.toJSON())
     .then((data) => {
       this.pushUserId(data.id);
-    })
+    });
     // .catch((error) => console.error('Fehler beim Hinzufügen des Benutzers:', error));
   }
 
