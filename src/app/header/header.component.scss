@@ -16,6 +16,22 @@ header {
 
 .logo {
     min-width: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+        height: 70px;
+    }
+    span {
+        font-family: "Nunito";
+        color: #000;
+        font-size: 24px;
+        font-weight: 700;
+        text-align: center;
+        line-height: 55px;
+        margin: 20px 20px;
+    }
 }
 
 .searchBar {

@@ -50,14 +50,14 @@
             color: #fff;
             font-family: "Nunito";
             position: absolute;
-            top: 50%;  /* position the top  edge of the element at the middle of the parent */
-            left: 50%; /* position the left edge of the element at the middle of the parent */
+            top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
             opacity: 0;
             transition: left 512ms ease-in-out, opacity 256ms ease-in-out;
-
+            width: max-content;
             &.visible {
-                left: 70%;
+                left: 82%;
                 opacity: 1;
             }
         }
@@ -74,17 +74,45 @@ nav {
         justify-content: center;
         align-items: center;
         height: 60px;
-        width: 210px;
+        width: 300px;
 
         .logoContainer {
             position: absolute;
             top: 50%;
-            left: 50%;
+            left: 36%;
             z-index: 1;
             height: 180px;
             transform: translate(-50%, -50%);
         }
+
+        .logoSpan {
+            position: absolute;
+            top: 50%;
+            left: 59%;
+            font-size: 100px;
+            z-index: 1;
+            font-family: 'Nunito';
+            font-weight: 700;
+            transform: translate(-50%, -50%);
+        }
     }
+}
+
+
+.logoIntroSpan {
+    position: absolute;
+    top: 20px;
+    left: 180px;
+    font-family: "Nunito";
+    color: #000;
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 55px;
+    margin: 20px 0;
+    z-index: 1;
+    transform: translate(0%, 0%);
+    transition: top 1000ms ease-in-out, left 1000ms ease-in-out, font-size 1000ms ease-in-out, transform 1000ms;
 }
 
 

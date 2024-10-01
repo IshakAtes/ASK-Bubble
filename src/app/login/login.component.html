@@ -3,7 +3,7 @@
     <div [ngClass]="{'introOverlay': intro, 'overlay': !intro}">
         <div class="introLogoCt">
             <img [ngClass]="{'toLeft': switchlogo}" src="../../assets/img/Logoo.png" alt="">
-            <span [ngClass]="{'visible': textVisible}">DABubble</span>
+            <span [ngClass]="{'visible': textVisible}">ASK-Bubble</span>
         </div>
     </div>
 
@@ -13,11 +13,13 @@
             <div class="logoMainContainer">
                 <img class="logoContainer"
                 [ngClass]="{'logoIntroAnimation': navLogoAnimation, 'logoContainer': !navLogoAnimation}"
-                src="../../assets/img/Logo.png" alt="logo">
-                <!-- <span>DABubble</span> -->
+                src="/assets/img/Logoo.png" alt="logo">
+                <span
+                [ngClass]="{'logoIntroSpan': navLogoAnimation, 'logoSpan': !navLogoAnimation}">
+                ASK-Bubble</span>
             </div>
             <div class="signUpLink">
-                <span>Neu bei DABubble?</span>
+                <span>Neu bei ASK-Bubble?</span>
                 <a [routerLink]="['/signUp']">Konto erstellen</a>
             </div>
         </nav>
