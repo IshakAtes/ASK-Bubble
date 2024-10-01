@@ -164,6 +164,7 @@ export class UserService {
   // }
   async createAndSaveUser() {
     try {
+      this.userCache['uid'] = this.userToken;
       const userRef = await this.addUser(this.userCache);
       const userId = userRef.id;
       this.userCache.userId = userId;

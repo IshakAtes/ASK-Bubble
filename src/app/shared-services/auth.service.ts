@@ -198,9 +198,10 @@ register(email: string, username: string, password: string): Observable<void> {
         this.us.userToken = response.user.uid;
         if (this.us.guest) {
           await this.us.createAndSaveGuest();
-        } else {
-          await this.us.createAndSaveUser(); 
         }
+        // else {
+        //   await this.us.createAndSaveUser(); 
+        // }
       });
     })
     .catch((error) => {
