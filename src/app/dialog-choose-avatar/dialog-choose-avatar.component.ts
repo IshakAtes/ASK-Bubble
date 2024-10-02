@@ -1,5 +1,5 @@
 import { CommonModule, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, NgZone } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../user.service';
 import { HttpClient } from '@angular/common/http';
@@ -30,7 +30,7 @@ export class DialogChooseAvatarComponent {
   authService = inject(AuthService);
 
 
-  constructor(private router: Router, public us: UserService) {}
+  constructor(private router: Router, public us: UserService, private ngZone: NgZone) {}
 
   post = {
     endPoint: 'https://bubble.ishakates.com/sendSignUp.php',
@@ -60,8 +60,10 @@ export class DialogChooseAvatarComponent {
       complete: () => {
         this.userCreated = true;
         setTimeout(() => {
-          this.userCreated = false;
-          this.router.navigate(['/']);
+          this.ngZone.run(() => {
+            this.userCreated = false;
+            this.router.navigate(['']);
+          });
         }, 2000);
       },
     });

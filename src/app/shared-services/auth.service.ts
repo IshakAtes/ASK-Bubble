@@ -1,4 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, NgZone, inject, signal } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateEmail, updatePassword, user, updateProfile, sendEmailVerification } from '@angular/fire/auth';
 import { catchError, EMPTY, from, Observable, tap } from 'rxjs';
 import { EmailAuthProvider, getAuth, onAuthStateChanged, UserCredential, reauthenticateWithCredential, AuthProvider, getAdditionalUserInfo } from "firebase/auth";
@@ -22,7 +22,7 @@ export class AuthService {
   infos: any ;
   
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private ngZone: NgZone) {
     this.checkUserStatus();
     // console.log('googleInfos', this.infos);
     // console.log('observ', this.activeUser);
@@ -266,7 +266,10 @@ authRegistration() {
    * this method navigate to the login Component
    */
   redirectToLogin() {
-    this.router.navigateByUrl('');
+    // Router-Navigation innerhalb der Angular-Zone
+    this.ngZone.run(() => {
+      this.router.navigateByUrl('');
+    });
   }
 
 
