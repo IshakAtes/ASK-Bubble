@@ -49,7 +49,7 @@ export class AuthService {
               await updateEmail(fbUser, newEmail);
               await sendEmailVerification(fbUser);
               await this.us.changeEmail(email, newEmail, name, avatar)
-              console.log(await this.us.changeEmail(email, newEmail, name, avatar));
+              // console.log(await this.us.changeEmail(email, newEmail, name, avatar));
             } catch (error) {
               this.wrongEmail = true;
             }

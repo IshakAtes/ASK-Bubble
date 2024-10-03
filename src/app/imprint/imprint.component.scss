@@ -11,15 +11,25 @@ nav {
         display: flex;
         justify-content: center;
         align-items: center;
+
         img {
             height: 60px;
+        }
+        span {
+            font-family: "Nunito";
+            color: #000;
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            line-height: 55px;
+            margin: 0px 20px;
         }
     }
 }
 
 .cardContainer {
         width: 100%;
-        height: 100%;
+        height: 90vh;
         display: flex;
         justify-content: center;
         align-items: center;
